@@ -99,7 +99,7 @@ export const useStore = defineStore('store', {
 
     /** True if current screen width is mobile. */
     isMobile (): boolean {
-    // fall back to base window width if no window size changes have occurred
+      // fall back to base window width if no window size changes have occurred
       const width = this.stateModel.windowWidth || window.innerWidth
       return (width < new Vuetify().framework.breakpoint.thresholds.sm)
     },

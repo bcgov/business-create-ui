@@ -453,6 +453,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
+  @Action(useStore) setHaveChanges!: (x: boolean) => void
 
   // Local properties
   active = false
@@ -646,6 +647,9 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   @Watch('formValid')
   @Emit('valid')
   private onComponentValid (): boolean {
+    // if we're here it's because the user has changed something
+    this.setHaveChanges(true)
+
     // this component is valid if we have an active business
     // and we have the home jurisdiction (custom component)
     // and we have the home incorporation date (custom component)
