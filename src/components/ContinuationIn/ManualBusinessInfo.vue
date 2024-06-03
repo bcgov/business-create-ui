@@ -288,6 +288,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
+  @Action(useStore) setHaveChanges!: (x: boolean) => void
 
   // Local properties
   active = false
@@ -387,6 +388,9 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   @Watch('formValid')
   @Emit('valid')
   private onComponentValid (): boolean {
+    // if we're here it's because the user has changed something
+    this.setHaveChanges(true)
+
     // this form is valid if we have the home jurisdiction (custom component)
     // and we have the home incorporation date (custom component)
     // and we have the affidavit file, if required (custom component)
