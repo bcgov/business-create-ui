@@ -43,7 +43,6 @@ import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
   readonly PdfPageSize = PdfPageSize
 
-  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
 

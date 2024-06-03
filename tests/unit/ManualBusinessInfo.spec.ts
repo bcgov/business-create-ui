@@ -1,14 +1,16 @@
 import Vue from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
 import { wrapperFactory } from '../vitest-wrapper-factory'
+import { ExistingBusinessInfoIF } from '@/interfaces'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 import UploadAffidavit from '@/components/ContinuationIn/UploadAffidavit.vue'
-import { ExistingBusinessInfoIF } from '@/interfaces'
-import { shallowMount } from '@vue/test-utils'
-import Vuex from 'vuex'
 
-Vue.use(Vuex)
+setActivePinia(createPinia())
+const store = useStore()
 
-describe('Manual BusinessInfo component', () => {
+describe('Manual Business Info component', () => {
   it('renders the component correctly', async () => {
     const wrapper = wrapperFactory(ManualBusinessInfo)
     await Vue.nextTick()
@@ -20,10 +22,9 @@ describe('Manual BusinessInfo component', () => {
     wrapper.destroy()
   })
 
-  // Test the Upload Affidavit component is rendered
-  it('renders the component correctly when isContinuationInAffidavitRequired is true', async () => {
-    // Create a mock business object
-    const businessMock: ExistingBusinessInfoIF = {
+  it('renders the UploadAffidavit component correctly', async () => {
+    // set some store values
+    store.stateModel.continuationIn.existingBusinessInfo = {
       affidavitFile: null,
       affidavitFileKey: null,
       affidavitFileName: null,
@@ -35,29 +36,34 @@ describe('Manual BusinessInfo component', () => {
       homeIncorporationDate: '',
       homeLegalName: '',
       mode: 'MANUAL'
-    }
-    const getters = {
-      isContinuationInAffidavitRequired: () => true,
-      getExistingBusinessInfo: () => businessMock
-    }
+    } as ExistingBusinessInfoIF
+    store.stateModel.entityType = CorpTypeCd.ULC_CONTINUE_IN
 
-    const store = new Vuex.Store({
-      getters
-    })
-
-    const wrapper = shallowMount(UploadAffidavit, {
-      store,
-      propsData: {
-        business: businessMock
-      }
-    })
+    const wrapper = wrapperFactory(ManualBusinessInfo)
     await Vue.nextTick()
+
+    // Verify the Upload Affidavit component was rendered
     expect(wrapper.findComponent(UploadAffidavit).exists()).toBe(true)
 
-    // Check if the text content is rendered correctly
-    expect(wrapper.text()).toContain('Upload the affidavit from the directors.')
-    expect(wrapper.text()).toContain('Use a white background and a legible font with contrasting font colour')
-    expect(wrapper.text()).toContain('PDF file type (maximum 30 MB file size)')
+    wrapper.destroy()
+  })
+
+  it('displays initial jurisdiction (Federal) value correctly', async () => {
+    // set some store values
+    store.stateModel.continuationIn.existingBusinessInfo = {
+      homeJurisdiction: {
+        country: 'CA',
+        region: 'FEDERAL'
+      },
+      mode: 'MANUAL'
+    } as ExistingBusinessInfoIF
+
+    const wrapper = wrapperFactory(ManualBusinessInfo)
+    await Vue.nextTick()
+
+    // verify component main exists
+    expect(wrapper.find('.home-jurisdiction label').text()).toBe('Jurisdiction')
+    expect(wrapper.find('.home-jurisdiction .v-select__selection').text()).toBe('Federal')
 
     wrapper.destroy()
   })

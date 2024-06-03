@@ -45,7 +45,7 @@
             class="home-jurisdiction"
             :showUsaJurisdictions="true"
             label="Jurisdiction"
-            :initialValue="jurisdictionInitialVal"
+            :initialValue="business.homeJurisdiction"
             :errorMessages="jurisdictionErrorMessage"
             :showAppendIcon="false"
             @change="onJurisdictionChange($event)"
@@ -331,24 +331,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   onClick (): void {
     this.business.mode = 'MANUAL'
     this.active = true
-  }
-
-  /** Jurisdiction initial value for draft. */
-  get jurisdictionInitialVal (): any {
-    const country = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.country : ''
-    let region = ''
-
-    if (this.getExistingBusinessInfo.homeJurisdiction) {
-      if (this.getExistingBusinessInfo.homeJurisdiction?.region === 'FEDERAL') {
-        region = JurisdictionLocation.FD
-      } else {
-        region = this.getExistingBusinessInfo ? this.getExistingBusinessInfo.homeJurisdiction?.region : ''
-      }
-    }
-
-    if (country && region) return { country, region }
-
-    return null
   }
 
   /** Resets this component back to its initial state. */
