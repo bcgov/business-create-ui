@@ -193,6 +193,29 @@
           </v-col>
         </v-row>
 
+        <!-- Upload Affidavit -->
+        <v-row
+          v-if="isContinuationInAffidavitRequired"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Upload Affidavit</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <UploadAffidavit
+              :business="business"
+            />
+          </v-col>
+        </v-row>
+
         <!-- message box -->
         <v-row
           class="mt-8"
@@ -237,12 +260,14 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
+import UploadAffidavit from './UploadAffidavit.vue'
 
 @Component({
   components: {
     DatePickerShared,
     Jurisdiction,
-    MessageBox
+    MessageBox,
+    UploadAffidavit
   },
   directives: {
     mask
@@ -260,6 +285,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
 
@@ -381,10 +407,12 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   private onComponentValid (): boolean {
     // this form is valid if we have the home jurisdiction (custom component)
     // and we have the home incorporation date (custom component)
+    // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
     return (
       !!this.business.homeJurisdiction &&
       !!this.business.homeIncorporationDate &&
+      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
       this.formValid
     )
   }

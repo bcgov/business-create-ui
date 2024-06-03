@@ -230,49 +230,28 @@
           </v-col>
         </v-row>
 
-        <v-expand-transition>
-          <!-- Upload Affidavit -->
-          <v-row
-            v-if="isContinuationInAffidavitRequired"
-            class="mt-6"
-            no-gutters
+        <!-- Upload Affidavit -->
+        <v-row
+          v-if="isContinuationInAffidavitRequired"
+          class="mt-6"
+          no-gutters
+        >
+          <v-col
+            cols="12"
+            sm="3"
           >
-            <v-col
-              cols="12"
-              sm="3"
-            >
-              <label>Upload Affidavit</label>
-            </v-col>
+            <label>Upload Affidavit</label>
+          </v-col>
 
-            <v-col
-              cols="12"
-              sm="9"
-            >
-              <p>
-                Upload the affidavit from the directors.
-              </p>
-
-              <ul>
-                <li>Use a white background and a legible font with contrasting font colour</li>
-                <li>PDF file type (maximum 30 MB file size)</li>
-              </ul>
-
-              <FileUploadPreview
-                class="mt-4"
-                inputFileLabel="Affidavit from directors"
-                :maxSize="MAX_FILE_SIZE"
-                :pdfPageSize="PdfPageSize.LETTER_SIZE"
-                :hint="business.affidavitFile ? 'File uploaded' : undefined"
-                :inputFile="business.affidavitFile"
-                :showErrors="getShowErrors"
-                :customErrorMessage.sync="customErrorMessage"
-                :isRequired="getShowErrors"
-                @fileValidity="onFileValidity($event)"
-                @fileSelected="onFileSelected($event)"
-              />
-            </v-col>
-          </v-row>
-        </v-expand-transition>
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <UploadAffidavit
+              :business="business"
+            />
+          </v-col>
+        </v-row>
 
         <!-- message box -->
         <v-row
@@ -428,12 +407,10 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
-import { StatusCodes } from 'http-status-codes'
 import { mask } from 'vue-the-mask'
 import { useStore } from '@/store/store'
-import { DateMixin, DocumentMixin } from '@/mixins'
-import { BusinessLookupResultIF, ColinBusinessIF, ExistingBusinessInfoIF, FormIF, PresignedUrlIF } from '@/interfaces'
-import { PdfPageSize } from '@/enums'
+import { DateMixin } from '@/mixins'
+import { BusinessLookupResultIF, ColinBusinessIF, ExistingBusinessInfoIF, FormIF } from '@/interfaces'
 import { EntityStates, JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { ColinServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
@@ -444,36 +421,34 @@ import { Rules } from '@/rules'
 import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
 import MessageBox from '@/components/common/MessageBox.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
-import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import UploadAffidavit from './UploadAffidavit.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
 @Component({
   components: {
     DatePickerShared,
     ExtraproBusinessLookup,
-    FileUploadPreview,
     GenericErrorDialog,
     Jurisdiction,
     MessageBox,
-    RegistriesContactInfo
+    RegistriesContactInfo,
+    UploadAffidavit
   },
   directives: {
     mask
   }
 })
-export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixin) {
+export default class ExtraproRegistration extends Mixins(DateMixin) {
   // Refs
   $refs!: {
     formRef: FormIF,
     incorporationDateRef: DatePickerShared
   }
 
-  readonly PdfPageSize = PdfPageSize
   readonly Rules = Rules
 
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
-  @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
@@ -483,10 +458,8 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
-  customErrorMessage = ''
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
-  fileValidity = false
   errorDialog = false
   errorDialogText = ''
   errorDialogTitle = ''
@@ -651,52 +624,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin, DocumentMixi
     }
   }
 
-  /**
-   * Called when FileUploadPreview tells us whether a file is valid.
-   * This is called right before the File Selected event.
-   */
-  onFileValidity (valid: boolean): void {
-    this.fileValidity = valid
-  }
-
-  /**
-   * Called when FileUploadPreview tells us about a new or cleared file.
-   * This is called right after the File Validity event.
-   */
-  async onFileSelected (file: File): Promise<void> {
-    if (file) {
-      if (this.fileValidity) {
-        // try to upload to Minio
-        let psu: PresignedUrlIF
-        try {
-          psu = await this.getPresignedUrl(file.name)
-          const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
-          if (!res || res.status !== StatusCodes.OK) throw new Error()
-        } catch {
-          // put file uploader into manual error mode by setting custom error message
-          this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
-          this.$forceUpdate() // force file upload component to react
-          return // don't add to list
-        }
-
-        // add properties reactively to business object
-        this.$set(this.business, 'affidavitFile', {
-          name: file.name,
-          lastModified: file.lastModified,
-          size: file.size
-        } as File)
-        this.$set(this.business, 'affidavitFileKey', psu.key)
-        this.$set(this.business, 'affidavitFileName', file.name)
-      }
-    } else {
-      // delete properties reactively when the file is cleared
-      this.$delete(this.business, 'affidavitFile')
-      this.$delete(this.business, 'affidavitFileKey')
-      this.$delete(this.business, 'affidavitFileName')
-      // FUTURE: should also delete the file from Minio (ticket #21110)
-    }
-  }
-
   /** Validates the form and other components. */
   @Watch('active')
   @Watch('getShowErrors')
@@ -783,19 +710,5 @@ label {
   margin-top: 1px;
   font-size: $px-14;
   color: $gray9;
-}
-
-// style the upload affidavit bullets
-ul {
-  list-style: none;
-  color: $gray7;
-
-  li::before {
-    content: "\2022";
-    display: inline-block;
-    width: 1.25em;
-    margin-left: -1.5em;
-    padding-left: 0.25rem;
-  }
 }
 </style>
