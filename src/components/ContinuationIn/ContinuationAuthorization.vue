@@ -172,10 +172,13 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   fileValidity = false
   customErrorMessage = ['', '', '', '', ''] // max 5 files
 
+  /**
+   * The minimum date for the Authorization Date:
+   * - the BC Founding Date (if it exists, ie, expro business)
+   * - else the Home Jurisdiction Incorporation Date (ie, manual entry)
+   * - else fall back to null (not undefined)
+   */
   get minAuthorizationDate (): string {
-    // the BC Founding Date (if it exists, ie, expro business)
-    // else the Home Jurisdiction Incorporation Date (ie, manual entry)
-    // else fall back to null (not undefined)
     return (
       this.getExistingBusinessInfo.bcFoundingDate ||
       this.getExistingBusinessInfo.homeIncorporationDate ||
