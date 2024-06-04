@@ -36,6 +36,7 @@
             :persistentHint="true"
             :initialValue="authorization.date"
             :inputRules="getShowErrors ? authorizationDateRules : []"
+            :minDate="minAuthorizationDate"
             :maxDate="getCurrentDate"
             @emitDateSync="authorization.date = $event"
           />
@@ -136,7 +137,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
-import { ContinuationAuthorizationIF, FormIF, PresignedUrlIF } from '@/interfaces'
+import { ContinuationAuthorizationIF, ExistingBusinessInfoIF, FormIF, PresignedUrlIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
@@ -160,6 +161,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getCurrentDate!: string
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
 
@@ -170,10 +172,31 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   fileValidity = false
   customErrorMessage = ['', '', '', '', ''] // max 5 files
 
+  /**
+   * The minimum date for the Authorization Date:
+   * - the BC Founding Date (if it exists, ie, expro business)
+   * - else the Home Jurisdiction Incorporation Date (ie, manual entry)
+   * - else fall back to null (not undefined)
+   */
+  get minAuthorizationDate (): string {
+    return (
+      this.getExistingBusinessInfo.bcFoundingDate ||
+      this.getExistingBusinessInfo.homeIncorporationDate ||
+      null
+    )
+  }
+
   get authorizationDateRules (): Array<VuetifyRuleFunction> {
+    const bcFoundingDate = this.getExistingBusinessInfo.bcFoundingDate
+    const homeIncorporationDate = this.getExistingBusinessInfo.homeIncorporationDate
+
     return [
       (v) => !!v || 'Authorization Date is required',
-      () => (this.authorization.date <= this.getCurrentDate) || 'Authorization Date cannot be in the future'
+      () => (this.authorization.date <= this.getCurrentDate) || 'Authorization Date cannot be in the future',
+      () => (!bcFoundingDate || (this.authorization.date >= bcFoundingDate)) ||
+        'Authorization Date cannot be before Date of Registration in B.C.',
+      () => (!homeIncorporationDate || (this.authorization.date >= homeIncorporationDate)) ||
+        'Authorization Date cannot be before Date of Incorporation in Home Jurisdiction'
     ]
   }
 
@@ -253,6 +276,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   }
 
   @Watch('getShowErrors')
+  @Watch('minAuthorizationDate') // because Authorization Date depends on this
   @Watch('authorization.date') // because Expiry Date depends on this
   private async onGetShowErrors (): Promise<void> {
     if (this.getShowErrors) {

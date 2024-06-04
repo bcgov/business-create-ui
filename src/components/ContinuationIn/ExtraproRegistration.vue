@@ -132,7 +132,7 @@
             sm="9"
           >
             <v-text-field
-              v-model="business.homeIdentifier"
+              v-model.trim="business.homeIdentifier"
               class="identifying-number-home"
               filled
               hide-details="auto"
@@ -159,7 +159,7 @@
             sm="9"
           >
             <v-text-field
-              v-model="business.homeLegalName"
+              v-model.trim="business.homeLegalName"
               class="name-home-jurisdiction"
               filled
               hide-details="auto"
@@ -475,13 +475,13 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   }
 
   readonly homeIdentifierRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Identifying Number is required',
-    (v) => (v && v.length <= 50) || 'Cannot exceed 50 characters'
+    (v) => !!v?.trim() || 'Identifying Number is required',
+    (v) => (v && v.trim().length <= 50) || 'Cannot exceed 50 characters'
   ]
 
   readonly homeLegalNameRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Name is required',
-    (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
+    (v) => !!v?.trim() || 'Name is required',
+    (v) => (v && v.trim().length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
@@ -640,10 +640,8 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
 
   /** Emits form validity. */
   @Watch('isBusinessActive')
-  @Watch('business.homeJurisdiction')
-  @Watch('business.homeIncorporationDate')
+  @Watch('business', { deep: true })
   @Watch('isContinuationInAffidavitRequired')
-  @Watch('business.affidavitFileKey')
   @Watch('formValid')
   @Emit('valid')
   private onComponentValid (): boolean {
