@@ -97,7 +97,7 @@
             sm="9"
           >
             <v-text-field
-              v-model="business.homeIdentifier"
+              v-model.trim="business.homeIdentifier"
               class="identifying-number"
               filled
               hide-details="auto"
@@ -124,7 +124,7 @@
             sm="9"
           >
             <v-text-field
-              v-model="business.homeLegalName"
+              v-model.trim="business.homeLegalName"
               class="business-name"
               filled
               hide-details="auto"
@@ -296,13 +296,13 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   formValid = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Identifying Number is required',
-    (v) => (v && v.length <= 50) || 'Cannot exceed 50 characters'
+    (v) => !!v?.trim() || 'Identifying Number is required',
+    (v) => (v && v.trim().length <= 50) || 'Cannot exceed 50 characters'
   ]
 
   readonly businessNameRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v || 'Business Name is required',
-    (v) => (v && v.length <= 1000) || 'Cannot exceed 1000 characters'
+    (v) => !!v?.trim() || 'Business Name is required',
+    (v) => (v && v.trim().length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
@@ -383,8 +383,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   }
 
   /** Emits form validity. */
-  @Watch('business.homeJurisdiction')
-  @Watch('business.homeIncorporationDate')
+  @Watch('business', { deep: true })
   @Watch('formValid')
   @Emit('valid')
   private onComponentValid (): boolean {
