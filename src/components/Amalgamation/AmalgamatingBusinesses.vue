@@ -135,7 +135,7 @@
               :showErrors="false"
               :businessLookup="{ ...EmptyBusinessLookup }"
               :BusinessLookupServices="BusinessLookupServices"
-              legalTypes="BC,BEN,CC,ULC,A"
+              legalTypes="A,BC,BEN,C,CBEN,CC,CCC,CUL,ULC"
               label="Business Name or Incorporation Number"
               @setBusiness="saveAmalgamatingBusiness($event)"
             />
