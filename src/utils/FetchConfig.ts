@@ -46,8 +46,8 @@ export async function FetchConfig (): Promise<any> {
     (import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_URL + import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_VERSION + '/')
   sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchApiUrl)
 
-  const businessApiKey: string = import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
-  sessionStorage.setItem('BUSINESS_API_KEY', businessApiKey)
+  const registriesSearchApiKey: string = import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
+  sessionStorage.setItem('REGISTRIES_SEARCH_API_KEY', registriesSearchApiKey)
 
   const authApiUrl: string = (import.meta.env.VUE_APP_AUTH_API_URL + import.meta.env.VUE_APP_AUTH_API_VERSION + '/')
   sessionStorage.setItem('AUTH_API_URL', authApiUrl)

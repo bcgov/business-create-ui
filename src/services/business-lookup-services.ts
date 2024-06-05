@@ -7,17 +7,17 @@ setActivePinia(createPinia())
 const store = useStore()
 
 /**
- * Class that provides integration with the BusinessLookup API.
+ * Class that provides integration with the Business Lookup API.
  */
 export default class BusinessLookupServices {
-  /** The Business API URL, from session storage. */
-  static get businessApiUrl (): string {
+  /** The Registries Search API URL, from session storage. */
+  static get searchApiUrl (): string {
     return sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
   }
 
-  /** The Business API Key, from session storage. */
-  static get businessApiKey (): string {
-    return sessionStorage.getItem('BUSINESS_API_KEY')
+  /** The Registries Search API Key, from session storage. */
+  static get searchApiKey (): string {
+    return sessionStorage.getItem('REGISTRIES_SEARCH_API_KEY')
   }
 
   /**
@@ -28,13 +28,13 @@ export default class BusinessLookupServices {
    * @returns a promise to return the search results
    */
   static async search (query: string, status: string, legalTypes: string): Promise<BusinessLookupResultIF[]> {
-    let url = this.businessApiUrl + 'businesses/search/facets?start=0&rows=20'
+    let url = this.searchApiUrl + 'businesses/search/facets?start=0&rows=20'
     url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
     url += `&query=value:${encodeURIComponent(query)}`
 
     const config = {
       headers: {
-        'x-apikey': this.businessApiKey,
+        'x-apikey': this.searchApiKey,
         'Account-Id': store.getAccountId
       }
     }
