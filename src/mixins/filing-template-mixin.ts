@@ -375,7 +375,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey,
           affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName
         },
-        authorization: this.getContinuationAuthorization,
+        authorization: {
+          files: this.getContinuationAuthorization.files,
+          date: this.getContinuationAuthorization.date,
+          expiryDate: this.getContinuationAuthorization.expiryDate || undefined // can't be null
+        },
         contactPoint: {
           email: this.getBusinessContact.email || '',
           phone: this.getBusinessContact.phone || '',
@@ -411,8 +415,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         legalName: this.getExistingBusinessInfo.bcLegalName
       }
     }
-
-    // FUTURE: save continuation authorization
 
     // Add court order / POA data.
     const courtOrder = this.getCourtOrderStep.courtOrder
