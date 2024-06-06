@@ -375,11 +375,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey,
           affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName
         },
-        authorization: {
-          files: this.getContinuationAuthorization.files,
-          date: this.getContinuationAuthorization.date,
-          expiryDate: this.getContinuationAuthorization.expiryDate || undefined // can't be null
-        },
         contactPoint: {
           email: this.getBusinessContact.email || '',
           phone: this.getBusinessContact.phone || '',
@@ -403,6 +398,15 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         isConfirmed: this.getExistingBusinessInfo?.isConfirmed || false,
         mode: this.getExistingBusinessInfo?.mode,
         status: this.getExistingBusinessInfo?.status
+      }
+    }
+
+    // Add continuation authorization.
+    if (this.getContinuationAuthorization) {
+      filing.continuationIn.authorization = {
+        files: this.getContinuationAuthorization.files,
+        date: this.getContinuationAuthorization.date,
+        expiryDate: this.getContinuationAuthorization.expiryDate || undefined // can't be null
       }
     }
 
