@@ -385,6 +385,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   /** Emits form validity. */
   @Watch('business', { deep: true })
   @Watch('formValid')
+  @Watch('getShowErrors')
   @Emit('valid')
   private onComponentValid (): boolean {
     // if we're here it's because the user has changed something
@@ -394,12 +395,16 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     // and we have the home incorporation date (custom component)
     // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
-    return (
-      !!this.business.homeJurisdiction &&
+    // show tick mark only when user visits Review Page
+    if (this.getShowErrors) {
+      return (
+        !!this.business.homeJurisdiction &&
       !!this.business.homeIncorporationDate &&
       (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
       this.formValid
-    )
+      )
+    }
+    return false
   }
 
   /** Emit whether we have become active or inactive. */

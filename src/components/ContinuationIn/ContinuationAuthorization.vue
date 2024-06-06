@@ -289,6 +289,21 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     }
   }
 
+  // reset the Authorization Date picker when Incorporation Date changes
+  // to a date after the current Authorization date
+  @Watch('minAuthorizationDate')
+  private resetAuthotrizationDate (): void {
+    const currentAuthDate = new Date(this.authorization.date)
+    const newMinDate = new Date(this.minAuthorizationDate)
+
+    if (newMinDate > currentAuthDate) {
+      this.authorization.date = null
+      this.$nextTick(() => {
+        this.$refs.authorizationDateRef.clearDate() // Reset the Authorization date picker
+      })
+    }
+  }
+
   @Watch('authorization', { deep: true })
   @Emit('valid')
   private onComponentValid (): boolean {
