@@ -270,6 +270,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
         fileName: file.name
       })
     } else {
+      // delete file from Minio; ignore errors
+      await this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       // remove file from array
       this.authorization.files.splice(index, 1)
     }

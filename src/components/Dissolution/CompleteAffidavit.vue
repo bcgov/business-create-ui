@@ -347,6 +347,9 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
         this.uploadAffidavitDocKey = null
       }
     } else {
+      // delete file from Minio; ignore errors
+      await this.deleteDocument(this.uploadAffidavitDocKey).catch(() => null)
+      // clear local variables
       this.uploadAffidavitDoc = null
       this.uploadAffidavitDocKey = null
       this.setAffidavit({

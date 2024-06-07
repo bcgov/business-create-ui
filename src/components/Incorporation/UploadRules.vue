@@ -354,6 +354,9 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.uploadRulesDocKey = null
       }
     } else {
+      // delete file from Minio; ignore errors
+      await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null
       this.setRules({

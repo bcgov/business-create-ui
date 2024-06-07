@@ -413,6 +413,9 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         this.uploadMemorandumDocKey = null
       }
     } else {
+      // delete file from Minio; ignore errors
+      await this.deleteDocument(this.uploadMemorandumDocKey).catch(() => null)
+      // clear local variables
       this.uploadMemorandumDoc = null
       this.uploadMemorandumDocKey = null
       this.setMemorandum({
