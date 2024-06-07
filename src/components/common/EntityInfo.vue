@@ -115,6 +115,7 @@ export default class EntityInfo extends Mixins(DateMixin) {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
   @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRegistrationFiling!: boolean
   @Getter(useStore) isRoleStaff!: boolean
@@ -166,14 +167,14 @@ export default class EntityInfo extends Mixins(DateMixin) {
   }
 
   get email (): string {
-    if (this.isIncorporationFiling) {
+    if (this.isIncorporationFiling || this.isContinuationInFiling) {
       return this.getUserEmail
     }
     return this.getBusinessContact.email
   }
 
   get phone (): string {
-    if (this.isIncorporationFiling) {
+    if (this.isIncorporationFiling || this.isContinuationInFiling) {
       return this.getUserPhone
     }
     const phone = this.getBusinessContact.phone
