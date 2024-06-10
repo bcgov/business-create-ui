@@ -34,9 +34,9 @@ describe('Summary Business Home Jurisdiction component', () => {
     expect(articles.at(1).find('label').text()).toBe('Registration Number in B.C.')
     expect(articles.at(2).find('label').text()).toBe('Name in B.C.')
     expect(articles.at(3).find('label').text()).toBe('Date of Registration in B.C.')
-    expect(articles.at(4).find('label').text()).toBe('Registration Number in Home Jurisdiction')
+    expect(articles.at(4).find('label').text()).toBe('Identifying Number in Home Jurisdiction')
     expect(articles.at(5).find('label').text()).toBe('Name in Home Jurisdiction')
-    expect(articles.at(6).find('label').text()).toBe('Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction')
+    expect(articles.at(6).find('label').text()).toBe('Date of Incorporation')
     expect(articles.at(7).find('label').text()).toBe('Business Number')
 
     wrapper.destroy()

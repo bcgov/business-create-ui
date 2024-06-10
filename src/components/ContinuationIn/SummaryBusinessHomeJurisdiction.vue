@@ -123,7 +123,7 @@
           </v-row>
         </article>
 
-        <!-- Registration Number in Home Jurisdiction -->
+        <!-- Identifying Number in Home Jurisdiction -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -131,14 +131,14 @@
               sm="3"
               class="pr-4"
             >
-              <label>Registration Number in Home Jurisdiction</label>
+              <label>Identifying Number in Home Jurisdiction</label>
             </v-col>
             <v-col
               cols="12"
               sm="9"
               class="pt-4 pt-sm-0"
             >
-              <div id="registration-number-home">
+              <div id="identifying-number-home">
                 {{ getExistingBusinessInfo?.homeIdentifier || '[Unknown]' }}
               </div>
             </v-col>
@@ -167,7 +167,7 @@
           </v-row>
         </article>
 
-        <!-- Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction -->
+        <!-- Date of Incorporation -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -175,7 +175,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction</label>
+              <label>Date of Incorporation</label>
             </v-col>
             <v-col
               cols="12"
