@@ -91,11 +91,12 @@ export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {
         this.$set(this.business, 'affidavitFileName', file.name)
       }
     } else {
+      // delete file from Minio; ignore errors
+      await this.deleteDocument(this.business.affidavitFileKey).catch(() => null)
       // delete properties reactively when the file is cleared
       this.$delete(this.business, 'affidavitFile')
       this.$delete(this.business, 'affidavitFileKey')
       this.$delete(this.business, 'affidavitFileName')
-      // FUTURE: should also delete the file from Minio
     }
   }
 }

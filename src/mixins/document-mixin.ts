@@ -71,6 +71,22 @@ export default class DocumentMixin extends Vue {
   }
 
   /**
+   * Deletes a Minio document from Legal API.
+   * @param documentKey the document key
+   * @returns a promise to return the axios response or the error response
+   */
+  async deleteDocument (documentKey: string): Promise<AxiosResponse> {
+    // safety checks
+    if (!documentKey) {
+      throw new Error('Invalid parameters')
+    }
+
+    const url = `documents/${documentKey}`
+
+    return axios.delete(url)
+  }
+
+  /**
    * Downloads a Minio document from Legal API and prompts browser to open/save it.
    * @param documentKey the document key
    * @param documentName the document filename

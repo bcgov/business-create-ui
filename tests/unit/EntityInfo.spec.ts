@@ -1,4 +1,4 @@
-import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory'
+import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import EntityInfo from '@/components/common/EntityInfo.vue'
 import { FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/enums/'
@@ -14,9 +14,9 @@ vi.mock('@/utils/feature-flags', () => {
 // Test Case Data
 const mockEntityInfo = [
   {
-    entityType: 'CP',
+    entityType: CorpTypeCd.COOP,
     tombstone: {
-      filingType: 'incorporationApplication'
+      filingType: FilingTypes.INCORPORATION_APPLICATION
     },
     description: 'BC Cooperative Association',
     numberedDesc: 'Numbered Cooperative Association',
@@ -27,9 +27,9 @@ const mockEntityInfo = [
     nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
-    entityType: 'BEN',
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
     tombstone: {
-      filingType: 'incorporationApplication'
+      filingType: FilingTypes.INCORPORATION_APPLICATION
     },
     description: 'BC Benefit Company',
     numberedDesc: 'Numbered Benefit Company',
@@ -40,9 +40,9 @@ const mockEntityInfo = [
     nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
-    entityType: 'BC',
+    entityType: CorpTypeCd.BC_COMPANY,
     tombstone: {
-      filingType: 'incorporationApplication'
+      filingType: FilingTypes.INCORPORATION_APPLICATION
     },
     description: 'BC Limited Company',
     numberedDesc: 'Numbered Limited Company',
@@ -53,9 +53,9 @@ const mockEntityInfo = [
     nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
-    entityType: 'ULC',
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
     tombstone: {
-      filingType: 'incorporationApplication'
+      filingType: FilingTypes.INCORPORATION_APPLICATION
     },
     description: 'BC Unlimited Liability Company',
     numberedDesc: 'Numbered Unlimited Liability Company',
@@ -66,9 +66,9 @@ const mockEntityInfo = [
     nameRequestApprovedName: 'Xyz Ltd.'
   },
   {
-    entityType: 'CC',
+    entityType: CorpTypeCd.BC_CCC,
     tombstone: {
-      filingType: 'incorporationApplication'
+      filingType: FilingTypes.INCORPORATION_APPLICATION
     },
     description: 'BC Community Contribution Company',
     numberedDesc: '',
@@ -77,28 +77,129 @@ const mockEntityInfo = [
       nrNum: 'NR 1234567'
     },
     nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Limited Company',
+    numberedDesc: '',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Limited Company',
+    numberedDesc: 'Numbered Limited Company',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Benefit Company',
+    numberedDesc: '',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Benefit Company',
+    numberedDesc: 'Numbered Benefit Company',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Community Contribution Company',
+    numberedDesc: '',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Community Contribution Company',
+    numberedDesc: 'Numbered Community Contribution Company',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Unlimited Liability Company',
+    numberedDesc: '',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
+    tombstone: {
+      filingType: FilingTypes.CONTINUATION_IN
+    },
+    description: 'BC Unlimited Liability Company',
+    numberedDesc: 'Numbered Unlimited Liability Company',
+    tempId: 'T1234567',
+    nameRequest: {
+      nrNum: 'NR 1234567'
+    },
+    nameRequestApprovedName: 'Xyz Ltd.'
   }
 ]
 
-//
-// FUTURE: These tests generate a lot of
-// "UnhandledPromiseRejectionWarning:NavigationDuplicated"
-// and
-// "UnhandledPromiseRejectionWarning: Unhandled promise rejection"
-// warnings, which should be cleaned up.
-//
 for (const mock of mockEntityInfo) {
   describe(`Entity Info component for a ${mock.entityType} with a NR`, () => {
     let wrapper: any
 
     beforeEach(() => {
-      wrapper = wrapperFactory(EntityInfo, null, {
-        tombstone: mock.tombstone,
-        entityType: mock.entityType,
-        tempId: mock.tempId,
-        nameRequest: mock.nameRequest,
-        nameRequestApprovedName: mock.nameRequestApprovedName
-      }, 'incorporation-define-company')
+      wrapper = shallowWrapperFactory(
+        EntityInfo,
+        null,
+        {
+          tombstone: mock.tombstone,
+          entityType: mock.entityType,
+          tempId: mock.tempId,
+          nameRequest: mock.nameRequest,
+          nameRequestApprovedName: mock.nameRequestApprovedName
+        }
+      )
     })
 
     afterEach(() => {
@@ -109,8 +210,14 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain('Xyz Ltd.')
 
-      expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
-        .toContain(`${mock.description} Incorporation Application`)
+      if (mock.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION) {
+        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
+          .toContain(`${mock.description} Incorporation Application`)
+      }
+      if (mock.tombstone.filingType === FilingTypes.CONTINUATION_IN) {
+        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
+          .toContain(`${mock.description} Continuation In Application`)
+      }
 
       expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
         .toContain('NR 1234567')
@@ -121,13 +228,17 @@ for (const mock of mockEntityInfo) {
     let wrapper: any
 
     beforeEach(() => {
-      wrapper = wrapperFactory(EntityInfo, null, {
-        tombstone: mock.tombstone,
-        entityType: mock.entityType,
-        tempId: mock.tempId,
-        nameRequest: { nrNum: null },
-        nameRequestApprovedName: null
-      }, 'incorporation-define-company')
+      wrapper = shallowWrapperFactory(
+        EntityInfo,
+        null,
+        {
+          tombstone: mock.tombstone,
+          entityType: mock.entityType,
+          tempId: mock.tempId,
+          nameRequest: { nrNum: null },
+          nameRequestApprovedName: null
+        }
+      )
     })
 
     afterEach(() => {
@@ -138,8 +249,14 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#entity-legal-name').textContent)
         .toContain(`${mock.numberedDesc}`)
 
-      expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
-        .toContain(`${mock.description} Incorporation Application`)
+      if (mock.tombstone.filingType === FilingTypes.INCORPORATION_APPLICATION) {
+        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
+          .toContain(`${mock.description} Incorporation Application`)
+      }
+      if (mock.tombstone.filingType === FilingTypes.CONTINUATION_IN) {
+        expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
+          .toContain(`${mock.description} Continuation In Application`)
+      }
     })
   })
 }
@@ -167,6 +284,7 @@ describe('Entity Info component for firms', () => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       EntityInfo,
       null,
@@ -188,6 +306,7 @@ describe('Entity Info component for firms', () => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       EntityInfo,
       null,
