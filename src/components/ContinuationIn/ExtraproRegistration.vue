@@ -655,16 +655,14 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
     // show tick mark only when user visits Review Page
-    if (this.getShowErrors) {
-      return (
-        this.isBusinessActive &&
+    return (
+      this.getShowErrors &&
+      this.isBusinessActive &&
       !!this.business.homeJurisdiction &&
       !!this.business.homeIncorporationDate &&
       (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
       this.formValid
-      )
-    }
-    return false
+    )
   }
 
   /** Informs parent component whether we have become active or inactive. */

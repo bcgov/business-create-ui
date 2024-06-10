@@ -396,15 +396,13 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
     // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
     // show tick mark only when user visits Review Page
-    if (this.getShowErrors) {
-      return (
-        !!this.business.homeJurisdiction &&
-      !!this.business.homeIncorporationDate &&
-      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
-      this.formValid
-      )
-    }
-    return false
+    return (
+      this.getShowErrors &&
+    !!this.business.homeJurisdiction &&
+    !!this.business.homeIncorporationDate &&
+    (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
+    this.formValid
+    )
   }
 
   /** Emit whether we have become active or inactive. */
