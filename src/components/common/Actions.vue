@@ -128,6 +128,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   @Getter(useStore) isShowFilePayBtn!: boolean
   @Getter(useStore) isShowReviewConfirmBtn!: boolean
 
+  @Action(useStore) clearUnsavedDocuments!: () => void
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
   @Action(useStore) setIsFilingPaying!: (x: boolean) => void
@@ -171,8 +172,9 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       // Save draft filing
       await LegalServices.updateFiling(this.getEntityIdentifier, filing, true)
 
-      // clear flag
+      // clear flag and list of unsaved documents
       this.setHaveChanges(false)
+      this.clearUnsavedDocuments()
     } catch (error) {
       console.log('Error on onClickSave(): ', error) // eslint-disable-line no-console
       this.$root.$emit('save-error-event', error)
@@ -200,8 +202,9 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       // Save draft filing
       await LegalServices.updateFiling(this.getEntityIdentifier, filing, true)
 
-      // clear flag
+      // clear flag and list of unsaved documents
       this.setHaveChanges(false)
+      this.clearUnsavedDocuments()
     } catch (error) {
       console.log('Error on onClickSaveResume(): ', error) // eslint-disable-line no-console
       this.$root.$emit('save-error-event', error)
@@ -276,8 +279,9 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         // Save filing
         filingComplete = await LegalServices.updateFiling(this.getEntityIdentifier, filing, false)
 
-        // clear flag
+        // clear flag and list of unsaved documents
         this.setHaveChanges(false)
+        this.clearUnsavedDocuments()
       } catch (error) {
         console.log('Error updating filing in onClickFilePay(): ', error) // eslint-disable-line no-console
         this.$root.$emit('save-error-event', error)

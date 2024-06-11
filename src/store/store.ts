@@ -1089,9 +1089,22 @@ export const useStore = defineStore('store', {
     /** The dissolution statement options. */
     getAffidavitResources (): AffidavitResourceIF {
       return this.resourceModel.affidavit
+    },
+    getUnsavedDocuments (): Array<string> {
+      return this.stateModel.unsavedDocuments
     }
   },
   actions: {
+    addUnsavedDocument (key: string) {
+      this.stateModel.unsavedDocuments.push(key)
+    },
+    clearUnsavedDocuments () {
+      this.stateModel.unsavedDocuments = []
+    },
+    removeUnsavedDocument (key: string) {
+      const index = this.stateModel.unsavedDocuments.indexOf(key)
+      if (index >= 0) this.stateModel.unsavedDocuments.splice(index, 1)
+    },
     setBusinessId (businessId: string) {
       this.stateModel.business.businessId = businessId
     },

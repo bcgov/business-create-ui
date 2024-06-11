@@ -84,6 +84,9 @@ export interface StateModelIF {
 
   // to calculate if this is a mobile screen
   windowWidth: number
+
+  // list of unsaved documents (keys)
+  unsavedDocuments: Array<string>
 }
 
 export interface StateIF {

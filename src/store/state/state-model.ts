@@ -236,5 +236,6 @@ export const stateModel: StateModelIF = {
   },
   completingParty: null,
   parties: null,
-  windowWidth: 0
+  windowWidth: 0,
+  unsavedDocuments: []
 }

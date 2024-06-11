@@ -256,7 +256,8 @@ import * as Dialogs from '@/dialogs'
 import * as Views from '@/views'
 
 // Mixins, interfaces, etc
-import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { CommonMixin, DateMixin, DocumentMixin, FilingTemplateMixin, NameRequestMixin }
+  from '@/mixins'
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
@@ -288,7 +289,9 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
     ...Views
   }
 })
-export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class App extends Mixins(
+  CommonMixin, DateMixin, DocumentMixin, FilingTemplateMixin, NameRequestMixin
+) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -314,7 +317,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
   @Getter(useStore) isSbcStaff!: boolean
+  // @Getter(useStore) isTypeCoop!: boolean
+  // @Getter(useStore) isTypeFirm!: boolean
 
+  @Action(useStore) clearUnsavedDocuments!: () => void
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
@@ -519,7 +525,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.updateCurrentJsDateId = setInterval(this.updateCurrentJsDate, 60000)
 
     // add handler to prompt user if there are changes, before unloading this page
-    window.onbeforeunload = (event) => {
+    // NB: this is not reliably fired by browsers, especially on mobile
+    window.onbeforeunload = (event: BeforeUnloadEvent) => {
       if (this.getHaveChanges) {
         event.preventDefault()
         // NB: custom text is not supported in all browsers
@@ -527,8 +534,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
     }
 
+    // add handler to delete unsaved documents when page is hidden / unloaded
+    // (don't use window.onload as it's deprecated)
+    // NB: this is not reliably fired by browsers, especially on mobile
+    window.onpagehide = async (event: PageTransitionEvent) => {
+      if (!event.persisted) {
+        await this.deleteUnsavedDocuments()
+      }
+    }
+
     // listen for changes to the window size to create responsive reactivity
-    window.addEventListener('resize', () => this.setWindowWidth(window.innerWidth))
+    window.onresize = () => this.setWindowWidth(window.innerWidth)
 
     // listen for save error event
     this.$root.$on('save-error-event', async error => {
@@ -537,8 +553,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.saveWarnings = error?.response?.data?.warnings || []
 
       if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
-        // changes were saved if a 402 is received, so clear flag
+        // changes were saved if a 402 is received, so clear flag and list of unsaved documents
         this.setHaveChanges(false)
+        this.clearUnsavedDocuments()
         this.paymentErrorDialog = true
       } else {
         console.log('Save error =', error) // eslint-disable-line no-console
@@ -578,14 +595,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.$root.$off('name-request-retrieve-error')
   }
 
-  /** Called to navigate to My Business Registry. */
-  goToManageBusinessDashboard (): void {
-    this.fileAndPayInvalidNameRequestDialog = false
-    const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
-    this.setHaveChanges(false)
-    Navigate(manageBusinessUrl)
-  }
-
   /** Called to navigate to entity's dashboard. */
   goToDashboard (force = false): void {
     // check if there are no data changes
@@ -612,7 +621,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // nothing to do
     }).catch(() => {
       // if we get here, Cancel was clicked
-      // ignore changes
+      // ignore changes but don't clear list of unsaved documents -- they still eed to be deleted
       this.setHaveChanges(false)
       // navigate to dashboard
       const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')

@@ -1,4 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
+import { Action, Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
@@ -7,6 +9,11 @@ import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
 @Component({})
 export default class DocumentMixin extends Vue {
+  @Getter(useStore) getUnsavedDocuments!: Array<string>
+
+  @Action(useStore) addUnsavedDocument!: (x: string) => void
+  @Action(useStore) removeUnsavedDocument!: (x: string) => void
+
   readonly UPLOAD_FAILED_MESSAGE = 'An error occurred while uploading.  Please try again.'
   readonly MAX_FILE_SIZE = 30 * 1024 // 30 MB in KB
   readonly pageSizeDict = {
@@ -18,6 +25,7 @@ export default class DocumentMixin extends Vue {
     }
   }
 
+  /** The PDF library object. */
   pdfjsLib: any
 
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
@@ -54,14 +62,18 @@ export default class DocumentMixin extends Vue {
    * @returns a promise to return the axios response or the error response
    */
   async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
+    // save document key in case the current draft/session isn't saved to Legal API
+    this.addUnsavedDocument(key)
+
     const options = {
       headers: {
         'Content-Type': file.type,
-        'x-amz-meta-userid': `${userId}`,
-        'x-amz-meta-key': `${key}`,
+        'x-amz-meta-userid': userId,
+        'x-amz-meta-key': key,
         'Content-Disposition': `attachment; filename=${file.name}`
       }
     }
+
     return axios.put(url, file, options)
       .then(response => {
         return response
@@ -71,19 +83,31 @@ export default class DocumentMixin extends Vue {
   }
 
   /**
-   * Deletes a Minio document from Legal API.
-   * @param documentKey the document key
+   * Deletes a Minio document via Legal API.
+   * @param key the document key
+   * @param deleteKey whether to delete the key from the unsaved documents list
    * @returns a promise to return the axios response or the error response
    */
-  async deleteDocument (documentKey: string): Promise<AxiosResponse> {
-    // safety checks
-    if (!documentKey) {
-      throw new Error('Invalid parameters')
+  async deleteDocument (key: string, deleteKey = true): Promise<AxiosResponse> {
+    if (deleteKey) {
+      // delete key from unsaved documents list
+      this.removeUnsavedDocument(key)
     }
 
-    const url = `documents/${documentKey}`
+    return axios.delete(`documents/${key}`)
+  }
 
-    return axios.delete(url)
+  /**
+   * Deletes documents uploaded in this session but where the draft filing, and hence the file keys,
+   * was not saved to the API. This is to prevent orphaned documents in Minio.
+   */
+  async deleteUnsavedDocuments (): Promise<Array<any>> {
+    const promises = []
+    for (const key of this.getUnsavedDocuments) {
+      promises.push(this.deleteDocument(key, false))
+    }
+    // make all API calls concurrently without rejection
+    return Promise.allSettled(promises)
   }
 
   /**
