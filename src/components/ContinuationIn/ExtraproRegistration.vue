@@ -195,7 +195,7 @@
               :persistentHint="true"
               :initialValue="business.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
-              :maxDate="getCurrentDate"
+              :maxDate="business.bcFoundingDate || getCurrentDate"
               @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
           </v-col>
@@ -487,8 +487,11 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v) => !!v || 'Date of Incorporation is required',
-      () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
-        'Date of Incorporation cannot be in the future'
+      () => (this.business.bcFoundingDate && this.business.homeIncorporationDate <= this.getCurrentDate) ||
+        'Date of Incorporation cannot be in the future',
+      () => !this.business.bcFoundingDate ||
+        (this.business.homeIncorporationDate <= this.business.bcFoundingDate) ||
+        'Date of Incorporation in home jurisdiction must be before Date of Registration in BC'
     ]
   }
 
@@ -643,6 +646,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   @Watch('business', { deep: true })
   @Watch('isContinuationInAffidavitRequired')
   @Watch('formValid')
+  @Watch('getShowErrors')
   @Emit('valid')
   private onComponentValid (): boolean {
     // if we're here it's because the user has changed something
@@ -653,7 +657,9 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     // and we have the home incorporation date (custom component)
     // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
+    // show tick mark only when user visits Review Page
     return (
+      this.getShowErrors &&
       this.isBusinessActive &&
       !!this.business.homeJurisdiction &&
       !!this.business.homeIncorporationDate &&
