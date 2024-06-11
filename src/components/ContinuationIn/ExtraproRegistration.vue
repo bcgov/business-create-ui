@@ -195,7 +195,7 @@
               :persistentHint="true"
               :initialValue="business.homeIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
-              :maxDate="getCurrentDate"
+              :maxDate="business.bcFoundingDate || getCurrentDate"
               @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
           </v-col>
@@ -487,8 +487,11 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v) => !!v || 'Date of Incorporation is required',
-      () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
-        'Date of Incorporation cannot be in the future'
+      () => (this.business.bcFoundingDate && this.business.homeIncorporationDate <= this.getCurrentDate) ||
+        'Date of Incorporation cannot be in the future',
+      () => !this.business.bcFoundingDate ||
+        (this.business.homeIncorporationDate <= this.business.bcFoundingDate) ||
+        'Date of Incorporation in home jurisdiction must be before Date of Registration in BC'
     ]
   }
 
