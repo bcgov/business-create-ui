@@ -281,7 +281,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   @Watch('getShowErrors')
   @Watch('minAuthorizationDate') // because Authorization Date depends on this
   @Watch('authorization.date') // because Expiry Date depends on this
-  @Watch('getExistingBusinessInfo.homeIncorporationDate') // because Authorization Date validity depends on this
+  //@Watch('getExistingBusinessInfo.homeIncorporationDate') // because Authorization Date validity depends on this
   private async onGetShowErrors (): Promise<void> {
     if (this.getShowErrors) {
       // wait for form to finish rendering
@@ -303,7 +303,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     // this component is valid if we have the valid authorization date
     // and at least one file uploaded
     return (
-      !!this.authorization.date &&
       this.authorizationDateValid &&
       (this.authorization.files.length >= 1)
     )
