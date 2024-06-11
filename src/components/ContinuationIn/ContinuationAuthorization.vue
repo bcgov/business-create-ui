@@ -169,6 +169,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   // Local properties
   authorization = null as ContinuationAuthorizationIF
+  authorizationDateValid = false
   fileValidity = false
   customErrorMessage = ['', '', '', '', ''] // max 5 files
 
@@ -280,19 +281,20 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   @Watch('getShowErrors')
   @Watch('minAuthorizationDate') // because Authorization Date depends on this
   @Watch('authorization.date') // because Expiry Date depends on this
+  @Watch('getExistingBusinessInfo.homeIncorporationDate') // because Authorization Date validity depends on this
   private async onGetShowErrors (): Promise<void> {
     if (this.getShowErrors) {
       // wait for form to finish rendering
       await this.$nextTick()
       // validate the form and our custom components that don't support form validation
       this.$refs.formRef.validate()
-      this.$refs.authorizationDateRef.validateForm()
+      this.authorizationDateValid = this.$refs.authorizationDateRef.validateForm()
       this.$refs.expiryDateRef.validateForm()
     }
   }
 
   @Watch('authorization', { deep: true })
-  @Watch('minAuthorizationDate') // re-validate when the min Authorization Date changes
+  @Watch('authorizationDateValid') // re-validate when the Authorization Date validity changes
   @Emit('valid')
   private onComponentValid (): boolean {
     // sync local object to the store
@@ -302,7 +304,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     // and at least one file uploaded
     return (
       !!this.authorization.date &&
-      new Date(this.minAuthorizationDate) <= new Date(this.authorization.date) &&
+      this.authorizationDateValid &&
       (this.authorization.files.length >= 1)
     )
   }
