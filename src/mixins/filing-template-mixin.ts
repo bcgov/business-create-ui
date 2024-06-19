@@ -405,8 +405,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     if (this.getContinuationAuthorization) {
       filing.continuationIn.authorization = {
         files: this.getContinuationAuthorization.files,
-        date: this.getContinuationAuthorization.date,
-        expiryDate: this.getContinuationAuthorization.expiryDate || undefined // can't be null
+        date: this.getContinuationAuthorization.date
       }
     }
 

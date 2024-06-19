@@ -17,8 +17,6 @@ describe('Continuation Authorization component', () => {
     const formRows = wrapper.findAll('form > .row')
     expect(formRows.at(0).find('.col-sm-3 label').text()).toBe('Authorization Date')
     expect(formRows.at(0).find('.col-sm-9').findComponent(DatePickerShared).exists()).toBe(true)
-    expect(formRows.at(1).find('.col-sm-3 label').text()).toBe('Expiry Date')
-    expect(formRows.at(1).find('.col-sm-9').findComponent(DatePickerShared).exists()).toBe(true)
 
     expect(wrapper.find('header').exists()).toBe(true)
     expect(wrapper.find('header p').text()).toContain('Upload documents that support proof of')

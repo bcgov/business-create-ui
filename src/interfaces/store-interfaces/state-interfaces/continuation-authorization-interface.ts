@@ -5,5 +5,4 @@ export interface ContinuationAuthorizationIF {
     fileName: string
   }>
   date: string // YYYY-MM-DD
-  expiryDate?: string // YYYY-MM-DD
 }

@@ -42,42 +42,9 @@
           />
         </v-col>
       </v-row>
-
-      <!-- Expiry Date -->
-      <v-row
-        class="mt-4"
-        no-gutters
-      >
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Expiry Date</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-          class="pl-8"
-        >
-          <DatePickerShared
-            id="expiry-date"
-            ref="expiryDateRef"
-            title="Expiry Date (Optional)"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            hint="The date the authorization expires"
-            :persistentHint="true"
-            :initialValue="authorization.expiryDate"
-            :inputRules="getShowErrors ? expiryDateRules: []"
-            :minDate="getCurrentDate"
-            @emitDateSync="authorization.expiryDate = $event"
-          />
-        </v-col>
-      </v-row>
     </v-form>
 
-    <v-divider class="mt-6 mb-8" />
+    <v-divider class="mt-4 mb-8" />
 
     <header>
       <p>
@@ -153,7 +120,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   // Refs
   $refs!: {
     authorizationDateRef: DatePickerShared,
-    expiryDateRef: DatePickerShared,
     formRef: FormIF
   }
 
@@ -170,7 +136,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   // Local properties
   authorization = null as ContinuationAuthorizationIF
   authorizationDateValid = false
-  expiryDateValid = false
   fileValidity = false
   customErrorMessage = ['', '', '', '', ''] // max 5 files
 
@@ -202,13 +167,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     ]
   }
 
-  get expiryDateRules (): Array<VuetifyRuleFunction> {
-    return [
-      () => !this.authorization.expiryDate ||
-        (this.authorization.expiryDate >= this.getCurrentDate) || 'Expiry Date cannot be in the past'
-    ]
-  }
-
   /** The number of file upload components to display (max 5). */
   get numUploads (): number {
     return Math.min((this.authorization.files.length + 1), 5)
@@ -217,7 +175,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   /** Called when this component is mounted. */
   mounted (): void {
     this.authorization = this.getContinuationAuthorization ||
-      { files: [], date: null, expiryDate: null } as ContinuationAuthorizationIF
+      { files: [], date: null } as ContinuationAuthorizationIF
   }
 
   /**
@@ -281,22 +239,19 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Watch('getShowErrors')
   @Watch('minAuthorizationDate') // because Authorization Date depends on this
-  @Watch('authorization.date') // because Expiry Date depends on this
-  @Watch('authorization.expiryDate')
+  @Watch('authorization.date') // in case this changes
   private async onGetShowErrors (): Promise<void> {
     if (this.getShowErrors) {
       // wait for form to finish rendering
       await this.$nextTick()
-      // validate the form and our custom components that don't support form validation
+      // validate the form and our custom component that doesn't support form validation
       this.$refs.formRef.validate()
       this.authorizationDateValid = this.$refs.authorizationDateRef.validateForm()
-      this.expiryDateValid = this.$refs.expiryDateRef.validateForm()
     }
   }
 
   @Watch('authorization', { deep: true })
   @Watch('authorizationDateValid') // re-validate when the Authorization Date validity changes
-  @Watch('expiryDateValid')
   @Emit('valid')
   private onComponentValid (): boolean {
     // sync local object to the store
@@ -306,7 +261,6 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     // and at least one file uploaded
     return (
       this.authorizationDateValid &&
-      this.expiryDateValid &&
       (this.authorization.files.length >= 1)
     )
   }
@@ -333,8 +287,7 @@ label {
   padding-right: 1rem !important;
 }
 
-#authorization-date,
-#expiry-date {
+#authorization-date {
   // show pointer on hover
   :deep(.v-input__slot) {
     pointer-events: auto;
