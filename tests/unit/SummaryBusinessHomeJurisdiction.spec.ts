@@ -56,11 +56,10 @@ describe('Summary Business Home Jurisdiction component', () => {
     expect(wrapper.find('.business-home-step-error-message a span').text()).toBe('Return to this step to finish it')
 
     expect(wrapper.find('#continuation-authorization-summary').exists()).toBe(true)
-    const articles = wrapper.findAll('#continuation-authorization-summary article')
 
+    const articles = wrapper.findAll('#continuation-authorization-summary article')
     expect(articles.at(0).find('label').text()).toBe('Continuation Authorization')
     expect(articles.at(1).find('label').text()).toBe('Authorization Date')
-    expect(articles.at(2).find('label').text()).toBe('Expiry Date')
 
     wrapper.destroy()
   })

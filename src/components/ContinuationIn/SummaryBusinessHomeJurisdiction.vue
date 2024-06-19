@@ -304,28 +304,6 @@
             </v-col>
           </v-row>
         </article>
-
-        <!-- Expiry Date -->
-        <article class="section-container">
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Expiry Date</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="expiry-date">
-                {{ expiryDate || '[Not entered]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
       </div>
     </section>
   </div>
@@ -400,11 +378,6 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, D
     return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.date, true, false)
   }
 
-  /** The formatted expiry date. */
-  get expiryDate (): string {
-    return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.expiryDate, true, false)
-  }
-
   /** Downloads the director affidavit document. */
   async downloadAffidavitDocument (): Promise<void> {
     await this.download(this.getExistingBusinessInfo.affidavitFileKey,
@@ -447,6 +420,11 @@ article:not(:first-child) {
 // clear bottom whitespace for all articles except last one
 article:not(:last-child) {
   padding-bottom: 0;
+}
+
+// vertically align file buttons with label
+#continuation-authorization-summary .col-sm-9 {
+  margin-top: -6px !important;
 }
 
 .download-affidavit-btn,
