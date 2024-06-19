@@ -65,7 +65,7 @@ jobs:
         with:
           name: codecov-business-create
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN}}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build-check:
     needs: setup-job
