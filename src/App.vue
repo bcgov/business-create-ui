@@ -700,6 +700,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
+      // get Keycloak roles
+      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
+        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
       // handle the filing according to whether we have a business id or temp id
       try {
         // safety checks
@@ -722,13 +729,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.fetchErrorDialog = !this.isErrorDialog
         throw error // go to catch()
       }
-
-      // get Keycloak roles
-      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
-        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
 
       // Now that we know what type of filing this is, and what the user's roles are,
       // add staff check for certain filings.
