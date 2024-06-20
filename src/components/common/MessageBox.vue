@@ -23,6 +23,7 @@ export default class MessageBox extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 .v-card {
   div {
     font-size: $px-14;

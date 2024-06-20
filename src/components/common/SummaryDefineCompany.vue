@@ -245,7 +245,9 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isTypeBcCcc!: boolean
   @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isTypeCccContinueIn!: boolean
   @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isTypeUlcContinueIn!: boolean
 
   /** Whether this section is invalid. */
   get invalidSection (): boolean {
@@ -268,10 +270,13 @@ export default class SummaryDefineCompany extends Vue {
     if (this.getNameRequestApprovedName) return this.getNameRequestApprovedName
 
     // otherwise name will be created from new incorporation number
-    const prefix = '[Incorporation Number]'
-    if (this.isTypeBcCcc) return `${prefix} B.C. COMMUNITY CONTRIBUTION COMPANY`
-    if (this.isTypeBcUlcCompany) return `${prefix} B.C. UNLIMITED LIABILITY COMPANY`
-    return `${prefix} B.C. LTD.`
+    if (this.isTypeBcCcc || this.isTypeCccContinueIn) {
+      return '[Incorporation Number] B.C. COMMUNITY CONTRIBUTION COMPANY LTD.'
+    }
+    if (this.isTypeBcUlcCompany || this.isTypeUlcContinueIn) {
+      return '[Incorporation Number] B.C. UNLIMITED LIABILITY COMPANY'
+    }
+    return '[Incorporation Number] B.C. LTD.'
   }
 
   /** The entity description. */

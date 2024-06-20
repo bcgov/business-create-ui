@@ -36,7 +36,7 @@
               :businessId="getBusinessId"
               :companyName="companyName"
               :correctionNameChoices="correctionNameChoices"
-              :entityType="null"
+              :entityType="getEntityType"
               :fetchAndValidateNr="fetchAndValidateNr"
               :formType="formType"
               :nameRequest="getNameRequest"

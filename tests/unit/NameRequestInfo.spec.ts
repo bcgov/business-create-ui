@@ -265,9 +265,7 @@ describe('Name Request Info component without a NR', () => {
   let wrapper: any
 
   beforeEach(() => {
-    // Entity type will always be set with or without an NR
-    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
-    // Temp Id will always be set with or without an NR
+    store.stateModel.entityType = CorpTypeCd.BC_COMPANY
     store.stateModel.tempId = 'T1234567'
     store.stateModel.nameRequest.nrNum = null
     store.stateModel.nameRequestApprovedName = null
@@ -286,16 +284,65 @@ describe('Name Request Info component without a NR', () => {
     expect(wrapper.vm.$el.querySelector('.numbered-company-list-items')).toBeDefined()
   })
 
-  it('renders the numbered company content', () => {
+  it('renders the numbered company content - BC Company', () => {
     const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
     expect(listItems.length).toEqual(5)
-
     expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
-    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Limited Company')
     expect(listItems[2].textContent).toContain(
       'The company is to be incorporated with a name created by adding "B.C. LTD." after the incorporation number.')
     expect(listItems[3].textContent).toContain(
       'Your Incorporation Number will be generated at the end of the filing transaction.')
     expect(listItems[4].textContent).toContain('It is not possible to request a specific Incorporation Number.')
+  })
+
+  it('renders the numbered company content - continued in BC', async () => {
+    store.setEntityType(CorpTypeCd.CONTINUE_IN)
+    await Vue.nextTick()
+
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(5)
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. LTD.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Limited Company')
+  })
+
+  it('renders the numbered company content - Community Contribution Company', async () => {
+    store.setEntityType(CorpTypeCd.BC_CCC)
+    await Vue.nextTick()
+
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(5)
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. COMMUNITY CONTRIBUTION COMPANY LTD.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Community Contribution Company')
+  })
+
+  it('renders the numbered company content - continued in CCC', async () => {
+    store.setEntityType(CorpTypeCd.CCC_CONTINUE_IN)
+    await Vue.nextTick()
+
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(5)
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. COMMUNITY CONTRIBUTION COMPANY LTD.')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Community Contribution Company')
+  })
+
+  it('renders the numbered company content - Unlimited Liability Company', async () => {
+    store.setEntityType(CorpTypeCd.BC_ULC_COMPANY)
+    await Vue.nextTick()
+
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(5)
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. UNLIMITED LIABILITY COMPANY')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Unlimited Liability Company')
+  })
+
+  it('renders the numbered company content - continued in ULC', async () => {
+    store.setEntityType(CorpTypeCd.ULC_CONTINUE_IN)
+    await Vue.nextTick()
+
+    const listItems = wrapper.vm.$el.querySelectorAll('.numbered-company-list-items li')
+    expect(listItems.length).toEqual(5)
+    expect(listItems[0].textContent).toContain('[Incorporation Number] B.C. UNLIMITED LIABILITY COMPANY')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Unlimited Liability Company')
   })
 })
