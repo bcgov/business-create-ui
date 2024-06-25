@@ -6,20 +6,33 @@ import BusinessName from '@/components/Restoration/BusinessName.vue'
 import BusinessType from '@/components/Restoration/BusinessType.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const restorationBusinessInfo = [
   {
-    entityType: 'BEN'
+    entityType: CorpTypeCd.BENEFIT_COMPANY
   },
   {
-    entityType: 'BC'
+    entityType: CorpTypeCd.BC_COMPANY
   },
   {
-    entityType: 'ULC'
+    entityType: CorpTypeCd.BC_CCC
   },
   {
-    entityType: 'CC'
+    entityType: CorpTypeCd.BC_ULC_COMPANY
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN
   }
 ]
 

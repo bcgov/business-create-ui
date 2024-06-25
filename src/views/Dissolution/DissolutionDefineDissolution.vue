@@ -22,14 +22,14 @@
         class="mt-5"
       >
         <AssociationDetails
-          :entityLabel="isTypeCoop ? 'Cooperative Association' : 'Company'"
+          :entityLabel="isEntityCoop ? 'Cooperative Association' : 'Company'"
         />
       </v-card>
     </section>
 
     <!-- Dissolution Statement -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       class="mt-10"
     >
       <header id="dissolution-statement-header">
@@ -52,7 +52,7 @@
     <!-- Custodian of Records -->
     <section class="mt-10">
       <header id="custodian-header">
-        <h2>{{ isTypeCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
+        <h2>{{ isEntityCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
         <p class="mt-4">
           {{ getCustodialRecordsResources.sectionSubtitle }}
         </p>
@@ -79,11 +79,11 @@
 
     <!-- Delete and/or Destroy Certificates -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       class="mt-10"
     >
       <header id="delete-certificates-header">
-        <h2>{{ isTypeCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
+        <h2>{{ isEntityCoop ? 4 : 3 }}. Delete and/or Destroy Certificates</h2>
         <p class="mt-4">
           After dissolution, all original certificates of incorporation, name change, or amalgamation
           are not valid and must not be used by the Cooperative Association. Any copies of these documents must
@@ -147,7 +147,7 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isDissolutionCustodianValid!: boolean
-  @Getter(useStore) isTypeCoop: boolean
+  @Getter(useStore) isEntityCoop: boolean
 
   // Global actions
   @Action(useStore) setCustodianValidity!: (x: boolean) => void
@@ -163,21 +163,21 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
 
   /** The entity designation. */
   get entityDesignation (): string {
-    return this.isTypeCoop ? 'Cooperative' : 'Company'
+    return this.isEntityCoop ? 'Cooperative' : 'Company'
   }
 
   /** The entity act. */
   get entityAct (): string {
-    return this.isTypeCoop ? 'Cooperative Association Act' : 'Business Corporations Act'
+    return this.isEntityCoop ? 'Cooperative Association Act' : 'Business Corporations Act'
   }
 
   get showDissolutionStatementErrors (): boolean {
     return this.getShowErrors &&
-      (this.isTypeCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
+      (this.isEntityCoop && this.getDissolutionStatementStep && !this.getDissolutionStatementStep.valid)
   }
 
   get showDestroyCertificateErrors () {
-    return this.getShowErrors && (this.isTypeCoop && !this.getDissolutionHasCertificateDestroyed)
+    return this.getShowErrors && (this.isEntityCoop && !this.getDissolutionHasCertificateDestroyed)
   }
 
   @Watch('$route')
@@ -187,9 +187,9 @@ export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
       await this.$nextTick()
       await this.validateAndScroll(
         {
-          isStatementValid: this.isTypeCoop ? this.getDissolutionStatementStep.valid : true,
+          isStatementValid: this.isEntityCoop ? this.getDissolutionStatementStep.valid : true,
           isCustodianValid: this.isDissolutionCustodianValid,
-          isDeleteValid: this.isTypeCoop ? this.getDissolutionHasCertificateDestroyed : true
+          isDeleteValid: this.isEntityCoop ? this.getDissolutionHasCertificateDestroyed : true
         },
         [
           'dissolution-statement-header',

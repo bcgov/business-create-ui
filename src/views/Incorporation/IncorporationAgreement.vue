@@ -42,7 +42,7 @@
           </template>
           <span v-html="getIncorporationArticlesResource.articlesTooltip" />
         </v-tooltip>
-        <template v-if="isTypeBcomp || isTypeBcUlcCompany || isTypeBcCcc">
+        <template v-if="showProvisionsTooltip">
           containing a
           <v-tooltip
             top
@@ -115,7 +115,7 @@
             </ul>
           </div>
 
-          <template v-if="isTypeBcomp">
+          <template v-if="isEntityBenefitCompany">
             <div class="help-div">
               <div class="articles-statements-footer">
                 In this case, you need to create a unique Incorporation Agreement and set of
@@ -127,7 +127,7 @@
           </template>
 
           <div
-            v-if="isTypeBcomp"
+            v-if="isEntityBenefitCompany"
             class="help-div"
           >
             <h3>Retain the signed Incorporation Agreement and {{ entityDescription }} Articles</h3>
@@ -274,16 +274,18 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
   }
 })
 export default class IncorporationAgreement extends Mixins(CommonMixin) {
-  @Getter(useStore) isTypeBcomp!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
-  @Getter(useStore) isTypeBcCompany!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getIncorporationAgreementResource!: any
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getIncorporationArticlesResource!: any
   @Getter(useStore) getSampleArticle!: string
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isEntityBcCcc!: boolean
+  @Getter(useStore) isEntityBcUlcCompany!: boolean
+  @Getter(useStore) isEntityBenefitCompany!: boolean
+  @Getter(useStore) isEntityBenContinueIn!: boolean
+  @Getter(useStore) isEntityCccContinueIn!: boolean
+  @Getter(useStore) isEntityUlcContinueIn!: boolean
 
   // Local properties
   helpToggle = false
@@ -300,6 +302,14 @@ export default class IncorporationAgreement extends Mixins(CommonMixin) {
   get documentURL (): string {
     return sessionStorage.getItem('BASE_URL') +
     `files/${this.getSampleArticle}`
+  }
+
+  /** Whether to show the provisions tooltip. */
+  get showProvisionsTooltip (): boolean {
+    return (
+      this.isEntityBenefitCompany || this.isEntityBcUlcCompany || this.isEntityBcCcc ||
+      this.isEntityBenContinueIn || this.isEntityUlcContinueIn || this.isEntityCccContinueIn
+    )
   }
 
   @Watch('$route')

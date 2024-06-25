@@ -6,7 +6,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 // Test Case Data
 const completeResolutionTestCases = [
   {
-    entityType: 'CP',
+    entityType: CorpTypeCd.COOP,
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'special resolution',
     helpHeader: 'Help with Special Resolution',
@@ -21,7 +21,7 @@ const completeResolutionTestCases = [
     confirmTextListItem1: 'The Cooperative Association name is identified'
   },
   {
-    entityType: 'BEN',
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'resolution',
     helpHeader: 'Help with Resolution',
@@ -30,7 +30,7 @@ const completeResolutionTestCases = [
     confirmText: 'I confirm a resolution was passed by'
   },
   {
-    entityType: 'CC',
+    entityType: CorpTypeCd.BC_CCC,
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'resolution',
     helpHeader: 'Help with Resolution',
@@ -39,7 +39,7 @@ const completeResolutionTestCases = [
     confirmText: 'I confirm a resolution was passed by'
   },
   {
-    entityType: 'BC',
+    entityType: CorpTypeCd.BC_COMPANY,
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'resolution',
     helpHeader: 'Help with Resolution',
@@ -48,7 +48,43 @@ const completeResolutionTestCases = [
     confirmText: 'I confirm a resolution was passed by'
   },
   {
-    entityType: 'ULC',
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
+    introTextItem2: 'resolution',
+    helpHeader: 'Help with Resolution',
+    helpTextList1Item1: 'The Company has no assets,',
+    helpTextList2Item1: 'passed at a general meeting by a simple majority of the votes cast',
+    confirmText: 'I confirm a resolution was passed by'
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
+    introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
+    introTextItem2: 'resolution',
+    helpHeader: 'Help with Resolution',
+    helpTextList1Item1: 'The Company has no assets,',
+    helpTextList2Item1: 'passed at a general meeting by a simple majority of the votes cast',
+    confirmText: 'I confirm a resolution was passed by'
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN,
+    introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
+    introTextItem2: 'resolution',
+    helpHeader: 'Help with Resolution',
+    helpTextList1Item1: 'The Company has no assets,',
+    helpTextList2Item1: 'passed at a general meeting by a simple majority of the votes cast',
+    confirmText: 'I confirm a resolution was passed by'
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN,
+    introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
+    introTextItem2: 'resolution',
+    helpHeader: 'Help with Resolution',
+    helpTextList1Item1: 'The Company has no assets,',
+    helpTextList2Item1: 'passed at a general meeting by a simple majority of the votes cast',
+    confirmText: 'I confirm a resolution was passed by'
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
     introTextItem1: 'Before submitting your voluntary dissolution you must complete, sign, and date a',
     introTextItem2: 'resolution',
     helpHeader: 'Help with Resolution',

@@ -11,13 +11,13 @@
         class="mt-5"
       >
         <NameRequestInfo />
-        <NameTranslations v-if="!isTypeCoop" />
+        <NameTranslations v-if="!isEntityCoop" />
       </v-card>
     </section>
 
     <!-- Cooperative Association Type -->
     <section
-      v-show="isTypeCoop"
+      v-show="isEntityCoop"
       class="mt-10"
     >
       <header id="cooperative-type-header">
@@ -93,11 +93,11 @@
     >
       <header id="office-address-header">
         <h2>
-          Registered <span v-if="!isTypeCoop">and Records</span> Office
+          Registered <span v-if="!isEntityCoop">and Records</span> Office
           Addresses
         </h2>
         <p>
-          Enter the Registered Office <span v-if="!isTypeCoop">and Records Office
+          Enter the Registered Office <span v-if="!isEntityCoop">and Records Office
           </span> Mailing and Delivery Addresses. All addresses must be located in BC.
         </p>
       </header>
@@ -204,9 +204,9 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
@@ -234,8 +234,8 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      validNameTranslations: this.isTypeCoop ? true : this.getNameTranslationsValid,
-      validCooperativeType: this.isTypeCoop ? this.hasValidCooperativeType : true,
+      validNameTranslations: this.isEntityCoop ? true : this.getNameTranslationsValid,
+      validCooperativeType: this.isEntityCoop ? this.hasValidCooperativeType : true,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid
     }

@@ -425,7 +425,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (this.getFilingData) {
       filingData = cloneDeep(this.getFilingData)
 
-      if (this.isTypeCoop && this.isDissolutionFiling) {
+      if (this.isEntityCoop && this.isDissolutionFiling) {
         const specialResolutionFilingData =
           filingData.find(x => x.filingTypeCode === FilingCodes.SPECIAL_RESOLUTION)
 
@@ -473,7 +473,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Whether the current filing is a firm dissolution. */
   get isFirmDissolution (): boolean {
-    return (this.isTypeFirm && this.isDissolutionFiling)
+    return (this.isEntityFirm && this.isDissolutionFiling)
   }
 
   /** The fee summary filing label. */
@@ -763,7 +763,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setCompletingParty(this.getCompletingParties())
 
       // load parties only for SP/GP businesses
-      if (this.isTypeFirm && this.getBusinessId) {
+      if (this.isEntityFirm && this.getBusinessId) {
         await this.loadPartiesInformation(this.getBusinessId)
       }
 
@@ -784,7 +784,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
             this.$router.replace(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
             return
           case FilingTypes.DISSOLUTION:
-            if (this.isTypeFirm) {
+            if (this.isEntityFirm) {
               this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             } else {
               this.$router.replace(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})

@@ -156,7 +156,6 @@ import { ContactInfo } from '@bcrs-shared-components/contact-info'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CommonMixin, DateMixin } from '@/mixins'
-import { CoopTypes } from '@/enums'
 import { isEmpty } from 'lodash'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
@@ -178,17 +177,13 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
 
   // Global getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
-  @Getter(useStore) getBusinessFoundingDate!: string
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getBusinessOfficeAddress!: OfficeAddressIF
   @Getter(useStore) getBusinessStartDate!: string
-  @Getter(useStore) getCompanyDisplayName!: string
-  @Getter(useStore) getCooperativeType!: CoopTypes
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
 
   // Global setters
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void

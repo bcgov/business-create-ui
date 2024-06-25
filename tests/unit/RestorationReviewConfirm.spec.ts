@@ -8,20 +8,33 @@ import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const restorationBusinessInfo = [
   {
-    entityType: 'BEN'
+    entityType: CorpTypeCd.BENEFIT_COMPANY
   },
   {
-    entityType: 'BC'
+    entityType: CorpTypeCd.BC_COMPANY
   },
   {
-    entityType: 'ULC'
+    entityType: CorpTypeCd.BC_CCC
   },
   {
-    entityType: 'CC'
+    entityType: CorpTypeCd.BC_ULC_COMPANY
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN
   }
 ]
 

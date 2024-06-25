@@ -128,16 +128,22 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
    * compatible entity type: ULC to ULC, LTD to LTD, and CCC to CCC.
    */
   get amalgamatingBusinesses (): AmalgamatingBusinessIF[] {
+    const ULCs = [CorpTypeCd.BC_ULC_COMPANY, CorpTypeCd.ULC_CONTINUE_IN]
+    const LTDs = [CorpTypeCd.BC_COMPANY, CorpTypeCd.CONTINUE_IN, CorpTypeCd.BENEFIT_COMPANY,
+      CorpTypeCd.BEN_CONTINUE_IN]
+    const CCCs = [CorpTypeCd.BC_CCC, CorpTypeCd.CCC_CONTINUE_IN]
+
     return this.getAmalgamatingBusinesses.filter(business =>
       (business.type !== AmlTypes.FOREIGN) &&
       (
-        // check if entity types match
-        this.getEntityType === business.legalType ||
-        (
-          // allow BCs and BENs to match
-          [CorpTypeCd.BC_COMPANY, CorpTypeCd.BENEFIT_COMPANY].includes(this.getEntityType) &&
-          [CorpTypeCd.BC_COMPANY, CorpTypeCd.BENEFIT_COMPANY].includes(business.legalType)
-        )
+        // check if entity types match exactly
+        (this.getEntityType === business.legalType) ||
+        // allow ULCs and CULs to match
+        (ULCs.includes(this.getEntityType) && ULCs.includes(business.legalType)) ||
+        // allow BC/Cs and BEN/CBENs to match
+        (LTDs.includes(this.getEntityType) && LTDs.includes(business.legalType)) ||
+        // allow CCs and CCCs to match
+        (CCCs.includes(this.getEntityType) && CCCs.includes(business.legalType))
       )
     )
   }

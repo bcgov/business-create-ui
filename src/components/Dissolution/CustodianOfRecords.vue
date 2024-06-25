@@ -26,7 +26,7 @@
             class="pt-4 pt-sm-0"
           >
             <!-- COOP only name input -->
-            <template v-if="isTypeCoop">
+            <template v-if="isEntityCoop">
               <label class="item-label">Person's Name</label>
               <v-row
                 id="person-input"
@@ -317,7 +317,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
   @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
   @Getter(useStore) getDissolutionCustodianEmail!: string
-  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
 
   @Action(useStore) setCustodianOfRecords: (x: OrgPersonIF) => void
 
@@ -342,7 +342,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
     this.custodian = this.getDissolutionCustodian
 
     // Corps are required to choose a party type, where coops are pre-determined to be of person type.
-    if (this.isTypeCoop) this.custodian.officer.partyType = PartyTypes.PERSON
+    if (this.isEntityCoop) this.custodian.officer.partyType = PartyTypes.PERSON
 
     // Define default address using resource values
     this.defaultAddress = {
@@ -378,7 +378,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
   /** The address schema. */
   get getAddressSchema (): AddressSchemaIF {
-    return this.isTypeCoop ? CoopOfficeAddressSchema : OfficeAddressSchema
+    return this.isEntityCoop ? CoopOfficeAddressSchema : OfficeAddressSchema
   }
 
   /** Is true when the form requirements are not met for party type. */

@@ -119,7 +119,7 @@
         <span>Add the Completing Party</span>
       </v-btn>
 
-      <template v-if="isTypeSoleProp">
+      <template v-if="isEntitySoleProp">
         <v-btn
           v-if="!validNumProprietors"
           id="btn-add-person"
@@ -147,7 +147,7 @@
         </v-btn>
       </template>
 
-      <template v-if="isTypePartnership">
+      <template v-if="isEntityPartnership">
         <v-btn
           id="btn-add-person"
           outlined
@@ -303,10 +303,10 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (roleType) {
       // a role was provided - pre-select it
       this.currentOrgPerson.roles = [{ roleType }]
-    } else if (this.validNumCompletingParty && this.isTypeSoleProp) {
+    } else if (this.validNumCompletingParty && this.isEntitySoleProp) {
       // only Proprietor role is possible - pre-select it
       this.currentOrgPerson.roles = [{ roleType: RoleTypes.PROPRIETOR }]
-    } else if (this.validNumCompletingParty && this.isTypePartnership) {
+    } else if (this.validNumCompletingParty && this.isEntityPartnership) {
       // only Partner role is possible - pre-select it
       this.currentOrgPerson.roles = [{ roleType: RoleTypes.PARTNER }]
     } else {

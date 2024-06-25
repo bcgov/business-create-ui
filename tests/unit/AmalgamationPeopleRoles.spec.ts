@@ -3,20 +3,33 @@ import { AmalgamationPeopleRoles } from '@/views'
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources/'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const amalgamationBusinessInfo = [
   {
-    entityType: 'BEN'
+    entityType: CorpTypeCd.BENEFIT_COMPANY
   },
   {
-    entityType: 'BC'
+    entityType: CorpTypeCd.BC_COMPANY
   },
   {
-    entityType: 'ULC'
+    entityType: CorpTypeCd.BC_CCC
   },
   {
-    entityType: 'CC'
+    entityType: CorpTypeCd.BC_ULC_COMPANY
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN
   }
 ]
 

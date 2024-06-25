@@ -137,7 +137,7 @@
 
     <!-- Special Resolution Form -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       id="sample-resolution-section"
       class="mt-10"
     >
@@ -183,7 +183,7 @@
 
     <!-- Resolution Date -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       id="resolution-date-section"
       class="mt-10"
     >
@@ -237,7 +237,7 @@
 
     <!-- Resolution Text -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       id="resolution-text-section"
       class="mt-10"
     >
@@ -294,7 +294,7 @@
 
     <!-- Resolution Signature -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       id="resolution-signature-info-section"
       class="mt-10"
     >
@@ -541,7 +541,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
 
   @Action(useStore) setResolution!: (x: CreateResolutionIF) => void
   @Action(useStore) setResolutionStepValidationDetail!: (x: ValidationDetailIF) => void
@@ -698,7 +698,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   }
 
   private isResolutionValid (): boolean {
-    if (this.isTypeCoop) {
+    if (this.isEntityCoop) {
       return this.$refs.resolutionTextRef?.valid &&
         this.$refs.resolutionDatePickerRef?.isDateValid() &&
         this.isSigningPersonValid &&
@@ -711,7 +711,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
   private updateResolutionStepValidationDetail () {
     let validationDetail = null as ValidationDetailIF
     const resolutionIsValid = this.isResolutionValid()
-    if (this.isTypeCoop) {
+    if (this.isEntityCoop) {
       validationDetail =
         {
           valid: resolutionIsValid,
@@ -794,7 +794,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
 
   @Watch('getShowErrors')
   private onShowErrorsChanged (): void {
-    if (this.isTypeCoop) {
+    if (this.isEntityCoop) {
       if (this.getShowErrors &&
         this.$refs.resolutionDatePickerRef &&
         this.$refs.resolutionTextFormRef &&
@@ -854,7 +854,7 @@ export default class CompleteResolution extends Mixins(CommonMixin, DateMixin) {
 
   @Watch('signingPerson', { deep: true })
   private async onSigningPersonChanged (): Promise<void> {
-    if (this.isTypeCoop) {
+    if (this.isEntityCoop) {
       await this.$nextTick()
       this.setResolution({
         ...this.getCreateResolutionStep,

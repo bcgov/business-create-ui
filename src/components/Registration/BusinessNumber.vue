@@ -29,8 +29,8 @@
         </p>
         <HelpBusinessNumber
           class="mt-4"
-          :isTypePartnership="isTypePartnership"
-          :isTypeSoleProp="isTypeSoleProp"
+          :isEntityPartnership="isEntityPartnership"
+          :isEntitySoleProp="isEntitySoleProp"
         />
         <v-text-field
           v-model="value"
@@ -77,11 +77,11 @@ export default class BusinessNumber extends Vue {
   /** Whether to display Change features. */
   @Prop({ default: false }) readonly hasBusinessNumberChanged!: boolean
 
-  /** Whether this is a General Partnership entity. */
-  @Prop({ default: false }) readonly isTypePartnership!: boolean
+  /** Whether entity is a General Partnership. */
+  @Prop({ default: false }) readonly isEntityPartnership!: boolean
 
-  /** Whether this is a Sole Proprietor entity. */
-  @Prop({ default: false }) readonly isTypeSoleProp!: boolean
+  /** Whether entity is a Sole Proprietorship. */
+  @Prop({ default: false }) readonly isEntitySoleProp!: boolean
 
   // Local variables
   enableRules = false

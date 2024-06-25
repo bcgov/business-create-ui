@@ -48,13 +48,13 @@
           <!-- Association Details -->
           <section>
             <AssociationDetails
-              :entityLabel="isTypeCoop ? 'Cooperative Association' : 'Company'"
+              :entityLabel="isEntityCoop ? 'Cooperative Association' : 'Company'"
               :isSummary="true"
             />
           </section>
 
           <!-- Dissolution Statement -->
-          <template v-if="isTypeCoop">
+          <template v-if="isEntityCoop">
             <section class="px-6">
               <DissolutionStatement
                 class="pa-8 gray-background"
@@ -79,7 +79,7 @@
           </section>
 
           <!-- Destroy Certificates -->
-          <template v-if="isTypeCoop">
+          <template v-if="isEntityCoop">
             <!-- divider -->
             <div class="px-6">
               <v-container class="py-0">
@@ -96,7 +96,7 @@
           </template>
 
           <!-- Dissolution Date and Time -->
-          <template v-if="!isTypeCoop">
+          <template v-if="!isEntityCoop">
             <!-- divider -->
             <div class="px-6">
               <v-container class="py-0">
@@ -434,9 +434,9 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -474,7 +474,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 
   /** The affidavit summary to display, depending on entity type. */
   get affidavitSummary (): string {
-    return this.isTypeCoop
+    return this.isEntityCoop
       ? this.getAffidavitStep.affidavitFile?.name
       : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
         'been completed and deposited in the company\'s records book.'
