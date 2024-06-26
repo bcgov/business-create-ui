@@ -68,10 +68,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) isEntityCoop!: boolean
+  @Getter(useStore) isEntityFirm!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) isTypeFirm!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
@@ -1216,6 +1216,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       case CorpTypeCd.BC_CCC:
       case CorpTypeCd.BC_COMPANY:
       case CorpTypeCd.BC_ULC_COMPANY:
+      case CorpTypeCd.BEN_CONTINUE_IN:
+      case CorpTypeCd.CCC_CONTINUE_IN:
+      case CorpTypeCd.CONTINUE_IN:
+      case CorpTypeCd.ULC_CONTINUE_IN:
         filing.dissolution = {
           ...filing.dissolution,
           resolution: {
@@ -1249,7 +1253,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // If this is a future effective filing then save the effective date (all except Coop).
     if (this.getEffectiveDateTime.isFutureEffective === true) filing.header.isFutureEffective = true
     if (this.getEffectiveDateTime.isFutureEffective === false) filing.header.isFutureEffective = false
-    if (this.getEffectiveDateTime.isFutureEffective && !this.isTypeCoop) {
+    if (this.getEffectiveDateTime.isFutureEffective && !this.isEntityCoop) {
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
@@ -1333,7 +1337,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // // restore Future Effective data
     // if (draftFiling.header.isFutureEffective === true) this.setIsFutureEffective(true)
     // if (draftFiling.header.isFutureEffective === false) this.setIsFutureEffective(false)
-    // if (draftFiling.header.isFutureEffective && !this.isTypeCoop) {
+    // if (draftFiling.header.isFutureEffective && !this.isEntityCoop) {
     //   const effectiveDate = this.apiToDate(draftFiling.header.effectiveDate)
     //   // Check that Effective Date is in the future, to improve UX and
     //   // to work around the default effective date set by the back end.
@@ -1384,7 +1388,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // set dissolution date for SP and GP if saved as draft
-    if (this.isTypeFirm) {
+    if (this.isEntityFirm) {
       this.setDissolutionDate(draftFiling.dissolution.dissolutionDate)
     }
   }

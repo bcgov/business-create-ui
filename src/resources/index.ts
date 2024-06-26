@@ -11,14 +11,22 @@ import {
   AmalgamationRegResourceBc,
   AmalgamationRegResourceBen,
   AmalgamationRegResourceCc,
-  AmalgamationRegResourceUlc
+  AmalgamationRegResourceUlc,
+  AmalgamationRegResourceC,
+  AmalgamationRegResourceCben,
+  AmalgamationRegResourceCcc,
+  AmalgamationRegResourceCul
 } from './AmalgamationRegular/'
 
 import {
   AmalgamationShortResourceBc,
   AmalgamationShortResourceBen,
   AmalgamationShortResourceCc,
-  AmalgamationShortResourceUlc
+  AmalgamationShortResourceUlc,
+  AmalgamationShortResourceC,
+  AmalgamationShortResourceCben,
+  AmalgamationShortResourceCcc,
+  AmalgamationShortResourceCul
 } from './AmalgamationShort/'
 
 import {
@@ -35,7 +43,11 @@ import {
   DissolutionResourceCp,
   DissolutionResourceGp,
   DissolutionResourceSp,
-  DissolutionResourceUlc
+  DissolutionResourceUlc,
+  DissolutionResourceC,
+  DissolutionResourceCben,
+  DissolutionResourceCcc,
+  DissolutionResourceCul
 } from './Dissolution/'
 
 import {
@@ -55,21 +67,33 @@ import {
   RestorationResourceBc,
   RestorationResourceBen,
   RestorationResourceCc,
-  RestorationResourceUlc
+  RestorationResourceUlc,
+  RestorationResourceC,
+  RestorationResourceCben,
+  RestorationResourceCcc,
+  RestorationResourceCul
 } from './Restoration/'
 
 export const AmalgamationRegResources: Array<AmalgamationResourceIF> = [
   AmalgamationRegResourceBc,
   AmalgamationRegResourceBen,
   AmalgamationRegResourceCc,
-  AmalgamationRegResourceUlc
+  AmalgamationRegResourceUlc,
+  AmalgamationRegResourceC,
+  AmalgamationRegResourceCben,
+  AmalgamationRegResourceCcc,
+  AmalgamationRegResourceCul
 ]
 
 export const AmalgamationShortResources: Array<AmalgamationResourceIF> = [
   AmalgamationShortResourceBc,
   AmalgamationShortResourceBen,
   AmalgamationShortResourceCc,
-  AmalgamationShortResourceUlc
+  AmalgamationShortResourceUlc,
+  AmalgamationShortResourceC,
+  AmalgamationShortResourceCben,
+  AmalgamationShortResourceCcc,
+  AmalgamationShortResourceCul
 ]
 
 export const ContinuationInResources: Array<ContinuationInResourceIF> = [
@@ -86,7 +110,11 @@ export const DissolutionResources: Array<DissolutionResourceIF> = [
   DissolutionResourceCp,
   DissolutionResourceGp,
   DissolutionResourceSp,
-  DissolutionResourceUlc
+  DissolutionResourceUlc,
+  DissolutionResourceC,
+  DissolutionResourceCben,
+  DissolutionResourceCcc,
+  DissolutionResourceCul
 ]
 
 export const IncorporationResources: Array<IncorporationResourceIF> = [
@@ -106,7 +134,11 @@ export const RestorationResources: Array<RestorationResourceIF> = [
   RestorationResourceBc,
   RestorationResourceBen,
   RestorationResourceCc,
-  RestorationResourceUlc
+  RestorationResourceUlc,
+  RestorationResourceC,
+  RestorationResourceCben,
+  RestorationResourceCcc,
+  RestorationResourceCul
 ]
 
 export * from './BreadcrumbResource'

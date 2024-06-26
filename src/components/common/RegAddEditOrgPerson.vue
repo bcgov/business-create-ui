@@ -28,7 +28,7 @@
 
             <div v-else>
               <template v-if="isNaN(activeIndex)">
-                <template v-if="isTypePartnership">
+                <template v-if="isEntityPartnership">
                   Add a Business as a Partner
                 </template>
                 <template v-else>
@@ -37,7 +37,7 @@
               </template>
 
               <template v-else>
-                <template v-if="isTypePartnership">
+                <template v-if="isEntityPartnership">
                   Edit a Business as a Partner
                 </template>
                 <template v-else>
@@ -343,7 +343,7 @@
                         class="mt-0"
                         :value="RoleTypes.COMPLETING_PARTY"
                         :label="RoleTypes.COMPLETING_PARTY"
-                        :disabled="isTypeSoleProp || isTypePartnership"
+                        :disabled="isEntitySoleProp || isEntityPartnership"
                       />
                     </v-col>
 
@@ -357,7 +357,7 @@
                         class="mt-0"
                         :value="RoleTypes.PROPRIETOR"
                         :label="RoleTypes.PROPRIETOR"
-                        :disabled="isTypeSoleProp || isTypePartnership"
+                        :disabled="isEntitySoleProp || isEntityPartnership"
                       />
                     </v-col>
 
@@ -371,7 +371,7 @@
                         class="mt-0"
                         :value="RoleTypes.PARTNER"
                         :label="RoleTypes.PARTNER"
-                        :disabled="isTypeSoleProp || isTypePartnership"
+                        :disabled="isEntitySoleProp || isEntityPartnership"
                       />
                     </v-col>
 

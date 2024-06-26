@@ -144,7 +144,7 @@
       </template>
 
       <!-- Cooperative Type -->
-      <template v-if="isTypeCoop">
+      <template v-if="isEntityCoop">
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -243,11 +243,11 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isTypeCccContinueIn!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) isTypeUlcContinueIn!: boolean
+  @Getter(useStore) isEntityBcCcc!: boolean
+  @Getter(useStore) isEntityBcUlcCompany!: boolean
+  @Getter(useStore) isEntityCccContinueIn!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
+  @Getter(useStore) isEntityUlcContinueIn!: boolean
 
   /** Whether this section is invalid. */
   get invalidSection (): boolean {
@@ -270,10 +270,10 @@ export default class SummaryDefineCompany extends Vue {
     if (this.getNameRequestApprovedName) return this.getNameRequestApprovedName
 
     // otherwise name will be created from new incorporation number
-    if (this.isTypeBcCcc || this.isTypeCccContinueIn) {
+    if (this.isEntityBcCcc || this.isEntityCccContinueIn) {
       return '[Incorporation Number] B.C. COMMUNITY CONTRIBUTION COMPANY LTD.'
     }
-    if (this.isTypeBcUlcCompany || this.isTypeUlcContinueIn) {
+    if (this.isEntityBcUlcCompany || this.isEntityUlcContinueIn) {
       return '[Incorporation Number] B.C. UNLIMITED LIABILITY COMPANY'
     }
     return '[Incorporation Number] B.C. LTD.'

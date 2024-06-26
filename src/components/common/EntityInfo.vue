@@ -44,21 +44,21 @@
           {{ getNameRequestNumber }}
         </div>
 
-        <template v-if="isTypeFirm && getBusinessId">
+        <template v-if="isEntityFirm && getBusinessId">
           <div id="entity-business-registration-date">
             <span class="business-info-label">Registration Date:</span>
             {{ registrationDate || "Not Available" }}
           </div>
         </template>
 
-        <template v-if="isTypeFirm && getBusinessId">
+        <template v-if="isEntityFirm && getBusinessId">
           <div id="entity-business-registration-number">
             <span class="business-info-label">Registration Number:</span>
             {{ getEntityIdentifier || "Not Available" }}
           </div>
         </template>
 
-        <template v-if="isTypeFirm && getBusinessId">
+        <template v-if="isEntityFirm && getBusinessId">
           <div id="entity-business-business-number">
             <span class="business-info-label">Business Number:</span>
             {{ getBusinessNumber || "Not Available" }}
@@ -114,13 +114,13 @@ export default class EntityInfo extends Mixins(DateMixin) {
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) isEntityFirm!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRegistrationFiling!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeFirm!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
 
   // declaration for template
   readonly axios = axios
@@ -151,9 +151,9 @@ export default class EntityInfo extends Mixins(DateMixin) {
   get entityDescription (): string {
     const corpTypeDescription = GetCorpFullDescription(this.getEntityType as any)
 
-    if (this.isTypeSoleProp && this.getTempId) {
+    if (this.isEntitySoleProp && this.getTempId) {
       return `${corpTypeDescription} / Doing Business As (DBA)`
-    } else if (this.isTypeFirm) {
+    } else if (this.isEntityFirm) {
       return corpTypeDescription
     } else {
       return `${corpTypeDescription} ${this.getFilingName}`

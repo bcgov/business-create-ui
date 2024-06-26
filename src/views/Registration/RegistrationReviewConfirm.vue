@@ -202,11 +202,11 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isEntityPartnership!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) isTypePartnership!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
@@ -214,8 +214,8 @@ export default class RegistrationReviewConfirm extends Vue {
 
   /** The Document Delivery additional email label. */
   get documentDeliveryAdditionalLabel (): string {
-    if (this.isTypeSoleProp) return 'Proprietor'
-    if (this.isTypePartnership) return 'Partners'
+    if (this.isEntitySoleProp) return 'Proprietor'
+    if (this.isEntityPartnership) return 'Partners'
     return null
   }
 
@@ -223,14 +223,14 @@ export default class RegistrationReviewConfirm extends Vue {
   get documentDeliveryAdditionalValue (): string {
     const orgPersonList = this.getAddPeopleAndRoleStep.orgPeople
 
-    if (this.isTypeSoleProp) {
+    if (this.isEntitySoleProp) {
       const emails = orgPersonList
         .filter(op => op.roles.some(role => role.roleType === RoleTypes.PROPRIETOR))
         .map(op => op.officer?.email)
         .filter(e => !!e)
       return emails.join(', ')
     }
-    if (this.isTypePartnership) {
+    if (this.isEntityPartnership) {
       const emails = orgPersonList
         .filter(op => op.roles.some(role => role.roleType === RoleTypes.PARTNER))
         .map(op => op.officer?.email)

@@ -182,7 +182,7 @@ export const useStore = defineStore('store', {
         case FilingTypes.REGISTRATION: return FilingNames.REGISTRATION
         case FilingTypes.RESTORATION: return FilingNames.RESTORATION_APPLICATION
         case FilingTypes.DISSOLUTION:
-          return this.isTypeFirm ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
+          return this.isEntityFirm ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
         default: return null // should never happen
       }
     },
@@ -213,13 +213,13 @@ export const useStore = defineStore('store', {
     },
 
     /**
-     * Whether a continuation in Director's Affidavit is required.
+     * Whether a Continuation In Director's Affidavit is required.
      * Is true if the business is a Continued In ULC from Alberta or Nova Scotia.
      */
     isContinuationInAffidavitRequired (): boolean {
       const homeJurisdiction = this.getExistingBusinessInfo?.homeJurisdiction
       return (
-        this.isTypeUlcContinueIn &&
+        this.isEntityUlcContinueIn &&
         (homeJurisdiction?.country === JurisdictionLocation.CA) &&
         (
           homeJurisdiction?.region === 'AB' ||
@@ -254,63 +254,63 @@ export const useStore = defineStore('store', {
     },
 
     /** Whether the entity is a Benefit Company. */
-    isTypeBcomp (): boolean {
+    isEntityBenefitCompany (): boolean {
       return (this.getEntityType === CorpTypeCd.BENEFIT_COMPANY)
     },
 
     /** Whether the entity is a Cooperative Assocation. */
-    isTypeCoop (): boolean {
+    isEntityCoop (): boolean {
       return (this.getEntityType === CorpTypeCd.COOP)
     },
 
     /** Whether the entity is a BC Community Contribution Company. */
-    isTypeBcCcc (): boolean {
+    isEntityBcCcc (): boolean {
       return (this.getEntityType === CorpTypeCd.BC_CCC)
     },
 
-    /** Whether the entity is a BC Company. */
-    isTypeBcCompany (): boolean {
+    /** Whether the entity is a BC Limited Company. */
+    isEntityBcCompany (): boolean {
       return (this.getEntityType === CorpTypeCd.BC_COMPANY)
     },
 
     /** Whether the entity is a BC Unlimited Liability Company. */
-    isTypeBcUlcCompany (): boolean {
+    isEntityBcUlcCompany (): boolean {
       return (this.getEntityType === CorpTypeCd.BC_ULC_COMPANY)
     },
 
     /** Whether the entity is a Sole Proprietorship. */
-    isTypeSoleProp (): boolean {
+    isEntitySoleProp (): boolean {
       return (this.getEntityType === CorpTypeCd.SOLE_PROP)
     },
 
     /** Whether the entity is a General Partnership. */
-    isTypePartnership (): boolean {
+    isEntityPartnership (): boolean {
       return (this.getEntityType === CorpTypeCd.PARTNERSHIP)
     },
 
-    /** Whether the entity is a Continued In BC Company. */
-    isTypeContinueIn (): boolean {
+    /** Whether the entity is a Continued In BC Limited Company. */
+    isEntityContinueIn (): boolean {
       return (this.getEntityType === CorpTypeCd.CONTINUE_IN)
     },
 
     /** Whether the entity is a Continued In Benefit Company. */
-    isTypeBenContinueIn (): boolean {
+    isEntityBenContinueIn (): boolean {
       return (this.getEntityType === CorpTypeCd.BEN_CONTINUE_IN)
     },
 
     /** Whether the entity is a Continued In Community Contribution Company. */
-    isTypeCccContinueIn (): boolean {
+    isEntityCccContinueIn (): boolean {
       return (this.getEntityType === CorpTypeCd.CCC_CONTINUE_IN)
     },
 
     /** Whether the entity is a Continued In Unlimited Liability Company. */
-    isTypeUlcContinueIn (): boolean {
+    isEntityUlcContinueIn (): boolean {
       return (this.getEntityType === CorpTypeCd.ULC_CONTINUE_IN)
     },
 
-    /** Is True if entity is a Sole Proprietorship or General Partnership. */
-    isTypeFirm (): boolean {
-      return (this.isTypeSoleProp || this.isTypePartnership)
+    /** Whether the entity is a Sole Proprietorship or General Partnership. */
+    isEntityFirm (): boolean {
+      return (this.isEntitySoleProp || this.isEntityPartnership)
     },
 
     /** The Account Information object. */
@@ -318,13 +318,17 @@ export const useStore = defineStore('store', {
       return this.stateModel.accountInformation
     },
 
-    /** Whether the entity is a base company (BEN, CC, BC, ULC). */
+    /** Whether the entity is a base company (BC/BEN/CC/ULC or C/CBEN/CCC/CUL). */
     isBaseCompany (): boolean {
       return (
-        this.isTypeBcomp ||
-        this.isTypeBcCcc ||
-        this.isTypeBcCompany ||
-        this.isTypeBcUlcCompany
+        this.isEntityBcCompany ||
+        this.isEntityBenefitCompany ||
+        this.isEntityBcCcc ||
+        this.isEntityBcUlcCompany ||
+        this.isEntityContinueIn ||
+        this.isEntityBenContinueIn ||
+        this.isEntityCccContinueIn ||
+        this.isEntityUlcContinueIn
       )
     },
 
@@ -389,7 +393,7 @@ export const useStore = defineStore('store', {
       if (!GetFeatureFlag('enable-legal-name-fix')) {
         return this.stateModel.business.legalName
       }
-      if (this.isTypeFirm) return this.stateModel.alternateName || 'Unknown'
+      if (this.isEntityFirm) return this.stateModel.alternateName || 'Unknown'
       return this.stateModel.business.legalName
     },
 
@@ -496,7 +500,7 @@ export const useStore = defineStore('store', {
 
     /** Is true when the step is valid. */
     isAffidavitValid (): boolean {
-      if (this.isTypeCoop) {
+      if (this.isEntityCoop) {
         return this.getAffidavitStep.validationDetail.valid
       } else {
       // Just validate the confirm checkbox for Corps
@@ -586,7 +590,7 @@ export const useStore = defineStore('store', {
 
     /** Is true when the step is valid. */
     isDefineCompanyValid (): boolean {
-      if (this.isTypeCoop) {
+      if (this.isEntityCoop) {
         return (!!this.getCooperativeType && this.getDefineCompanyStep.valid)
       }
       return this.getDefineCompanyStep.valid
@@ -652,7 +656,7 @@ export const useStore = defineStore('store', {
         ? this.getEffectiveDateTime.valid
         : true
 
-      if (this.isTypeFirm) {
+      if (this.isEntityFirm) {
         return (
           isDocumentDeliveryValid &&
             isTransactionalFnValid &&
@@ -967,7 +971,7 @@ export const useStore = defineStore('store', {
 
     /** Is true when the Define Dissolution page is valid. */
     isDissolutionDefineDissolutionValid (): boolean {
-      const isCoopDefineDissolutionValid = this.isTypeCoop
+      const isCoopDefineDissolutionValid = this.isEntityCoop
         ? (this.getDissolutionStatementStep.valid && this.getDissolutionHasCertificateDestroyed)
         : true
 

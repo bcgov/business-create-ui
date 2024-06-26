@@ -35,14 +35,13 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
+  @Getter(useStore) isEntityPartnership!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) isTypeBcomp!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
-  @Getter(useStore) isTypePartnership!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
   @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
@@ -197,22 +196,6 @@ export default class AddEditOrgPersonMixin extends Vue {
     return (!this.showCompletingPartyRole && !this.showIncorporatorRole && this.showDirectorRole)
   }
 
-  /**
-   * Whether to show the delivery address by default.
-   * Applies to some entity types only.
-   */
-  get showDeliveryAddressByDefault (): boolean {
-    return [
-      CorpTypeCd.COOP,
-      CorpTypeCd.BENEFIT_COMPANY,
-      CorpTypeCd.BC_CCC,
-      CorpTypeCd.BC_COMPANY,
-      CorpTypeCd.BC_ULC_COMPANY,
-      CorpTypeCd.SOLE_PROP,
-      CorpTypeCd.PARTNERSHIP
-    ].includes(this.getEntityType)
-  }
-
   /** Called when component is created. */
   created (): void {
     // mark this step as invalid while adding or editing
@@ -246,7 +229,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     if (!isNaN(this.activeIndex)) this.enableRules = true
   }
 
-  /** decide if the "Delivery Address same as Mailing Address" check box should be checked */
+  /** Decide if the "Delivery Address same as Mailing Address" check box should be checked. */
   updateSameAsMailingChkBox (): void {
     // safety check
     if (!this.isDirector && !this.isProprietor && !this.isPartner) return
@@ -256,7 +239,7 @@ export default class AddEditOrgPersonMixin extends Vue {
 
     this.inheritMailingAddress = isEqual(this.inProgressMailingAddress, this.inProgressDeliveryAddress)
 
-    if (this.inheritMailingAddress && this.showDeliveryAddressByDefault) {
+    if (this.inheritMailingAddress) {
       const isNew = this.isEmptyAddress(this.orgPerson.mailingAddress) &&
                     this.isEmptyAddress(this.orgPerson.deliveryAddress)
 

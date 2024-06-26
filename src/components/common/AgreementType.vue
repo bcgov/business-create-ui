@@ -35,7 +35,7 @@
     <!-- EDIT SECTION -->
     <template v-if="!isSummary">
       <div
-        v-if="isTypeBcUlcCompany || isTypeBcCcc"
+        v-if="isEntityBcUlcCompany || isEntityBcCcc || isEntityUlcContinueIn || isEntityCccContinueIn"
         :class="{ 'invalid-section': showErrorSummary && getShowErrors }"
       >
         <v-checkbox
@@ -101,8 +101,10 @@ export default class AgreementType extends Vue {
   @Getter(useStore) getIncorporationAgreementDocuments!: Array<IncorporationAgreementTypeIF>
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
+  @Getter(useStore) isEntityBcCcc!: boolean
+  @Getter(useStore) isEntityBcUlcCompany!: boolean
+  @Getter(useStore) isEntityCccContinueIn!: boolean
+  @Getter(useStore) isEntityUlcContinueIn!: boolean
 
   @Action(useStore) setIncorporationAgreementStepData!: (x: IncorporationAgreementIF) => void
 

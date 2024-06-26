@@ -24,7 +24,7 @@
         sm="9"
       >
         <p class="mb-0">
-          {{ isTypePartnership ? labelGP : labelSP }}
+          {{ isEntityPartnership ? labelGP : labelSP }}
         </p>
         <div id="business-checkbox-div">
           <v-checkbox
@@ -37,7 +37,7 @@
                 class="certify-stmt"
                 :class="{'error--text': showErrors}"
               >
-                {{ isTypePartnership ? textGP : textSP }}
+                {{ isEntityPartnership ? textGP : textSP }}
               </div>
             </template>
           </v-checkbox>
@@ -58,8 +58,8 @@ export default class BusinessTypeConfirm extends Vue {
   /** Whether to display Change features. */
   @Prop({ default: false }) readonly hasBusinessTypeChecked!: boolean
 
-  /** Whether the business type is SP or GP. */
-  @Prop({ default: false }) readonly isTypePartnership!: boolean
+  /** Whether entity is a GP (else we assume it's a SP). */
+  @Prop({ default: false }) readonly isEntityPartnership!: boolean
 
   /** Whether to show errors. */
   @Prop({ required: true }) readonly showErrors!: boolean

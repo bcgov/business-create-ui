@@ -27,9 +27,13 @@ describe('Resulting Business Name component', () => {
   })
 
   const FOREIGN = { type: AmlTypes.FOREIGN }
-  const CCC = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BC_CCC }
   const BC = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BC_COMPANY }
   const BEN = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BENEFIT_COMPANY }
+  const C = { type: AmlTypes.LEAR, legalType: CorpTypeCd.CONTINUE_IN }
+  const CBEN = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BEN_CONTINUE_IN }
+  const CC = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BC_CCC }
+  const CCC = { type: AmlTypes.LEAR, legalType: CorpTypeCd.CCC_CONTINUE_IN }
+  const CUL = { type: AmlTypes.LEAR, legalType: CorpTypeCd.ULC_CONTINUE_IN }
   const ULC = { type: AmlTypes.LEAR, legalType: CorpTypeCd.BC_ULC_COMPANY }
 
   const tests = [
@@ -38,24 +42,44 @@ describe('Resulting Business Name component', () => {
       computed: []
     },
     { // variation 1
-      entityType: CorpTypeCd.BC_CCC,
-      amalgamatingBusinesses: [ BC, BEN, CCC, ULC ],
-      computed: [ CCC ]
+      entityType: CorpTypeCd.BC_COMPANY,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ BC, BEN, C, CBEN ]
     },
     { // variation 2
-      entityType: CorpTypeCd.BC_ULC_COMPANY,
-      amalgamatingBusinesses: [ BC, BEN, CCC, ULC ],
-      computed: [ ULC ]
+      entityType: CorpTypeCd.BENEFIT_COMPANY,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ BC, BEN, C, CBEN ]
     },
     { // variation 3
-      entityType: CorpTypeCd.BC_COMPANY,
-      amalgamatingBusinesses: [ BC, BEN, CCC, ULC ],
-      computed: [ BC, BEN ]
+      entityType: CorpTypeCd.CONTINUE_IN,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ BC, BEN, C, CBEN ]
     },
     { // variation 4
-      entityType: CorpTypeCd.BENEFIT_COMPANY,
-      amalgamatingBusinesses: [ BC, BEN, CCC, ULC ],
-      computed: [ BC, BEN ]
+      entityType: CorpTypeCd.BEN_CONTINUE_IN,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ BC, BEN, C, CBEN ]
+    },
+    { // variation 5
+      entityType: CorpTypeCd.BC_CCC,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ CC, CCC ]
+    },
+    { // variation 6
+      entityType: CorpTypeCd.CCC_CONTINUE_IN,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ CC, CCC ]
+    },
+    { // variation 7
+      entityType: CorpTypeCd.ULC_CONTINUE_IN,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ CUL, ULC ]
+    },
+    { // variation 8
+      entityType: CorpTypeCd.BC_ULC_COMPANY,
+      amalgamatingBusinesses: [ BC, BEN, C, CBEN, CC, CCC, CUL, ULC ],
+      computed: [ CUL, ULC ]
     }
   ]
 

@@ -7,27 +7,47 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 // Test Case Data
 const uploadAffidavitTestCases = [
   {
-    entityType: 'CP',
+    entityType: CorpTypeCd.COOP,
     helpText: 'The Cooperative Association has no assets; and',
     checkboxLabel: 'I confirm the following items are included as required in the Cooperative Associations Act'
   },
   {
-    entityType: 'BEN',
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
     helpText: 'The Company has no assets; and',
     checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
-    entityType: 'CC',
+    entityType: CorpTypeCd.BC_CCC,
     helpText: 'The Company has no assets; and',
     checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
-    entityType: 'BC',
+    entityType: CorpTypeCd.BC_COMPANY,
     helpText: 'The Company has no assets; and',
     checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   },
   {
-    entityType: 'ULC',
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN,
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN,
+    helpText: 'The Company has no assets; and',
+    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
     helpText: 'The Company has no assets; and',
     checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
   }

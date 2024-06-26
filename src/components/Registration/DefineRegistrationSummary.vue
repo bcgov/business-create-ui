@@ -165,7 +165,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isTypePartnership: boolean
 
   /** The entity description. */
   get entityDescription (): string {

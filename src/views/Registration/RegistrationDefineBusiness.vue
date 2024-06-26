@@ -21,7 +21,7 @@
           :class="{ 'invalid-section': getShowErrors && !businessTypeConfirmValid }"
           :showErrors="getShowErrors && !businessTypeConfirmValid"
           :businessTypeConfirm="getRegistration.businessTypeConfirm"
-          :isTypePartnership="isTypePartnership"
+          :isEntityPartnership="isEntityPartnership"
           @update:businessTypeConfirm="setRegistrationBusinessTypeConfirm($event)"
           @valid="onBusinessTypeConfirmValidEvent($event)"
         />
@@ -45,8 +45,8 @@
           class="py-8 px-6"
           :class="{ 'invalid-section': getShowErrors && !businessNumberValid }"
           :businessNumber="getRegistration.businessNumber"
-          :isTypePartnership="isTypePartnership"
-          :isTypeSoleProp="isTypeSoleProp"
+          :isEntityPartnership="isEntityPartnership"
+          :isEntitySoleProp="isEntitySoleProp"
           @update:businessNumber="setRegistrationBusinessNumber($event)"
           @valid="onBusinessNumberValidEvent($event)"
         />
@@ -175,9 +175,9 @@ export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) isEntityPartnership!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypePartnership!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void

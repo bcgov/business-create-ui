@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "5.11.4",
+  "version": "5.11.5",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -31,7 +31,7 @@
     "@bcrs-shared-components/enums": "1.1.10",
     "@bcrs-shared-components/expandable-help": "1.0.1",
     "@bcrs-shared-components/genesys-web-message": "1.0.0",
-    "@bcrs-shared-components/help-business-number": "1.1.1",
+    "@bcrs-shared-components/help-business-number": "1.1.4",
     "@bcrs-shared-components/interfaces": "1.1.15",
     "@bcrs-shared-components/jurisdiction": "1.1.4",
     "@bcrs-shared-components/limited-restoration-panel": "1.0.5",

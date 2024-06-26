@@ -3,11 +3,12 @@ import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import { DissolutionResources } from '@/resources'
 import { PartyTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const custodianTestCases = [
   {
-    entityType: 'CP',
+    entityType: CorpTypeCd.COOP,
     custodianTitle: 'Custodian of Records',
     hasPersonOnly: true,
     hasPersonOrOrg: false,
@@ -22,7 +23,7 @@ const custodianTestCases = [
     inheritMailingAddress: false
   },
   {
-    entityType: 'BEN',
+    entityType: CorpTypeCd.BENEFIT_COMPANY,
     custodianTitle: 'Custodian of Records',
     hasPersonOnly: false,
     hasPersonOrOrg: true,
@@ -37,7 +38,97 @@ const custodianTestCases = [
     inheritMailingAddress: false
   },
   {
-    entityType: 'BC',
+    entityType: CorpTypeCd.BC_COMPANY,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.BC_CCC,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.BC_ULC_COMPANY,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN,
+    custodianTitle: 'Custodian of Records',
+    hasPersonOnly: false,
+    hasPersonOrOrg: true,
+    partyType: PartyTypes.PERSON,
+    mailingAddress: {
+      addressCity: 'MockVille',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'v1v 1v1',
+      streetAddress: '123 Mock Ave'
+    },
+    inheritMailingAddress: false
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN,
     custodianTitle: 'Custodian of Records',
     hasPersonOnly: false,
     hasPersonOrOrg: true,

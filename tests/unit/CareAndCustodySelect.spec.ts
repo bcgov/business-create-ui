@@ -3,17 +3,36 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.vue'
 import { DissolutionResources } from '@/resources'
 import { RoleTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 // Test Case Data
 const custodianTestCases = [
   {
-    entityType: 'CP'
+    entityType: CorpTypeCd.COOP
   },
   {
-    entityType: 'BEN'
+    entityType: CorpTypeCd.BENEFIT_COMPANY
   },
   {
-    entityType: 'BC'
+    entityType: CorpTypeCd.BC_COMPANY
+  },
+  {
+    entityType: CorpTypeCd.BC_CCC
+  },
+  {
+    entityType: CorpTypeCd.BC_ULC_COMPANY
+  },
+  {
+    entityType: CorpTypeCd.BEN_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.CCC_CONTINUE_IN
+  },
+  {
+    entityType: CorpTypeCd.ULC_CONTINUE_IN
   }
 ]
 

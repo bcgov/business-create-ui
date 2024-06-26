@@ -92,7 +92,7 @@
       >
         <div class="d-flex flex-column flex-sm-row justify-center align-center">
           <img
-            v-if="isTypeCoop"
+            v-if="isEntityCoop"
             src="@/assets/images/BCRegistries_CoopAffidavit-x2.png"
             class="preview-image"
           >
@@ -183,7 +183,7 @@
 
     <!-- Upload Affidavit -->
     <section
-      v-if="isTypeCoop"
+      v-if="isEntityCoop"
       id="upload-affidavit-section"
       class="mt-10"
     >
@@ -294,7 +294,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
-  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAffidavitStepValidity!: (x: ValidationDetailIF) => void
@@ -319,7 +319,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   }
 
   get entityTitle (): string {
-    return this.isTypeCoop ? 'Cooperative Association' : 'Company'
+    return this.isEntityCoop ? 'Cooperative Association' : 'Company'
   }
 
   readonly confirmCompletionAffidavit = [

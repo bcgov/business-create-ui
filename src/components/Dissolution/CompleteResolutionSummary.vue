@@ -35,7 +35,7 @@
     </section>
 
     <section
-      v-if="isTypeCoop && !allResolutionValidationItemsInvalid"
+      v-if="isEntityCoop && !allResolutionValidationItemsInvalid"
       id="resolution-summary-section-3"
       class="section-container"
       :class="{ 'invalid-section': !getCreateResolutionStep.validationDetail.valid }"
@@ -184,7 +184,7 @@ export default class CompleteResolutionSummary extends Mixins(DateMixin) {
   @Getter(useStore) getCreateResolutionResource!: CreateResolutionResourceIF
   @Getter(useStore) getCreateResolutionStep!: CreateResolutionIF
   @Getter(useStore) isBaseCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
 
   // Enum for template
   readonly RouteNames = RouteNames

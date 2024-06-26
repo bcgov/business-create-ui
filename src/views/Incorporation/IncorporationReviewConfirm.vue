@@ -73,7 +73,7 @@
       </template>
 
       <!-- Rules -->
-      <template v-if="isTypeCoop">
+      <template v-if="isEntityCoop">
         <v-card
           id="rules-vcard"
           flat
@@ -88,7 +88,7 @@
       </template>
 
       <!-- Memorandum -->
-      <template v-if="isTypeCoop">
+      <template v-if="isEntityCoop">
         <v-card
           id="memorandum-vcard"
           flat
@@ -174,7 +174,7 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff && isTypeCoop"
+          :disableEdit="!isRoleStaff && isEntityCoop"
           :invalidSection="isCertifyInvalid"
           :isStaff="isRoleStaff"
         />
@@ -283,9 +283,8 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isBaseCompany!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void

@@ -351,11 +351,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isEntityFirm: boolean
+  @Getter(useStore) isEntitySoleProp: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) isTypeFirm: boolean
-  @Getter(useStore) isTypeSoleProp: boolean
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -409,24 +409,25 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     return this.getValidateSteps && !this.getStaffPaymentStep.valid
   }
 
-  // addition label if its SP/GPs
+  /** Additional label if it's SP/GP, else undefined. */
   get additionalLabel () {
     let label
-    if (this.isTypeFirm) { // if Sp/GP
-      label = this.isTypeSoleProp ? 'Proprietor' : 'Partners'
+    if (this.isEntityFirm) {
+      label = this.isEntitySoleProp ? 'Proprietor' : 'Partners'
     }
     return label
   }
 
   /**
-  Get additional value
-  if SP return proprietor email id
-  if GP return partner email ids (comma separated)
-  **/
+   * Additional value.
+   * - if SP, return proprietor email id
+   * - if GP, return partner email ids (comma separated)
+   * - else undefined
+   */
   get additionalValue () {
     let emailList
-    if (this.isTypeFirm) { // if Sp/GP
-      const roleType = this.isTypeSoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
+    if (this.isEntityFirm) {
+      const roleType = this.isEntitySoleProp ? RoleTypes.PROPRIETOR : RoleTypes.PARTNER
       const partnerDetails = this.getParties?.filter(people => people.roles.some(role => role.roleType === roleType))
 
       if (partnerDetails?.length > 0) {
@@ -456,9 +457,9 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     )
   }
 
-  /** Dissolution Error */
+  /** Returns dissolution error. */
   dissolutionError (): string {
-    if (this.isTypeFirm && this.getValidateSteps && !this.getDissolutionDate) {
+    if (this.isEntityFirm && this.getValidateSteps && !this.getDissolutionDate) {
       return 'Business dissolution date is required'
     }
     return ''

@@ -100,7 +100,7 @@
       </v-card>
 
       <!--Records Office Address -->
-      <template v-if="!isTypeCoop">
+      <template v-if="!isEntityCoop">
         <!-- Records Office -->
         <v-row
           no-gutters
@@ -261,7 +261,7 @@
       </v-row>
 
       <v-row
-        v-if="!isTypeCoop"
+        v-if="!isEntityCoop"
         id="summary-records-address"
         no-gutters
         class="mt-6"
@@ -327,7 +327,6 @@ import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { AddressIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CommonMixin } from '@/mixins'
 
 @Component({
@@ -359,9 +358,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   @Prop({ default: false }) readonly showErrors!: boolean
 
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
-  @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) isBaseCompany!: boolean
-  @Getter(useStore) isTypeCoop!: boolean
+  @Getter(useStore) isEntityCoop!: boolean
 
   // Local properties
   protected addresses: RegisteredRecordsAddressesIF = this.inputAddresses
@@ -405,7 +403,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 
   // Imports for template
   readonly OfficeAddressSchema = OfficeAddressSchema
-  readonly CorpTypeCd = CorpTypeCd
 
   /** Called when component is created. */
   created (): void {
@@ -493,15 +490,10 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
            !address.streetAddressAdditional)
   }
 
-  /* coop and corp display delivery address by default */
+  /** Whether to show the delivery address by default. */
   get showDeliveryAddressByDefault (): boolean {
-    return [
-      CorpTypeCd.COOP,
-      CorpTypeCd.BENEFIT_COMPANY,
-      CorpTypeCd.BC_CCC,
-      CorpTypeCd.BC_COMPANY,
-      CorpTypeCd.BC_ULC_COMPANY
-    ].includes(this.getEntityType)
+    // only coops and corps
+    return (this.isEntityCoop || this.isBaseCompany)
   }
 
   //
@@ -639,7 +631,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
         this.$refs.regDeliveryAddress.$refs.addressForm.validate()
       }
 
-      if (!this.isTypeCoop && !this.inheritRegisteredAddress) {
+      if (!this.isEntityCoop && !this.inheritRegisteredAddress) {
         // Records Mailing Address
         this.$refs.recMailingAddress.$refs.addressForm.validate()
         if (!this.inheritRecMailingAddress) {
@@ -660,7 +652,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   /** Emits updated addresses object to the parent page. */
   @Emit('update:addresses')
   private emitAddresses (): any {
-    if (!this.isTypeCoop) {
+    if (!this.isEntityCoop) {
       return {
         registeredOffice: {
           deliveryAddress: this.deliveryAddress,

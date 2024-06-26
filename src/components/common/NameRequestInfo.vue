@@ -275,22 +275,26 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) isAmalgamationFiling!: boolean
-  @Getter(useStore) isTypeBcCcc!: boolean
-  @Getter(useStore) isTypeBcUlcCompany!: boolean
-  @Getter(useStore) isTypeCccContinueIn!: boolean
-  @Getter(useStore) isTypeSoleProp!: boolean
-  @Getter(useStore) isTypeUlcContinueIn!: boolean
+  @Getter(useStore) isEntityBcCcc!: boolean
+  @Getter(useStore) isEntityBcUlcCompany!: boolean
+  @Getter(useStore) isEntityCccContinueIn!: boolean
+  @Getter(useStore) isEntitySoleProp!: boolean
+  @Getter(useStore) isEntityUlcContinueIn!: boolean
 
   get numberedCompanySuffix (): string {
-    if (this.isTypeBcCcc || this.isTypeCccContinueIn) return 'B.C. COMMUNITY CONTRIBUTION COMPANY LTD.'
-    if (this.isTypeBcUlcCompany || this.isTypeUlcContinueIn) return 'B.C. UNLIMITED LIABILITY COMPANY'
+    if (this.isEntityBcCcc || this.isEntityCccContinueIn) {
+      return 'B.C. COMMUNITY CONTRIBUTION COMPANY LTD.'
+    }
+    if (this.isEntityBcUlcCompany || this.isEntityUlcContinueIn) {
+      return 'B.C. UNLIMITED LIABILITY COMPANY'
+    }
     return 'B.C. LTD.'
   }
 
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
     const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
-    if (this.isTypeSoleProp) {
+    if (this.isEntitySoleProp) {
       return `${corpTypeDescription} or Doing Business As (DBA)`
     }
     return corpTypeDescription

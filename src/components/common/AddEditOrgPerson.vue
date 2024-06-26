@@ -26,7 +26,7 @@
 
           <!-- Title for org -->
           <label
-            v-if="isOrg && isTypeCoop"
+            v-if="isOrg && isEntityCoop"
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
@@ -50,7 +50,7 @@
           sm="9"
         >
           <MessageBox
-            v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
+            v-if="isCompletingParty && !isRoleStaff && isEntityCoop"
             color="gold"
           >
             <p>
@@ -65,7 +65,7 @@
           </MessageBox>
 
           <div
-            v-if="isCompletingParty && !isRoleStaff && isTypeCoop"
+            v-if="isCompletingParty && !isRoleStaff && isEntityCoop"
             class="mt-8"
           />
 
@@ -88,7 +88,7 @@
                   class="item"
                   label="First Name"
                   :rules="enableRules ? Rules.FirstNameRules : []"
-                  :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
                 />
                 <v-text-field
                   id="person__middle-name"
@@ -97,7 +97,7 @@
                   class="item"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRules: []"
-                  :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
                 />
                 <v-text-field
                   id="person__last-name"
@@ -106,7 +106,7 @@
                   class="item"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isCompletingParty && !isRoleStaff && isTypeCoop"
+                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
                 />
               </div>
             </article>
