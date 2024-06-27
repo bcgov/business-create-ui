@@ -98,7 +98,7 @@
         </h2>
         <p>
           Enter the Registered Office <span v-if="!isEntityCoop">and Records Office
-          </span> Mailing and Delivery Addresses. All addresses must be located in BC.
+          </span> Mailing and Delivery Addresses. All addresses must be located in B.C.
         </p>
       </header>
 
