@@ -34,7 +34,7 @@ describe('Amalgamation Business Information - regular amalgamation', () => {
   it('renders office addresses section', () => {
     const section = wrapper.findAll('section').at(0)
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
-    expect(section.find('header p').text()).toContain('Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting')
+    expect(section.find('header p').text()).toContain('Enter the Registered Office and Records Office Mailing and Delivery Addresses of the resulting')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
     expect(section.findComponent(MessageBox).exists()).toBe(false)
   })

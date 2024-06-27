@@ -9,8 +9,8 @@
         <h2>Registered and Records Office Addresses</h2>
 
         <p v-if="isAmalgamationFilingRegular">
-          Enter the Registered Office and Records Office Mailing and Delivery Addresses of the Resulting
-          businesses. All addresses must be located in BC.
+          Enter the Registered Office and Records Office Mailing and Delivery Addresses of the resulting
+          businesses. All addresses must be located in B.C.
         </p>
 
         <p v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">

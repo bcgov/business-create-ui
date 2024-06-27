@@ -9,7 +9,7 @@
         <h2>Registered and Records Office Addresses</h2>
         <p>
           Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
-          located in BC.
+          located in B.C.
         </p>
       </header>
 
