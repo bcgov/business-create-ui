@@ -28,7 +28,7 @@
         </h2>
         <p>
           Enter the Registered Office and Records Office Mailing and Delivery Addresses of the resulting
-          businesses. All addresses must be located in B.C.
+          business. All addresses must be located in B.C.
         </p>
       </header>
 
