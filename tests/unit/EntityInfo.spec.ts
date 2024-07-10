@@ -216,7 +216,7 @@ for (const mock of mockEntityInfo) {
       }
       if (mock.tombstone.filingType === FilingTypes.CONTINUATION_IN) {
         expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
-          .toContain(`${mock.description} Continuation In Application`)
+          .toContain(`${mock.description} Continuation Application`)
       }
 
       expect(wrapper.vm.$el.querySelector('#entity-nr-number').textContent)
@@ -255,7 +255,7 @@ for (const mock of mockEntityInfo) {
       }
       if (mock.tombstone.filingType === FilingTypes.CONTINUATION_IN) {
         expect(wrapper.vm.$el.querySelector('#entity-description').textContent)
-          .toContain(`${mock.description} Continuation In Application`)
+          .toContain(`${mock.description} Continuation Application`)
       }
     })
   })
