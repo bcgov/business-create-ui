@@ -14,6 +14,7 @@ import {
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
+  FilingStatus,
   FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
@@ -345,7 +346,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   }
 
   /**
-   * Builds an continuation in filing from store data. Used when saving a filing.
+   * Builds a continuation in filing from store data. Used when saving a filing.
    * @returns the filing body to save
    */
   buildContinuationInFiling (): ContinuationInFilingIF {
@@ -447,6 +448,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    */
   parseContinuationInDraft (draftFiling: ContinuationInFilingIF): void {
     const continuationIn = draftFiling.continuationIn
+    const status = draftFiling.header.status || null
 
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
@@ -472,10 +474,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         homeIdentifier: continuationIn.foreignJurisdiction.identifier,
         homeIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
         homeLegalName: continuationIn.foreignJurisdiction.legalName,
-        isConfirmed: false, // don't restore confirmation checkbox
+        isConfirmed: continuationIn.isConfirmed,
         mode: continuationIn.mode,
         status: continuationIn.status,
-        taxId: continuationIn.foreignJurisdiction.taxId
+        taxId: continuationIn.foreignJurisdiction.taxId,
+        latestReviewComment: draftFiling.header.latestReviewComment || null
       })
     }
 
@@ -558,14 +561,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // NB: Staff role is mutually exclusive with premium account.
-    if (this.isRoleStaff) {
+    if (status === FilingStatus.CHANGE_REQUESTED) {
+      // if user is editing a (previously filed) filing, waive fees as they don't have to pay again
+      this.parseStaffPayment({ header: { waiveFees: true } } as any)
+    } else if (this.isRoleStaff) {
       // restore Staff Payment data
+      // (NB: Staff role is mutually exclusive with premium account.)
       this.parseStaffPayment(draftFiling)
     }
 
     // if this is a premium account and Folio Number exists then restore it
-    // NB: Premium account is mutually exclusive with staff role.
+    // (NB: Premium account is mutually exclusive with staff role.)
     if (this.isPremiumAccount) {
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)

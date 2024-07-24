@@ -14,6 +14,7 @@ import { cloneDeep } from 'lodash'
 export const stateModel: StateModelIF = {
   currentJsDate: null,
   tombstone: {
+    filingStatus: null,
     filingType: null,
     keycloakGuid: null,
     keycloakRoles: [],

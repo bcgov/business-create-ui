@@ -46,7 +46,34 @@
 
     <v-divider class="mt-4 mb-8" />
 
-    <header>
+    <MessageBox
+      v-if="isShowMessageBox"
+      color="red"
+    >
+      <v-icon color="error">
+        mdi-alert
+      </v-icon>
+
+      <label
+        class="font-16"
+        for="textarea-message"
+      >
+        Change Requested:
+      </label>
+
+      <textarea
+        id="textarea-message"
+        v-auto-resize
+        class="font-16 font-italic ml-8"
+        readonly
+        rows="1"
+        :value="latestReviewComment"
+      />
+    </MessageBox>
+
+    <header
+      :class="{ 'mt-6': isShowMessageBox }"
+    >
       <p>
         Upload documents that support proof of authorization from your home jursidiction.
       </p>
@@ -105,15 +132,21 @@ import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
 import { ContinuationAuthorizationIF, ExistingBusinessInfoIF, FormIF, PresignedUrlIF } from '@/interfaces'
-import { PdfPageSize } from '@/enums'
+import { FilingStatus, PdfPageSize } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
+import AutoResize from 'vue-auto-resize'
+import MessageBox from '@/components/common/MessageBox.vue'
 
 @Component({
   components: {
     DatePickerShared,
-    FileUploadPreview
+    FileUploadPreview,
+    MessageBox
+  },
+  directives: {
+    AutoResize
   }
 })
 export default class ExtraproRegistration extends Mixins(DocumentMixin) {
@@ -128,6 +161,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
+  @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
 
@@ -165,6 +199,18 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       () => (!homeIncorporationDate || (this.authorization.date >= homeIncorporationDate)) ||
         'Authorization Date cannot be before Date of Incorporation in Home Jurisdiction'
     ]
+  }
+
+  /** The latest review comment. Only used when filing is in Change Requested status. */
+  get latestReviewComment (): string {
+    return this.getExistingBusinessInfo.latestReviewComment
+  }
+
+  get isShowMessageBox (): boolean {
+    return (
+      (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) &&
+      !!this.latestReviewComment
+    )
   }
 
   /** The number of file upload components to display (max 5). */
@@ -276,7 +322,7 @@ header {
   }
 }
 
-// set style for all root labels
+// set style for all labels
 label {
   font-weight: bold;
   color: $gray9;
@@ -298,6 +344,15 @@ label {
   :deep(.v-input__icon--append .v-icon) {
     color: $app-blue !important;
   }
+}
+
+textarea {
+  color: $gray7;
+  width: 100%;
+  resize: none;
+  // FUTURE: use field-sizing instead of "v-auto-resize" directive
+  // ref: https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing
+  // field-sizing: content;
 }
 
 // align the checkbox with its label

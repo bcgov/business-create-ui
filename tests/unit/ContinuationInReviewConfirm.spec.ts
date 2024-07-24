@@ -11,6 +11,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import { FilingStatus } from '@/enums'
 
 describe('Continuation In Review Confirm component', () => {
   it('renders the component correctly - Review and Confirm section', async () => {
@@ -42,7 +43,17 @@ describe('Continuation In Review Confirm component', () => {
   })
 
   it('renders the component correctly - Continuation Effective Date and Time section', async () => {
-    const wrapper = wrapperFactory(ContinuationInReviewConfirm)
+    const wrapper = wrapperFactory(
+      ContinuationInReviewConfirm,
+      null,
+      null,
+      null,
+      null,
+      // declare computed property to override store getter:
+      {
+        getFilingStatus: () => FilingStatus.DRAFT
+      }
+    )
     await Vue.nextTick()
 
     // verify that component exists
@@ -126,8 +137,9 @@ describe('Continuation In Review Confirm component', () => {
       null,
       null,
       null,
-      // declare computed property to override store getter:
+      // declare computed properties to override store getters:
       {
+        getFilingStatus: () => FilingStatus.DRAFT,
         isRoleStaff: () => true
       }
     )
@@ -142,6 +154,38 @@ describe('Continuation In Review Confirm component', () => {
     expect(sixthSection.find('header h2').text()).toBe('Staff Payment')
     expect(sixthSection.find('header p').text()).toBe('')
     expect(sixthSection.findComponent(StaffPayment).exists()).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('renders the components correctly - when status = Change Requested', async () => {
+    const wrapper = wrapperFactory(
+      ContinuationInReviewConfirm,
+      null,
+      null,
+      null,
+      null,
+      // declare computed properties to override store getters:
+      {
+        getFilingStatus: () => FilingStatus.CHANGE_REQUESTED,
+        isRoleStaff: () => true
+      }
+    )
+    await Vue.nextTick()
+
+    // verify that component exists
+    expect(wrapper.findComponent(ContinuationInReviewConfirm).exists()).toBe(true)
+    expect(wrapper.find('#continuation-in-review-confirm').exists()).toBe(true)
+
+    // verify Continuation Effective Date and Time section
+    const secondSection = wrapper.find('#continuation-effective-date-time-section')
+    expect(secondSection.find('header h2').text()).toBe('Continuation Effective Date and Time')
+    expect(secondSection.find('header p').text()).toBe('The incorporation date and time will be upon approval.')
+    expect(secondSection.findComponent(EffectiveDateTime).exists()).toBe(false)
+
+    // verify Staff Payment section
+    const sixthSection = wrapper.find('#staff-payment-section')
+    expect(sixthSection.exists()).toBe(false)
 
     wrapper.destroy()
   })

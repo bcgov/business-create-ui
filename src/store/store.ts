@@ -11,6 +11,7 @@ import {
   DissolutionTypes,
   EntityStates,
   FilingNames,
+  FilingStatus,
   FilingTypes,
   RelationshipTypes,
   RestorationTypes
@@ -185,6 +186,10 @@ export const useStore = defineStore('store', {
           return this.isEntityFirm ? FilingNames.DISSOLUTION_FIRM : FilingNames.VOLUNTARY_DISSOLUTION
         default: return null // should never happen
       }
+    },
+
+    getFilingStatus (): FilingStatus {
+      return this.stateModel.tombstone.filingStatus
     },
 
     /** Whether the user has "staff" Keycloak role. */
@@ -573,8 +578,8 @@ export const useStore = defineStore('store', {
       return this.stateModel.isFilingPaying
     },
 
-    /** Whether the Review and Confirm button should be displayed. */
-    isShowReviewConfirmBtn (): boolean {
+    /** Whether the "next" button should be displayed. */
+    isShowNextBtn (): boolean {
       return (!!this.getEntityType && this.getCurrentStep < this.getMaxStep)
     },
 
@@ -729,10 +734,12 @@ export const useStore = defineStore('store', {
      * TODO: Add all the remaining checks when all components are in place.
      */
     isContinuationInValid (): boolean {
-      const isEffectiveDateTimeValid = this.getEffectiveDateTime.valid
+      const isEffectiveDateTimeValid =
+        (this.getFilingStatus === FilingStatus.DRAFT) ? this.getEffectiveDateTime.valid : true
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+      const isStaffPaymentValid =
+        (this.isRoleStaff && this.getFilingStatus === FilingStatus.DRAFT) ? this.getStaffPaymentStep.valid : true
 
       return (
         this.isContinuationInBusinessHomeValid &&
@@ -1116,6 +1123,9 @@ export const useStore = defineStore('store', {
     },
     setFilingType (filingType: FilingTypes) {
       this.stateModel.tombstone.filingType = filingType
+    },
+    setFilingStatus (filingStatus: FilingStatus) {
+      this.stateModel.tombstone.filingStatus = filingStatus
     },
     setDissolutionType (dissolutionType: DissolutionTypes) {
       this.stateModel.dissolution.dissolutionType = dissolutionType
