@@ -2,7 +2,7 @@ import { AmalgamatingBusinessIF, BusinessAddressIF, ContinuationAuthorizationIF,
   NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF,
   SpecialResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
-  FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
+  FilingStatus, FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions, EntityStates } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
@@ -78,6 +78,8 @@ export interface ContinuationInFilingIF {
     filingId?: number // for existing filings (not used when building a new filing)
     folioNumber?: string // only displayed for certain account types
     isFutureEffective: boolean
+    status?: FilingStatus
+    latestReviewComment?: string // when filing is in CHANGE_REQUESTED state
 
     // staff payment properties:
     routingSlipNumber?: string

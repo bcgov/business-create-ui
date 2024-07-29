@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "5.11.8",
+  "version": "5.11.9",
   "private": true,
   "appName": "Create UI",
   "sbcName": "SBC Common Components",
@@ -60,6 +60,7 @@
     "uuid": "^9.0.0",
     "vue": "2.7.16",
     "vue-affix": "^0.5.2",
+    "vue-auto-resize": "^1.0.1",
     "vue-hotjar": "^1.4.0",
     "vue-observe-visibility": "^1.0.0",
     "vue-router": "^3.6.5",

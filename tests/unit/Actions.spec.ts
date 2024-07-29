@@ -11,7 +11,7 @@ import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
-import { FilingTypes } from '@/enums'
+import { FilingStatus, FilingTypes } from '@/enums'
 import { CorrectNameOptions, NameRequestStates } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
@@ -71,7 +71,7 @@ const nrData = {
   state: NameRequestStates.APPROVED
 }
 
-describe('Actions component', () => {
+describe('Actions component - Incorporation Application', () => {
   let wrapper: any
 
   beforeEach(() => {
@@ -100,11 +100,71 @@ describe('Actions component', () => {
     await Vue.nextTick()
 
     // verify File and Pay button state
+    expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('#file-pay-btn').text()).toBe('File and Pay')
   })
 
   it('Renders the component properly', () => {
     expect(wrapper.find('#action-buttons-container').exists()).toBe(true)
+  })
+})
+
+describe('Actions component - Continuation Application', () => {
+  it('Shows "Submit and Pay" button when filing is in Draft status', async () => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    router.push({ name: 'continuation-in-review-confirm', query: { id: 'T1234567' } })
+    const wrapper = shallowMount(Actions, {
+      // declare computed properties to override local and store getters:
+      computed: {
+        getFilingStatus: () => FilingStatus.DRAFT,
+        isShowFilePayBtn: () => true,
+        isSummaryStep: () => true
+      },
+      localVue,
+      router,
+      vuetify
+    })
+
+    // verify buttons
+    expect(wrapper.find('#app-summary-cancel-btn').text()).toBe('Cancel')
+    expect(wrapper.find('#save-btn').text()).toBe('Save')
+    expect(wrapper.find('#save-resume-btn').text()).toBe('Save and Resume Later')
+    expect(wrapper.find('#back-btn > span').text()).toBe('Back')
+    expect(wrapper.find('#next-btn').isVisible()).toBe(false)
+    expect(wrapper.find('#file-pay-btn').text()).toBe('Submit and Pay')
+
+    wrapper.destroy()
+  })
+
+  it('Shows "Resubmit" button when filing is in Change Requested status', async () => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    router.push({ name: 'continuation-in-review-confirm', query: { id: 'T1234567' } })
+    const wrapper = shallowMount(Actions, {
+      // declare computed properties to override local and store getters:
+      computed: {
+        getFilingStatus: () => FilingStatus.CHANGE_REQUESTED,
+        isShowFilePayBtn: () => true,
+        isSummaryStep: () => true
+      },
+      localVue,
+      router,
+      vuetify
+    })
+
+    // verify buttons
+    expect(wrapper.find('#app-summary-cancel-btn').text()).toBe('Cancel')
+    expect(wrapper.find('#save-btn').text()).toBe('Save')
+    expect(wrapper.find('#save-resume-btn').text()).toBe('Save and Resume Later')
+    expect(wrapper.find('#back-btn > span').text()).toBe('Back')
+    expect(wrapper.find('#next-btn').isVisible()).toBe(false)
+    expect(wrapper.find('#file-pay-btn').text()).toBe('Resubmit')
+
+    wrapper.destroy()
   })
 })
 

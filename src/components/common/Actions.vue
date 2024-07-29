@@ -4,6 +4,7 @@
     class="list-item pa-0"
   >
     <div class="buttons-left">
+      <!-- Cancel -->
       <v-btn
         v-if="isSummaryStep"
         id="app-summary-cancel-btn"
@@ -16,6 +17,7 @@
         <span>Cancel</span>
       </v-btn>
 
+      <!-- Save -->
       <v-btn
         id="save-btn"
         large
@@ -28,6 +30,7 @@
         <span>Save</span>
       </v-btn>
 
+      <!-- Save and Resume later -->
       <v-btn
         id="save-resume-btn"
         large
@@ -42,6 +45,7 @@
     </div>
 
     <div class="buttons-right">
+      <!-- Back -->
       <v-fade-transition hide-on-leave>
         <v-btn
           v-show="isShowBackBtn"
@@ -57,10 +61,11 @@
         </v-btn>
       </v-fade-transition>
 
+      <!-- "next" -->
       <v-fade-transition hide-on-leave>
         <v-btn
-          v-show="isShowReviewConfirmBtn"
-          id="review-confirm-btn"
+          v-show="isShowNextBtn"
+          id="next-btn"
           large
           color="primary"
           :to="nextRoute"
@@ -71,6 +76,7 @@
         </v-btn>
       </v-fade-transition>
 
+      <!-- File and Pay -->
       <v-fade-transition hide-on-leave>
         <v-btn
           v-show="isShowFilePayBtn"
@@ -80,7 +86,7 @@
           :loading="isFilingPaying"
           @click="onClickFilePay()"
         >
-          <span>File and Pay</span>
+          <span>{{ filePayButtonLabel }}</span>
         </v-btn>
       </v-fade-transition>
 
@@ -106,7 +112,7 @@ import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
 import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { LegalServices } from '@/services/'
-import { FilingTypes, RouteNames } from '@/enums'
+import { FilingStatus, FilingTypes, RouteNames } from '@/enums'
 import { NameRequestStates } from '@bcrs-shared-components/enums'
 
 @Component({})
@@ -114,6 +120,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   DateMixin, FilingTemplateMixin, NameRequestMixin) {
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
+  @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getFilingType!: string
   @Getter(useStore) getMaxStep!: number
   // @Getter(useStore) getNameRequestApplicant!: NrApplicantIF
@@ -126,7 +133,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   @Getter(useStore) isSaving!: boolean
   @Getter(useStore) isSavingResuming!: boolean
   @Getter(useStore) isShowFilePayBtn!: boolean
-  @Getter(useStore) isShowReviewConfirmBtn!: boolean
+  @Getter(useStore) isShowNextBtn!: boolean
 
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
@@ -135,20 +142,67 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   @Action(useStore) setIsSavingResuming!: (x: boolean) => void
   @Action(useStore) setValidateSteps!: (x: boolean) => void
 
-  /** Is True if the Back button should be displayed. */
+  /** Whether the Back button should be displayed. */
   get isShowBackBtn (): boolean {
     return (this.getCurrentStep > 1)
   }
 
+  /** Whether this is a filing summary step. */
   get isSummaryStep (): boolean {
     return (
       this.$route.name === RouteNames.AMALG_REG_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.AMALG_SHORT_REVIEW_CONFIRM ||
+      this.$route.name === RouteNames.CONTINUATION_IN_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.DISSOLUTION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.INCORPORATION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.REGISTRATION_REVIEW_CONFIRM ||
       this.$route.name === RouteNames.RESTORATION_REVIEW_CONFIRM
     )
+  }
+
+  /** The route to the previous step. */
+  get previousRoute (): string {
+    const prevStep = this.prev()
+    return prevStep?.to || null
+  }
+
+  /** Returns the previous step. */
+  private prev (): any {
+    const currentStep: number = this.$router.currentRoute.meta?.step
+    if (currentStep && currentStep > 1) {
+      return this.getSteps.find(step => step.step === currentStep - 1)
+    }
+    return null
+  }
+
+  /** The route to the next step. */
+  get nextRoute (): string | undefined {
+    const nextStep = this.next()
+    return nextStep?.to || null
+  }
+
+  /** Label for the Next button. */
+  get nextButtonLabel (): string {
+    const nextStep = this.next()
+    return nextStep ? nextStep.text.replaceAll('\n', ' ') : ''
+  }
+
+  /** Returns the next step. */
+  private next (): any {
+    const currentStep: number = this.$router.currentRoute.meta?.step
+    if (currentStep && currentStep < this.getMaxStep) {
+      return this.getSteps.find(step => step.step === currentStep + 1)
+    }
+    return null
+  }
+
+  /** Label for the File and Pay button. */
+  get filePayButtonLabel (): string {
+    if (this.$route.name === RouteNames.CONTINUATION_IN_REVIEW_CONFIRM) {
+      if (this.getFilingStatus === FilingStatus.DRAFT) return 'Submit and Pay'
+      if (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) return 'Resubmit'
+    }
+    return 'File and Pay'
   }
 
   /** Called when Cancel button is clicked. */
@@ -217,7 +271,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
    * @returns a promise (ie, this is an async method)
    */
   async onClickFilePay (): Promise<void> {
-    // Prompt Step validations
+    // prompt step validations
     this.setValidateSteps(true)
 
     if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
@@ -356,42 +410,6 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       this.$root.$emit('name-request-invalid-error', state || NameRequestStates.INVALID)
       throw new Error(`Invalid NR state = {$state}`)
     }
-  }
-
-  /** The route to the next step. */
-  get nextRoute (): string | undefined {
-    const nextStep = this.next()
-    return nextStep?.to || null
-  }
-
-  /** Label for the Next button. */
-  get nextButtonLabel (): string {
-    const nextStep = this.next()
-    return nextStep ? nextStep.text.replaceAll('\n', ' ') : ''
-  }
-
-  /** Returns the next step. */
-  private next (): any {
-    const currentStep: number | undefined = this.$router.currentRoute.meta?.step
-    if (currentStep && currentStep < this.getMaxStep) {
-      return this.getSteps.find(step => step.step === currentStep + 1)
-    }
-    return null
-  }
-
-  /** The route to the previous step. */
-  get previousRoute (): string | undefined {
-    const prevStep = this.prev()
-    return prevStep?.to || null
-  }
-
-  /** Returns the previous step. */
-  private prev (): any {
-    const currentStep: number | undefined = this.$router.currentRoute.meta?.step
-    if (currentStep && currentStep > 1) {
-      return this.getSteps.find(step => step.step === currentStep - 1)
-    }
-    return null
   }
 
   /** Emits Go To Dashboard event. */

@@ -73,6 +73,7 @@
 
     <!-- Continuation Effective Date and Time -->
     <section
+      v-if="(getFilingStatus === FilingStatus.DRAFT) || getEffectiveDateTime.isFutureEffective"
       id="continuation-effective-date-time-section"
       class="mt-10"
     >
@@ -95,6 +96,18 @@
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"
       />
+    </section>
+    <section
+      v-else
+      id="continuation-effective-date-time-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Continuation Effective Date and Time</h2>
+        <p class="mt-4">
+          The incorporation date and time will be upon approval.
+        </p>
+      </header>
     </section>
 
     <!-- Document Delivery -->
@@ -183,7 +196,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="isRoleStaff && getFilingStatus === FilingStatus.DRAFT"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -206,6 +219,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
+import { FilingStatus } from '@/enums'
 import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -234,12 +248,16 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
   }
 })
 export default class ContinuationInReviewConfirm extends Vue {
+  // enum for template
+  readonly FilingStatus = FilingStatus
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isRoleStaff!: boolean

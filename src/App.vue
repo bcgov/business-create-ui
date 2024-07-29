@@ -326,6 +326,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setCurrentStep!: (x: number) => void
   @Action(useStore) setEntityState!: (x: EntityStates) => void
   @Action(useStore) setFeePrices!: (x: Array<FeesIF>) => void
+  @Action(useStore) setFilingStatus!: (x: FilingStatus) => void
   @Action(useStore) setFilingType!: (x: FilingTypes) => void
   @Action(useStore) setGoodStanding!: (x: boolean) => void
   @Action(useStore) setIdentifier!: (x: string) => void
@@ -866,8 +867,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setFilingType(draftFiling.header.name)
 
     // check if filing is in a valid state to be edited
-    this.filingNotExistDialog = !this.hasValidFilingState(draftFiling)
-    if (this.filingNotExistDialog) return null
+    this.filingNotExistDialog = (draftFiling?.header?.status !== FilingStatus.DRAFT)
+    if (this.filingNotExistDialog) return null // don't continue
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
@@ -921,10 +922,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
 
     this.setFilingType(draftFiling.header.name)
+    this.setFilingStatus(draftFiling.header.status)
 
     // check if filing is in a valid state to be edited
-    this.filingNotExistDialog = !this.hasValidFilingState(draftFiling)
-    if (this.filingNotExistDialog) return null
+    this.filingNotExistDialog = (
+      draftFiling?.header?.status !== FilingStatus.DRAFT &&
+      draftFiling?.header?.status !== FilingStatus.CHANGE_REQUESTED
+    )
+    if (this.filingNotExistDialog) return null // don't continue
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
@@ -983,12 +988,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (nameRequest?.nrNumber) {
       await this.processNameRequest(draftFiling)
     }
-  }
-
-  /** Used to check if the filing is in a valid state for changes. */
-  private hasValidFilingState (filing: any): boolean {
-    const filingStatus = filing?.header?.status
-    return (filingStatus === FilingStatus.DRAFT)
   }
 
   /**
