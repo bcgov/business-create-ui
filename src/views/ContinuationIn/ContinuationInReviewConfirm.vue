@@ -92,6 +92,8 @@
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
         label="Incorporation Date and Time"
+        immediateLabel="Immediately upon approval"
+        futureEffectiveLabel="A date / time in the future (subject to approval)"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"

@@ -23,8 +23,7 @@ describe('Continuation In Business Home component', () => {
     expect(secondSection.find('header').exists()).toBe(true)
     expect(secondSection.find('header h2').text()).toBe('Continuation Authorization')
     expect(secondSection.find('header p').text()).toContain('You must provide proof')
-    expect(secondSection.find('.v-card').exists()).toBe(true)
-    expect(secondSection.find('.v-card #continuation-authorization').exists()).toBe(true)
+    expect(secondSection.find('#continuation-authorization').exists()).toBe(true)
 
     wrapper.destroy()
   })

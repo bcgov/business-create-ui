@@ -297,6 +297,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingData!: Array<FilingDataIF>
   @Getter(useStore) getFilingName!: FilingNames
+  @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
   @Getter(useStore) getOrgInformation!: OrgInformationIF
@@ -1362,6 +1363,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.isRouteName(RouteNames.REGISTRATION_REVIEW_CONFIRM) ||
       this.isRouteName(RouteNames.RESTORATION_REVIEW_CONFIRM)
     ) {
+      this.setShowErrors(true)
+    }
+
+    // enable validation right away if user is changing a submitted filing
+    if (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) {
       this.setShowErrors(true)
     }
   }
