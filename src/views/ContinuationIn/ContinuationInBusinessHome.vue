@@ -45,15 +45,9 @@
         </p>
       </header>
 
-      <v-card
-        flat
-        class="py-8 px-6"
-        :class="{ 'invalid-section': getShowErrors && !continuationAuthorizationValid }"
-      >
-        <ContinuationAuthorization
-          @valid="continuationAuthorizationValid = $event"
-        />
-      </v-card>
+      <ContinuationAuthorization
+        @valid="continuationAuthorizationValid = $event"
+      />
     </section>
   </div>
 </template>

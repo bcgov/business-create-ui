@@ -7,121 +7,160 @@
     v-if="authorization"
     id="continuation-authorization"
   >
-    <v-form
-      ref="formRef"
-      lazy-validation
-      @submit.prevent
+    <v-card
+      flat
+      class="py-8 px-6"
+      :class="{ 'invalid-section': getShowErrors && !authorizationDateValid }"
     >
-      <!-- Authorization Date -->
+      <v-form
+        ref="formRef"
+        lazy-validation
+        @submit.prevent
+      >
+        <!-- Authorization Date -->
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
+          >
+            <label>Authorization Date</label>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="9"
+            class="pl-8"
+          >
+            <DatePickerShared
+              id="authorization-date"
+              ref="authorizationDateRef"
+              title="Authorization Date"
+              :nudgeRight="40"
+              :nudgeTop="85"
+              hint="The date the authorization was issued"
+              :persistentHint="true"
+              :initialValue="authorization.date"
+              :inputRules="getShowErrors ? authorizationDateRules : []"
+              :minDate="minAuthorizationDate"
+              :maxDate="getCurrentDate"
+              @emitDateSync="authorization.date = $event"
+            />
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-card>
+
+    <v-card
+      flat
+      class="mt-6 py-8 px-6"
+      :class="{ 'invalid-section': getShowErrors && !authorizationFilesValid }"
+    >
+      <!-- Upload File -->
       <v-row no-gutters>
         <v-col
           cols="12"
           sm="3"
         >
-          <label>Authorization Date</label>
+          <label>Upload File</label>
         </v-col>
 
         <v-col
           cols="12"
           sm="9"
-          class="pl-8"
         >
-          <DatePickerShared
-            id="authorization-date"
-            ref="authorizationDateRef"
-            title="Authorization Date"
-            :nudgeRight="40"
-            :nudgeTop="85"
-            hint="The date the authorization was issued"
-            :persistentHint="true"
-            :initialValue="authorization.date"
-            :inputRules="getShowErrors ? authorizationDateRules : []"
-            :minDate="minAuthorizationDate"
-            :maxDate="getCurrentDate"
-            @emitDateSync="authorization.date = $event"
+          <p>
+            Upload documents that support proof of authorization from your home jursidiction.
+          </p>
+
+          <ul>
+            <li>
+              Use a white background and a legible font with contrasting font colour
+            </li>
+            <li>
+              PDF file type (maximum 30 MB file size)
+            </li>
+            <li>
+              Maximum 5 files
+            </li>
+          </ul>
+        </v-col>
+      </v-row>
+
+      <!-- file upload components -->
+      <v-row
+        v-for="(num, index) in numUploads"
+        :key="authorization.files[index]?.fileKey"
+        :class="(index === 0) ? 'mt-6' : 'mt-4'"
+        class="upload-file-row mb-n2"
+        no-gutters
+      >
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <!-- empty column -->
+        </v-col>
+
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <FileUploadPreview
+            inputFileLabel="Continuation authorization"
+            :maxSize="MAX_FILE_SIZE"
+            :pdfPageSize="PdfPageSize.LETTER_SIZE"
+            :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
+            :inputFile="authorization.files[index]?.file"
+            :showErrors="getShowErrors"
+            :customErrorMessage.sync="customErrorMessage[index]"
+            :isRequired="getShowErrors && (index === 0)"
+            @fileValidity="onFileValidity($event)"
+            @fileSelected="onFileSelected(index, $event)"
           />
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider class="mt-4 mb-8" />
-
-    <MessageBox
-      v-if="isShowMessageBox"
-      color="red"
-    >
-      <v-icon color="error">
-        mdi-alert
-      </v-icon>
-
-      <label
-        class="font-16"
-        for="textarea-message"
+      <!-- Change Requested message box -->
+      <v-row
+        v-if="isShowMessageBox"
+        class="mt-6"
+        no-gutters
       >
-        Change Requested:
-      </label>
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <!-- empty column -->
+        </v-col>
 
-      <textarea
-        id="textarea-message"
-        v-auto-resize
-        class="font-16 font-italic ml-8"
-        readonly
-        rows="1"
-        :value="latestReviewComment"
-      />
-    </MessageBox>
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <MessageBox color="red">
+            <v-icon color="error">
+              mdi-alert
+            </v-icon>
 
-    <header
-      :class="{ 'mt-6': isShowMessageBox }"
-    >
-      <p>
-        Upload documents that support proof of authorization from your home jursidiction.
-      </p>
+            <label
+              class="font-16"
+              for="textarea-message"
+            >
+              Change Requested:
+            </label>
 
-      <ul>
-        <li>
-          Use a white background and a legible font with contrasting font colour
-        </li>
-        <li>
-          PDF file type (maximum 30 MB file size)
-        </li>
-      </ul>
-    </header>
-
-    <div class="pt-4" />
-
-    <!-- file upload components -->
-    <v-row
-      v-for="(num, index) in numUploads"
-      :key="authorization.files[index]?.fileKey"
-      class="upload-file-row mt-4 mb-n2"
-      no-gutters
-    >
-      <v-col
-        cols="12"
-        sm="3"
-      >
-        <label v-if="index === 0">Upload File (Maximum 5)</label>
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="9"
-      >
-        <FileUploadPreview
-          inputFileLabel="Continuation authorization"
-          :maxSize="MAX_FILE_SIZE"
-          :pdfPageSize="PdfPageSize.LETTER_SIZE"
-          :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
-          :inputFile="authorization.files[index]?.file"
-          :showErrors="getShowErrors"
-          :customErrorMessage.sync="customErrorMessage[index]"
-          :isRequired="getShowErrors && (index === 0)"
-          @fileValidity="onFileValidity($event)"
-          @fileSelected="onFileSelected(index, $event)"
-        />
-      </v-col>
-    </v-row>
+            <textarea
+              id="textarea-message"
+              v-auto-resize
+              class="font-16 font-italic ml-8"
+              readonly
+              rows="1"
+              :value="latestReviewComment"
+            />
+          </MessageBox>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -172,6 +211,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   authorizationDateValid = false
   fileValidity = false
   customErrorMessage = ['', '', '', '', ''] // max 5 files
+  isFileAdded = false
 
   /**
    * The minimum date for the Authorization Date:
@@ -201,21 +241,35 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     ]
   }
 
+  /** Whether filing status is Change Requested. */
+  get isStatusChangeRequested (): boolean {
+    return (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED)
+  }
+
   /** The latest review comment. Only used when filing is in Change Requested status. */
   get latestReviewComment (): string {
     return this.getExistingBusinessInfo.latestReviewComment
   }
 
+  /** Whether to show the message box. */
   get isShowMessageBox (): boolean {
-    return (
-      (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) &&
-      !!this.latestReviewComment
-    )
+    return (this.isStatusChangeRequested && !!this.latestReviewComment)
   }
 
   /** The number of file upload components to display (max 5). */
   get numUploads (): number {
     return Math.min((this.authorization.files.length + 1), 5)
+  }
+
+  /** Whether authorization files section is valid. */
+  get authorizationFilesValid (): boolean {
+    // must have at least one file uploaded
+    // AND this must a draft filing or if it's a Change Requested filing
+    // then a new file must have been added
+    return (
+      (this.authorization?.files.length >= 1) &&
+      (!this.isStatusChangeRequested || this.isFileAdded)
+    )
   }
 
   /** Called when this component is mounted. */
@@ -275,6 +329,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
         fileKey: psu.key,
         fileName: file.name
       })
+
+      this.isFileAdded = true
     } else {
       // delete file from Minio; ignore errors
       await this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
@@ -296,19 +352,14 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     }
   }
 
-  @Watch('authorization', { deep: true })
+  @Watch('authorizationFilesValid') // re-validate when the Authorization Files validity changes
   @Watch('authorizationDateValid') // re-validate when the Authorization Date validity changes
   @Emit('valid')
   private onComponentValid (): boolean {
     // sync local object to the store
     this.setContinuationAuthorization(this.authorization)
 
-    // this component is valid if we have the valid authorization date
-    // and at least one file uploaded
-    return (
-      this.authorizationDateValid &&
-      (this.authorization.files.length >= 1)
-    )
+    return (this.authorizationDateValid && this.authorizationFilesValid)
   }
 }
 </script>
@@ -316,10 +367,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-header {
-  p, li {
-    color: $gray7;
-  }
+p, li {
+  color: $gray7;
 }
 
 // set style for all labels
@@ -353,6 +402,8 @@ textarea {
   // FUTURE: use field-sizing instead of "v-auto-resize" directive
   // ref: https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing
   // field-sizing: content;
+  // unset height as it's sometimes 0 initially
+  height: unset !important;
 }
 
 // align the checkbox with its label
