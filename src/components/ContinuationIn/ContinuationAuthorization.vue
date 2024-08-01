@@ -138,12 +138,15 @@
           sm="9"
         >
           <MessageBox color="red">
-            <v-icon color="error">
+            <v-icon
+              color="error"
+              dense
+            >
               mdi-alert
             </v-icon>
 
             <label
-              class="font-16"
+              class="font-14"
               for="textarea-message"
             >
               Change Requested:
@@ -152,7 +155,7 @@
             <textarea
               id="textarea-message"
               v-auto-resize
-              class="font-16 font-italic ml-8"
+              class="font-14 ml-6 pr-5 mb-n2"
               readonly
               rows="1"
               :value="latestReviewComment"
@@ -403,7 +406,7 @@ textarea {
   // ref: https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing
   // field-sizing: content;
   // unset height as it's sometimes 0 initially
-  height: unset !important;
+  height: unset;
 }
 
 // align the checkbox with its label
