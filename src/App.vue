@@ -199,8 +199,9 @@
               cols="12"
               lg="3"
             >
-              <!-- Render fee summary only after data is loaded. -->
-              <aside v-if="haveData">
+              <!-- Render fee summary only after data is loaded, -->
+              <!-- and if this isn't a change-requested filing. -->
+              <aside v-if="haveData && getFilingStatus !== FilingStatus.CHANGE_REQUESTED">
                 <affix
                   relative-element-selector=".col-lg-9"
                   :offset="{ top: 100, bottom: -100 }"
@@ -375,6 +376,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   // declarations for template
   readonly RouteNames = RouteNames
+  readonly FilingStatus = FilingStatus
   readonly FilingTypes = FilingTypes
   readonly axios = axios
   readonly window = window
