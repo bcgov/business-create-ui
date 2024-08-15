@@ -53,7 +53,7 @@ export const DissolutionResourceBen: DissolutionResourceIF = {
         'The affidavit references the Business Corporations Act, section 316.',
         `The director identified in the affidavit is a current director of the Company and is the director whose
         signature is on the affidavit.`,
-        'The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths for British Columbia.'
+        'The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths.'
       ]
     }
   },
