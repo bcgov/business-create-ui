@@ -1331,7 +1331,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (!this.haveData) {
         // assign the business id or temp id
         const id = this.$route.query?.id as string
-        if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM')) {
+        if (id?.startsWith('CP') || id?.startsWith('BC') || id?.startsWith('FM') || id?.startsWith('C')) {
           this.setBusinessId(id)
         } else {
           this.setTempId(id)
