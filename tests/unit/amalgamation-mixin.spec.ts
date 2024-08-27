@@ -304,5 +304,6 @@ describe('Amalgamation Mixin - rules', () => {
       wrapper.vm.setEntityType(legalType)
       expect(setEntityTypeSpy).toHaveBeenCalledWith(testCase.expected)
     })
+    setEntityTypeSpy.mockRestore()
   })
 })
