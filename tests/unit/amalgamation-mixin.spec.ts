@@ -286,4 +286,23 @@ describe('Amalgamation Mixin - rules', () => {
     store.setAmalgamationType(null)
     expect(wrapper.vm.foreignHorizontal({ type: AmlTypes.FOREIGN })).toBeNull()
   })
+
+  it('should set the correct entity type based on the primary company legal type', () => {
+    const setEntityTypeSpy = vi.spyOn(wrapper.vm, 'setEntityType')
+    const testCases = [
+      { input: CorpTypeCd.CONTINUE_IN, expected: CorpTypeCd.BC_COMPANY },
+      { input: CorpTypeCd.BEN_CONTINUE_IN, expected: CorpTypeCd.BENEFIT_COMPANY },
+      { input: CorpTypeCd.CCC_CONTINUE_IN, expected: CorpTypeCd.BC_CCC },
+      { input: CorpTypeCd.ULC_CONTINUE_IN, expected: CorpTypeCd.BC_ULC_COMPANY },
+      { input: CorpTypeCd.BC_ULC_COMPANY, expected: CorpTypeCd.BC_ULC_COMPANY },
+      { input: CorpTypeCd.BC_COMPANY, expected: CorpTypeCd.BC_COMPANY },
+      { input: CorpTypeCd.BENEFIT_COMPANY, expected: CorpTypeCd.BENEFIT_COMPANY }
+    ]
+    testCases.forEach(testCase => {
+      setEntityTypeSpy.mockClear()
+      const legalType = wrapper.vm.getLegalType(testCase.input)
+      wrapper.vm.setEntityType(legalType)
+      expect(setEntityTypeSpy).toHaveBeenCalledWith(testCase.expected)
+    })
+  })
 })
