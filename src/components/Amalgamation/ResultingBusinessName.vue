@@ -208,7 +208,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
         (b.type === AmlTypes.LEAR && b.name === name)
       )
       if (business?.type === AmlTypes.LEAR) {
-        this.setEntityType(business.legalType)
+        this.setEntityType(this.getLegalType(business.legalType))
         this.updateResources()
       }
     }
@@ -220,7 +220,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
 
     // as we are using a new NR, also use its legal type
     // and update resources (since legal type may have changed)
-    this.setEntityType(nameRequest.legalType)
+    this.setEntityType(this.getLegalType(nameRequest.legalType))
     this.updateResources()
   }
 

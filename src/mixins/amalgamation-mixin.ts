@@ -445,7 +445,7 @@ export default class AmalgamationMixin extends Vue {
     // set new resulting business name and legal type
     // and update resources (since legal type may have changed)
     this.setNameRequestApprovedName(business.name)
-    this.setEntityType(business.legalType)
+    this.setEntityType(this.getLegalType(business.legalType))
     this.updateResources()
   }
 
@@ -522,5 +522,25 @@ export default class AmalgamationMixin extends Vue {
   /** True if there is a BC company in the table. */
   get isAnyBcCompany (): boolean {
     return (this.isAnyBen || this.isAnyCcc || this.isAnyLimited || this.isAnyUnlimited)
+  }
+
+  /** The legal type of the new amalgamation filing. */
+  getLegalType (legalType: CorpTypeCd): CorpTypeCd {
+    switch (legalType) {
+      case CorpTypeCd.CONTINUE_IN:
+        return CorpTypeCd.BC_COMPANY
+
+      case CorpTypeCd.BEN_CONTINUE_IN:
+        return CorpTypeCd.BENEFIT_COMPANY
+
+      case CorpTypeCd.CCC_CONTINUE_IN:
+        return CorpTypeCd.BC_CCC
+
+      case CorpTypeCd.ULC_CONTINUE_IN:
+        return CorpTypeCd.BC_ULC_COMPANY
+
+      default:
+        return legalType
+    }
   }
 }
