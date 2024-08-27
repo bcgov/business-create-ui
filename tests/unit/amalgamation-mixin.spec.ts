@@ -296,7 +296,8 @@ describe('Amalgamation Mixin - rules', () => {
       { input: CorpTypeCd.ULC_CONTINUE_IN, expected: CorpTypeCd.BC_ULC_COMPANY },
       { input: CorpTypeCd.BC_ULC_COMPANY, expected: CorpTypeCd.BC_ULC_COMPANY },
       { input: CorpTypeCd.BC_COMPANY, expected: CorpTypeCd.BC_COMPANY },
-      { input: CorpTypeCd.BENEFIT_COMPANY, expected: CorpTypeCd.BENEFIT_COMPANY }
+      { input: CorpTypeCd.BENEFIT_COMPANY, expected: CorpTypeCd.BENEFIT_COMPANY },
+      { input: CorpTypeCd.BC_CCC, expected: CorpTypeCd.BC_CCC }
     ]
     testCases.forEach(testCase => {
       setEntityTypeSpy.mockClear()
