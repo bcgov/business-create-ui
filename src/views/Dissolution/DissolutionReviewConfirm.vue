@@ -251,7 +251,7 @@
           :contactValue="getBusinessContact.email"
           :custodianEmail="getDissolutionCustodianEmail"
           :completingPartyEmail="getUserEmail"
-          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          :documentOptionalEmail="documentOptionalEmail"
           contactLabel="Registered Office"
           @update:optionalEmail="setDocumentOptionalEmail($event)"
           @valid="setDocumentOptionalEmailValidity($event)"
@@ -496,6 +496,13 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
+  }
+
+  /** Get the Document Delievery email when a staff files.
+   * Default: staff email; editable.
+   */
+  get documentOptionalEmail (): string {
+    return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
   }
 }
 </script>

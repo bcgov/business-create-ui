@@ -63,6 +63,7 @@
           :contactValue="getBusinessContact.email"
           :editableCompletingParty="isRoleStaff || isSbcStaff"
           :completingPartyEmail="getUserEmail"
+          :documentOptionalEmail="documentOptionalEmail"
           :additionalLabel="documentDeliveryAdditionalLabel"
           :additionalValue="documentDeliveryAdditionalValue"
           :invalidSection="isDocumentDeliveryInvalid"
@@ -248,6 +249,13 @@ export default class RegistrationReviewConfirm extends Vue {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
+  }
+
+  /** Get the Document Delievery email when a staff files.
+   * Default: staff email; editable.
+   */
+  get documentOptionalEmail (): string {
+    return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
   }
 }
 </script>
