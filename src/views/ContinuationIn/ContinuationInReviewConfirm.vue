@@ -130,9 +130,15 @@
       >
         <DocumentDelivery
           class="py-8 px-6"
+          :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
+          :editableCompletingParty="isRoleStaff"
+          :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
+          :documentOptionalEmail="documentOptionalEmail"
           contactLabel="Registered Office"
+          @update:optionalEmail="setDocumentOptionalEmail($event)"
+          @valid="setDocumentOptionalEmailValidity($event)"
         />
       </v-card>
     </section>
@@ -222,7 +228,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingStatus } from '@/enums'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF, CourtOrderStepIF } from '@/interfaces'
+import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
+  CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -257,6 +264,7 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFilingStatus!: FilingStatus
@@ -267,6 +275,8 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
   @Action(useStore) setCourtOrderValidity!: (x: boolean) => void
+  @Action(useStore) setDocumentOptionalEmail!: (x: string) => void
+  @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
   @Action(useStore) setEffectiveDate!: (x: Date) => void
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
@@ -301,6 +311,18 @@ export default class ContinuationInReviewConfirm extends Vue {
   /** Is true when the Court Order conditions are not met. */
   get isCourtOrderInvalid (): boolean {
     return (this.getValidateSteps && !this.getCourtOrderStep.valid)
+  }
+
+  /** Is true when the Document Delivery conditions are not met. */
+  get isDocumentDeliveryInvalid (): boolean {
+    return (this.getValidateSteps && !this.getDocumentDelivery.valid)
+  }
+
+  /** Get the Document Delievery email when a staff files.
+   * Default: staff email; editable.
+   */
+  get documentOptionalEmail (): string {
+    return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
   }
 }
 </script>
