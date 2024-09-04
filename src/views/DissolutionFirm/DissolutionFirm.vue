@@ -125,7 +125,7 @@
           :contactValue="getBusinessContact.email"
           :custodianEmail="getDissolutionCustodianEmail"
           :completingPartyEmail="getUserEmail"
-          :documentOptionalEmail="getDocumentDelivery.documentOptionalEmail"
+          :documentOptionalEmail="documentOptionalEmail"
           :additionalLabel="additionalLabel"
           :additionalValue="additionalValue"
           contactLabel="Business Contact"
@@ -499,6 +499,14 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
         `Dissolution Date must be after ${this.dateToPacificDate(this.startDateMin, true)} and up to
         ${this.dateToPacificDate(this.startDateMax, true)}`
     ]
+  }
+
+  /**
+   * Get the Document Delivery email when a staff files.
+   * Default: staff email; editable.
+   */
+  get documentOptionalEmail (): string {
+    return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
   }
 
   /** The entity description.  */
