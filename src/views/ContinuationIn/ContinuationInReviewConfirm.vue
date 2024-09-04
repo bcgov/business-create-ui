@@ -318,7 +318,8 @@ export default class ContinuationInReviewConfirm extends Vue {
     return (this.getValidateSteps && !this.getDocumentDelivery.valid)
   }
 
-  /** Get the Document Delievery email when a staff files.
+  /**
+   * Get the Document Delivery email when a staff files.
    * Default: staff email; editable.
    */
   get documentOptionalEmail (): string {

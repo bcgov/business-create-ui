@@ -501,7 +501,8 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     ]
   }
 
-  /** Get the Document Delievery email when a staff files.
+  /**
+   * Get the Document Delivery email when a staff files.
    * Default: staff email; editable.
    */
   get documentOptionalEmail (): string {

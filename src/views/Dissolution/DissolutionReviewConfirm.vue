@@ -498,7 +498,8 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 
-  /** Get the Document Delievery email when a staff files.
+  /**
+   * Get the Document Delivery email when a staff files.
    * Default: staff email; editable.
    */
   get documentOptionalEmail (): string {
