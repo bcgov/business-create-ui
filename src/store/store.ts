@@ -774,7 +774,7 @@ export const useStore = defineStore('store', {
 
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
 
-      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+      const isCourtOrderValid = (this.isBaseCompany && this.isRoleStaff) ? this.getCourtOrderStep.valid : true
 
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
