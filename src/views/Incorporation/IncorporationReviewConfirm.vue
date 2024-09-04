@@ -315,10 +315,6 @@ export default class IncorporationReviewConfirm extends Vue {
 
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
-    // Set the Court Order section valid, when it is not visible
-    if (!(this.isBaseCompany && this.isRoleStaff)) {
-      this.setCourtOrderValidity(true)
-    }
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 
