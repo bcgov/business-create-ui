@@ -1433,8 +1433,13 @@ export const useStore = defineStore('store', {
     setWindowWidth (width: number) {
       this.stateModel.windowWidth = width
     },
+
+    //
+    // alamgamation-specific setters
+    //
     setAmalgamatingBusinesses (amalgamatingBusinesses: Array<AmalgamatingBusinessIF>) {
       this.stateModel.amalgamation.amalgamatingBusinesses = amalgamatingBusinesses
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     /** Adds specified item to end of amalgamating businesses list. */
     pushAmalgamatingBusiness (item: AmalgamatingBusinessIF) {
@@ -1451,45 +1456,55 @@ export const useStore = defineStore('store', {
     },
     setAmalgamationCourtApproval (courtApproval: boolean) {
       this.stateModel.amalgamation.courtApproval = courtApproval
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setAmalgamationCourtApprovalValid (valid: boolean) {
       this.stateModel.amalgamation.courtApprovalValid = valid
     },
     setAmalgamationType (type: AmalgamationTypes) {
       this.stateModel.amalgamation.type = type
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setRestorationType (type: RestorationTypes) {
-      this.stateModel.restoration.type = type
-    },
-    setRestorationExpiry (expiry: string) {
-      this.stateModel.restoration.expiry = expiry
-    },
-    setRestorationRelationships (relationships: RelationshipTypes[]) {
-      this.stateModel.restoration.relationships = relationships
-    },
-    setBusinessNameValid (valid: boolean) {
-      this.stateModel.restoration.businessNameValid = valid
-    },
-    setRestorationTypeValid (valid: boolean) {
-      this.stateModel.restoration.restorationTypeValid = valid
+
+    //
+    // restoration-specific setters
+    //
+    setRestorationApplicationDate (date: string) {
+      this.stateModel.restoration.applicationDate = date
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setRestorationApprovalType (type: ApprovalTypes) {
       this.stateModel.restoration.approvalType = type
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setRestorationCourtOrderNumber (fileNumber: string) {
-      this.stateModel.restoration.courtOrder.fileNumber = fileNumber
+    setRestorationApprovalTypeValid (valid: boolean) {
+      this.stateModel.restoration.approvalTypeValid = valid
+    },
+    setRestorationBusinessNameValid (valid: boolean) {
+      this.stateModel.restoration.businessNameValid = valid
     },
     setRestorationCourtOrder (courtOrder: CourtOrderIF) {
       this.stateModel.restoration.courtOrder = courtOrder
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setRestorationExpiry (expiry: string) {
+      this.stateModel.restoration.expiry = expiry
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setRestorationNoticeDate (date: string) {
       this.stateModel.restoration.noticeDate = date
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setRestorationApplicationDate (date: string) {
-      this.stateModel.restoration.applicationDate = date
+    setRestorationRelationships (relationships: RelationshipTypes[]) {
+      this.stateModel.restoration.relationships = relationships
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setApprovalTypeValid (valid: boolean) {
-      this.stateModel.restoration.approvalTypeValid = valid
+    setRestorationType (type: RestorationTypes) {
+      this.stateModel.restoration.type = type
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setRestorationTypeValid (valid: boolean) {
+      this.stateModel.restoration.restorationTypeValid = valid
     }
   }
 })

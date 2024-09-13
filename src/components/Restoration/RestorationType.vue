@@ -1,8 +1,6 @@
 <template>
   <div id="restoration-type">
-    <div
-      class="section-container"
-    >
+    <div class="section-container">
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -76,9 +74,8 @@
             <v-expand-transition>
               <div v-if="isLimitedRestorationFiling">
                 <LimitedRestorationPanel
-                  :currentDate="getCurrentDate"
-                  :expiryDate="getRestoration.expiry"
-                  @expiry="setRestorationExpiry($event)"
+                  :months="expiryMonths"
+                  @months="onMonthsChanged($event)"
                   @valid="setRestorationTypeValid($event)"
                 />
               </div>
@@ -130,6 +127,29 @@ export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
     return (this.getShowErrors && !this.getRestorationTypeValid)
   }
 
+  /** The expiry months from the limited restoration draft. */
+  get expiryMonths (): number {
+    const expiryDate = this.getRestoration.expiry
+    if (expiryDate) {
+      return this.subtractDates(this.getCurrentDate, expiryDate)
+    }
+    return 24 // default if no expiry date was set
+  }
+
+  /**
+   * When months has changed, sets the limited restoration extension expiry date in the store.
+   * @param months The number of months to extend the restoration (or null).
+   */
+  onMonthsChanged (months: number): void {
+    if (Number.isInteger(months)) {
+      // add the expiry months to today
+      this.setRestorationExpiry(this.addMonthsToDate(months, this.getCurrentDate))
+    } else {
+      // clear the expiry date
+      this.setRestorationExpiry(null)
+    }
+  }
+
   /**
    * Sets the selected Limited Restoration choice.
    * @param val the value of the selected radio button
@@ -137,8 +157,10 @@ export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
   changeRestorationType (): void {
     this.setRestorationType(this.selectRestorationType)
     if (this.isLimitedRestorationFiling) {
+      // reset relationships (which only applies to full restoration)
       this.setRestorationRelationships([])
-    } else {
+    } else if (this.isFullRestorationFiling) {
+      // reset expiry date (which only applies to limited restoration)
       this.setRestorationExpiry(null)
     }
   }
