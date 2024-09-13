@@ -13,7 +13,7 @@
         @courtNumberChange="setRestorationCourtOrder({ fileNumber: $event })"
         @update:noticeDate="setRestorationNoticeDate($event)"
         @update:applicationDate="setRestorationApplicationDate($event)"
-        @valid="setApprovalTypeValid($event)"
+        @valid="setRestorationApprovalTypeValid($event)"
       />
     </div>
   </div>
@@ -37,9 +37,9 @@ export default class ApprovalType extends Vue {
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setApprovalTypeValid!: (x: boolean) => void
   @Action(useStore) setRestorationApplicationDate!: (x: string) => void
   @Action(useStore) setRestorationApprovalType!: (x: ApprovalTypes) => void
+  @Action(useStore) setRestorationApprovalTypeValid!: (x: boolean) => void
   @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
   @Action(useStore) setRestorationNoticeDate!: (x: string) => void
 

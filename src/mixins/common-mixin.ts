@@ -1,6 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { isEqual } from 'lodash'
-import omit from 'lodash.omit'
+import { isEqual, omit } from 'lodash'
 import { ValidationItemDetailIF } from '@/interfaces'
 import { getName } from 'country-list'
 
