@@ -33,7 +33,7 @@
             <v-expand-transition>
               <div v-if="isFullRestorationFiling">
                 <div
-                  class="ml-8 tooltip-text"
+                  class="ml-8 mt-2 tooltip-text"
                   :class="{ 'error-text': invalidSection }"
                 >
                   Please select
@@ -56,7 +56,9 @@
                   to the company at the time the company was dissolved:
                 </div>
                 <RelationshipsPanel
+                  class="ml-8 mb-n2"
                   :draftRelationships="getRestoration.relationships"
+                  :showValidationErrors="getShowErrors"
                   @changed="setRestorationRelationships($event)"
                   @valid="setRestorationTypeValid($event)"
                 />
@@ -65,7 +67,7 @@
 
             <v-radio
               id="limited-radio-button"
-              class="pt-4 radio-button"
+              class="mt-4 radio-button"
               label="Limited Restoration"
               :value="RestorationTypes.LIMITED"
             />
@@ -175,6 +177,7 @@ export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
+
 .tooltip-text {
   color: $gray7;
 }
