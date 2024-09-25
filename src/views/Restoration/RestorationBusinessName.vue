@@ -34,7 +34,7 @@
         <h2>Restoration Type</h2>
         <p class="pt-2">
           Determine the restoration and approval type.
-          </p>
+        </p>
       </header>
       <v-card
         flat

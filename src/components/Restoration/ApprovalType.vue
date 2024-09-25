@@ -3,6 +3,7 @@
     <ApprovalTypeShared
       class="pa-8"
       :courtOrderNumber="getRestoration.courtOrder.fileNumber"
+      :approvedByCourtOrder="approvedByCourtOrder"
       :approvedByRegistrar="approvedByRegistrar"
       :noticeDate="getRestoration.noticeDate"
       :applicationDate="getRestoration.applicationDate"
@@ -44,8 +45,12 @@ export default class ApprovalType extends Vue {
   @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
   @Action(useStore) setRestorationNoticeDate!: (x: string) => void
 
+  get approvedByCourtOrder (): boolean {
+    return !!this.getRestoration.courtOrder.fileNumber
+  }
+
   get approvedByRegistrar (): boolean {
-    return (!!this.getRestoration.noticeDate && !!this.getRestoration.applicationDate)
+    return (!!this.getRestoration.noticeDate || !!this.getRestoration.applicationDate)
   }
 }
 </script>
