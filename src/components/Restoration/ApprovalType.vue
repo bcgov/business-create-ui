@@ -1,26 +1,24 @@
 <template>
   <div id="approval-type">
-    <div
-      class="section-container"
-    >
-      <ApprovalTypeShared
-        :courtOrderNumber="getRestoration.courtOrder.fileNumber"
-        :approvedByRegistrar="approvedByRegistrar"
-        :noticeDate="getRestoration.noticeDate"
-        :applicationDate="getRestoration.applicationDate"
-        :invalidSection="invalidSection"
-        @radioButtonChange="setRestorationApprovalType($event)"
-        @courtNumberChange="setRestorationCourtOrder({ fileNumber: $event })"
-        @update:noticeDate="setRestorationNoticeDate($event)"
-        @update:applicationDate="setRestorationApplicationDate($event)"
-        @valid="setRestorationApprovalTypeValid($event)"
-      />
-    </div>
+    <ApprovalTypeShared
+      class="pa-8"
+      :courtOrderNumber="getRestoration.courtOrder.fileNumber"
+      :approvedByRegistrar="approvedByRegistrar"
+      :noticeDate="getRestoration.noticeDate"
+      :applicationDate="getRestoration.applicationDate"
+      :invalidSection="invalidSection"
+      :validate="getShowErrors"
+      @radioButtonChange="setRestorationApprovalType($event)"
+      @courtNumberChange="setRestorationCourtOrder({ fileNumber: $event })"
+      @update:noticeDate="setRestorationNoticeDate($event)"
+      @update:applicationDate="setRestorationApplicationDate($event)"
+      @valid="setRestorationApprovalTypeValid($event)"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ApprovalTypes } from '@/enums'
@@ -33,6 +31,9 @@ import { ApprovalType as ApprovalTypeShared } from '@bcrs-shared-components/appr
   }
 })
 export default class ApprovalType extends Vue {
+  /** Whether this section is invalid. */
+  @Prop({ default: false }) readonly invalidSection!: boolean
+
   @Getter(useStore) getApprovalTypeValid!: boolean
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getShowErrors!: boolean
@@ -42,11 +43,6 @@ export default class ApprovalType extends Vue {
   @Action(useStore) setRestorationApprovalTypeValid!: (x: boolean) => void
   @Action(useStore) setRestorationCourtOrder!: (x: CourtOrderIF) => void
   @Action(useStore) setRestorationNoticeDate!: (x: string) => void
-
-  /** This section's validity state (when prompted by app). */
-  get invalidSection (): boolean {
-    return (this.getShowErrors && !this.getApprovalTypeValid)
-  }
 
   get approvedByRegistrar (): boolean {
     return (!!this.getRestoration.noticeDate && !!this.getRestoration.applicationDate)

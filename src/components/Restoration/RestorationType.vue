@@ -1,5 +1,8 @@
 <template>
-  <div id="restoration-type">
+  <div
+    id="restoration-type"
+    :class="{ 'invalid-section': invalidSection }"
+  >
     <div class="section-container">
       <v-row no-gutters>
         <v-col
@@ -90,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { DateMixin, CommonMixin } from '@/mixins'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
@@ -106,6 +109,9 @@ import { LimitedRestorationPanel } from '@bcrs-shared-components/limited-restora
   }
 })
 export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
+  /** Whether this section is invalid. */
+  @Prop({ default: false }) readonly invalidSection!: boolean
+
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getRestorationTypeValid!: boolean
@@ -123,11 +129,6 @@ export default class RestorationType extends Mixins(DateMixin, CommonMixin) {
 
   // Enum for template
   readonly RestorationTypes = RestorationTypes
-
-  /** This section's validity state (when prompted by app). */
-  get invalidSection (): boolean {
-    return (this.getShowErrors && !this.getRestorationTypeValid)
-  }
 
   /** The expiry months from the limited restoration draft. */
   get expiryMonths (): number {
