@@ -1,13 +1,13 @@
 <template>
   <div id="restoration-business-name">
-    <!-- Business Name and Name Translations -->
+    <!-- Name section -->
     <section
       id="name-section"
       class="mt-10"
     >
       <header>
         <h2>Name</h2>
-        <p>
+        <p class="pt-2">
           Add a Name Request that is reserved for this restoration application or restore
           as a numbered company.
         </p>
@@ -25,14 +25,14 @@
       </v-card>
     </section>
 
-    <!-- Restoration Type and Approval Type -->
+    <!-- Restoration Type section -->
     <section
       id="restoration-type-section"
       class="mt-10"
     >
       <header>
         <h2>Restoration Type</h2>
-        <p>Determine the restoration and approval type.</p>
+        <p class="pt-2">Determine the restoration and approval type.</p>
       </header>
       <v-card
         flat
@@ -40,20 +40,19 @@
       >
         <RestorationType
           id="restoration-type"
-          :class="{ 'approval-restoration-invalid-section': invalidSectionRestoration }"
+          :invalidSection="invalidSectionRestoration"
         />
 
-        <!-- Divider b/w Restoration and Approval type -->
         <div
-          class="px-5"
           :class="{ 'invalid-divider': invalidSectionRestoration && invalidSectionApproval }"
+          class="px-5"
         >
           <v-divider />
         </div>
 
         <ApprovalType
           id="approval-type"
-          :class="{ 'approval-restoration-invalid-section': invalidSectionApproval }"
+          :invalidSection="invalidSectionApproval"
         />
       </v-card>
     </section>
@@ -157,19 +156,9 @@ h2::before {
   content: counter(header-counter) '. ';
 }
 
-header p {
-  padding-top: 0.5rem;
-}
-
-/* Invalid Section border for Approval and Restoration Type */
-.approval-restoration-invalid-section{
-  box-shadow: inset 3px 0 0 $app-red;
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-}
-
-#restoration-type-section .v-card .invalid-divider {
+.invalid-divider {
   border-left: 3px solid $BCgovInputError !important;
+  // adjust left padding (was originally px-5)
   padding-left: calc(20px - 3px) !important;
 }
 </style>
