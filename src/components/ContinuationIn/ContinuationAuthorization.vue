@@ -7,55 +7,48 @@
     v-if="authorization"
     id="continuation-authorization"
   >
+    <!-- Authorization Date -->
     <v-card
       flat
       class="py-8 px-6"
       :class="{ 'invalid-section': getShowErrors && !authorizationDateValid }"
     >
-      <v-form
-        ref="formRef"
-        lazy-validation
-        @submit.prevent
-      >
-        <!-- Authorization Date -->
-        <v-row no-gutters>
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Authorization Date</label>
-          </v-col>
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+        >
+          <label>Authorization Date</label>
+        </v-col>
 
-          <v-col
-            cols="12"
-            sm="9"
-            class="pl-8"
-          >
-            <DatePickerShared
-              id="authorization-date"
-              ref="authorizationDateRef"
-              title="Authorization Date"
-              :nudgeRight="40"
-              :nudgeTop="85"
-              hint="The date the authorization was issued"
-              :persistentHint="true"
-              :initialValue="authorization.date"
-              :inputRules="getShowErrors ? authorizationDateRules : []"
-              :minDate="minAuthorizationDate"
-              :maxDate="getCurrentDate"
-              @emitDateSync="authorization.date = $event"
-            />
-          </v-col>
-        </v-row>
-      </v-form>
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <DatePickerShared
+            id="authorization-date"
+            ref="authorizationDateRef"
+            title="Authorization Date"
+            :nudgeRight="40"
+            :nudgeTop="85"
+            hint="The date the authorization was issued"
+            :persistentHint="true"
+            :initialValue="authorization.date"
+            :inputRules="getShowErrors ? authorizationDateRules : []"
+            :minDate="minAuthorizationDate"
+            :maxDate="getCurrentDate"
+            @emitDateSync="authorization.date = $event"
+          />
+        </v-col>
+      </v-row>
     </v-card>
 
+    <!-- Upload File -->
     <v-card
       flat
       class="mt-6 py-8 px-6"
       :class="{ 'invalid-section': getShowErrors && !authorizationFilesValid }"
     >
-      <!-- Upload File -->
       <v-row no-gutters>
         <v-col
           cols="12"
@@ -69,7 +62,8 @@
           sm="9"
         >
           <p>
-            Upload documents that support proof of authorization from your home jursidiction.
+            Upload one or more documents that show proof of authorization to continue out of your
+            previous jursidiction.
           </p>
 
           <ul>
@@ -83,15 +77,41 @@
               Maximum 5 files
             </li>
           </ul>
+
+          <v-btn
+            id="add-document-button"
+            outlined
+            color="primary"
+            class="btn-outlined-primary mt-4"
+            :disabled="numFiles >= 5"
+            @click="onClickAddDocumentButton()"
+          >
+            <v-icon>mdi-plus</v-icon>
+            <span>Add a Document</span>
+          </v-btn>
+
+          <p
+            v-if="customErrorMessage"
+            class="error-text mt-4 mb-0"
+          >
+            {{ customErrorMessage }}
+          </p>
+
+          <FileUploadPreview
+            ref="fileUploadPreview"
+            class="d-none mt-6"
+            :maxSize="MAX_FILE_SIZE"
+            :customErrorMessage.sync="customErrorMessage"
+            @fileValidity="onFileValidity($event)"
+            @fileSelected="onFileSelected($event)"
+          />
         </v-col>
       </v-row>
 
-      <!-- file upload components -->
       <v-row
-        v-for="(num, index) in numUploads"
-        :key="authorization.files[index]?.fileKey"
-        :class="(index === 0) ? 'mt-6' : 'mt-4'"
-        class="upload-file-row mb-n2"
+        v-for="(num, index) in numFiles"
+        :key="authorization.files[index].fileKey"
+        class="upload-file-row mt-5 mb-n2"
         no-gutters
       >
         <v-col
@@ -104,19 +124,24 @@
         <v-col
           cols="12"
           sm="9"
+          class="dk-gray-background rounded d-flex justify-space-between px-2 py-1"
         >
-          <FileUploadPreview
-            inputFileLabel="Continuation authorization"
-            :maxSize="MAX_FILE_SIZE"
-            :pdfPageSize="PdfPageSize.LETTER_SIZE"
-            :hint="authorization.files[index]?.file ? 'File uploaded' : undefined"
-            :inputFile="authorization.files[index]?.file"
-            :showErrors="getShowErrors"
-            :customErrorMessage.sync="customErrorMessage[index]"
-            :isRequired="getShowErrors && (index === 0)"
-            @fileValidity="onFileValidity($event)"
-            @fileSelected="onFileSelected(index, $event)"
-          />
+          <div class="document-details">
+            <v-icon>mdi-paperclip</v-icon>
+            <span class="pl-2">{{ authorization.files[index]?.file.name }}</span>
+            <span class="pl-2">({{ friendlyFileSize(authorization.files[index]?.file.size) }})</span>
+          </div>
+          <v-btn
+            class="remove-document-button"
+            text
+            color="primary"
+            @click="onFileSelected(null, index)"
+          >
+            <span>Remove</span>
+            <v-icon dense>
+              mdi-close
+            </v-icon>
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -173,8 +198,8 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
-import { ContinuationAuthorizationIF, ExistingBusinessInfoIF, FormIF, PresignedUrlIF } from '@/interfaces'
-import { FilingStatus, PdfPageSize } from '@/enums'
+import { ContinuationAuthorizationIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { FilingStatus } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
@@ -195,10 +220,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   // Refs
   $refs!: {
     authorizationDateRef: DatePickerShared,
-    formRef: FormIF
+    fileUploadPreview: FileUploadPreview
   }
-
-  readonly PdfPageSize = PdfPageSize
 
   @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
   @Getter(useStore) getCurrentDate!: string
@@ -213,7 +236,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   authorization = null as ContinuationAuthorizationIF
   authorizationDateValid = false
   fileValidity = false
-  customErrorMessage = ['', '', '', '', ''] // max 5 files
+  customErrorMessage = ''
   isFileAdded = false
 
   /**
@@ -259,9 +282,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     return (this.isStatusChangeRequested && !!this.latestReviewComment)
   }
 
-  /** The number of file upload components to display (max 5). */
-  get numUploads (): number {
-    return Math.min((this.authorization.files.length + 1), 5)
+  get numFiles (): number {
+    return (this.authorization?.files.length || 0)
   }
 
   /** Whether authorization files section is valid. */
@@ -270,7 +292,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     // AND this must a draft filing or if it's a Change Requested filing
     // then a new file must have been added
     return (
-      (this.authorization?.files.length >= 1) &&
+      (this.numFiles >= 1) &&
       (!this.isStatusChangeRequested || this.isFileAdded)
     )
   }
@@ -279,6 +301,20 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   mounted (): void {
     this.authorization = this.getContinuationAuthorization ||
       { files: [], date: null } as ContinuationAuthorizationIF
+  }
+
+  /** When user has clicked Add button, opens the file upload dialog. */
+  onClickAddDocumentButton (): void {
+    this.$refs.fileUploadPreview.clickFileInput()
+  }
+
+  /** Converts a file size to a string in MB, KB or bytes. */
+  friendlyFileSize (size: number): string {
+    const sizeKB = size / 1024
+    const sizeMB = sizeKB / 1024
+    if (sizeMB > 1) return `${sizeMB.toFixed(1)} MB`
+    if (sizeKB > 1) return `${sizeKB.toFixed(0)} KB`
+    return `${size} bytes`
   }
 
   /**
@@ -292,8 +328,10 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   /**
    * Called when FileUploadPreview tells us about a new or cleared file.
    * This is called right after the File Validity event.
+   * @param file the file to add or null to delete
+   * @param index the index of the file to delete
    */
-  async onFileSelected (index: number, file: File): Promise<void> {
+  async onFileSelected (file: File, index = 0): Promise<void> {
     if (file) {
       // verify that file is valid
       if (!this.fileValidity) {
@@ -304,8 +342,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
         // put file uploader into manual error mode by setting custom error message
-        this.customErrorMessage[index] = 'Duplicate file'
-        this.$forceUpdate() // force file upload component to react
+        this.customErrorMessage = 'Duplicate file'
         return // don't add to list
       }
 
@@ -317,8 +354,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
         if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
         // put file uploader into manual error mode by setting custom error message
-        this.customErrorMessage[index] = this.UPLOAD_FAILED_MESSAGE
-        this.$forceUpdate() // force file upload component to react
+        this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
         return // don't add to array
       }
 
@@ -349,8 +385,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
     if (this.getShowErrors) {
       // wait for form to finish rendering
       await this.$nextTick()
-      // validate the form and our custom component that doesn't support form validation
-      this.$refs.formRef.validate()
+      // validate date component
       this.authorizationDateValid = this.$refs.authorizationDateRef.validateForm()
     }
   }
@@ -432,5 +467,9 @@ ul {
     margin-left: -1.5em;
     padding-left: 0.25rem;
   }
+}
+
+.document-details {
+  padding-top: 6px;
 }
 </style>
