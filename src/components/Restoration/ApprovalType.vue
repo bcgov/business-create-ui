@@ -9,7 +9,7 @@
       :applicationDate="getRestoration.applicationDate"
       :invalidSection="invalidSection"
       :validate="getShowErrors"
-      @radioButtonChange="setRestorationApprovalType($event)"
+      @approvalTypeChange="setRestorationApprovalType($event)"
       @courtNumberChange="setRestorationCourtOrder({ fileNumber: $event })"
       @update:noticeDate="setRestorationNoticeDate($event)"
       @update:applicationDate="setRestorationApplicationDate($event)"
