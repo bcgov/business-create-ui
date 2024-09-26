@@ -43,7 +43,7 @@
       </v-row>
     </v-card>
 
-    <!-- Upload File -->
+    <!-- Upload Documents -->
     <v-card
       flat
       class="mt-6 py-8 px-6"
@@ -54,7 +54,7 @@
           cols="12"
           sm="3"
         >
-          <label>Upload File</label>
+          <label>Upload Documents</label>
         </v-col>
 
         <v-col

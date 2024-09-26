@@ -26,7 +26,7 @@ describe('Continuation Authorization component', () => {
     rows = secondVcard.findAll('.row')
     expect(rows.length).toBe(1)
 
-    expect(rows.at(0).find('.col-sm-3 > label').text()).toBe('Upload File')
+    expect(rows.at(0).find('.col-sm-3 > label').text()).toBe('Upload Documents')
     expect(rows.at(0).find('.col-sm-9 > p').text()).toContain('Upload one or more documents')
     expect(rows.at(0).find('.col-sm-9 > ul').text()).toContain('Use a white background')
     expect(rows.at(0).find('.col-sm-9 > ul').text()).toContain('PDF file type')
