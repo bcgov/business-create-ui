@@ -84,6 +84,7 @@
             color="primary"
             class="btn-outlined-primary mt-4"
             :disabled="numFiles >= 5"
+            :loading="isDocumentLoading"
             @click="onClickAddDocumentButton()"
           >
             <v-icon>mdi-plus</v-icon>
@@ -238,6 +239,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   fileValidity = false
   customErrorMessage = ''
   isFileAdded = false
+  isDocumentLoading = false
 
   /**
    * The minimum date for the Authorization Date:
@@ -332,25 +334,34 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
    * @param index the index of the file to delete
    */
   async onFileSelected (file: File, index = 0): Promise<void> {
-    // verify that file is valid
-    if (this.fileValidity && file) {
+    if (file) {
+      // verify that file is valid
+      if (!this.fileValidity) {
+        // if file loader hasn't set an error message, set default message
+        if (!this.customErrorMessage) this.customErrorMessage = 'Invalid file.'
+        return // don't add to array
+      }
+
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
-        // put file uploader into manual error mode by setting custom error message
-        this.customErrorMessage = 'Duplicate file'
+        // set error message
+        this.customErrorMessage = 'Duplicate file.'
         return // don't add to array
       }
 
       // try to upload to Minio
       let psu: PresignedUrlIF
       try {
+        this.isDocumentLoading = true
         psu = await this.getPresignedUrl(file.name)
         const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
         if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
-        // put file uploader into manual error mode by setting custom error message
+        // set error message
         this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
         return // don't add to array
+      } finally {
+        this.isDocumentLoading = false
       }
 
       // add file to array
@@ -372,6 +383,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       // remove file from array
       this.authorization.files.splice(index, 1)
+      // clear previous error message, if any
+      this.customErrorMessage = null
     }
   }
 

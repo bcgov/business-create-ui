@@ -14,7 +14,7 @@ export default class DocumentMixin extends Vue {
       pointsPerInch: 72,
       width: 8.5,
       height: 11,
-      validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper'
+      validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper.'
     }
   }
 
