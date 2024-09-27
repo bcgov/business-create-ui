@@ -61,7 +61,7 @@
           cols="12"
           sm="9"
         >
-          <p>
+          <p :class="{ 'error-text': getShowErrors && !authorizationFilesValid }">
             Upload one or more documents that show proof of authorization to continue out of your
             previous jursidiction.
           </p>
@@ -392,6 +392,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   @Watch('authorizationFilesValid') // re-validate when the Authorization Files validity changes
   @Watch('authorizationDateValid') // re-validate when the Authorization Date validity changes
+  @Watch('authorization.files') // update store when files are added or removed
   @Emit('valid')
   private onComponentValid (): boolean {
     // sync local object to the store
