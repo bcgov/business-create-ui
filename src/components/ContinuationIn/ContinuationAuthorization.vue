@@ -332,18 +332,13 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
    * @param index the index of the file to delete
    */
   async onFileSelected (file: File, index = 0): Promise<void> {
-    if (file) {
-      // verify that file is valid
-      if (!this.fileValidity) {
-        // NB: as this is validity according to the component, do not overwrite current error message
-        return // don't add to array and don't change existing file
-      }
-
+    // verify that file is valid
+    if (this.fileValidity && file) {
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
         // put file uploader into manual error mode by setting custom error message
         this.customErrorMessage = 'Duplicate file'
-        return // don't add to list
+        return // don't add to array
       }
 
       // try to upload to Minio
@@ -370,9 +365,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       })
 
       this.isFileAdded = true
-    } else {
-      // delete file from Minio; ignore errors
-      await this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
+    } else if (file === null) {
+      // null file means user clicked Remove button - proceed
+      // undefined file means file upload was cancelled - do nothing
+      // delete file from Minio, not waiting for response and ignoring errors
+      this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       // remove file from array
       this.authorization.files.splice(index, 1)
     }
