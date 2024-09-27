@@ -303,7 +303,7 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       { files: [], date: null } as ContinuationAuthorizationIF
   }
 
-  /** When user has clicked Add button, opens the file upload dialog. */
+  /** When user has clicked the Add button, opens the file selection dialog. */
   onClickAddDocumentButton (): void {
     this.$refs.fileUploadPreview.clickFileInput()
   }
