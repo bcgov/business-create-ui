@@ -17,9 +17,12 @@
           <div
             class="font-14 ml-3"
           >
-            Not extraprovincially registered in B.C.?
-            &nbsp; &nbsp;
-            <a @click="onClick()">Enter your business information manually</a>
+            Not extraprovincially registered in B.C.?<br>
+            <a @click="onClick()">
+              <span class="font-weight-bold text-decoration-underline">
+                Enter your business information manually
+              </span>
+            </a>
           </div>
         </v-col>
       </v-row>

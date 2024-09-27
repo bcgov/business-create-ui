@@ -5,6 +5,7 @@
     lazy-validation
   >
     <v-file-input
+      id="file-input"
       v-model="fileUpload"
       :label="label"
       filled
@@ -83,6 +84,13 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
       await this.$nextTick()
     }
     await this.computeEmitFileValidity(this.fileUpload)
+  }
+
+  /** Programmatically opens the file selection dialog. Can be called externally. */
+  public clickFileInput (): void {
+    // find the find input element in THIS component (not globally)
+    const element = this.$el.querySelector('#file-input') as HTMLElement
+    element.click()
   }
 
   // Note: the validation is done this way as opposed to being all defined in the validation rules(fileUploadRules)
