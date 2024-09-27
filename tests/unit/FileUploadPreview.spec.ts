@@ -94,7 +94,7 @@ describe('FileUploadPreview component', () => {
     await fileInput.trigger('change')
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('File is required')
+    expect(messages.at(0).text()).toBe('File is required.')
 
     wrapper.destroy()
   })
@@ -128,7 +128,7 @@ describe('FileUploadPreview component', () => {
     await fileInput.trigger('change')
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Exceeds maximum 10 MB file size')
+    expect(messages.at(0).text()).toBe('Exceeds maximum 10 MB file size.')
 
     wrapper.destroy()
   })
@@ -187,7 +187,7 @@ describe('FileUploadPreview component', () => {
     await waitForUpdate(5)
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
+    expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper.')
 
     wrapper.destroy()
   }, 10000)
@@ -209,7 +209,7 @@ describe('FileUploadPreview component', () => {
     await waitForUpdate(5)
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper')
+    expect(messages.at(0).text()).toBe('Document must be set to fit onto 8.5” x 11” letter-size paper.')
 
     wrapper.destroy()
   }, 10000)
@@ -231,7 +231,7 @@ describe('FileUploadPreview component', () => {
     await waitForUpdate(3)
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('File must be unencrypted')
+    expect(messages.at(0).text()).toBe('File must not be encrypted.')
 
     wrapper.destroy()
   })
@@ -254,7 +254,7 @@ describe('FileUploadPreview component', () => {
     await waitForUpdate(3)
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('File content cannot be locked')
+    expect(messages.at(0).text()).toBe('File content cannot be locked.')
 
     wrapper.destroy()
   })

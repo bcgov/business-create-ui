@@ -54,14 +54,14 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     return [
       (file: File) => {
         if (this.isRequired) {
-          return !!file || this.inputFileLabel + ' is required'
+          return !!file || this.inputFileLabel + ' is required.'
         }
         return true
       },
       (file: File) => {
         if (file && this.maxSize) {
           const maxSizeMB = this.maxSize / 1024
-          const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size'
+          const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size.'
           return (file?.size <= (this.maxSize * 1024)) || errorMsg
         }
         return true
@@ -69,7 +69,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
       (file: File) => {
         if (file) {
           const pattern = /^(.*)\.(pdf)$/i
-          return pattern.test(file.name) || 'Invalid file extension'
+          return pattern.test(file.name) || 'Invalid file extension.'
         }
         return true
       }
@@ -111,15 +111,15 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
       if (typeof file.arrayBuffer === 'undefined') { return true }
       const fileInfo = await this.retrieveFileInfo(file)
       if (!fileInfo) {
-        this.setCustomErrorMessage('Invalid PDF file')
+        this.setCustomErrorMessage('Invalid PDF file.')
         return false
       }
       if (fileInfo.isEncrypted) {
-        this.setCustomErrorMessage('File must be unencrypted')
+        this.setCustomErrorMessage('File must not be encrypted.')
         return false
       }
       if (fileInfo.isContentLocked) {
-        this.setCustomErrorMessage('File content cannot be locked')
+        this.setCustomErrorMessage('File content cannot be locked.')
         return false
       }
       const isPageSizeValid = await this.validatePageSize(file)
