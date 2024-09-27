@@ -1,9 +1,5 @@
 <template>
-  <v-form
-    ref="form"
-    class="file-upload-preview"
-    lazy-validation
-  >
+  <div class="file-upload-preview">
     <v-file-input
       id="file-input"
       v-model="fileUpload"
@@ -11,7 +7,6 @@
       filled
       dense
       accept=".pdf"
-      :rules="fileUploadRules"
       show-size
       color="primary"
       :hint="hint"
@@ -20,7 +15,7 @@
       :error-messages="customErrorMessages"
       @change="onChange($event)"
     />
-  </v-form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -50,32 +45,6 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
   fileUpload = null as File
   customErrorMessages = [] as string[]
 
-  get fileUploadRules () {
-    return [
-      (file: File) => {
-        if (this.isRequired) {
-          return !!file || this.inputFileLabel + ' is required.'
-        }
-        return true
-      },
-      (file: File) => {
-        if (file && this.maxSize) {
-          const maxSizeMB = this.maxSize / 1024
-          const errorMsg = 'Exceeds maximum ' + maxSizeMB.toString() + ' MB file size.'
-          return (file?.size <= (this.maxSize * 1024)) || errorMsg
-        }
-        return true
-      },
-      (file: File) => {
-        if (file) {
-          const pattern = /^(.*)\.(pdf)$/i
-          return pattern.test(file.name) || 'Invalid file extension.'
-        }
-        return true
-      }
-    ]
-  }
-
   /** Called when component is mounted. */
   async mounted (): Promise<void> {
     if (this.inputFile) {
@@ -88,25 +57,49 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
 
   /** Programmatically opens the file selection dialog. Can be called externally. */
   public clickFileInput (): void {
+    // clear any previous error state
+    this.setCustomErrorMessage('')
+    // clear any existing file
+    this.fileUpload = null
     // find the find input element in THIS component (not globally)
     const element = this.$el.querySelector('#file-input') as HTMLElement
+    // click the file input element to open the file selection dialog
     element.click()
   }
 
-  // Note: the validation is done this way as opposed to being all defined in the validation rules(fileUploadRules)
-  //  above because Vuetify does not support async validation out of the box.  This was needed to work
-  //  around this limitation.  vuelidate does support this but this would mean introducing a component that
-  //  is using a different validation approach or updating all components to use vuelidate.  Have decided
-  //  to do this for the time being.
+  /**
+   * Validates the file input. Includes "rules" here because Vuetify does not support async validation.
+   * @param file The file to validate.
+   */
   private async validateFileInput (file: File): Promise<boolean> {
-    // clear any existing error messages
-    this.setCustomErrorMessage(null)
+    // clear any previous error state
+    this.setCustomErrorMessage('')
 
-    // validate the form (using rules)
-    const isValid = this.$refs.form.validate()
-    if (!isValid) return false
+    // check if required file is present
+    if (this.isRequired && !file) {
+      this.setCustomErrorMessage('File is required.')
+      return false
+    }
 
-    // perform perform PDF validations
+    // check optional max size
+    if (file && this.maxSize) {
+      const maxSizeMB = this.maxSize / 1024
+      if (file.size > (this.maxSize * 1024)) {
+        this.setCustomErrorMessage('Exceeds maximum ' + maxSizeMB.toString() + ' MB file size.')
+        return false
+      }
+    }
+
+    // check file extension
+    if (file) {
+      const pattern = /^(.*)\.(pdf)$/i
+      if (!pattern.test(file.name)) {
+        this.setCustomErrorMessage('Invalid file extension.')
+        return false
+      }
+    }
+
+    // perform PDF validations
     if (file) {
       if (typeof file.arrayBuffer === 'undefined') { return true }
       const fileInfo = await this.retrieveFileInfo(file)
@@ -130,7 +123,8 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
         return false
       }
     }
-    // if we get this far then the file must be valid
+
+    // if we get this far then declare the file valid
     return true
   }
 

@@ -103,6 +103,7 @@
             class="d-none mt-6"
             :maxSize="MAX_FILE_SIZE"
             :customErrorMessage.sync="customErrorMessage"
+            :isRequired="false"
             @fileValidity="onFileValidity($event)"
             @fileSelected="onFileSelected($event)"
           />
@@ -136,7 +137,7 @@
             class="remove-document-button"
             text
             color="primary"
-            @click="onFileSelected(null, index)"
+            @click="onRemoveClicked(index)"
           >
             <span>Remove</span>
             <v-icon dense>
@@ -330,18 +331,11 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
   /**
    * Called when FileUploadPreview tells us about a new or cleared file.
    * This is called right after the File Validity event.
-   * @param file the file to add or null to delete
-   * @param index the index of the file to delete
+   * @param file the file to add
    */
-  async onFileSelected (file: File, index = 0): Promise<void> {
-    if (file) {
-      // verify that file is valid
-      if (!this.fileValidity) {
-        // if file loader hasn't set an error message, set default message
-        if (!this.customErrorMessage) this.customErrorMessage = 'Invalid file.'
-        return // don't add to array
-      }
-
+  async onFileSelected (file: File): Promise<void> {
+    // verify that file is specified and is valid
+    if (file && this.fileValidity) {
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
         // set error message
@@ -376,15 +370,22 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
       })
 
       this.isFileAdded = true
-    } else if (file === null) {
-      // null file means user clicked Remove button - proceed
-      // undefined file means file upload was cancelled - do nothing
+    }
+  }
+
+  /**
+   * Called when user clicks a Remove button.
+   * @param index the index of the file to remove
+   */
+  onRemoveClicked (index = NaN): void {
+    // safety check
+    if (index >= 0) {
       // delete file from Minio, not waiting for response and ignoring errors
       this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       // remove file from array
       this.authorization.files.splice(index, 1)
-      // clear previous error message, if any
-      this.customErrorMessage = null
+      // clear any existing error message
+      this.customErrorMessage = ''
     }
   }
 
