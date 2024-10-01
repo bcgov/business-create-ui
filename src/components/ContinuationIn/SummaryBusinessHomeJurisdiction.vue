@@ -220,7 +220,7 @@
                   v-if="getExistingBusinessInfo.affidavitFileName"
                   text
                   color="primary"
-                  class="download-affidavit-btn mt-sm-n2 d-block pl-0"
+                  class="download-affidavit-btn mt-sm-n2 d-block px-2 ml-n2"
                   :disabled="isDownloading"
                   :loading="isDownloading"
                   @click="downloadAffidavitDocument()"
@@ -245,7 +245,7 @@
                 :key="item.fileKey"
                 text
                 color="primary"
-                class="download-authorization-btn d-block pl-0"
+                class="download-authorization-btn d-block px-2 ml-n2"
                 :disabled="isDownloading"
                 :loading="isDownloading"
                 @click="downloadAuthorizationDocument(item)"
