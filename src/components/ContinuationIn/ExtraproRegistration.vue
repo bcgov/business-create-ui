@@ -88,7 +88,6 @@
         v-model="formValid"
         @submit.prevent
       >
-        <!-- Home Jurisdiction -->
         <v-row
           class="mt-8"
           no-gutters
@@ -97,97 +96,58 @@
             cols="12"
             sm="3"
           >
-            <label>Home Jurisdiction Information</label>
+            <label>Previous Jurisdiction Information</label>
+            <p class="mt-2 font-15">
+              The legal authority or region where your business was originally registered or where it
+              previously operated.
+            </p>
           </v-col>
 
           <v-col
             cols="12"
             sm="9"
           >
+            <!-- message box -->
+            <MessageBox color="gold">
+              <strong>Important:</strong> Make sure this information is identical to the current information
+              in your previous jurisdiction.
+            </MessageBox>
+
+            <!-- Home Jurisdiction -->
             <Jurisdiction
-              class="home-jurisdiction"
+              class="home-jurisdiction mt-6"
               :showUsaJurisdictions="true"
               label="Home Jurisdiction"
               :initialValue="business.homeJurisdiction"
               :errorMessages="jurisdictionErrorMessage"
               @change="onJurisdictionChange($event)"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Identifying Number in Home Jurisdiction -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Identifying Number in Home Jurisdiction -->
             <v-text-field
               v-model.trim="business.homeIdentifier"
-              class="identifying-number-home"
+              class="identifying-number-home mt-6"
               filled
               hide-details="auto"
               label="Identifying Number in Home Jurisdiction"
               :rules="getShowErrors ? homeIdentifierRules : []"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Name in Home Jurisdiction -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Name in Home Jurisdiction -->
             <v-text-field
               v-model.trim="business.homeLegalName"
-              class="name-home-jurisdiction"
+              class="name-home-jurisdiction mt-6"
               filled
               hide-details="auto"
               label="Name in Home Jurisdiction"
               :rules="getShowErrors ? homeLegalNameRules : []"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Date of Incorporation -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Date of Incorporation -->
             <DatePickerShared
               id="incorporation-date"
               ref="incorporationDateRef"
+              class="mt-6"
               title="Date of Incorporation"
               :nudgeRight="40"
               :nudgeTop="85"
@@ -198,29 +158,12 @@
               :maxDate="business.bcFoundingDate || getCurrentDate"
               @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Business Number -->
-        <v-row
-          class="mt-4"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Business Number -->
             <v-text-field
               v-model="business.taxId"
               v-mask="['#########']"
-              class="business-number"
+              class="business-number mnt-6"
               filled
               hide-details="auto"
               label="Business Number (Optional)"
@@ -248,56 +191,8 @@
             sm="9"
           >
             <UploadAffidavit
+              class="mb-n2"
               :business="business"
-            />
-          </v-col>
-        </v-row>
-
-        <!-- message box -->
-        <v-row
-          class="mt-8"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <MessageBox color="gold">
-              <strong>Important:</strong> Verify that this information matches exactly the current information
-              in the home jurisdiction.
-            </MessageBox>
-          </v-col>
-        </v-row>
-
-        <!-- Confirmation -->
-        <v-row
-          class="mt-8"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Confirmation</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <v-checkbox
-              v-model="business.isConfirmed"
-              class="confirmation pt-0 mt-0"
-              hide-details
-              :label="checkboxLabel"
-              :rules="getShowErrors ? [(v) => !!v] : []"
             />
           </v-col>
         </v-row>
@@ -464,10 +359,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   errorDialog = false
   errorDialogText = ''
   errorDialogTitle = ''
-
-  readonly checkboxLabel = 'I understand and acknowledge that the extraprovincial registration of' +
-    ' this business will be cancelled and made historical in the B.C. Registry once the continuation' +
-    ' application application has been submitted.'
 
   /** Whether the business is active (otherwise it's historical). */
   get isBusinessActive (): boolean {

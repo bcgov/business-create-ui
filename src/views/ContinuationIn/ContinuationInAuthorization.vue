@@ -1,10 +1,10 @@
 <template>
-  <div id="continuation-in-business-home">
+  <div id="continuation-in-authorization">
     <!-- Existing Business Information -->
     <section class="mt-10">
       <header id="existing-business-information">
         <h2>Existing Business Information</h2>
-        <p class="mt-4">
+        <p>
           Enter information about your existing business. If your company is extraprovincially registered
           in B.C., that registration will be made historical when this continuation application is processed.
         </p>
@@ -35,18 +35,44 @@
       </v-card>
     </section>
 
-    <!-- Continuation Authorization -->
+    <!-- Contact Information -->
     <section class="mt-10">
-      <header id="continuation-authorization">
-        <h2>Continuation Authorization</h2>
-        <p class="mt-4">
+      <header id="contact-information">
+        <h2>Contact Information</h2>
+        <p>
+          Enter the contact information for the continuation authorization. The BC Business Registry
+          will use this to communicate with the business about this authorization in the future,
+          including sending documents and notifications.
+        </p>
+      </header>
+
+      <v-card
+        flat
+        class="py-8 px-6"
+        :class="{ 'invalid-section': getShowErrors && !businessContactInfoValid }"
+      >
+        <BusinessContactInfo
+          :initialValue="getBusinessContact"
+          :isEditing="true"
+          :showErrors="getShowErrors"
+          @update="setBusinessContact($event)"
+          @valid="businessContactInfoValid = $event"
+        />
+      </v-card>
+    </section>
+
+    <!-- Proof of Authorization -->
+    <section class="mt-10">
+      <header id="proof-of-authorization">
+        <h2>Proof of Authorization</h2>
+        <p>
           You must provide proof of authorization to continue out of your home jurisdiction.
           This will be reviewed by our staff.
         </p>
       </header>
 
-      <ContinuationAuthorization
-        @valid="continuationAuthorizationValid = $event"
+      <AuthorizationProof
+        @valid="authorizationProofValid = $event"
       />
     </section>
   </div>
@@ -57,42 +83,53 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin, NameRequestMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
-import ContinuationAuthorization from '@/components/ContinuationIn/ContinuationAuthorization.vue'
+import { ContactPointIF } from '@bcrs-shared-components/interfaces'
+import AuthorizationProof from '@/components/ContinuationIn/AuthorizationProof.vue'
+import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 
 @Component({
   components: {
-    ContinuationAuthorization,
-    ManualBusinessInfo,
-    ExtraproRegistration
+    AuthorizationProof,
+    BusinessContactInfo,
+    ExtraproRegistration,
+    ManualBusinessInfo
   }
 })
-export default class ContinuationInBusinessHome extends Mixins(CommonMixin, NameRequestMixin) {
+export default class ContinuationInAuthorization extends Mixins(CommonMixin, NameRequestMixin) {
+  @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isFilingValid!: boolean
 
-  @Action(useStore) setContinuationInBusinessHomeValid!: (x: boolean) => void
+  @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setContinuationAuthorizationPageValid!: (x: boolean) => void
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
+  @Action(useStore) setShowErrors!: (x: boolean) => void
+  @Action(useStore) setValidateSteps!: (x: boolean) => void
 
   // Local properties
   manualBusinessInfoActive = false
   manualBusinessInfoValid = false
   extraproRegistrationActive = false
   extraproRegistrationValid = false
-  continuationAuthorizationValid = false
+  businessContactInfoValid = false
+  authorizationProofValid = false
 
   /** Array of valid components. Must match validFlags below. */
   readonly validComponents = [
     'existing-business-information',
-    'continuation-authorization'
+    'contact-information',
+    'proof-of-authorization'
   ]
 
   /** Object of valid flags. Must match validComponents above. */
   get validFlags (): object {
     return {
       existingBusinessInformationValid: this.existingBusinessInformationValid,
-      continuationAuthorizationValid: this.continuationAuthorizationValid
+      contactInformationValid: this.businessContactInfoValid,
+      authorizationProofValid: this.authorizationProofValid
     }
   }
 
@@ -113,22 +150,29 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   }
 
   /** Watch all components on this page and set validity in store accordingly. */
-  @Watch('continuationAuthorizationValid', { immediate: true })
   @Watch('existingBusinessInformationValid', { immediate: true })
-  private onContinuationInBusinessHomeValid () {
-    this.setContinuationInBusinessHomeValid(
-      this.continuationAuthorizationValid &&
-      this.existingBusinessInformationValid
+  @Watch('businessContactInfoValid', { immediate: true })
+  @Watch('authorizationProofValid', { immediate: true })
+  private onComponentValidityChanged () {
+    this.setContinuationAuthorizationPageValid(
+      this.existingBusinessInformationValid &&
+      this.businessContactInfoValid &&
+      this.authorizationProofValid
     )
   }
 
-  /** When we route to this step, validate the step and scroll to any errors. */
-  @Watch('$route')
-  private async scrollToInvalidComponent (): Promise<void> {
-    if (this.getShowErrors && this.$route.name === RouteNames.CONTINUATION_IN_BUSINESS_HOME) {
-      // scroll to invalid section
+  /** Called when user has clicked Submit (and this flag's value has changed). */
+  @Watch('getValidateSteps')
+  private async onValidateStepsChanges (val: boolean): Promise<void> {
+    if (val) {
+      // set Show Errors flag to enable and show component validation
+      this.setShowErrors(true)
+      // wait for validation to complete
       await this.$nextTick()
+      // scroll to the first error, if any
       await this.validateAndScroll(this.validFlags, this.validComponents)
+      // reset this flag so user can click Submit again and we can re-validate
+      this.setValidateSteps(false)
     }
   }
 }
@@ -144,7 +188,7 @@ export default class ContinuationInBusinessHome extends Mixins(CommonMixin, Name
   border-color: rgb(33, 33, 33); // grey darken-4
 }
 
-#continuation-in-business-home {
+#continuation-in-authorization {
   /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }

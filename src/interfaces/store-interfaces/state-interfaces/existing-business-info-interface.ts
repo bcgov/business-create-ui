@@ -14,7 +14,6 @@ export interface ExistingBusinessInfoIF {
   homeIdentifier: string
   homeIncorporationDate: string // YYYY-MM-DD
   homeLegalName: string
-  isConfirmed?: boolean // only used by UI
   latestReviewComment?: string
   mode: 'EXPRO' | 'MANUAL' // only used by UI
   status?: EntityStates // only used by UI

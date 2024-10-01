@@ -30,161 +30,103 @@
 
     <!-- active = display/edit mode -->
     <template v-if="active">
-      <!-- Jurisdiction + clear button -->
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-        >
-          <label>Jurisdiction</label>
-        </v-col>
-
-        <v-col
-          cols="12"
-          sm="9"
-          class="d-flex justify-space-between"
-        >
-          <Jurisdiction
-            class="home-jurisdiction"
-            :showUsaJurisdictions="true"
-            label="Jurisdiction"
-            :initialValue="business.homeJurisdiction"
-            :errorMessages="jurisdictionErrorMessage"
-            :showAppendIcon="false"
-            @change="onJurisdictionChange($event)"
-          />
-          <v-tooltip
-            top
-            content-class="top-tooltip"
-            transition="fade-transition"
-          >
-            <template #activator="{ on }">
-              <!-- align clear button on top of jurisdiction component -->
-              <v-btn
-                class="clear-info-btn float-right mt-3 ml-n10 mr-1"
-                color="primary"
-                icon
-                aria-label="Clear existing business information"
-                @click="reset()"
-                v-on="on"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </template>
-            Clear existing business information.
-          </v-tooltip>
-        </v-col>
-      </v-row>
-
-      <v-divider class="mt-8" />
-
       <v-form
         ref="formRef"
         v-model="formValid"
         @submit.prevent
       >
-        <!-- Identifying Number -->
-        <v-row
-          class="mt-8"
-          no-gutters
-        >
+        <v-row no-gutters>
           <v-col
             cols="12"
             sm="3"
           >
-            <label>Business Information in Home Jurisdiction</label>
+            <label>Previous Jurisdiction Information</label>
+            <p class="mt-2 font-15">
+              The legal authority or region where your business was originally registered or where it
+              previously operated.
+            </p>
           </v-col>
 
           <v-col
             cols="12"
             sm="9"
           >
+            <!-- message box -->
+            <MessageBox color="gold">
+              <strong>Important:</strong> Make sure this information is identical to the current information
+              in your previous jurisdiction.
+            </MessageBox>
+
+            <!-- Jurisdiction + clear button -->
+            <div class="d-flex justify-space-between mt-6">
+              <Jurisdiction
+                class="home-jurisdiction"
+                :showUsaJurisdictions="true"
+                label="Jurisdiction"
+                :initialValue="business.homeJurisdiction"
+                :errorMessages="jurisdictionErrorMessage"
+                :showAppendIcon="false"
+                @change="onJurisdictionChange($event)"
+              />
+              <v-tooltip
+                top
+                content-class="top-tooltip"
+                transition="fade-transition"
+              >
+                <template #activator="{ on }">
+                  <!-- align clear button on top of jurisdiction component -->
+                  <v-btn
+                    class="clear-info-btn float-right mt-3 ml-n10 mr-1"
+                    color="primary"
+                    icon
+                    aria-label="Clear previous business information"
+                    @click="reset()"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </template>
+                Clear previous business information.
+              </v-tooltip>
+            </div>
+
+            <!-- Identifying Number -->
             <v-text-field
               v-model.trim="business.homeIdentifier"
-              class="identifying-number"
+              class="identifying-number mt-6"
               filled
               hide-details="auto"
               label="Identifying Number"
               :rules="getShowErrors ? identifyingNumberRules : []"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Business Name in Home Jurisdiction -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Business Name in Home Jurisdiction -->
             <v-text-field
               v-model.trim="business.homeLegalName"
-              class="business-name"
+              class="business-name mt-6"
               filled
               hide-details="auto"
               label="Business Name in Home Jurisdiction"
               :rules="getShowErrors ? businessNameRules : []"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Business Number-->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Business Number-->
             <v-text-field
               v-model="business.taxId"
               v-mask="['#########']"
-              class="business-number"
+              class="business-number mt-6"
               filled
               hide-details="auto"
               label="Business Number (Optional)"
               hint="First 9 digits of the CRA Business Number if you have one"
               :rules="getShowErrors ? Rules.BusinessNumberRules : []"
             />
-          </v-col>
-        </v-row>
 
-        <!-- Incorporation Date -->
-        <v-row
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
+            <!-- Incorporation Date -->
             <DatePickerShared
               id="incorporation-date"
               ref="incorporationDateRef"
+              class="mt-6"
               title="Incorporation Date in Home Jurisdiction"
               :nudgeRight="40"
               :nudgeTop="85"
@@ -214,33 +156,9 @@
             sm="9"
           >
             <UploadAffidavit
+              class="mb-n2"
               :business="business"
             />
-          </v-col>
-        </v-row>
-
-        <!-- message box -->
-        <v-row
-          class="mt-8"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <!-- empty column -->
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <MessageBox
-              color="gold"
-            >
-              <strong>Important:</strong> Verify that this information matches exactly the current information
-              in the home jurisdiction.
-            </MessageBox>
           </v-col>
         </v-row>
       </v-form>

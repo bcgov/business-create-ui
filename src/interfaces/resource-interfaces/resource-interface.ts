@@ -23,6 +23,7 @@ export interface ContinuationInResourceIF {
   displayName: string
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
+  pageBlurbDraft: string
   peopleAndRoles: PeopleAndRolesResourceIF
   reviewAndConfirm: {
     completingPartyStatement: CompletingPartyStatementIF
@@ -35,6 +36,7 @@ export interface DissolutionResourceIF {
   displayName: string
   steps: Array<StepIF>
   filingData: Array<FilingDataIF>
+  pageBlurbDraft: string
   detailsTitle: string
   custodialRecords?: CustodianResourceIF
   dissolutionStatements?: Array<KeyValueIF>

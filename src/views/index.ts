@@ -12,7 +12,7 @@ export { default as AmalgamationPeopleRoles } from './Amalgamation/PeopleRoles.v
 export { default as AmalgamationReviewConfirm } from './Amalgamation/ReviewConfirm.vue'
 export { default as AmalgamationShareStructure } from './Amalgamation/ShareStructure.vue'
 
-export { default as ContinuationInBusinessHome } from './ContinuationIn/ContinuationInBusinessHome.vue'
+export { default as ContinuationInAuthorization } from './ContinuationIn/ContinuationInAuthorization.vue'
 export { default as ContinuationInBusinessBc } from './ContinuationIn/ContinuationInBusinessBc.vue'
 export { default as ContinuationInPeopleRoles } from './ContinuationIn/ContinuationInPeopleRoles.vue'
 export { default as ContinuationInReviewConfirm } from './ContinuationIn/ContinuationInReviewConfirm.vue'

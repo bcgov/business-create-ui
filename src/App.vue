@@ -167,11 +167,10 @@
               </header>
 
               <p
-                v-if="isFirmDissolution"
+                v-if="getPageBlurb"
                 class="mt-4"
               >
-                Confirm the following information, select the dissolution date and certify
-                your dissolution before filing.
+                {{ getPageBlurb }}
               </p>
 
               <Stepper
@@ -199,9 +198,8 @@
               cols="12"
               lg="3"
             >
-              <!-- Render fee summary only after data is loaded, -->
-              <!-- and if this isn't a change-requested filing. -->
-              <aside v-if="haveData && getFilingStatus !== FilingStatus.CHANGE_REQUESTED">
+              <!-- Render fee summary only after data is loaded. -->
+              <aside v-if="haveData">
                 <affix
                   relative-element-selector=".col-lg-9"
                   :offset="{ top: 100, bottom: -100 }"
@@ -273,6 +271,7 @@ import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, Filin
   StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
 
 @Component({
   components: {
@@ -302,6 +301,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
   @Getter(useStore) getOrgInformation!: OrgInformationIF
+  @Getter(useStore) getPageBlurb!: string
   @Getter(useStore) getSteps!: Array<StepIF>
   @Getter(useStore) getUserFirstName!: string
   @Getter(useStore) getUserLastName!: string
@@ -310,6 +310,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   // @Getter(useStore) isAmalgamationFilingRegular!: boolean
   // @Getter(useStore) isAmalgamationFilingVertical!: boolean
+  @Getter(useStore) isAuthorizationStatus!: boolean
+  // @Getter(useStore) isContinuationInAuthorization!: boolean
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
@@ -417,9 +419,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       return `${this.getFilingName} (Horizontal Short-form)`
     } else if (this.isAmalgamationFilingVertical) {
       return `${this.getFilingName} (Vertical Short-form)`
-    } else {
-      return this.getFilingName
+    } else if (this.isContinuationInAuthorization) {
+      return 'Continuation Authorization'
     }
+    return this.getFilingName
   }
 
   /** Data for fee summary component. */
@@ -475,15 +478,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     )
   }
 
-  /** Whether the current filing is a firm dissolution. */
-  get isFirmDissolution (): boolean {
-    return (this.isEntityFirm && this.isDissolutionFiling)
-  }
-
-  /** The fee summary filing label. */
+  /** The (optional) fee summary filing label. */
   get filingLabel (): string {
-    // text override for firm dissolutions
-    return this.isFirmDissolution ? 'Dissolution' : null
+    // special case for firm dissolutions
+    if (this.isEntityFirm && this.isDissolutionFiling) return 'Dissolution'
+    // special case for continuation in authorizations
+    if (this.isContinuationInAuthorization) return 'Continuation Authorization'
+    // otherwise, no special label
+    return null
   }
 
   /** The About text. */
@@ -771,6 +773,24 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         await this.loadPartiesInformation(this.getBusinessId)
       }
 
+      // special route checks for Continuation In filing
+      if (this.isContinuationInFiling) {
+        if (this.isAuthorizationStatus) {
+          // make sure user is on the Continuation In Authorization route
+          if (this.$route.name !== RouteNames.CONTINUATION_IN_AUTHORIZATION) {
+            this.$router.replace(RouteNames.CONTINUATION_IN_AUTHORIZATION).catch(() => {})
+            return
+          }
+        } else {
+          // make sure user is on Continuation In Business BC route
+          if (this.$route.name !== RouteNames.CONTINUATION_IN_BUSINESS_BC) {
+            this.$router.replace(RouteNames.CONTINUATION_IN_BUSINESS_BC).catch(() => {})
+            return
+          }
+        }
+      }
+
+      // default route check:
       // if user is on a route not valid for the current filing type
       // then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
@@ -785,8 +805,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
             }
             return
           case FilingTypes.CONTINUATION_IN:
-            this.$router.replace(RouteNames.CONTINUATION_IN_BUSINESS_HOME).catch(() => {})
-            return
+            // should never get here -- already handled above
+            throw new Error('Invalid code path for Continuation In')
           case FilingTypes.DISSOLUTION:
             if (this.isEntityFirm) {
               this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
@@ -867,7 +887,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstTask(businessId)
 
+    // set filing type and status
     this.setFilingType(draftFiling.header.name)
+    this.setFilingStatus(draftFiling.header.status)
 
     // check if filing is in a valid state to be edited
     this.filingNotExistDialog = (draftFiling?.header?.status !== FilingStatus.DRAFT)
@@ -924,13 +946,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
 
+    // set filing type and status
     this.setFilingType(draftFiling.header.name)
     this.setFilingStatus(draftFiling.header.status)
+    // *** TODO: remove after testing
+    if (draftFiling.header.status === FilingStatus.CHANGE_REQUESTED) {
+      this.setFilingStatus(FilingStatus.APPROVED)
+    }
 
     // check if filing is in a valid state to be edited
     this.filingNotExistDialog = (
       draftFiling?.header?.status !== FilingStatus.DRAFT &&
-      draftFiling?.header?.status !== FilingStatus.CHANGE_REQUESTED
+      draftFiling?.header?.status !== FilingStatus.CHANGE_REQUESTED &&
+      draftFiling?.header?.status !== FilingStatus.APPROVED
     )
     if (this.filingNotExistDialog) return null // don't continue
 
@@ -958,6 +986,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         }
         this.parseContinuationInDraft(draftFiling)
         resources = ContinuationInResources.find(x => x.entityType === this.getEntityType) as ResourceIF
+        // special case for Continuation In Authorizations
+        if (this.isAuthorizationStatus) {
+          resources.steps = ContinuationInStepsAuthorization
+        }
         break
       case FilingTypes.INCORPORATION_APPLICATION:
         draftFiling = {
@@ -1320,7 +1352,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
-  /** Called initially and when $route property changes (ie, on step changes). */
+  /**
+   * Called when $route property changes (ie, on step changes).
+   * Is also called initially without needing { immediate: true }.
+   */
   @Watch('$route', { immediate: false })
   private async onRouteChanged (): Promise<void> {
     // init only if we are not on signin or signout route
@@ -1368,7 +1403,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setShowErrors(true)
     }
 
-    // enable validation right away if user is changing a submitted filing
+    // enable validation right away if user is editing a submitted filing
+    // used for continuation in filings only atm
     if (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) {
       this.setShowErrors(true)
     }

@@ -22,11 +22,11 @@
           class="radio-group"
         >
           <v-radio
-            :label="immediateLabel"
+            label="Immediate (Upon Filing)"
             value="isImmediate"
           />
           <v-radio
-            :label="futureEffectiveLabel"
+            label="A date / time in the future"
             value="isFutureEffective"
           />
         </v-radio-group>
@@ -165,8 +165,6 @@ export default class EffectiveDateTime extends Mixins(DateMixin) {
 
   @Prop({ required: true }) readonly effectiveDateTime!: EffectiveDateTimeIF
   @Prop({ default: 'Incorporation Date and Time' }) readonly label!: string
-  @Prop({ default: 'Immediate (Upon Filing)' }) readonly immediateLabel!: string
-  @Prop({ default: 'A date / time in the future' }) readonly futureEffectiveLabel!: string
 
   // Local properties
   isImmediate = false

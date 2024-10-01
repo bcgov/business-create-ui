@@ -254,7 +254,7 @@ describe('FileUploadPreview component', () => {
     await waitForUpdate(3)
     const messages = wrapper.findAll('.error--text .v-messages__message')
     expect(messages.length).toBe(1)
-    expect(messages.at(0).text()).toBe('File content cannot be locked.')
+    expect(messages.at(0).text()).toBe('File content must not be locked.')
 
     wrapper.destroy()
   })

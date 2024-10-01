@@ -5,7 +5,7 @@
   -->
   <div
     v-if="authorization"
-    id="continuation-authorization"
+    id="authorization-proof"
   >
     <!-- Authorization Date -->
     <v-card
@@ -200,7 +200,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
-import { ContinuationAuthorizationIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { AuthorizationProofIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import { FilingStatus } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
@@ -218,24 +218,24 @@ import MessageBox from '@/components/common/MessageBox.vue'
     AutoResize
   }
 })
-export default class ExtraproRegistration extends Mixins(DocumentMixin) {
+export default class AuthorizationProof extends Mixins(DocumentMixin) {
   // Refs
   $refs!: {
     authorizationDateRef: DatePickerShared,
     fileUploadPreview: FileUploadPreview
   }
 
-  @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
+  @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
 
-  @Action(useStore) setContinuationAuthorization!: (x: ContinuationAuthorizationIF) => void
+  @Action(useStore) setContinuationAuthorization!: (x: AuthorizationProofIF) => void
 
   // Local properties
-  authorization = null as ContinuationAuthorizationIF
+  authorization = null as AuthorizationProofIF
   authorizationDateValid = false
   fileValidity = false
   customErrorMessage = ''
@@ -302,8 +302,8 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
 
   /** Called when this component is mounted. */
   mounted (): void {
-    this.authorization = this.getContinuationAuthorization ||
-      { files: [], date: null } as ContinuationAuthorizationIF
+    this.authorization = this.getContinuationInAuthorizationProof ||
+      { files: [], date: null } as AuthorizationProofIF
   }
 
   /** When user has clicked the Add button, opens the file selection dialog. */
@@ -334,12 +334,25 @@ export default class ExtraproRegistration extends Mixins(DocumentMixin) {
    * @param file the file to add
    */
   async onFileSelected (file: File): Promise<void> {
+    /** Returns True if given string contains only Latin 1 (ie, ISO8859-1) characters. */
+    function isValidLatin1 (str: string): boolean {
+      // eslint-disable-next-line no-control-regex
+      return !/[^\u0000-\u00ff]/g.test(str)
+    }
+
     // verify that file is specified and is valid
     if (file && this.fileValidity) {
       // verify that file doesn't already exist
       if (this.authorization.files.find(f => f.file.name === file.name)) {
         // set error message
         this.customErrorMessage = 'Duplicate file.'
+        return // don't add to array
+      }
+
+      // verify file name encoding
+      if (!isValidLatin1(file.name)) {
+        // put file uploader into manual error mode by setting custom error message
+        this.customErrorMessage = 'Invalid character in file name.'
         return // don't add to array
       }
 

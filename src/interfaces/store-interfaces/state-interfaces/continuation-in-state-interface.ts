@@ -1,8 +1,7 @@
-import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 
-// TODO: Add properties as needed
 export interface ContinuationInStateIF {
-  businessHomeValid: boolean
-  continuationAuthorization: ContinuationAuthorizationIF
+  continuationAuthorizationPageValid: boolean
+  authorizationProof: AuthorizationProofIF
   existingBusinessInfo: ExistingBusinessInfoIF
 }

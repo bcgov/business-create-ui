@@ -12,7 +12,7 @@
         v-if="numErrors > 0 || numWarnings < 1"
         id="dialog-title"
       >
-        Unable to save {{ filingName }}
+        Unable to save {{ filingTitle }}
       </v-card-title>
 
       <!-- otherwise there are only warnings... -->
@@ -20,7 +20,7 @@
         v-else
         id="dialog-title"
       >
-        {{ filingName }} saved with warnings
+        {{ filingTitle }} saved with warnings
       </v-card-title>
 
       <v-card-text id="dialog-text">
@@ -30,8 +30,8 @@
           class="font-14"
         >
           <p>
-            We were unable to save your {{ filingName }}. You can continue to try to save this
-            {{ filingName }} or you can exit without saving and re-create this {{ filingName }} at another time.
+            We were unable to save your {{ filingTitle }}. You can continue to try to save this
+            {{ filingTitle }} or you can exit without saving and re-create this {{ filingTitle }} at another time.
           </p>
           <p>If you exit, any changes you've made will not be saved.</p>
         </div>
@@ -41,7 +41,7 @@
           v-if="numErrors > 0"
           class="font-14 mb-4"
         >
-          <p>We were unable to save your {{ filingName }} due to the following errors:</p>
+          <p>We were unable to save your {{ filingTitle }} due to the following errors:</p>
           <ul>
             <li
               v-for="(error, index) in errors"
@@ -128,6 +128,7 @@ import { FilingTypes } from '@bcrs-shared-components/enums'
   }
 })
 export default class SaveErrorDialog extends Vue {
+  @Getter(useStore) isContinuationInAuthorization!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) getFilingType!: FilingTypes
 
@@ -147,11 +148,14 @@ export default class SaveErrorDialog extends Vue {
   @Emit() exit (): void {}
   @Emit() okay (): void {}
 
-  /** The filing name. */
-  get filingName (): string {
+  /** The filing title. */
+  get filingTitle (): string {
     switch (this.getFilingType) {
       case FilingTypes.AMALGAMATION_APPLICATION: return 'Application'
-      case FilingTypes.CONTINUATION_IN: return 'Application'
+      case FilingTypes.CONTINUATION_IN: {
+        // special case for Continuation In Authorizations
+        return this.isContinuationInAuthorization ? 'Authorization' : 'Application'
+      }
       case FilingTypes.INCORPORATION_APPLICATION: return 'Application'
       case FilingTypes.REGISTRATION: return 'Registration'
       case FilingTypes.RESTORATION: return 'Restoration'

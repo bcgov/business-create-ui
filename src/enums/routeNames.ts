@@ -20,7 +20,7 @@ export enum RouteNames {
   AMALG_SHORT_REVIEW_CONFIRM = 'amalg-short-review-confirm',
 
   // Continuation In route names
-  CONTINUATION_IN_BUSINESS_HOME = 'continuation-in-business-home',
+  CONTINUATION_IN_AUTHORIZATION = 'continuation-in-authorization',
   CONTINUATION_IN_BUSINESS_BC = 'continuation-in-business-bc',
   CONTINUATION_IN_PEOPLE_ROLES = 'continuation-in-people-roles',
   CONTINUATION_IN_REVIEW_CONFIRM = 'continuation-in-review-confirm',

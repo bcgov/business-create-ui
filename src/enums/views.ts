@@ -14,7 +14,7 @@ export enum Views {
   AMALGAMATION_SHARE_STRUCTURE = 'amalgamation-share-structure', // regular only
 
   // Continuation In views
-  CONTINUATION_IN_BUSINESS_HOME = 'continuation-in-business-home',
+  CONTINUATION_IN_AUTHORIZATION = 'continuation-in-authorization',
   CONTINUATION_IN_BUSINESS_BC = 'continuation-in-business-bc',
   CONTINUATION_IN_PEOPLE_ROLES = 'continuation-in-people-roles',
   CONTINUATION_IN_REVIEW_CONFIRM = 'continuation-in-review-confirm',
