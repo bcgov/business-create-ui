@@ -16,7 +16,7 @@
             class="pr-4"
           >
             <label class="title-label">
-              {{ getCustodialRecordsResources.custodianTitle }}
+              {{ getCustodialRecords.custodianTitle }}
             </label>
           </v-col>
 
@@ -314,7 +314,7 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
 
-  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
+  @Getter(useStore) getCustodialRecords!: CustodianResourceIF
   @Getter(useStore) getDissolutionCustodian!: OrgPersonIF
   @Getter(useStore) getDissolutionCustodianEmail!: string
   @Getter(useStore) isEntityCoop!: boolean
@@ -347,8 +347,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
     // Define default address using resource values
     this.defaultAddress = {
       addressCity: '',
-      addressCountry: this.getCustodialRecordsResources?.baseAddressValues?.country,
-      addressRegion: this.getCustodialRecordsResources?.baseAddressValues?.region,
+      addressCountry: this.getCustodialRecords?.baseAddressValues?.country,
+      addressRegion: this.getCustodialRecords?.baseAddressValues?.region,
       deliveryInstructions: '',
       postalCode: '',
       streetAddress: '',

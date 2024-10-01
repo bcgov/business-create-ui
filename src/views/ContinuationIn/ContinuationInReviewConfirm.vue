@@ -73,7 +73,6 @@
 
     <!-- Continuation Effective Date and Time -->
     <section
-      v-if="(getFilingStatus === FilingStatus.DRAFT) || getEffectiveDateTime.isFutureEffective"
       id="continuation-effective-date-time-section"
       class="mt-10"
     >
@@ -92,24 +91,10 @@
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
         label="Incorporation Date and Time"
-        immediateLabel="Immediately upon approval"
-        futureEffectiveLabel="A date / time in the future (subject to approval)"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"
       />
-    </section>
-    <section
-      v-else
-      id="continuation-effective-date-time-section"
-      class="mt-10"
-    >
-      <header>
-        <h2>Continuation Effective Date and Time</h2>
-        <p class="mt-4">
-          The incorporation date and time will be upon approval.
-        </p>
-      </header>
     </section>
 
     <!-- Document Delivery -->
@@ -204,7 +189,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff && getFilingStatus === FilingStatus.DRAFT"
+      v-if="isRoleStaff"
       id="staff-payment-section"
       class="mt-10"
     >

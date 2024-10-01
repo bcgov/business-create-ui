@@ -1,4 +1,4 @@
-import { AmalgamatingBusinessIF, BusinessAddressIF, ContinuationAuthorizationIF, CourtOrderIF, NaicsIF,
+import { AmalgamatingBusinessIF, BusinessAddressIF, AuthorizationProofIF, CourtOrderIF, NaicsIF,
   NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF,
   SpecialResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
@@ -109,7 +109,7 @@ export interface ContinuationInFilingIF {
       affidavitFileKey?: string
       affidavitFileName?: string
     }
-    authorization?: ContinuationAuthorizationIF
+    authorization?: AuthorizationProofIF
     contactPoint: ContactPointIF
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
@@ -117,7 +117,6 @@ export interface ContinuationInFilingIF {
     parties: OrgPersonIF[]
     shareStructure: { shareClasses: ShareClassIF[] }
     courtOrder?: CourtOrderIF
-    isConfirmed?: boolean // used only by UI
     mode?: 'EXPRO' | 'MANUAL' // used only by UI
     status?: EntityStates // only used by UI
   }

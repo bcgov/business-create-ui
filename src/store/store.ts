@@ -40,7 +40,7 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   CompletingPartyStatementIF,
-  ContinuationAuthorizationIF,
+  AuthorizationProofIF,
   ContinuationInStateIF,
   CustodianResourceIF,
   DefineCompanyIF,
@@ -139,6 +139,27 @@ export const useStore = defineStore('store', {
       return (this.getFilingType === FilingTypes.CONTINUATION_IN)
     },
 
+    /**
+     * Whether the current filing is in "authorization mode".
+     * Use for Continuation In filings only atm.
+     */
+    isAuthorizationStatus (): boolean {
+      // Draft: user is filling out the Continuation Authorization step only
+      // Change Requested: user is making changes to the Continuation Authorization step only
+      return [FilingStatus.DRAFT, FilingStatus.CHANGE_REQUESTED].includes(this.getFilingStatus)
+    },
+
+    /**
+     * Whether this filing is a Continuation In Authorization (step 0).
+     * Otherwise, it's a normal Continuation In filing (steps 1-4).
+     */
+    isContinuationInAuthorization (): boolean {
+      return (
+        this.isContinuationInFiling &&
+        this.isAuthorizationStatus
+      )
+    },
+
     /** Whether the current filing is an Incorporation Application. */
     isIncorporationFiling (): boolean {
       return (this.getFilingType === FilingTypes.INCORPORATION_APPLICATION)
@@ -207,9 +228,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.entityType
     },
 
-    /** The continuation in Continuation Authorization object. */
-    getContinuationAuthorization (): ContinuationAuthorizationIF {
-      return this.getContinuationIn.continuationAuthorization
+    /** The continuation in Authorization Proof object. */
+    getContinuationInAuthorizationProof (): AuthorizationProofIF {
+      return this.getContinuationIn.authorizationProof
     },
 
     /** The continuation in Existing Business Info object. */
@@ -593,7 +614,7 @@ export const useStore = defineStore('store', {
       return (this.isSaving || this.isSavingResuming || this.isFilingPaying)
     },
 
-    /** Is true when the step is valid. */
+    /** Whether the Define Company step is valid. */
     isDefineCompanyValid (): boolean {
       if (this.isEntityCoop) {
         return (!!this.getCooperativeType && this.getDefineCompanyStep.valid)
@@ -601,12 +622,12 @@ export const useStore = defineStore('store', {
       return this.getDefineCompanyStep.valid
     },
 
-    /** Is true when the Continuation In Business Home step is valid. */
-    isContinuationInBusinessHomeValid (): boolean {
-      return this.getContinuationIn.businessHomeValid
+    /** Whether the Continuation Authorization page is valid. */
+    isContinuationAuthorizationPageValid (): boolean {
+      return this.getContinuationIn.continuationAuthorizationPageValid
     },
 
-    /** Is true when the step is valid. */
+    /** Whether the Restore Business Name step is valid. */
     isRestoreBusinessNameValid (): boolean {
       return (
         this.getRestorationBusinessNameValid &&
@@ -616,17 +637,17 @@ export const useStore = defineStore('store', {
       )
     },
 
-    /** Is true when the step is valid. */
+    /** Whether the Add People And Roles step is valid. */
     isAddPeopleAndRolesValid (): boolean {
       return this.getAddPeopleAndRoleStep.valid
     },
 
-    /** Is true when the step is valid. */
+    /** Whether the Create Share Structure step is valid. */
     isCreateShareStructureValid (): boolean {
       return this.getCreateShareStructureStep.valid
     },
 
-    /** Is true when the step is valid. */
+    /** Whether the Incorporation Agreement step is valid. */
     isIncorporationAgreementValid (): boolean {
       return this.getIncorporationAgreementStep.valid
     },
@@ -729,11 +750,14 @@ export const useStore = defineStore('store', {
       )
     },
 
-    /**
-     * Whether all the continuation in steps are valid.
-     * TODO: Add all the remaining checks when all components are in place.
-     */
+    /** Whether all the continuation in steps are valid. */
     isContinuationInValid (): boolean {
+      // special case for continuation in authorization
+      if (this.isContinuationInAuthorization) {
+        return this.isContinuationAuthorizationPageValid
+      }
+
+      // otherwise, it's a continuation in application
       const isEffectiveDateTimeValid =
         (this.getFilingStatus === FilingStatus.DRAFT) ? this.getEffectiveDateTime.valid : true
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
@@ -742,7 +766,6 @@ export const useStore = defineStore('store', {
         (this.isRoleStaff && this.getFilingStatus === FilingStatus.DRAFT) ? this.getStaffPaymentStep.valid : true
 
       return (
-        this.isContinuationInBusinessHomeValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         this.isCreateShareStructureValid &&
@@ -1082,8 +1105,15 @@ export const useStore = defineStore('store', {
       return (steps ? steps.filter(step => step.step !== -1).length : -1)
     },
 
-    /** The dissolution details title. */
-    getDissolutionDetailsTitle (): string {
+    /** The page blurb. Only valid in Draft or Change Requested status. */
+    getPageBlurb (): string {
+      return [FilingStatus.DRAFT, FilingStatus.CHANGE_REQUESTED].includes(this.getFilingStatus)
+        ? this.resourceModel.pageBlurbDraft
+        : null
+    },
+
+    /** The details title. Used for dissolutions only atm. */
+    getDetailsTitle (): string {
       return this.resourceModel.detailsTitle
     },
 
@@ -1093,7 +1123,7 @@ export const useStore = defineStore('store', {
     },
 
     /** The dissolution custodial records resources. */
-    getCustodialRecordsResources (): CustodianResourceIF {
+    getCustodialRecords (): CustodianResourceIF {
       return this.resourceModel.custodialRecords
     },
 
@@ -1179,8 +1209,8 @@ export const useStore = defineStore('store', {
     setCurrentJsDate (date: Date) {
       this.stateModel.currentJsDate = date
     },
-    setContinuationAuthorization (val: ContinuationAuthorizationIF) {
-      this.stateModel.continuationIn.continuationAuthorization = val
+    setContinuationAuthorization (val: AuthorizationProofIF) {
+      this.stateModel.continuationIn.authorizationProof = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setExistingBusinessInfo (val: ExistingBusinessInfoIF) {
@@ -1212,8 +1242,8 @@ export const useStore = defineStore('store', {
     setDefineCompanyStepValidity (valid: boolean) {
       this.stateModel.defineCompanyStep.valid = valid
     },
-    setContinuationInBusinessHomeValid (valid: boolean) {
-      this.getContinuationIn.businessHomeValid = valid
+    setContinuationAuthorizationPageValid (valid: boolean) {
+      this.getContinuationIn.continuationAuthorizationPageValid = valid
     },
     setOfficeAddresses (addresses: RegisteredRecordsAddressesIF) {
       this.stateModel.defineCompanyStep.officeAddresses = addresses
@@ -1310,8 +1340,8 @@ export const useStore = defineStore('store', {
     setHaveChanges (haveChanges: boolean) {
       this.stateModel.haveChanges = haveChanges
     },
-    setValidateSteps (validate: boolean) {
-      this.stateModel.validateSteps = validate
+    setValidateSteps (validateSteps: boolean) {
+      this.stateModel.validateSteps = validateSteps
     },
     setShowErrors (showErrors: boolean) {
       this.stateModel.showErrors = showErrors

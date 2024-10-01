@@ -8,23 +8,7 @@
       @close="errorDialog = false"
     />
 
-    <section :class="{ 'invalid-section': !isContinuationInBusinessHomeValid }">
-      <div
-        v-if="!isContinuationInBusinessHomeValid"
-        class="business-home-step-error-message pt-5 pl-5"
-      >
-        <v-icon color="error">
-          mdi-information-outline
-        </v-icon>
-        <span class="error-text mx-1">This step is unfinished.</span>
-
-        <router-link
-          :to="{ path: `/${RouteNames.CONTINUATION_IN_BUSINESS_HOME}` }"
-        >
-          <span>Return to this step to finish it</span>
-        </router-link>
-      </div>
-
+    <section>
       <div id="existing-business-information-summary">
         <!-- Home Jurisdiction -->
         <article class="section-container">
@@ -228,6 +212,7 @@
             <v-col
               cols="12"
               sm="9"
+              class="file-buttons pt-2 pt-sm-0"
             >
               <!-- the director's affidavit file -->
               <template v-if="isContinuationInAffidavitRequired">
@@ -235,7 +220,7 @@
                   v-if="getExistingBusinessInfo.affidavitFileName"
                   text
                   color="primary"
-                  class="download-affidavit-btn mt-sm-n2 d-block"
+                  class="download-affidavit-btn mt-sm-n2 d-block pl-0"
                   :disabled="isDownloading"
                   :loading="isDownloading"
                   @click="downloadAffidavitDocument()"
@@ -256,11 +241,11 @@
 
               <!-- the proof of authorization file(s) -->
               <v-btn
-                v-for="item in getContinuationAuthorization?.files"
+                v-for="item in getContinuationInAuthorizationProof?.files"
                 :key="item.fileKey"
                 text
                 color="primary"
-                class="download-authorization-btn d-block"
+                class="download-authorization-btn d-block pl-0"
                 :disabled="isDownloading"
                 :loading="isDownloading"
                 @click="downloadAuthorizationDocument(item)"
@@ -269,7 +254,7 @@
                 <span>{{ item.fileName }}</span>
               </v-btn>
               <div
-                v-if="!getContinuationAuthorization?.files?.length"
+                v-if="!getContinuationInAuthorizationProof?.files?.length"
                 class="pl-4"
               >
                 <v-icon color="error">
@@ -296,7 +281,6 @@
             <v-col
               cols="12"
               sm="9"
-              class="pt-4 pt-sm-0"
             >
               <div id="authorization-date">
                 {{ authorizationDate || '[Unknown]' }}
@@ -314,8 +298,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { GenericErrorDialog } from '@/dialogs/'
-import { RouteNames } from '@/enums'
-import { ContinuationAuthorizationIF, ExistingBusinessInfoIF } from '@/interfaces'
+import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
@@ -326,14 +309,10 @@ import { JurisdictionLocation } from '@bcrs-shared-components/enums'
   }
 })
 export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, DocumentMixin) {
-  // for template
-  readonly RouteNames = RouteNames
-
   // Getters
-  @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
+  @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) isContinuationInAffidavitRequired!: boolean
-  @Getter(useStore) isContinuationInBusinessHomeValid!: boolean
 
   // local variables
   errorDialog = false
@@ -375,7 +354,7 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, D
 
   /** The formatted authorization date. */
   get authorizationDate (): string {
-    return this.yyyyMmDdToPacificDate(this.getContinuationAuthorization?.date, true, false)
+    return this.yyyyMmDdToPacificDate(this.getContinuationInAuthorizationProof?.date, true, false)
   }
 
   /** Downloads the director affidavit document. */
@@ -408,10 +387,6 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, D
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-.v-icon.mdi-information-outline {
-  margin-top: -2px;
-}
-
 // reduce top whitespace for all articles except first one
 article:not(:first-child) {
   padding-top: 1.25rem;
@@ -423,7 +398,7 @@ article:not(:last-child) {
 }
 
 // vertically align file buttons with label
-#continuation-authorization-summary .col-sm-9 {
+.file-buttons {
   margin-top: -6px !important;
 }
 

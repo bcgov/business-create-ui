@@ -4,7 +4,7 @@ import { useStore } from '@/store/store'
 import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
-  ContinuationAuthorizationIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
+  AuthorizationProofIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
   ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
@@ -14,7 +14,6 @@ import {
 } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
-  FilingStatus,
   FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
@@ -38,7 +37,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
-  @Getter(useStore) getContinuationAuthorization!: ContinuationAuthorizationIF
+  @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
@@ -69,6 +68,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) isContinuationInAuthorization!: boolean
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityFirm!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
@@ -81,7 +81,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   // @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
-  @Action(useStore) setContinuationAuthorization!: (x: ContinuationAuthorizationIF) => void
+  @Action(useStore) setContinuationAuthorization!: (x: AuthorizationProofIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
   // @Action(useStore) setCorrectNameOption!: (x: CorrectNameOptions) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
@@ -396,17 +396,16 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           shareClasses: this.getCreateShareStructureStep.shareClasses
         },
         // save properties used only for UI:
-        isConfirmed: this.getExistingBusinessInfo?.isConfirmed || false,
         mode: this.getExistingBusinessInfo?.mode,
         status: this.getExistingBusinessInfo?.status
       }
     }
 
-    // Add continuation authorization.
-    if (this.getContinuationAuthorization) {
+    // Add continuation in authorization proof.
+    if (this.getContinuationInAuthorizationProof) {
       filing.continuationIn.authorization = {
-        files: this.getContinuationAuthorization.files,
-        date: this.getContinuationAuthorization.date
+        files: this.getContinuationInAuthorizationProof.files,
+        date: this.getContinuationInAuthorizationProof.date
       }
     }
 
@@ -448,7 +447,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
    */
   parseContinuationInDraft (draftFiling: ContinuationInFilingIF): void {
     const continuationIn = draftFiling.continuationIn
-    const status = draftFiling.header.status || null
 
     // save filing id
     this.setFilingId(+draftFiling.header.filingId)
@@ -474,7 +472,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         homeIdentifier: continuationIn.foreignJurisdiction.identifier,
         homeIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
         homeLegalName: continuationIn.foreignJurisdiction.legalName,
-        isConfirmed: continuationIn.isConfirmed,
         mode: continuationIn.mode,
         status: continuationIn.status,
         taxId: continuationIn.foreignJurisdiction.taxId,
@@ -482,7 +479,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       })
     }
 
-    // restore continuation authorization
+    // restore continuation in authorization proof
     if (continuationIn.authorization) {
       this.setContinuationAuthorization(continuationIn.authorization)
     }
@@ -561,11 +558,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    if (status === FilingStatus.CHANGE_REQUESTED) {
-      // if user is editing a (previously filed) filing, waive fees as they don't have to pay again
+    if (this.isContinuationInAuthorization) {
+      // if this is a continuation in authorization, show zero fees
       this.parseStaffPayment({ header: { waiveFees: true } } as any)
     } else if (this.isRoleStaff) {
-      // restore Staff Payment data
+      // otherwise, restore normal Staff Payment data
       // (NB: Staff role is mutually exclusive with premium account.)
       this.parseStaffPayment(draftFiling)
     }

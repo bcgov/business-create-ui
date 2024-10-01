@@ -13,8 +13,8 @@
     </MessageBox>
 
     <section class="mt-10">
-      <header id="association-details">
-        <h2>1. {{ getDissolutionDetailsTitle }}</h2>
+      <header id="details-title">
+        <h2>1. {{ getDetailsTitle }}</h2>
       </header>
 
       <v-card
@@ -52,17 +52,17 @@
     <!-- Custodian of Records -->
     <section class="mt-10">
       <header id="custodian-header">
-        <h2>{{ isEntityCoop ? 3 : 2 }}. {{ getCustodialRecordsResources.custodianTitle }}</h2>
+        <h2>{{ isEntityCoop ? 3 : 2 }}. {{ getCustodialRecords.custodianTitle }}</h2>
         <p class="mt-4">
-          {{ getCustodialRecordsResources.sectionSubtitle }}
+          {{ getCustodialRecords.sectionSubtitle }}
         </p>
       </header>
 
       <!-- Help Section -->
       <HelpSection
-        v-if="getCustodialRecordsResources.helpSection"
+        v-if="getCustodialRecords.helpSection"
         class="mt-5"
-        :helpSection="getCustodialRecordsResources.helpSection"
+        :helpSection="getCustodialRecords.helpSection"
       />
 
       <v-card
@@ -140,8 +140,8 @@ import MessageBox from '@/components/common/MessageBox.vue'
 export default class DissolutionDefineDissolution extends Mixins(CommonMixin) {
   // Global getters
   @Getter(useStore) getBusinessLegalName!: string
-  @Getter(useStore) getCustodialRecordsResources!: CustodianResourceIF
-  @Getter(useStore) getDissolutionDetailsTitle!: string
+  @Getter(useStore) getCustodialRecords!: CustodianResourceIF
+  @Getter(useStore) getDetailsTitle!: string
   @Getter(useStore) getDissolutionStatementStep!: DissolutionStatementIF
   @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
   @Getter(useStore) getEntityType!: CorpTypeCd

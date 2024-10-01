@@ -94,7 +94,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
     if (file) {
       const pattern = /^(.*)\.(pdf)$/i
       if (!pattern.test(file.name)) {
-        this.setCustomErrorMessage('Invalid file extension.')
+        this.setCustomErrorMessage('Invalid file extension. Must be "PDF".')
         return false
       }
     }
@@ -112,7 +112,7 @@ export default class FileUploadPreview extends Mixins(DocumentMixin) {
         return false
       }
       if (fileInfo.isContentLocked) {
-        this.setCustomErrorMessage('File content cannot be locked.')
+        this.setCustomErrorMessage('File content must not be locked.')
         return false
       }
       const isPageSizeValid = await this.validatePageSize(file)

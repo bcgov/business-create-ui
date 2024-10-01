@@ -114,6 +114,7 @@ import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameReq
 import { LegalServices } from '@/services/'
 import { FilingStatus, FilingTypes, RouteNames } from '@/enums'
 import { NameRequestStates } from '@bcrs-shared-components/enums'
+import flushPromises from 'flush-promises'
 
 @Component({})
 export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
@@ -127,6 +128,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
   // @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getSteps!: Array<any>
   @Getter(useStore) isBusySaving!: boolean
+  // @Getter(useStore) isContinuationInAuthorization!: boolean
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isFilingPaying!: boolean
   @Getter(useStore) isFilingValid!: boolean
@@ -198,9 +201,13 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
 
   /** Label for the File and Pay button. */
   get filePayButtonLabel (): string {
-    if (this.$route.name === RouteNames.CONTINUATION_IN_REVIEW_CONFIRM) {
-      if (this.getFilingStatus === FilingStatus.DRAFT) return 'Submit and Pay'
-      if (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED) return 'Resubmit'
+    // special case for Continuation In Authorizations
+    if (this.isContinuationInFiling && (this.getFilingStatus === FilingStatus.DRAFT)) {
+      return 'Submit'
+    }
+    // special case for Continuation In Authorizations
+    if (this.isContinuationInFiling && (this.getFilingStatus === FilingStatus.CHANGE_REQUESTED)) {
+      return 'Resubmit'
     }
     return 'File and Pay'
   }
@@ -274,6 +281,10 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     // prompt step validations
     this.setValidateSteps(true)
 
+    // wait extra long for Continuation In Authorization to validate
+    // (whereas regular filings validate when getShowErrors becomes True)
+    if (this.isContinuationInAuthorization) await flushPromises()
+
     if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
       try {
         // Re-fetch the business table data. We do this in case one of the businesses has changed (eg,
@@ -293,8 +304,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
     if (this.isFilingValid) {
       // prevent double saving
       if (this.isBusySaving) return
-      // If File and Pay is successful setIsFilingPaying should't be reset to false,
-      // this prevent buttons from being re-enabled if the page is slow to redirect.
+      // If File and Pay is successful, setIsFilingPaying shouldn't be reset to false.
+      // This prevent buttons from being re-enabled if the page is slow to redirect.
       this.setIsFilingPaying(true)
 
       if (
@@ -340,7 +351,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       }
 
       const paymentToken = filingComplete?.header?.paymentToken
-      if (paymentToken) {
+      // special case for continuation in authorization -- no payment at this time
+      if (paymentToken || this.isContinuationInAuthorization) {
         const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
         const returnUrl = sessionStorage.getItem('DASHBOARD_URL') + this.getEntityIdentifier +
           `?filing_id=${this.getFilingId}`
@@ -361,7 +373,8 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
         this.$root.$emit('save-error-event', error)
         this.setIsFilingPaying(false)
       }
-    } else {
+    } else if (!this.isContinuationInAuthorization) {
+      // if this is a Continuation In Authorization then let that page scroll if needed
       // otherwise, smooth-scroll to the top of the page
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }

@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import { wrapperFactory } from '../vitest-wrapper-factory'
-import ContinuationAuthorization from '@/components/ContinuationIn/ContinuationAuthorization.vue'
+import AuthorizationProof from '@/components/ContinuationIn/AuthorizationProof.vue'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { FilingStatus } from '@/enums'
 import MessageBox from '@/components/common/MessageBox.vue'
 
-describe('Continuation Authorization component', () => {
+describe('Authorization Proof component', () => {
   it('renders the component correctly - draft filing', async () => {
-    const wrapper = wrapperFactory(ContinuationAuthorization)
+    const wrapper = wrapperFactory(AuthorizationProof)
     await Vue.nextTick()
 
     // verify main component exists
-    expect(wrapper.findComponent(ContinuationAuthorization).exists()).toBe(true)
-    expect(wrapper.find('#continuation-authorization').exists()).toBe(true)
+    expect(wrapper.findComponent(AuthorizationProof).exists()).toBe(true)
+    expect(wrapper.find('#authorization-proof').exists()).toBe(true)
 
     // spot check some content (structure / text)
     const firstVcard = wrapper.findAll('.v-card').at(0)
@@ -41,7 +41,7 @@ describe('Continuation Authorization component', () => {
 
   it('renders the component correctly - change-requested filing', async () => {
     const wrapper = wrapperFactory(
-      ContinuationAuthorization,
+      AuthorizationProof,
       null,
       {
         tombstone: { filingStatus: FilingStatus.CHANGE_REQUESTED },
@@ -51,8 +51,8 @@ describe('Continuation Authorization component', () => {
     await Vue.nextTick()
 
     // verify main component exists
-    expect(wrapper.findComponent(ContinuationAuthorization).exists()).toBe(true)
-    expect(wrapper.find('#continuation-authorization').exists()).toBe(true)
+    expect(wrapper.findComponent(AuthorizationProof).exists()).toBe(true)
+    expect(wrapper.find('#authorization-proof').exists()).toBe(true)
 
     // spot check some content (structure / text)
     const firstVcard = wrapper.findAll('.v-card').at(0)
