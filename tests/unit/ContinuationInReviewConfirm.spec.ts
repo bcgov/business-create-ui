@@ -1,8 +1,7 @@
-/* eslint-disable max-len */
 import Vue from 'vue'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import ContinuationInReviewConfirm from '@/views/ContinuationIn/ContinuationInReviewConfirm.vue'
-import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/SummaryBusinessHomeJurisdiction.vue'
+import SummaryBusinessPreviousJurisdiction from '@/components/ContinuationIn/SummaryBusinessPreviousJurisdiction.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
@@ -26,11 +25,12 @@ describe('Continuation In Review Confirm component', () => {
     const firstSection = wrapper.findAll('section').at(0)
     expect(firstSection.find('header h2').text()).toBe('Review and Confirm')
     expect(firstSection.find('header p').text()).toContain('Review the information in your application.')
-    expect(firstSection.find('#your-business-in-home-jurisdiction-vcard').exists()).toBe(true)
-    expect(firstSection.find('#your-business-in-home-jurisdiction-vcard label').text()).toContain('Your Business in Home Jurisdiction')
-    expect(firstSection.findComponent(SummaryBusinessHomeJurisdiction).exists()).toBe(true)
+    expect(firstSection.find('#your-business-in-previous-jurisdiction-vcard').exists()).toBe(true)
+    expect(firstSection.find('#your-business-in-previous-jurisdiction-vcard label').text())
+      .toContain('Your Business in Previous Jurisdiction')
+    expect(firstSection.findComponent(SummaryBusinessPreviousJurisdiction).exists()).toBe(true)
     expect(firstSection.find('#your-business-in-bc-vcard').exists()).toBe(true)
-    expect(firstSection.find('#your-business-in-bc-vcard label').text()).toContain('Your Business in BC')
+    expect(firstSection.find('#your-business-in-bc-vcard label').text()).toContain('Your Business in B.C.')
     expect(firstSection.findComponent(SummaryDefineCompany).exists()).toBe(true)
     expect(firstSection.find('#people-and-roles-vcard').exists()).toBe(true)
     expect(firstSection.find('#people-and-roles-vcard label').text()).toContain('People and Roles')

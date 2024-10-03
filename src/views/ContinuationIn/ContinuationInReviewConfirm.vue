@@ -13,20 +13,33 @@
         </p>
       </header>
 
-      <!-- Your Business in Home Jurisdiction -->
+      <!-- Extraprovincial Registration in B.C. -->
       <v-card
-        id="your-business-in-home-jurisdiction-vcard"
+        id="extraprovincial-registration-bc-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          label="Extraprovincial Registration in B.C."
+        />
+        <SummaryExtraprovincialRegistration />
+      </v-card>
+
+      <!-- Your Business in Previous Jurisdiction -->
+      <v-card
+        id="your-business-in-previous-jurisdiction-vcard"
         flat
         class="mt-6"
       >
         <CardHeader
           icon="mdi-home-city-outline"
-          label="Your Business in Home Jurisdiction"
+          label="Your Business in Previous Jurisdiction"
         />
-        <SummaryBusinessHomeJurisdiction />
+        <SummaryBusinessPreviousJurisdiction />
       </v-card>
 
-      <!-- Your Business in BC -->
+      <!-- Your Business in B.C. -->
       <v-card
         id="your-business-in-bc-vcard"
         flat
@@ -34,7 +47,7 @@
       >
         <CardHeader
           icon="mdi-domain"
-          label="Your Business in BC"
+          label="Your Business in B.C."
         />
         <SummaryDefineCompany />
       </v-card>
@@ -221,7 +234,8 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
-import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/SummaryBusinessHomeJurisdiction.vue'
+import SummaryBusinessPreviousJurisdiction from '@/components/ContinuationIn/SummaryBusinessPreviousJurisdiction.vue'
+import SummaryExtraprovincialRegistration from '@/components/ContinuationIn/SummaryExtraprovincialRegistration.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -237,7 +251,8 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
-    SummaryBusinessHomeJurisdiction,
+    SummaryBusinessPreviousJurisdiction,
+    SummaryExtraprovincialRegistration,
     StaffPayment
   }
 })

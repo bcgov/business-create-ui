@@ -179,4 +179,17 @@ export default class DocumentMixin extends Vue {
       return null // invalid pdf file
     }
   }
+
+  /**
+   * Returns file size as a string in MB, KB or bytes.
+   * @param file the file whose size to return
+   */
+  friendlyFileSize (file: File): string {
+    const size = file?.size || 0
+    const sizeKB = size / 1024
+    const sizeMB = sizeKB / 1024
+    if (sizeMB > 1) return `${sizeMB.toFixed(1)} MB`
+    if (sizeKB > 1) return `${sizeKB.toFixed(0)} KB`
+    return `${size} bytes`
+  }
 }

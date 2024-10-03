@@ -9,13 +9,13 @@ const businessMock: ExistingBusinessInfoIF = {
   affidavitFile: null,
   affidavitFileKey: null,
   affidavitFileName: null,
-  homeJurisdiction: {
+  previousJurisdiction: {
     country: 'CA',
     region: 'AB'
   },
-  homeIdentifier: '',
-  homeIncorporationDate: '',
-  homeLegalName: '',
+  prevIncorporationNumber: '',
+  prevIncorporationDate: '',
+  prevBusinessName: '',
   mode: 'EXPRO'
 }
 

@@ -14,16 +14,15 @@
           cols="12"
           sm="9"
         >
-          <div
-            class="font-14 ml-3"
-          >
+          <p class="font-14 ml-3 mb-1">
             Not extraprovincially registered in B.C.?<br>
-            <a @click="onClick()">
-              <span class="font-weight-bold text-decoration-underline">
-                Enter your business information manually
-              </span>
-            </a>
-          </div>
+          </p>
+          <a
+            class="font-weight-bold text-decoration-underline font-14 ml-3"
+            @click="onClick()"
+          >
+            Enter your business information manually
+          </a>
         </v-col>
       </v-row>
     </template>
@@ -57,13 +56,13 @@
               in your previous jurisdiction.
             </MessageBox>
 
-            <!-- Jurisdiction + clear button -->
+            <!-- Previous Jurisdiction + clear button -->
             <div class="d-flex justify-space-between mt-6">
               <Jurisdiction
-                class="home-jurisdiction"
+                class="previous-jurisdiction"
                 :showUsaJurisdictions="true"
-                label="Jurisdiction"
-                :initialValue="business.homeJurisdiction"
+                label="Previous Jurisdiction"
+                :initialValue="business.previousJurisdiction"
                 :errorMessages="jurisdictionErrorMessage"
                 :showAppendIcon="false"
                 @change="onJurisdictionChange($event)"
@@ -90,33 +89,34 @@
               </v-tooltip>
             </div>
 
-            <!-- Identifying Number -->
+            <!-- Incorporation Number -->
             <v-text-field
-              v-model.trim="business.homeIdentifier"
-              class="identifying-number mt-6"
+              v-model.trim="business.prevIncorporationNumber"
+              class="incorporation-number mt-6"
               filled
-              hide-details="auto"
-              label="Identifying Number"
+              persistent-hint
+              label="Incorporation Number"
+              hint="This number identifies your business in its previous jurisdiction."
               :rules="getShowErrors ? identifyingNumberRules : []"
             />
 
-            <!-- Business Name in Home Jurisdiction -->
+            <!-- Business Name in Previous Jurisdiction -->
             <v-text-field
-              v-model.trim="business.homeLegalName"
-              class="business-name mt-6"
+              v-model.trim="business.prevBusinessName"
+              class="business-name mt-4"
               filled
               hide-details="auto"
-              label="Business Name in Home Jurisdiction"
+              label="Business Name in Previous Jurisdiction"
               :rules="getShowErrors ? businessNameRules : []"
             />
 
             <!-- Business Number-->
             <v-text-field
-              v-model="business.taxId"
+              v-model="business.businessNumber"
               v-mask="['#########']"
               class="business-number mt-6"
               filled
-              hide-details="auto"
+              persistent-hint
               label="Business Number (Optional)"
               hint="First 9 digits of the CRA Business Number if you have one"
               :rules="getShowErrors ? Rules.BusinessNumberRules : []"
@@ -126,14 +126,16 @@
             <DatePickerShared
               id="incorporation-date"
               ref="incorporationDateRef"
-              class="mt-6"
-              title="Incorporation Date in Home Jurisdiction"
+              class="mt-4 mb-n1"
+              title="Date of Incorporation"
               :nudgeRight="40"
               :nudgeTop="85"
-              :initialValue="getExistingBusinessInfo.homeIncorporationDate"
+              hint="Date of Incorporation, Continuation or Amalgamation in previous jurisdiction"
+              :persistentHint="true"
+              :initialValue="getExistingBusinessInfo.prevIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"
               :maxDate="getCurrentDate"
-              @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
+              @emitDateSync="$set(business, 'prevIncorporationDate', $event)"
             />
           </v-col>
         </v-row>
@@ -156,8 +158,8 @@
             sm="9"
           >
             <UploadAffidavit
-              class="mb-n2"
               :business="business"
+              @valid="affidavitValid = $event"
             />
           </v-col>
         </v-row>
@@ -215,6 +217,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
+  affidavitValid = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
     (v) => !!v?.trim() || 'Identifying Number is required',
@@ -229,13 +232,13 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v) => !!v || 'Incorporation Date is required',
-      () => (this.business.homeIncorporationDate <= this.getCurrentDate) ||
+      () => (this.business.prevIncorporationDate <= this.getCurrentDate) ||
         'Incorporation Date cannot be in the future'
     ]
   }
 
   get jurisdictionErrorMessage (): string {
-    return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
+    return (this.getShowErrors && !this.business.previousJurisdiction) ? 'Jurisdiction is required' : ''
   }
 
   /** Called when this component is mounted. */
@@ -267,7 +270,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   onJurisdictionChange (jurisdiction: any): void {
     if (jurisdiction?.group === 0) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: JurisdictionLocation.CA,
         region: (jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : jurisdiction.value
       })
@@ -275,7 +278,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
     if (jurisdiction?.group === 1) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: JurisdictionLocation.US,
         region: jurisdiction.value
       })
@@ -283,7 +286,7 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
     if (jurisdiction?.group === 2) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: jurisdiction.value,
         region: ''
       })
@@ -306,23 +309,24 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   /** Emits form validity. */
   @Watch('business', { deep: true })
   @Watch('formValid')
+  @Watch('affidavitValid')
   @Watch('getShowErrors')
   @Emit('valid')
   private onComponentValid (): boolean {
     // if we're here it's because the user has changed something
     this.setHaveChanges(true)
 
-    // this form is valid if we have the home jurisdiction (custom component)
-    // and we have the home incorporation date (custom component)
+    // this form is valid if we have the previous jurisdiction (custom component)
+    // and we have the incorporation date (custom component)
     // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
     // show tick mark only when user visits Review Page
     return (
       this.getShowErrors &&
-    !!this.business.homeJurisdiction &&
-    !!this.business.homeIncorporationDate &&
-    (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
-    this.formValid
+      !!this.business.previousJurisdiction &&
+      !!this.business.prevIncorporationDate &&
+      (!this.isContinuationInAffidavitRequired || this.affidavitValid) &&
+      this.formValid
     )
   }
 

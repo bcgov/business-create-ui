@@ -28,13 +28,13 @@ describe('Manual Business Info component', () => {
       affidavitFile: null,
       affidavitFileKey: null,
       affidavitFileName: null,
-      homeJurisdiction: {
+      previousJurisdiction: {
         country: 'CA',
         region: 'AB'
       },
-      homeIdentifier: '',
-      homeIncorporationDate: '',
-      homeLegalName: '',
+      prevIncorporationNumber: '',
+      prevIncorporationDate: '',
+      prevBusinessName: '',
       mode: 'MANUAL'
     } as ExistingBusinessInfoIF
     store.stateModel.entityType = CorpTypeCd.ULC_CONTINUE_IN
@@ -51,7 +51,7 @@ describe('Manual Business Info component', () => {
   it('displays initial jurisdiction (Federal) value correctly', async () => {
     // set some store values
     store.stateModel.continuationIn.existingBusinessInfo = {
-      homeJurisdiction: {
+      previousJurisdiction: {
         country: 'CA',
         region: 'FEDERAL'
       },
@@ -62,8 +62,8 @@ describe('Manual Business Info component', () => {
     await Vue.nextTick()
 
     // verify component main exists
-    expect(wrapper.find('.home-jurisdiction label').text()).toBe('Jurisdiction')
-    expect(wrapper.find('.home-jurisdiction .v-select__selection').text()).toBe('Federal')
+    expect(wrapper.find('.previous-jurisdiction label').text()).toBe('Previous Jurisdiction')
+    expect(wrapper.find('.previous-jurisdiction .v-select__selection').text()).toBe('Federal')
 
     wrapper.destroy()
   })

@@ -6,7 +6,7 @@
         <h2>Existing Business Information</h2>
         <p>
           Enter information about your existing business. If your company is extraprovincially registered
-          in B.C., that registration will be made historical when this continuation application is processed.
+          in B.C., that registration will be made historical when this Continuation Application is processed.
         </p>
       </header>
 
@@ -40,9 +40,8 @@
       <header id="contact-information">
         <h2>Contact Information</h2>
         <p>
-          Enter the contact information for the continuation authorization. The BC Business Registry
-          will use this to communicate with the business about this authorization in the future,
-          including sending documents and notifications.
+          Enter the contact information for the resulting business. BC Registries will use this to
+          communicate with the business in the future, including sending documents and notifications.
         </p>
       </header>
 
@@ -66,8 +65,8 @@
       <header id="proof-of-authorization">
         <h2>Proof of Authorization</h2>
         <p>
-          You must provide proof of authorization to continue out of your home jurisdiction.
-          This will be reviewed by our staff.
+          You must provide proof of authorization to continue out of your previous jurisdiction. This
+          will be reviewed by BC Registries.
         </p>
       </header>
 

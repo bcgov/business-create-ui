@@ -366,12 +366,12 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       },
       continuationIn: {
         foreignJurisdiction: {
-          country: this.getExistingBusinessInfo?.homeJurisdiction?.country,
-          region: this.getExistingBusinessInfo?.homeJurisdiction?.region || undefined,
-          legalName: this.getExistingBusinessInfo?.homeLegalName,
-          identifier: this.getExistingBusinessInfo?.homeIdentifier,
-          incorporationDate: this.getExistingBusinessInfo?.homeIncorporationDate,
-          taxId: this.getExistingBusinessInfo?.taxId || undefined,
+          country: this.getExistingBusinessInfo?.previousJurisdiction?.country,
+          region: this.getExistingBusinessInfo?.previousJurisdiction?.region || undefined,
+          legalName: this.getExistingBusinessInfo?.prevBusinessName,
+          identifier: this.getExistingBusinessInfo?.prevIncorporationNumber,
+          incorporationDate: this.getExistingBusinessInfo?.prevIncorporationDate,
+          taxId: this.getExistingBusinessInfo?.businessNumber || undefined,
           affidavitFile: this.getExistingBusinessInfo?.affidavitFile,
           affidavitFileKey: this.getExistingBusinessInfo?.affidavitFileKey,
           affidavitFileName: this.getExistingBusinessInfo?.affidavitFileName
@@ -404,18 +404,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // Add continuation in authorization proof.
     if (this.getContinuationInAuthorizationProof) {
       filing.continuationIn.authorization = {
-        files: this.getContinuationInAuthorizationProof.files,
-        date: this.getContinuationInAuthorizationProof.date
+        files: this.getContinuationInAuthorizationProof.files
       }
     }
 
     // Add expro business information.
     if (this.getExistingBusinessInfo?.mode === 'EXPRO') {
-      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo.bcFoundingDate)
+      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo.bcRegistrationDate)
       filing.continuationIn.business = {
         foundingDate: this.dateToApi(foundingDate),
-        identifier: this.getExistingBusinessInfo.bcIdentifier,
-        legalName: this.getExistingBusinessInfo.bcLegalName
+        identifier: this.getExistingBusinessInfo.bcRegistrationNumber,
+        legalName: this.getExistingBusinessInfo.bcRegisteredName
       }
     }
 
@@ -461,20 +460,20 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         affidavitFile: continuationIn.foreignJurisdiction.affidavitFile,
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
         affidavitFileName: continuationIn.foreignJurisdiction.affidavitFileName,
-        bcFoundingDate: this.dateToYyyyMmDd(foundingDate),
-        bcIdentifier: continuationIn.business?.identifier,
-        bcLegalName: continuationIn.business?.legalName,
-        // store homeJurisdiction as null if not saved
-        homeJurisdiction: continuationIn.foreignJurisdiction.country ? {
+        bcRegistrationDate: this.dateToYyyyMmDd(foundingDate),
+        bcRegistrationNumber: continuationIn.business?.identifier,
+        bcRegisteredName: continuationIn.business?.legalName,
+        // store previousJurisdiction as null if not saved
+        previousJurisdiction: continuationIn.foreignJurisdiction.country ? {
           country: continuationIn.foreignJurisdiction.country,
           region: continuationIn.foreignJurisdiction.region
         } : null,
-        homeIdentifier: continuationIn.foreignJurisdiction.identifier,
-        homeIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
-        homeLegalName: continuationIn.foreignJurisdiction.legalName,
+        prevIncorporationNumber: continuationIn.foreignJurisdiction.identifier,
+        prevIncorporationDate: continuationIn.foreignJurisdiction.incorporationDate,
+        prevBusinessName: continuationIn.foreignJurisdiction.legalName,
         mode: continuationIn.mode,
         status: continuationIn.status,
-        taxId: continuationIn.foreignJurisdiction.taxId,
+        businessNumber: continuationIn.foreignJurisdiction.taxId,
         latestReviewComment: draftFiling.header.latestReviewComment || null
       })
     }

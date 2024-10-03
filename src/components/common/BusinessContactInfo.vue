@@ -112,8 +112,7 @@
           sm="3"
           class="pr-4"
         >
-          <label v-if="isIncorporationFiling">Registered Office Contact Information</label>
-          <label v-else>Business Contact Information</label>
+          <label>{{ contactInformationLabel }}</label>
         </v-col>
 
         <v-col
@@ -171,6 +170,7 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
 
+  @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
 
   // Rules for template
@@ -182,6 +182,12 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   // Rules
   emailMustMatch (): string {
     return (this.contact.email === this.contact.confirmEmail) ? '' : 'Email addresses must match'
+  }
+
+  get contactInformationLabel (): string {
+    if (this.isContinuationInFiling) return 'Registered Office Contact Information'
+    if (this.isIncorporationFiling) return 'Registered Office Contact Information'
+    return 'Business Contact Information'
   }
 
   // Watchers
