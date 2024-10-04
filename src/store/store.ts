@@ -243,13 +243,13 @@ export const useStore = defineStore('store', {
      * Is true if the business is a Continued In ULC from Alberta or Nova Scotia.
      */
     isContinuationInAffidavitRequired (): boolean {
-      const homeJurisdiction = this.getExistingBusinessInfo?.homeJurisdiction
+      const previousJurisdiction = this.getExistingBusinessInfo?.previousJurisdiction
       return (
         this.isEntityUlcContinueIn &&
-        (homeJurisdiction?.country === JurisdictionLocation.CA) &&
+        (previousJurisdiction?.country === JurisdictionLocation.CA) &&
         (
-          homeJurisdiction?.region === 'AB' ||
-          homeJurisdiction?.region === 'NS'
+          previousJurisdiction?.region === 'AB' ||
+          previousJurisdiction?.region === 'NS'
         )
       )
     },

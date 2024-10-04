@@ -168,7 +168,7 @@
 
               <p
                 v-if="getPageBlurb"
-                class="mt-4"
+                class="mt-4 font-18"
               >
                 {{ getPageBlurb }}
               </p>

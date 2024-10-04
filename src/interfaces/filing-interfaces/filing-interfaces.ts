@@ -98,13 +98,13 @@ export interface ContinuationInFilingIF {
       identifier: string
       legalName: string
     }
-    foreignJurisdiction: { // data in home jurisdiction
+    foreignJurisdiction: { // aka home jurisdiction
       country: string
       region?: string
       legalName: string
       identifier: string
       incorporationDate: string // YYYY-MM-DD
-      taxId?: string
+      taxId?: string // aka Business Number
       affidavitFile?: File
       affidavitFileKey?: string
       affidavitFileName?: string
