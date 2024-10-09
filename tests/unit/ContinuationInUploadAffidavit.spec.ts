@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import UploadAffidavit from '@/components/ContinuationIn/UploadAffidavit.vue'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
 import { ExistingBusinessInfoIF } from '@/interfaces'
 
 // Create a mock business object
@@ -32,16 +33,21 @@ describe('Upload Affidavit component', () => {
 
     await Vue.nextTick()
 
-    // Verify main component exists
+    // Verify that main component exists
     expect(wrapper.findComponent(UploadAffidavit).exists()).toBe(true)
 
-    // Check if the text content is rendered correctly
-    expect(wrapper.text()).toContain('Upload the affidavit from the directors.')
-    expect(wrapper.text()).toContain('Use a white background and a legible font with contrasting font colour')
-    expect(wrapper.text()).toContain('PDF file type (maximum 30 MB file size)')
+    // Verify that text content is rendered correctly
+    expect(wrapper.text()).toContain('There is additional information required by the Registrar')
+    expect(wrapper.text()).toContain('for an unlimited liability corporation from Alberta.')
 
-    // Check if FileUploadPreview component is rendered
+    expect(wrapper.find('ul').text()).toContain('Use a white background and a legible font')
+    expect(wrapper.find('ul').text()).toContain('PDF file type (maximum 30 MB file size)')
+
+    // Verify that FileUploadPreview component is rendered
     expect(wrapper.findComponent(FileUploadPreview).exists()).toBe(true)
+
+    // Verify that ExpandableHelp component is rendered
+    expect(wrapper.findComponent(ExpandableHelp).exists()).toBe(true)
 
     wrapper.destroy()
   })

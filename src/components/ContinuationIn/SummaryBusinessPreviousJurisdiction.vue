@@ -48,7 +48,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="identifying-number-home">
-                {{ getExistingBusinessInfo?.prevIncorporationNumber || '[Unknown]' }}
+                {{ getExistingBusinessInfo.prevIncorporationNumber || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -70,7 +70,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="name-home">
-                {{ getExistingBusinessInfo?.prevBusinessName || '[Unknown]' }}
+                {{ getExistingBusinessInfo.prevBusinessName || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -92,7 +92,7 @@
               class="pt-4 pt-sm-0"
             >
               <div id="business-number">
-                {{ getExistingBusinessInfo?.businessNumber || '[Not Entered]' }}
+                {{ getExistingBusinessInfo.businessNumber || '[Not Entered]' }}
               </div>
             </v-col>
           </v-row>
@@ -123,8 +123,8 @@
 
       <v-divider class="mx-6" />
 
+      <!-- Proof of Authorization -->
       <div id="proof-of-authorization-summary">
-        <!-- Proof of Authorization -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -137,40 +137,15 @@
             <v-col
               cols="12"
               sm="9"
-              class="file-buttons pt-2 pt-sm-0"
+              class="mt-2 mt-sm-n1"
             >
-              <!-- the director's affidavit file -->
-              <template v-if="isContinuationInAffidavitRequired">
-                <v-btn
-                  v-if="getExistingBusinessInfo.affidavitFileName"
-                  text
-                  color="primary"
-                  class="download-affidavit-btn mt-sm-n2 d-block px-2 ml-n2"
-                  :disabled="isDownloading"
-                  :loading="isDownloading"
-                  @click="downloadAffidavitDocument()"
-                >
-                  <v-icon>mdi-file-pdf-outline</v-icon>
-                  <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
-                </v-btn>
-                <div
-                  v-else
-                  class="pl-4"
-                >
-                  <v-icon color="error">
-                    mdi-close
-                  </v-icon>
-                  <span class="pl-2">Missing Affidavit</span>
-                </div>
-              </template>
-
               <!-- the proof of authorization file(s) -->
               <v-btn
                 v-for="item in getContinuationInAuthorizationProof?.files"
                 :key="item.fileKey"
                 text
                 color="primary"
-                class="download-authorization-btn d-block px-2 ml-n2"
+                class="download-authorization-btn d-block pa-2 ml-n2"
                 :disabled="isDownloading"
                 :loading="isDownloading"
                 @click="downloadAuthorizationDocument(item)"
@@ -178,17 +153,52 @@
                 <v-icon>mdi-file-pdf-outline</v-icon>
                 <span>{{ item.fileName }}</span>
               </v-btn>
-              <div
-                v-if="!getContinuationInAuthorizationProof?.files?.length"
-                class="pl-4"
-              >
-                <v-icon color="error">
-                  mdi-close
-                </v-icon>
-                <span class="pl-2">Missing Authorization File(s)</span>
-              </div>
 
-              <!-- *** TODO: add approval checkbox here -->
+              <!-- Authorization Approved checkmark -->
+              <div class="approved-checkmark mt-1 d-flex align-start">
+                <v-icon color="green darken-2">
+                  mdi-check
+                </v-icon>
+                <span class="ml-2">Authorization to Continue In has been approved.</span>
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+      </div>
+
+      <v-divider class="mx-6" />
+
+      <!-- Alberta Unlimited Liability Corporation Information -->
+      <div
+        v-if="getExistingBusinessInfo.affidavitFileName"
+        id="ab-ulc-information-summary"
+      >
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label>Alberta Unlimited Liability Corporation Information</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="mt-2 mt-sm-n1"
+            >
+              <!-- the director's affidavit file -->
+              <v-btn
+                text
+                color="primary"
+                class="download-affidavit-btn d-block pa-2 ml-n2"
+                :disabled="isDownloading"
+                :loading="isDownloading"
+                @click="downloadAffidavitDocument()"
+              >
+                <v-icon>mdi-file-pdf-outline</v-icon>
+                <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
+              </v-btn>
             </v-col>
           </v-row>
         </article>
@@ -216,7 +226,6 @@ export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixi
   // Getters
   @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
-  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   // local variables
   errorDialog = false
@@ -226,7 +235,7 @@ export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixi
 
   /** The text version of the previous jurisdiction. */
   get previousJurisdiction (): string {
-    const jurisdiction = this.getExistingBusinessInfo?.previousJurisdiction // may be undefined or null
+    const jurisdiction = this.getExistingBusinessInfo.previousJurisdiction // may be undefined or null
 
     if (jurisdiction?.country === JurisdictionLocation.CA) {
       if (jurisdiction?.region === 'FEDERAL') return 'Federal'
@@ -243,7 +252,7 @@ export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixi
 
   /** The formatted date of incorporation, continuation, or amalgamation in the previous jurisdiction. */
   get prevIncorporationDate (): string {
-    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo?.prevIncorporationDate, true, false)
+    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo.prevIncorporationDate, true, false)
   }
 
   /** Downloads the director affidavit document. */
@@ -286,20 +295,41 @@ article:not(:last-child) {
   padding-bottom: 0;
 }
 
-// vertically align file buttons with label
-.file-buttons {
-  margin-top: -6px !important;
+.download-authorization-btn,
+.download-affidavit-btn {
+  // set button height for multi-line filenames
+  height: auto !important;
+
+  .v-icon {
+    // minimum width of icons (to align them)
+    min-width: 24px;
+  }
+  span {
+    // make button text larger than default
+    font-size: $px-16;
+    // wrap long filenames
+    text-wrap: wrap;
+  }
 }
 
-.download-affidavit-btn,
-.download-authorization-btn {
-  // nudge icon down a bit to line up with text
+.approved-checkmark {
   .v-icon {
-    margin-top: 2px;
+    // minimum width of icons (to align them)
+    min-width: 24px;
+    // nudge icon up a bit to line up with text
+    margin-top: -1px;
   }
-  // make button text larger than default
   span {
+    // make button text larger than default
     font-size: $px-16;
+  }
+}
+
+// "md" breakpoint
+@media (min-width: 960px) {
+  .approved-checkmark .v-icon {
+    // nudge icon down a bit to line up with text
+    margin-top: 1px;
   }
 }
 </style>

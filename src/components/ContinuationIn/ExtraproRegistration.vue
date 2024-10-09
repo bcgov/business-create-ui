@@ -174,7 +174,7 @@
           </v-col>
         </v-row>
 
-        <!-- Upload Affidavit -->
+        <!-- Alberta Unlimited Liability Corporation Information -->
         <v-row
           v-if="isContinuationInAffidavitRequired"
           class="mt-6"
@@ -184,7 +184,7 @@
             cols="12"
             sm="3"
           >
-            <label>Upload Affidavit</label>
+            <label>Alberta Unlimited Liability Corporation Information</label>
           </v-col>
 
           <v-col
@@ -192,8 +192,8 @@
             sm="9"
           >
             <UploadAffidavit
-              class="mb-n2"
               :business="business"
+              @valid="affidavitValid = $event"
             />
           </v-col>
         </v-row>
@@ -355,6 +355,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
+  affidavitValid = false
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
   errorDialog = false
@@ -536,7 +537,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   /** Emits form validity. */
   @Watch('isBusinessActive')
   @Watch('business', { deep: true })
-  @Watch('isContinuationInAffidavitRequired')
+  @Watch('affidavitValid')
   @Watch('formValid')
   @Watch('getShowErrors')
   @Emit('valid')
@@ -555,7 +556,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
       this.isBusinessActive &&
       !!this.business.previousJurisdiction &&
       !!this.business.prevIncorporationDate &&
-      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
+      (!this.isContinuationInAffidavitRequired || this.affidavitValid) &&
       this.formValid
     )
   }

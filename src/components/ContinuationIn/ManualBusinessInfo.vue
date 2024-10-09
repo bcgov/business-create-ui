@@ -140,7 +140,7 @@
           </v-col>
         </v-row>
 
-        <!-- Upload Affidavit -->
+        <!-- Alberta Unlimited Liability Corporation Information -->
         <v-row
           v-if="isContinuationInAffidavitRequired"
           class="mt-6"
@@ -150,7 +150,7 @@
             cols="12"
             sm="3"
           >
-            <label>Upload Affidavit</label>
+            <label>Alberta Unlimited Liability Corporation Information</label>
           </v-col>
 
           <v-col

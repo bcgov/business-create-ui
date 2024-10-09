@@ -119,6 +119,7 @@ export interface ContinuationInFilingIF {
     courtOrder?: CourtOrderIF
     mode?: 'EXPRO' | 'MANUAL' // used only by UI
     status?: EntityStates // only used by UI
+    exproConfirmation?: boolean // only used by UI by expro
   }
 }
 

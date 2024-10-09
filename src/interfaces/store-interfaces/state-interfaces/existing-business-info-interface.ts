@@ -18,4 +18,5 @@ export interface ExistingBusinessInfoIF {
   mode: 'EXPRO' | 'MANUAL' // only used by UI
   status?: EntityStates // only used by UI
   businessNumber?: string
+  exproConfirmation?: boolean // only used by UI
 }
