@@ -1083,6 +1083,7 @@ export const useStore = defineStore('store', {
       switch (true) {
         case this.isFullRestorationFiling: return [this.resourceModel.filingData[0]]
         case this.isLimitedRestorationFiling: return [this.resourceModel.filingData[1]]
+        case (this.isRestorationFiling && !this.isFullRestorationFiling && !this.isLimitedRestorationFiling): return []
         case this.isAmalgamationFilingHorizontal: return [this.resourceModel.filingData[0]]
         case this.isAmalgamationFilingVertical: return [this.resourceModel.filingData[1]]
         default: return this.resourceModel.filingData
