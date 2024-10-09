@@ -168,7 +168,7 @@
 
       <v-divider class="mx-6" />
 
-      <!-- Alberta Unlimited Liability Corporation Information -->
+      <!-- Unlimited Liability Corporation Information -->
       <div
         v-if="getExistingBusinessInfo.affidavitFileName"
         id="ab-ulc-information-summary"
@@ -180,7 +180,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Alberta Unlimited Liability Corporation Information</label>
+              <label>Unlimited Liability Corporation Information</label>
             </v-col>
             <v-col
               cols="12"

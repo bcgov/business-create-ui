@@ -41,7 +41,7 @@ describe('Summary Business Home Jurisdiction component', () => {
     // third block
     expect(wrapper.find('#ab-ulc-information-summary').exists()).toBe(true)
     article = wrapper.find('#ab-ulc-information-summary article')
-    expect(article.find('label').text()).toBe('Alberta Unlimited Liability Corporation Information')
+    expect(article.find('label').text()).toBe('Unlimited Liability Corporation Information')
 
     wrapper.destroy()
   })

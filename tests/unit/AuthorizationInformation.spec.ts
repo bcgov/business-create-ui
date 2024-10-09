@@ -39,7 +39,7 @@ describe('Authorization Information component', () => {
 
     expect(rows.at(2).find('label').text()).toBe('Proof of Authorization')
 
-    expect(rows.at(3).find('label').text()).toBe('Alberta Unlimited Liability Corporation Information')
+    expect(rows.at(3).find('label').text()).toBe('Unlimited Liability Corporation Information')
 
     expect(rows.at(4).find('label').text()).toBe('Confirmation')
     expect(rows.at(4).find('.v-input--checkbox').text()).toContain('I understand that the extraprovincial')
