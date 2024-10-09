@@ -73,7 +73,7 @@
               <span class="pl-2">{{ previousJurisdiction || '[Unknown]' }}</span>
             </li>
             <li>
-              <strong>Incorporation Number:</strong>
+              <strong>Identifying Number:</strong>
               <span class="pl-2">{{ getExistingBusinessInfo.prevIncorporationNumber || '[Unknown]' }}</span>
             </li>
             <li>

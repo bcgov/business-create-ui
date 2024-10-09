@@ -16,7 +16,10 @@
       </header>
 
       <v-card flat>
-        <NameRequestInfo :displayNrNumber="false" />
+        <NameRequestInfo
+          :displayNrNumber="false"
+          :displayApplicantInfo="false"
+        />
       </v-card>
     </section>
 

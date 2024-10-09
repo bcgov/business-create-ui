@@ -32,7 +32,7 @@ describe('Authorization Information component', () => {
 
     expect(rows.at(1).find('label').text()).toBe('Previous Jurisdiction Information')
     expect(rows.at(1).findAll('li > strong').at(0).text()).toBe('Previous Jurisdiction:')
-    expect(rows.at(1).findAll('li > strong').at(1).text()).toBe('Incorporation Number:')
+    expect(rows.at(1).findAll('li > strong').at(1).text()).toBe('Identifying Number:')
     expect(rows.at(1).findAll('li > strong').at(2).text()).toBe('Registered Name:')
     expect(rows.at(1).findAll('li > strong').at(3).text()).toBe('Business Number:')
     expect(rows.at(1).findAll('li > strong').at(4).text()).toBe('Date of Incorporation, Continuation, or Amalgamation:')

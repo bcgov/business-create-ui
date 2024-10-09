@@ -32,7 +32,7 @@
           </v-row>
         </article>
 
-        <!-- Incorporation Number -->
+        <!-- Identifying Number -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -40,7 +40,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Incorporation Number</label>
+              <label>Identifying Number</label>
             </v-col>
             <v-col
               cols="12"

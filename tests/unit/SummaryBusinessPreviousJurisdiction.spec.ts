@@ -28,7 +28,7 @@ describe('Summary Business Home Jurisdiction component', () => {
     const articles = wrapper.findAll('#existing-business-information-summary article')
     expect(articles.length).toBe(5)
     expect(articles.at(0).find('label').text()).toBe('Previous Jurisdiction')
-    expect(articles.at(1).find('label').text()).toBe('Incorporation Number')
+    expect(articles.at(1).find('label').text()).toBe('Identifying Number')
     expect(articles.at(2).find('label').text()).toBe('Registered Name')
     expect(articles.at(3).find('label').text()).toBe('Business Number in Previous Jurisdiction')
     expect(articles.at(4).find('label').text()).toContain('Date of Incorporation')

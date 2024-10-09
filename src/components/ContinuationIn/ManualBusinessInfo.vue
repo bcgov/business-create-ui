@@ -89,13 +89,13 @@
               </v-tooltip>
             </div>
 
-            <!-- Incorporation Number -->
+            <!-- Identifying Number -->
             <v-text-field
               v-model.trim="business.prevIncorporationNumber"
               class="incorporation-number mt-6"
               filled
               persistent-hint
-              label="Incorporation Number"
+              label="Identifying Number"
               hint="This number identifies your business in its previous jurisdiction."
               :rules="getShowErrors ? identifyingNumberRules : []"
             />
