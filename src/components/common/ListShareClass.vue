@@ -66,10 +66,18 @@
             <td class="list-item__title">
               {{ row.item.name }}
             </td>
-            <td>{{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}</td>
-            <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
-            <td>{{ row.item.currency }}</td>
-            <td>{{ row.item.hasRightsOrRestrictions ? 'Yes' : 'No' }}</td>
+            <td class="share-series-value">
+              {{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.parValue ? row.item.parValue : 'No Par Value' }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.currency }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.hasRightsOrRestrictions ? 'Yes' : 'No' }}
+            </td>
 
             <!-- Share Class Edit Btn -->
             <td v-if="!isSummary">
@@ -434,5 +442,9 @@ tbody {
   font-size: $px-14 !important;
   color: $gray9 !important;
   font-weight: bold !important;
+}
+
+.share-series-value {
+  color: $gray7 !important;
 }
 </style>

@@ -13,12 +13,11 @@
         >
           <label
             id="resolution-label"
-          >Resolution or court Order Dates</label>
+          >Resolution or Court Order Dates</label>
         </v-col>
         <v-col
           cols="12"
           sm="9"
-          class="pt-sm-0"
         >
           <p>
             Dates of resolution or court orders to alter the company's share structure or the
@@ -35,7 +34,6 @@
         <v-col
           cols="12"
           sm="9"
-          class="pt-sm-0"
         >
           <div>
             <tr
