@@ -240,17 +240,14 @@ export const useStore = defineStore('store', {
 
     /**
      * Whether a Continuation In Director's Affidavit is required.
-     * Is true if the business is a Continued In ULC from Alberta or Nova Scotia.
+     * Is true if the business is a Continued In ULC from Alberta.
      */
     isContinuationInAffidavitRequired (): boolean {
       const previousJurisdiction = this.getExistingBusinessInfo?.previousJurisdiction
       return (
         this.isEntityUlcContinueIn &&
         (previousJurisdiction?.country === JurisdictionLocation.CA) &&
-        (
-          previousJurisdiction?.region === 'AB' ||
-          previousJurisdiction?.region === 'NS'
-        )
+        (previousJurisdiction?.region === 'AB')
       )
     },
 

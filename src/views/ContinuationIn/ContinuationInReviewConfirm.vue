@@ -15,6 +15,7 @@
 
       <!-- Extraprovincial Registration in B.C. -->
       <v-card
+        v-if="isExpro"
         id="extraprovincial-registration-bc-vcard"
         flat
         class="mt-6"
@@ -92,10 +93,10 @@
       <header>
         <h2>Continuation Effective Date and Time</h2>
         <p class="mt-4">
-          Select the Date and Time of incorporation for your business. You may select a date up
-          to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to
-          enter an incorporation date in the future). Unless a business has special requirements,
-          most businesses select an immediate Date and Time of Incorporation.
+          Select the effective date and time of continuation. You may pay
+          <strong>an additional fee of $100</strong>
+          to select a date up to 10 days in the future. Unless a business has special requirements,
+          most businesses select an immediate date and time.
         </p>
       </header>
 
@@ -103,7 +104,7 @@
         class="mt-6"
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
-        label="Incorporation Date and Time"
+        label="Continuation Date and Time"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"
@@ -226,8 +227,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingStatus } from '@/enums'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
-  CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
+import { CertifyIF, ContactPointIF, CourtOrderStepIF, DocumentDeliveryIF, EffectiveDateTimeIF,
+  ExistingBusinessInfoIF, ShareStructureIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -267,6 +268,7 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
@@ -291,6 +293,11 @@ export default class ContinuationInReviewConfirm extends Vue {
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
     })
+  }
+
+  /** Whether the existing business is an extrapro. */
+  get isExpro (): boolean {
+    return (this.getExistingBusinessInfo.mode === 'EXPRO')
   }
 
   /** The entity description,  */

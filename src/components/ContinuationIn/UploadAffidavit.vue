@@ -2,7 +2,9 @@
   <div id="upload-affidavit">
     <!-- Upload Affidavit -->
     <p :class="{ 'error-text': getShowErrors && !affivaditFileValid }">
-      Upload the affidavit from the directors.
+      There is additional information required by the Registrar for an unlimited liability corporation
+      from Alberta. You are required to provide either a <strong>Director's Affidavit</strong> or a
+      <strong>Court Order</strong>. This will be reviewed by BC Registries staff.
     </p>
 
     <ul>
@@ -61,6 +63,15 @@
         </v-icon>
       </v-btn>
     </div>
+
+    <ExpandableHelp
+      class="mt-6"
+      helpLabel="Help with Unlimited Liability Corporation Information"
+    >
+      <template #content>
+        <UnlimitedLiabilityCorporationHelp />
+      </template>
+    </ExpandableHelp>
   </div>
 </template>
 
@@ -72,9 +83,14 @@ import { StatusCodes } from 'http-status-codes'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
+import UnlimitedLiabilityCorporationHelp from './UnlimitedLiabilityCorporationHelp.vue'
+
 @Component({
   components: {
-    FileUploadPreview
+    ExpandableHelp,
+    FileUploadPreview,
+    UnlimitedLiabilityCorporationHelp
   }
 })
 export default class UploadAffidavit extends Mixins(DateMixin, DocumentMixin) {

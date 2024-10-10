@@ -22,6 +22,7 @@
     </header>
   </section>
 </template>
+
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'

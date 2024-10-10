@@ -326,7 +326,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore Certify state
     this.setCertifyState({
-      valid: false,
+      valid: false, // never restore checkbox
       certifiedBy: draftFiling.header.certifiedBy
     })
 
@@ -354,7 +354,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     const filing: ContinuationInFilingIF = {
       header: {
         name: FilingTypes.CONTINUATION_IN,
-        certifiedBy: this.getCertifyState.certifiedBy,
+        certifiedBy: this.getCertifyState.certifiedBy || undefined, // remove for authorization
         date: this.getCurrentDate,
         filingId: this.getFilingId,
         folioNumber: this.getFolioNumber,
@@ -397,7 +397,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         },
         // save properties used only for UI:
         mode: this.getExistingBusinessInfo?.mode,
-        status: this.getExistingBusinessInfo?.status
+        status: this.getExistingBusinessInfo?.status,
+        exproConfirmation: this.getExistingBusinessInfo?.exproConfirmation // may be True, False or undefined
       }
     }
 
@@ -410,11 +411,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // Add expro business information.
     if (this.getExistingBusinessInfo?.mode === 'EXPRO') {
-      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo.bcRegistrationDate)
+      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo?.bcRegistrationDate)
       filing.continuationIn.business = {
         foundingDate: this.dateToApi(foundingDate),
-        identifier: this.getExistingBusinessInfo.bcRegistrationNumber,
-        legalName: this.getExistingBusinessInfo.bcRegisteredName
+        identifier: this.getExistingBusinessInfo?.bcRegistrationNumber,
+        legalName: this.getExistingBusinessInfo?.bcRegisteredName
       }
     }
 
@@ -456,6 +457,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // restore existing business information
     if (continuationIn.foreignJurisdiction) {
       const foundingDate = this.apiToDate(continuationIn.business?.foundingDate)
+      const exproConfirmation = (continuationIn.exproConfirmation === true) ? true
+        : (continuationIn.exproConfirmation === false) ? false : undefined
       this.setExistingBusinessInfo({
         affidavitFile: continuationIn.foreignJurisdiction.affidavitFile,
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
@@ -473,6 +476,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         prevBusinessName: continuationIn.foreignJurisdiction.legalName,
         mode: continuationIn.mode,
         status: continuationIn.status,
+        exproConfirmation: exproConfirmation,
         businessNumber: continuationIn.foreignJurisdiction.taxId,
         latestReviewComment: draftFiling.header.latestReviewComment || null
       })
@@ -543,10 +547,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     // restore Certify state
-    this.setCertifyState({
-      valid: false,
-      certifiedBy: draftFiling.header.certifiedBy
-    })
+    // NB: is absent for authorization
+    if (draftFiling.header.certifiedBy) {
+      this.setCertifyState({
+        valid: false, // never restore checkbox
+        certifiedBy: draftFiling.header.certifiedBy
+      })
+    }
 
     // restore Future Effective data
     if (draftFiling.header.isFutureEffective) {
@@ -783,7 +790,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore Certify state
     this.setCertifyState({
-      valid: false,
+      valid: false, // never restore checkbox
       certifiedBy: draftFiling.header.certifiedBy
     })
 
@@ -1018,7 +1025,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore Certify state
     this.setCertifyState({
-      valid: false,
+      valid: false, // never restore checkbox
       certifiedBy: draftFiling.header.certifiedBy
     })
 
@@ -1120,7 +1127,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore Certify state
     this.setCertifyState({
-      valid: false,
+      valid: false, // never restore checkbox
       certifiedBy: draftFiling.header.certifiedBy
     })
 

@@ -24,8 +24,8 @@
           sm="9"
         >
           <p :class="{ 'error-text': getShowErrors && !authorizationFilesValid }">
-            Upload one or more files that show proof of authorization to continue out of your
-            previous jursidiction.
+            Upload one or more files that show proof of authorization to continue out of your previous
+            jursidiction.
           </p>
 
           <ul>

@@ -23,7 +23,8 @@
           >
             <ul class="name-request-list-items pl-1">
               <li id="name-request-title">
-                <strong>{{ getNameRequestNumber }}</strong> - {{ getNameRequestApprovedName }}
+                <span v-if="displayNrNumber"><strong>{{ getNameRequestNumber }}</strong> - </span>
+                <span>{{ getNameRequestApprovedName }}</span>
               </li>
               <li class="mt-4">
                 <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
@@ -45,7 +46,10 @@
       </div>
 
       <!-- Name Request Applicant -->
-      <div class="section-container pt-0">
+      <div
+        v-if="displayApplicantInfo"
+        class="section-container pt-0"
+      >
         <v-row
           id="name-request-applicant"
           no-gutters
@@ -249,7 +253,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CorrectNameOptions, NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
@@ -268,6 +272,9 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   readonly NOT_RECEIVED_STATE = 'Not Received'
   readonly NOT_REQUIRED_STATE = 'Not Required'
   readonly WAIVED_STATE = 'Waived'
+
+  @Prop({ default: true }) readonly displayNrNumber!: boolean
+  @Prop({ default: true }) readonly displayApplicantInfo!: boolean
 
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getEntityType!: CorpTypeCd
