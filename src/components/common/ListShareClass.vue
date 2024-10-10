@@ -39,7 +39,23 @@
         disable-pagination
         disable-sort
         hide-default-footer
+        hide-default-header
       >
+        <template
+          #header="{ props: { headers } }"
+        >
+          <thead>
+            <tr>
+              <th
+                v-for="(h, index) in headers"
+                :key="index"
+                :class="h.class"
+              >
+                <span>{{ h.text }}</span>
+              </th>
+            </tr>
+          </thead>
+        </template>
         <template #item="row">
           <!-- Share Class Rows-->
           <tr
@@ -50,10 +66,18 @@
             <td class="list-item__title">
               {{ row.item.name }}
             </td>
-            <td>{{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}</td>
-            <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
-            <td>{{ row.item.currency }}</td>
-            <td>{{ row.item.hasRightsOrRestrictions ? 'Yes' : 'No' }}</td>
+            <td class="share-series-value">
+              {{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.parValue ? row.item.parValue : 'No Par Value' }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.currency }}
+            </td>
+            <td class="share-series-value">
+              {{ row.item.hasRightsOrRestrictions ? 'Yes' : 'No' }}
+            </td>
 
             <!-- Share Class Edit Btn -->
             <td v-if="!isSummary">
@@ -241,12 +265,13 @@ export default class ListShareClass extends Vue {
       text: 'Name of Share Class or Series',
       align: 'start',
       sortable: false,
-      value: 'name'
+      value: 'name',
+      class: 'share-structure-header'
     },
-    { text: 'Maximum Number of Shares', value: 'maxNumberOfShares' },
-    { text: 'Par Value', value: 'parValue' },
-    { text: 'Currency', value: 'currency' },
-    { text: 'Special Rights or Restrictions', value: 'hasRightsOrRestrictions' },
+    { text: 'Maximum Number of Shares', value: 'maxNumberOfShares', class: 'share-structure-header' },
+    { text: 'Par Value', value: 'parValue', class: 'share-structure-header' },
+    { text: 'Currency', value: 'currency', class: 'share-structure-header' },
+    { text: 'Special Rights or Restrictions', value: 'hasRightsOrRestrictions', class: 'share-structure-header' },
     { text: '', value: 'actions' }
   ]
 
@@ -411,5 +436,15 @@ tbody {
 
 .v-icon.mdi-information-outline {
   margin-top: -2px;
+}
+
+.share-structure-header {
+  font-size: $px-14 !important;
+  color: $gray9 !important;
+  font-weight: bold !important;
+}
+
+.share-series-value {
+  color: $gray7 !important;
 }
 </style>

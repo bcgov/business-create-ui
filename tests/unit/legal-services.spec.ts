@@ -57,6 +57,35 @@ describe('Legal Services', () => {
     sinon.restore()
   })
 
+  it('fetches resolutions', async () => {
+    // mock list response
+    sinon.stub(axios, 'get').withArgs('businesses/123/resolutions')
+      .returns(new Promise(resolve => resolve({
+        data: {
+          resolutions: [
+            {
+              date: '2024-07-15',
+              id: 123456,
+              type: 'SPECIAL'
+            },
+            {
+              date: '2024-07-16',
+              id: 123457,
+              type: 'SPECIAL'
+            }
+          ]
+        }
+      })))
+
+    // fetch resolutions and check it
+    const response: any = await LegalServices.fetchResolutions('123')
+    expect(response.length).toEqual(2)
+    expect(response.at(0)).toHaveProperty('date')
+    expect(response.at(0)).toHaveProperty('type')
+
+    sinon.restore()
+  })
+
   it.skip('fetches a draft dissolution', async () => {
     // FUTURE
   })

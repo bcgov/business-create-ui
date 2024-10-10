@@ -75,7 +75,8 @@ import {
   StateIF,
   StepIF,
   UploadAffidavitIF,
-  ValidationDetailIF
+  ValidationDetailIF,
+  ResolutionIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
 
@@ -1025,6 +1026,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.parties
     },
 
+    /** The resolutions list. */
+    getResolutions (): ResolutionIF[] {
+      return this.stateModel.resolutions
+    },
+
     //
     // The getters below return values from the current resource
     // model -- in other words, for the currently-selected entity type.
@@ -1430,6 +1436,10 @@ export const useStore = defineStore('store', {
     },
     setParties (parties: Array<PartyIF>) {
       this.stateModel.parties = parties
+    },
+    setResolutions (resolutions: ResolutionIF[]) {
+      this.stateModel.resolutions = resolutions
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setAdminFreeze (adminFreeze: boolean) {
       this.stateModel.business.adminFreeze = adminFreeze
