@@ -1,6 +1,7 @@
 import { AmalgamatingBusinessIF, BusinessAddressIF, AuthorizationProofIF, CourtOrderIF, NaicsIF,
   NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF,
-  SpecialResolutionIF } from '@/interfaces'
+  SpecialResolutionIF,
+  ResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
   FilingStatus, FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions, EntityStates } from '@bcrs-shared-components/enums/'
@@ -60,6 +61,8 @@ export interface AmalgamationFilingIF {
     incorporationAgreement?: {
       agreementType: string
     }
+    resolutions?: ResolutionIF[]
+
     // ULC only:
     courtOrder?: CourtOrderIF
   }

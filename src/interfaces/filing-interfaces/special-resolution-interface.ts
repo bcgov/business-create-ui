@@ -6,3 +6,9 @@ export interface SpecialResolutionIF {
   signingDate: string
   signatory: PersonIF
 }
+
+export interface ResolutionIF {
+  date: string
+  id: number
+  type: string
+}

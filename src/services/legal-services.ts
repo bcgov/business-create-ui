@@ -1,6 +1,6 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
-import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF }
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF, ResolutionIF }
   from '@/interfaces'
 import { FilingTypes, RoleTypes } from '@/enums'
 import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
@@ -244,6 +244,24 @@ export default class LegalServices {
         })
 
         return shareStructure
+      })
+  }
+
+  /**
+   * Fetch the resolutions of the current business.
+   * @param businessId the business identifier
+   * @returns a promise to return the resolutions
+   */
+  static async fetchResolutions (businessId: string): Promise<ResolutionIF[]> {
+    const url = `businesses/${businessId}/resolutions`
+
+    return axios.get(url)
+      .then(response => {
+        const resolutions = response?.data.resolutions
+
+        if (!resolutions) throw new Error('Invalid API response')
+
+        return resolutions
       })
   }
 

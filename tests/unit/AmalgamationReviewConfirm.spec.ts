@@ -12,6 +12,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
+import ListResolutions from '@/components/common/ListResolutions.vue'
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -83,6 +84,7 @@ for (const test of amalgamationBusinessInfo) {
       vcard = section.find('#share-structure-vcard')
       expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Share Structure')
       expect(vcard.findComponent(ListShareClass).exists()).toBe(true)
+      expect(vcard.findComponent(ListResolutions).exists()).toBe(true)
     })
 
     it('displays Amalgamation Date and Time section', () => {
@@ -183,6 +185,7 @@ for (const test of amalgamationBusinessInfo) {
       vcard = section.find('#share-structure-vcard')
       expect(vcard.findComponent(CardHeader).attributes('label')).toBe('Share Structure')
       expect(vcard.findComponent(ListShareClass).exists()).toBe(true)
+      expect(vcard.findComponent(ListResolutions).exists()).toBe(true)
     })
 
     it('displays Amalgamation Date and Time section', () => {
