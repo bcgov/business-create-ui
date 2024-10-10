@@ -36,7 +36,7 @@ export const ContinuationInResourceCcc: ContinuationInResourceIF = {
     completingPartyStatement: {
       certifyStatements: [],
       certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: null
+      entityDisplay: 'business'
     }
   }
 }
