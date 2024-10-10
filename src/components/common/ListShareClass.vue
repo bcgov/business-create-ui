@@ -368,7 +368,7 @@ tbody {
 }
 
 .class-row td:not(:first-child) {
-  color: $gray7;
+  color: $gray6;
 }
 
 .class-row-has-series td {
