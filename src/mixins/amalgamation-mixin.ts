@@ -391,7 +391,6 @@ export default class AmalgamationMixin extends Vue {
     // NB - addresses and auth info have already been fetched (and checked above)
     // NB - make all API calls concurrently without rejection
     // NB - if any call failed, that item will be null
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ directors, shareStructure, resolutions ] =
       await Promise.allSettled([
         LegalServices.fetchDirectors(business.identifier),

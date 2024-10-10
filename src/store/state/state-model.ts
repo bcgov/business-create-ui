@@ -237,6 +237,6 @@ export const stateModel: StateModelIF = {
   },
   completingParty: null,
   parties: null,
-  resolutions: null,
+  resolutions: [],
   windowWidth: 0
 }

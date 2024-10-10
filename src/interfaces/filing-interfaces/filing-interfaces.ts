@@ -61,7 +61,7 @@ export interface AmalgamationFilingIF {
     incorporationAgreement?: {
       agreementType: string
     }
-    resolutions?: ResolutionIF[]
+    resolutions: ResolutionIF[]
 
     // ULC only:
     courtOrder?: CourtOrderIF

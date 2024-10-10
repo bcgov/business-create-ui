@@ -39,7 +39,23 @@
         disable-pagination
         disable-sort
         hide-default-footer
+        hide-default-header
       >
+        <template
+          #header="{ props: { headers } }"
+        >
+          <thead>
+            <tr>
+              <th
+                v-for="(h, index) in headers"
+                :key="index"
+                :class="h.class"
+              >
+                <span>{{ h.text }}</span>
+              </th>
+            </tr>
+          </thead>
+        </template>
         <template #item="row">
           <!-- Share Class Rows-->
           <tr
@@ -241,12 +257,13 @@ export default class ListShareClass extends Vue {
       text: 'Name of Share Class or Series',
       align: 'start',
       sortable: false,
-      value: 'name'
+      value: 'name',
+      class: 'share-structure-header'
     },
-    { text: 'Maximum Number of Shares', value: 'maxNumberOfShares' },
-    { text: 'Par Value', value: 'parValue' },
-    { text: 'Currency', value: 'currency' },
-    { text: 'Special Rights or Restrictions', value: 'hasRightsOrRestrictions' },
+    { text: 'Maximum Number of Shares', value: 'maxNumberOfShares', class: 'share-structure-header' },
+    { text: 'Par Value', value: 'parValue', class: 'share-structure-header' },
+    { text: 'Currency', value: 'currency', class: 'share-structure-header' },
+    { text: 'Special Rights or Restrictions', value: 'hasRightsOrRestrictions', class: 'share-structure-header' },
     { text: '', value: 'actions' }
   ]
 
@@ -351,7 +368,7 @@ tbody {
 }
 
 .class-row td:not(:first-child) {
-  color: $gray6;
+  color: $gray7;
 }
 
 .class-row-has-series td {
@@ -411,5 +428,11 @@ tbody {
 
 .v-icon.mdi-information-outline {
   margin-top: -2px;
+}
+
+.share-structure-header {
+  font-size: $px-14 !important;
+  color: $gray9 !important;
+  font-weight: bold !important;
 }
 </style>

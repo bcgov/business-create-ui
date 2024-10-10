@@ -13,13 +13,12 @@
         >
           <label
             id="resolution-label"
-            class="font-weight-bold"
           >Resolution or court Order Dates</label>
         </v-col>
         <v-col
           cols="12"
           sm="9"
-          class="pt-4 pt-sm-0"
+          class="pt-sm-0"
         >
           <p>
             Dates of resolution or court orders to alter the company's share structure or the
@@ -36,7 +35,7 @@
         <v-col
           cols="12"
           sm="9"
-          class="pt-4 pt-sm-0"
+          class="pt-sm-0"
         >
           <div>
             <tr
@@ -69,3 +68,22 @@ export default class ListResolutions extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/styles/theme.scss';
+
+#list-resolutions {
+  font-size: $px-14;
+  color: $gray7;
+
+  p {
+    font-size: $px-14;
+  }
+}
+
+label {
+  font-weight: bold;
+  color: $gray9;
+}
+
+</style>
