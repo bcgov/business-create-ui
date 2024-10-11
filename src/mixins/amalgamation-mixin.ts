@@ -7,7 +7,7 @@ import {
 import {
   AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
   NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF,
-  ShareClassIF
+  ShareClassIF, ResolutionIF
 } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -44,6 +44,7 @@ export default class AmalgamationMixin extends Vue {
   @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
   @Action(useStore) setResources!: (x: ResourceIF) => void
   @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
+  @Action(useStore) setResolutions!: (x: ResolutionIF[]) => void
 
   /** Iterable array of rule functions, in order of evaluation. */
   readonly rules = [
@@ -390,10 +391,11 @@ export default class AmalgamationMixin extends Vue {
     // NB - addresses and auth info have already been fetched (and checked above)
     // NB - make all API calls concurrently without rejection
     // NB - if any call failed, that item will be null
-    const [ directors, shareStructure ] =
+    const [ directors, shareStructure, resolutions ] =
       await Promise.allSettled([
         LegalServices.fetchDirectors(business.identifier),
-        LegalServices.fetchShareStructure(business.identifier)
+        LegalServices.fetchShareStructure(business.identifier),
+        LegalServices.fetchResolutions(business.identifier)
       ]).then(results => results.map((result: any) => result.value || null))
 
     // check for errors before changing anything
@@ -424,6 +426,7 @@ export default class AmalgamationMixin extends Vue {
 
     // overwrite share structure
     this.setShareClasses(shareStructure.shareClasses)
+    this.setResolutions(resolutions)
 
     // overwrite business contact -- only when user has marked new holding/primary business,
     // otherwise leave existing data from restored draft

@@ -10,8 +10,8 @@ import {
   ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
   NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
   RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
-  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF
-} from '@/interfaces'
+  ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF,
+  ResolutionIF } from '@/interfaces'
 import {
   AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
   FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
@@ -73,6 +73,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) isEntityFirm!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
+  @Getter(useStore) getResolutions!: ResolutionIF[]
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
@@ -166,7 +167,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses
-        }
+        },
+        resolutions: this.getResolutions
       }
     }
 
@@ -245,6 +247,12 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // NB - short-form amalg will overwrite this from the holding/primary business
     if (draftFiling.amalgamationApplication.shareStructure) {
       this.setShareClasses(draftFiling.amalgamationApplication.shareStructure.shareClasses)
+    }
+
+    // restore Resolutions
+    // NB - short-form amalg will overwrite this from the holding/primary business
+    if (draftFiling.amalgamationApplication.resolutions) {
+      this.setShareClasses(draftFiling.amalgamationApplication.resolutions)
     }
 
     // restore business name data

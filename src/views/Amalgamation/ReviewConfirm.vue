@@ -70,6 +70,7 @@
           :showErrorSummary="showErrorSummary"
           :isAmalgamationFiling="true"
         />
+        <ListResolutions />
       </v-card>
     </section>
 
@@ -283,6 +284,7 @@ import ListShareClass from '@/components/common/ListShareClass.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import ListResolutions from '@/components/common/ListResolutions.vue'
 
 @Component({
   components: {
@@ -296,6 +298,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
     EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
+    ListResolutions,
     SummaryDefineCompany,
     StaffPayment
   }

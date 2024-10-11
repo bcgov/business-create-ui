@@ -29,7 +29,8 @@ import {
   ShareStructureIF,
   StaffPaymentStepIF,
   TombstoneIF,
-  UploadAffidavitIF
+  UploadAffidavitIF,
+  ResolutionIF
 } from '@/interfaces'
 
 // State model interface
@@ -77,6 +78,7 @@ export interface StateModelIF {
   amalgamation: AmalgamationStateIF
   continuationIn: ContinuationInStateIF
   restoration: RestorationStateIF
+  resolutions?: ResolutionIF[]
 
   // staffPaymentStep and courtOrder are common and for now are only used in dissolution
   staffPaymentStep: StaffPaymentStepIF
