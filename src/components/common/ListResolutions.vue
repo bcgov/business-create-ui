@@ -35,7 +35,7 @@
           cols="12"
           sm="9"
         >
-          <div>
+          <div id="resolution-list">
             <tr
               v-for="(item, index) in resolutionList"
               :key="index"
