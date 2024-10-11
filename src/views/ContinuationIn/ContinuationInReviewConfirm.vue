@@ -13,20 +13,34 @@
         </p>
       </header>
 
-      <!-- Your Business in Home Jurisdiction -->
+      <!-- Extraprovincial Registration in B.C. -->
       <v-card
-        id="your-business-in-home-jurisdiction-vcard"
+        v-if="isExpro"
+        id="extraprovincial-registration-bc-vcard"
+        flat
+        class="mt-6"
+      >
+        <CardHeader
+          icon="mdi-domain"
+          label="Extraprovincial Registration in B.C."
+        />
+        <SummaryExtraprovincialRegistration />
+      </v-card>
+
+      <!-- Your Business in Previous Jurisdiction -->
+      <v-card
+        id="your-business-in-previous-jurisdiction-vcard"
         flat
         class="mt-6"
       >
         <CardHeader
           icon="mdi-home-city-outline"
-          label="Your Business in Home Jurisdiction"
+          label="Your Business in Previous Jurisdiction"
         />
-        <SummaryBusinessHomeJurisdiction />
+        <SummaryBusinessPreviousJurisdiction />
       </v-card>
 
-      <!-- Your Business in BC -->
+      <!-- Your Business in B.C. -->
       <v-card
         id="your-business-in-bc-vcard"
         flat
@@ -34,7 +48,7 @@
       >
         <CardHeader
           icon="mdi-domain"
-          label="Your Business in BC"
+          label="Your Business in B.C."
         />
         <SummaryDefineCompany />
       </v-card>
@@ -79,10 +93,10 @@
       <header>
         <h2>Continuation Effective Date and Time</h2>
         <p class="mt-4">
-          Select the Date and Time of incorporation for your business. You may select a date up
-          to 10 days in the future (note: there is an <strong>additional fee of $100</strong> to
-          enter an incorporation date in the future). Unless a business has special requirements,
-          most businesses select an immediate Date and Time of Incorporation.
+          Select the effective date and time of continuation. You may pay
+          <strong>an additional fee of $100</strong>
+          to select a date up to 10 days in the future. Unless a business has special requirements,
+          most businesses select an immediate date and time.
         </p>
       </header>
 
@@ -90,7 +104,7 @@
         class="mt-6"
         :class="{ 'invalid-section': isEffectiveDateTimeInvalid }"
         :effectiveDateTime="getEffectiveDateTime"
-        label="Incorporation Date and Time"
+        label="Continuation Date and Time"
         @valid="setEffectiveDateTimeValid($event)"
         @effectiveDate="setEffectiveDate($event)"
         @isFutureEffective="setIsFutureEffective($event)"
@@ -213,15 +227,16 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingStatus } from '@/enums'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
-  CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
+import { CertifyIF, ContactPointIF, CourtOrderStepIF, DocumentDeliveryIF, EffectiveDateTimeIF,
+  ExistingBusinessInfoIF, ShareStructureIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
-import SummaryBusinessHomeJurisdiction from '@/components/ContinuationIn/SummaryBusinessHomeJurisdiction.vue'
+import SummaryBusinessPreviousJurisdiction from '@/components/ContinuationIn/SummaryBusinessPreviousJurisdiction.vue'
+import SummaryExtraprovincialRegistration from '@/components/ContinuationIn/SummaryExtraprovincialRegistration.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
@@ -237,7 +252,8 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
     ListPeopleAndRoles,
     ListShareClass,
     SummaryDefineCompany,
-    SummaryBusinessHomeJurisdiction,
+    SummaryBusinessPreviousJurisdiction,
+    SummaryExtraprovincialRegistration,
     StaffPayment
   }
 })
@@ -252,6 +268,7 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
@@ -276,6 +293,11 @@ export default class ContinuationInReviewConfirm extends Vue {
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
     })
+  }
+
+  /** Whether the existing business is an extrapro. */
+  get isExpro (): boolean {
+    return (this.getExistingBusinessInfo.mode === 'EXPRO')
   }
 
   /** The entity description,  */

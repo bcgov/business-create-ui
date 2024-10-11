@@ -8,27 +8,45 @@
         </h2>
       </header>
 
-      <v-card
-        flat
-        class="py-2 px-6"
-      >
-        <NameRequestInfo />
+      <v-card flat>
+        <NameRequestInfo
+          :displayNrNumber="false"
+          :displayApplicantInfo="false"
+        />
         <NameTranslations />
       </v-card>
     </section>
 
-    <!-- Registered Office Addresses -->
-    <section
-      v-show="isEntityType"
-      class="mt-10"
-    >
-      <header id="office-address-header">
+    <!-- Authorization Information -->
+    <section class="mt-10">
+      <header id="authorization-information-header">
         <h2>
-          Registered and Records Office Addresses
+          Authorization Information
         </h2>
         <p>
-          Enter the Registered Office and Records Office Mailing and Delivery Addresses of the resulting
-          business. All addresses must be located in B.C.
+          The information that you submitted on your continuation authorization is displayed below. If
+          you would like to change this information, please delete this application and submit a new
+          continuation authorization.
+        </p>
+      </header>
+
+      <div :class="{ 'invalid-section': getShowErrors && !authorizationInfoValid }">
+        <AuthorizationInformation
+          :showErrors="getShowErrors"
+          @valid="authorizationInfoValid = $event"
+        />
+      </div>
+    </section>
+
+    <!-- Office Addresses -->
+    <section class="mt-10">
+      <header id="office-address-header">
+        <h2>
+          Office Addresses
+        </h2>
+        <p>
+          Provide mailing and delivery addresses for the Registered Office and the Records Office.
+          All addresses must be in B.C.
         </p>
       </header>
 
@@ -43,15 +61,12 @@
     </section>
 
     <!-- Registered Office Contact Information -->
-    <section
-      v-show="isEntityType"
-      class="mt-10"
-    >
+    <section class="mt-10">
       <header id="registered-office-contact-header">
         <h2>Registered Office Contact Information</h2>
         <p>
-          Enter the contact information for the resulting business. The BC Business Registry will use this
-          to communicate with the business in the future, including sending documents and notifications.
+          Enter the contact information for the business. The BC Business Registry will use this to
+          communicate with the business in the future, including sending documents and notifications.
         </p>
       </header>
 
@@ -116,6 +131,7 @@ import {
 } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
+import AuthorizationInformation from '@/components/ContinuationIn/AuthorizationInformation.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -124,6 +140,7 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
+    AuthorizationInformation,
     BusinessContactInfo,
     FolioNumber,
     NameRequestInfo,
@@ -138,7 +155,6 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getFolioNumberValid!: boolean
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isEntityType!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
@@ -148,12 +164,14 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Action(useStore) setIgnoreChanges!: (x: boolean) => void
   @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
 
+  authorizationInfoValid = false
   addressFormValid = false
   businessContactFormValid = false
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
     'company-name-header',
+    'authorization-information-header',
     'office-address-header',
     'registered-office-contact-header',
     'folio-reference-number-header'
@@ -163,6 +181,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   get validFlags (): object {
     return {
       validCompanyNameForm: this.getNameTranslationsValid,
+      validAuthorizationInfo: this.authorizationInfoValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
       validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
@@ -213,6 +232,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
     })
   }
 
+  @Watch('authorizationInfoValid', { immediate: true })
   @Watch('addressFormValid', { immediate: true })
   @Watch('businessContactFormValid', { immediate: true })
   @Watch('getFolioNumberValid', { immediate: true })
@@ -220,6 +240,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   // Update the overall Define Company Step validity
   private onDefineCompanyStepValid (): void {
     this.setDefineCompanyStepValidity(
+      this.authorizationInfoValid &&
       this.addressFormValid &&
       this.businessContactFormValid &&
       (!this.isPremiumAccount || this.getFolioNumberValid) &&

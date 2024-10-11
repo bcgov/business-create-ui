@@ -178,7 +178,7 @@
 
       <v-divider class="mx-6" />
 
-      <!-- Registered Office Contact Information -->
+      <!-- Business Contact Information -->
       <article class="section-container">
         <BusinessContactInfo
           :initialValue="getBusinessContact"

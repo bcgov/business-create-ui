@@ -1,7 +1,7 @@
 <template>
-  <div id="summary-business-home-jurisdiction">
+  <div id="summary-business-previous-jurisdiction">
     <GenericErrorDialog
-      attach="#summary-business-home-jurisdiction"
+      attach="#summary-business-previous-jurisdiction"
       :dialog="errorDialog"
       :text="errorDialogText"
       :title="errorDialogTitle"
@@ -10,7 +10,7 @@
 
     <section>
       <div id="existing-business-information-summary">
-        <!-- Home Jurisdiction -->
+        <!-- Previous Jurisdiction -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -18,7 +18,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Home Jurisdiction</label>
+              <label>Previous Jurisdiction</label>
             </v-col>
             <v-col
               cols="12"
@@ -26,88 +26,13 @@
               class="pt-4 pt-sm-0"
             >
               <div id="home-jurisdiction">
-                {{ homeJurisdiction || '[Unknown]' }}
+                {{ previousJurisdiction || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
         </article>
 
-        <!-- Registration Number in B.C. -->
-        <article
-          v-if="isExpro"
-          class="section-container"
-        >
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Registration Number in B.C.</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="registration-number-bc">
-                {{ getExistingBusinessInfo?.bcIdentifier || '[Unknown]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
-
-        <!-- Name in B.C. -->
-        <article
-          v-if="isExpro"
-          class="section-container"
-        >
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Name in B.C.</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="name-bc">
-                {{ getExistingBusinessInfo?.bcLegalName || '[Unknown]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
-
-        <!-- Date of Registration in B.C. -->
-        <article
-          v-if="isExpro"
-          class="section-container"
-        >
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Date of Registration in B.C.</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="registration-date-bc">
-                {{ registrationDateBc || '[Unknown]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
-
-        <!-- Identifying Number in Home Jurisdiction -->
+        <!-- Identifying Number -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -115,7 +40,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Identifying Number in Home Jurisdiction</label>
+              <label>Identifying Number</label>
             </v-col>
             <v-col
               cols="12"
@@ -123,13 +48,13 @@
               class="pt-4 pt-sm-0"
             >
               <div id="identifying-number-home">
-                {{ getExistingBusinessInfo?.homeIdentifier || '[Unknown]' }}
+                {{ getExistingBusinessInfo.prevIncorporationNumber || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
         </article>
 
-        <!-- Name in Home Jurisdiction -->
+        <!-- Registered Name -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -137,7 +62,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Name in Home Jurisdiction</label>
+              <label>Registered Name</label>
             </v-col>
             <v-col
               cols="12"
@@ -145,13 +70,13 @@
               class="pt-4 pt-sm-0"
             >
               <div id="name-home">
-                {{ getExistingBusinessInfo?.homeLegalName || '[Unknown]' }}
+                {{ getExistingBusinessInfo.prevBusinessName || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
         </article>
 
-        <!-- Date of Incorporation -->
+        <!-- Business Number in Previous Jurisdiction -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -159,29 +84,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Date of Incorporation</label>
-            </v-col>
-            <v-col
-              cols="12"
-              sm="9"
-              class="pt-4 pt-sm-0"
-            >
-              <div id="incorporation-date-home">
-                {{ incorporationDateHome || '[Unknown]' }}
-              </div>
-            </v-col>
-          </v-row>
-        </article>
-
-        <!-- Business Number -->
-        <article class="section-container">
-          <v-row no-gutters>
-            <v-col
-              cols="12"
-              sm="3"
-              class="pr-4"
-            >
-              <label>Business Number</label>
+              <label>Business Number in Previous Jurisdiction</label>
             </v-col>
             <v-col
               cols="12"
@@ -189,7 +92,29 @@
               class="pt-4 pt-sm-0"
             >
               <div id="business-number">
-                {{ getExistingBusinessInfo?.taxId || '[Not Entered]' }}
+                {{ getExistingBusinessInfo.businessNumber || '[Not Entered]' }}
+              </div>
+            </v-col>
+          </v-row>
+        </article>
+
+        <!-- Date of Incorporation, Continuation, or Amalgamation -->
+        <article class="section-container">
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label>Date of Incorporation, Continuation, or Amalgamation</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <div id="incorporation-date">
+                {{ prevIncorporationDate || '[Unknown]' }}
               </div>
             </v-col>
           </v-row>
@@ -198,8 +123,8 @@
 
       <v-divider class="mx-6" />
 
-      <div id="continuation-authorization-summary">
-        <!-- Continuation Authorization -->
+      <!-- Proof of Authorization -->
+      <div id="proof-of-authorization-summary">
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -207,45 +132,20 @@
               sm="3"
               class="pr-4"
             >
-              <label>Continuation Authorization</label>
+              <label>Proof of Authorization</label>
             </v-col>
             <v-col
               cols="12"
               sm="9"
-              class="file-buttons pt-2 pt-sm-0"
+              class="mt-2 mt-sm-n1"
             >
-              <!-- the director's affidavit file -->
-              <template v-if="isContinuationInAffidavitRequired">
-                <v-btn
-                  v-if="getExistingBusinessInfo.affidavitFileName"
-                  text
-                  color="primary"
-                  class="download-affidavit-btn mt-sm-n2 d-block px-2 ml-n2"
-                  :disabled="isDownloading"
-                  :loading="isDownloading"
-                  @click="downloadAffidavitDocument()"
-                >
-                  <v-icon>mdi-file-pdf-outline</v-icon>
-                  <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
-                </v-btn>
-                <div
-                  v-else
-                  class="pl-4"
-                >
-                  <v-icon color="error">
-                    mdi-close
-                  </v-icon>
-                  <span class="pl-2">Missing Affidavit</span>
-                </div>
-              </template>
-
               <!-- the proof of authorization file(s) -->
               <v-btn
                 v-for="item in getContinuationInAuthorizationProof?.files"
                 :key="item.fileKey"
                 text
                 color="primary"
-                class="download-authorization-btn d-block px-2 ml-n2"
+                class="download-authorization-btn d-block pa-2 ml-n2"
                 :disabled="isDownloading"
                 :loading="isDownloading"
                 @click="downloadAuthorizationDocument(item)"
@@ -253,22 +153,26 @@
                 <v-icon>mdi-file-pdf-outline</v-icon>
                 <span>{{ item.fileName }}</span>
               </v-btn>
-              <div
-                v-if="!getContinuationInAuthorizationProof?.files?.length"
-                class="pl-4"
-              >
-                <v-icon color="error">
-                  mdi-close
+
+              <!-- Authorization Approved checkmark -->
+              <div class="approved-checkmark mt-1 d-flex align-start">
+                <v-icon color="green darken-2">
+                  mdi-check
                 </v-icon>
-                <span class="pl-2">Missing Authorization File(s)</span>
+                <span class="ml-2">Authorization to Continue In has been approved.</span>
               </div>
             </v-col>
           </v-row>
         </article>
+      </div>
 
-        <v-divider class="mx-6 mt-6 mb-3" />
+      <v-divider class="mx-6" />
 
-        <!-- Authorization Date -->
+      <!-- Unlimited Liability Corporation Information -->
+      <div
+        v-if="getExistingBusinessInfo.affidavitFileName"
+        id="ab-ulc-information-summary"
+      >
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -276,15 +180,25 @@
               sm="3"
               class="pr-4"
             >
-              <label>Authorization Date</label>
+              <label>Unlimited Liability Corporation Information</label>
             </v-col>
             <v-col
               cols="12"
               sm="9"
+              class="mt-2 mt-sm-n1"
             >
-              <div id="authorization-date">
-                {{ authorizationDate || '[Unknown]' }}
-              </div>
+              <!-- the director's affidavit file -->
+              <v-btn
+                text
+                color="primary"
+                class="download-affidavit-btn d-block pa-2 ml-n2"
+                :disabled="isDownloading"
+                :loading="isDownloading"
+                @click="downloadAffidavitDocument()"
+              >
+                <v-icon>mdi-file-pdf-outline</v-icon>
+                <span>{{ getExistingBusinessInfo.affidavitFileName }}</span>
+              </v-btn>
             </v-col>
           </v-row>
         </article>
@@ -308,11 +222,10 @@ import { JurisdictionLocation } from '@bcrs-shared-components/enums'
     GenericErrorDialog
   }
 })
-export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, DocumentMixin) {
+export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixin, DocumentMixin) {
   // Getters
   @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
-  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   // local variables
   errorDialog = false
@@ -320,14 +233,9 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, D
   errorDialogTitle = ''
   isDownloading = false
 
-  /** Whether the existing business is an extrapro. */
-  get isExpro (): boolean {
-    return this.getExistingBusinessInfo?.mode === 'EXPRO'
-  }
-
-  /** The text version of the home jurisdiction. */
-  get homeJurisdiction (): string {
-    const jurisdiction = this.getExistingBusinessInfo?.homeJurisdiction // may be undefined or null
+  /** The text version of the previous jurisdiction. */
+  get previousJurisdiction (): string {
+    const jurisdiction = this.getExistingBusinessInfo.previousJurisdiction // may be undefined or null
 
     if (jurisdiction?.country === JurisdictionLocation.CA) {
       if (jurisdiction?.region === 'FEDERAL') return 'Federal'
@@ -342,19 +250,9 @@ export default class SummaryBusinessHomeJurisdiction extends Mixins(DateMixin, D
     return IntlJurisdictions.find(intl => intl.value === jurisdiction?.country)?.text || null
   }
 
-  /** The formatted date of registration in BC. */
-  get registrationDateBc (): string {
-    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo?.bcFoundingDate, true, false)
-  }
-
-  /** The formatted date of incorporation in the home jurisdiction. */
-  get incorporationDateHome (): string {
-    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo?.homeIncorporationDate, true, false)
-  }
-
-  /** The formatted authorization date. */
-  get authorizationDate (): string {
-    return this.yyyyMmDdToPacificDate(this.getContinuationInAuthorizationProof?.date, true, false)
+  /** The formatted date of incorporation, continuation, or amalgamation in the previous jurisdiction. */
+  get prevIncorporationDate (): string {
+    return this.yyyyMmDdToPacificDate(this.getExistingBusinessInfo.prevIncorporationDate, true, false)
   }
 
   /** Downloads the director affidavit document. */
@@ -397,20 +295,41 @@ article:not(:last-child) {
   padding-bottom: 0;
 }
 
-// vertically align file buttons with label
-.file-buttons {
-  margin-top: -6px !important;
+.download-authorization-btn,
+.download-affidavit-btn {
+  // set button height for multi-line filenames
+  height: auto !important;
+
+  .v-icon {
+    // minimum width of icons (to align them)
+    min-width: 24px;
+  }
+  span {
+    // make button text larger than default
+    font-size: $px-16;
+    // wrap long filenames
+    text-wrap: wrap;
+  }
 }
 
-.download-affidavit-btn,
-.download-authorization-btn {
-  // nudge icon down a bit to line up with text
+.approved-checkmark {
   .v-icon {
-    margin-top: 2px;
+    // minimum width of icons (to align them)
+    min-width: 24px;
+    // nudge icon up a bit to line up with text
+    margin-top: -1px;
   }
-  // make button text larger than default
   span {
+    // make button text larger than default
     font-size: $px-16;
+  }
+}
+
+// "md" breakpoint
+@media (min-width: 960px) {
+  .approved-checkmark .v-icon {
+    // nudge icon down a bit to line up with text
+    margin-top: 1px;
   }
 }
 </style>

@@ -101,13 +101,13 @@ export interface ContinuationInFilingIF {
       identifier: string
       legalName: string
     }
-    foreignJurisdiction: { // data in home jurisdiction
+    foreignJurisdiction: { // aka home jurisdiction
       country: string
       region?: string
       legalName: string
       identifier: string
       incorporationDate: string // YYYY-MM-DD
-      taxId?: string
+      taxId?: string // aka Business Number
       affidavitFile?: File
       affidavitFileKey?: string
       affidavitFileName?: string
@@ -122,6 +122,7 @@ export interface ContinuationInFilingIF {
     courtOrder?: CourtOrderIF
     mode?: 'EXPRO' | 'MANUAL' // used only by UI
     status?: EntityStates // only used by UI
+    exproConfirmation?: boolean // only used by UI by expro
   }
 }
 

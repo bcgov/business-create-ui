@@ -4,5 +4,4 @@ export interface AuthorizationProofIF {
     fileKey: string
     fileName: string
   }>
-  date: string // YYYY-MM-DD
 }

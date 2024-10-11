@@ -1041,7 +1041,7 @@ describe('Restoration - App page', () => {
                   foundingDate: '2021-10-07T20:37:41+00:00'
                 },
                 restoration: {
-                  type: 'fullRestoration'
+                  type: '' // initially set to null, to test the fee summary
                 },
                 header: {
                   affectedFilings: [],
@@ -1101,6 +1101,12 @@ describe('Restoration - App page', () => {
     expect(wrapper.findComponent(EntityInfo).exists()).toBe(true)
     expect(wrapper.findComponent(Stepper).exists()).toBe(true)
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
+  })
+
+  it('displays the fee summary amount properly for restoration application', async () => {
+    const feeSummary = wrapper.findComponent(SbcFeeSummary)
+    // when restoration type is initially not chosen, the fee summary is called with empty []
+    expect(feeSummary.props('filingData')).toEqual([])
   })
 })
 

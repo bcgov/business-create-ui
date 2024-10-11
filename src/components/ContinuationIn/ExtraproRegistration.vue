@@ -53,7 +53,7 @@
             hide-details
             label="B.C. Extraprovincial Registration Number"
             readonly
-            :value="business.bcIdentifier"
+            :value="business.bcRegistrationNumber"
             @click:append="reset()"
           />
           <v-tooltip
@@ -113,67 +113,68 @@
               in your previous jurisdiction.
             </MessageBox>
 
-            <!-- Home Jurisdiction -->
+            <!-- Previous Jurisdiction -->
             <Jurisdiction
-              class="home-jurisdiction mt-6"
+              class="previous-jurisdiction mt-6"
               :showUsaJurisdictions="true"
-              label="Home Jurisdiction"
-              :initialValue="business.homeJurisdiction"
+              label="Previous Jurisdiction"
+              :initialValue="business.previousJurisdiction"
               :errorMessages="jurisdictionErrorMessage"
               @change="onJurisdictionChange($event)"
             />
 
-            <!-- Identifying Number in Home Jurisdiction -->
+            <!-- Identifying Number -->
             <v-text-field
-              v-model.trim="business.homeIdentifier"
-              class="identifying-number-home mt-6"
+              v-model.trim="business.prevIncorporationNumber"
+              class="incorporation-number mt-6"
               filled
-              hide-details="auto"
-              label="Identifying Number in Home Jurisdiction"
-              :rules="getShowErrors ? homeIdentifierRules : []"
+              persistent-hint
+              label="Identifying Number"
+              hint="This number identifies your business in its previous jurisdiction."
+              :rules="getShowErrors ? incorporationNumberRules : []"
             />
 
-            <!-- Name in Home Jurisdiction -->
+            <!-- Business Name in Previous Jurisdiction -->
             <v-text-field
-              v-model.trim="business.homeLegalName"
-              class="name-home-jurisdiction mt-6"
+              v-model.trim="business.prevBusinessName"
+              class="business-name mt-4"
               filled
               hide-details="auto"
-              label="Name in Home Jurisdiction"
-              :rules="getShowErrors ? homeLegalNameRules : []"
+              label="Business Name in Previous Jurisdiction"
+              :rules="getShowErrors ? businessNameRules : []"
+            />
+
+            <!-- Business Number -->
+            <v-text-field
+              v-model="business.businessNumber"
+              v-mask="['#########']"
+              class="business-number mt-6"
+              filled
+              persistent-hint
+              label="Business Number (Optional)"
+              hint="First 9 digits of the CRA Business Number if you have one"
+              :rules="getShowErrors ? Rules.BusinessNumberRules : []"
             />
 
             <!-- Date of Incorporation -->
             <DatePickerShared
               id="incorporation-date"
               ref="incorporationDateRef"
-              class="mt-6"
+              class="mt-4 mb-n1"
               title="Date of Incorporation"
               :nudgeRight="40"
               :nudgeTop="85"
-              hint="Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction"
+              hint="Date of Incorporation, Continuation or Amalgamation in previous jurisdiction"
               :persistentHint="true"
-              :initialValue="business.homeIncorporationDate"
+              :initialValue="business.prevIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
-              :maxDate="business.bcFoundingDate || getCurrentDate"
-              @emitDateSync="$set(business, 'homeIncorporationDate', $event)"
-            />
-
-            <!-- Business Number -->
-            <v-text-field
-              v-model="business.taxId"
-              v-mask="['#########']"
-              class="business-number mnt-6"
-              filled
-              hide-details="auto"
-              label="Business Number (Optional)"
-              hint="First 9 digits of the CRA Business Number if you have one"
-              :rules="getShowErrors ? Rules.BusinessNumberRules : []"
+              :maxDate="business.bcRegistrationDate || getCurrentDate"
+              @emitDateSync="$set(business, 'prevIncorporationDate', $event)"
             />
           </v-col>
         </v-row>
 
-        <!-- Upload Affidavit -->
+        <!-- Unlimited Liability Corporation Information -->
         <v-row
           v-if="isContinuationInAffidavitRequired"
           class="mt-6"
@@ -183,7 +184,7 @@
             cols="12"
             sm="3"
           >
-            <label>Upload Affidavit</label>
+            <label>Unlimited Liability Corporation Information</label>
           </v-col>
 
           <v-col
@@ -191,8 +192,8 @@
             sm="9"
           >
             <UploadAffidavit
-              class="mb-n2"
               :business="business"
+              @valid="affidavitValid = $event"
             />
           </v-col>
         </v-row>
@@ -222,11 +223,11 @@
             </div>
             <div class="name-in-bc font-15 mt-2">
               <label>Name in B.C.:</label>
-              {{ business.bcLegalName }}
+              {{ business.bcRegisteredName }}
             </div>
             <div class="date-registration-bc font-15 mt-2">
               <label>Date of Registration in B.C.:</label>
-              {{ yyyyMmDdToPacificDate(business.bcFoundingDate, true, false) || '[Unknown]' }}
+              {{ yyyyMmDdToPacificDate(business.bcRegistrationDate, true, false) || '[Unknown]' }}
             </div>
           </v-col>
         </v-row>
@@ -251,19 +252,19 @@
           >
             <div class="business-name font-15">
               <label>Business Name:</label>
-              {{ business.homeLegalName || '[Unknown]' }}
+              {{ business.prevBusinessName || '[Unknown]' }}
             </div>
             <div class="registration-number font-15 mt-2">
               <label>Registration Number:</label>
-              {{ business.homeIdentifier || '[Unknown]' }}
+              {{ business.prevIncorporationNumber || '[Unknown]' }}
             </div>
             <div class="business-number font-15 mt-2">
               <label>Business Number:</label>
-              {{ business.taxId || '[Unknown]' }}
+              {{ business.businessNumber || '[Unknown]' }}
             </div>
             <div class="incorporation-date font-15 mt-2">
               <label>Date of Incorporation, Continuation or Amalgamation in Home Jurisdiction:</label>
-              {{ yyyyMmDdToPacificDate(business.homeIncorporationDate, true, false) || '[Unknown]' }}
+              {{ yyyyMmDdToPacificDate(business.prevIncorporationDate, true, false) || '[Unknown]' }}
             </div>
           </v-col>
         </v-row>
@@ -354,6 +355,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
+  affidavitValid = false
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
   errorDialog = false
@@ -365,34 +367,34 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     return (this.business.status === EntityStates.ACTIVE)
   }
 
-  readonly homeIdentifierRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v?.trim() || 'Identifying Number is required',
+  readonly incorporationNumberRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v?.trim() || 'Incorporation Number is required',
     (v) => (v && v.trim().length <= 50) || 'Cannot exceed 50 characters'
   ]
 
-  readonly homeLegalNameRules: Array<VuetifyRuleFunction> = [
-    (v) => !!v?.trim() || 'Name is required',
+  readonly businessNameRules: Array<VuetifyRuleFunction> = [
+    (v) => !!v?.trim() || 'Business Name is required',
     (v) => (v && v.trim().length <= 1000) || 'Cannot exceed 1000 characters'
   ]
 
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v) => !!v || 'Date of Incorporation is required',
-      () => (this.business.bcFoundingDate && this.business.homeIncorporationDate <= this.getCurrentDate) ||
+      () => (this.business.bcRegistrationDate && this.business.prevIncorporationDate <= this.getCurrentDate) ||
         'Date of Incorporation cannot be in the future',
-      () => !this.business.bcFoundingDate ||
-        (this.business.homeIncorporationDate <= this.business.bcFoundingDate) ||
-        'Date of Incorporation in home jurisdiction must be before Date of Registration in BC'
+      () => !this.business.bcRegistrationDate ||
+        (this.business.prevIncorporationDate <= this.business.bcRegistrationDate) ||
+        'Date of Incorporation in previous jurisdiction must be before Date of Registration in B.C.'
     ]
   }
 
   get jurisdictionErrorMessage (): string {
-    return (this.getShowErrors && !this.business.homeJurisdiction) ? 'Jurisdiction is required' : ''
+    return (this.getShowErrors && !this.business.previousJurisdiction) ? 'Jurisdiction is required' : ''
   }
 
   /** The text version of the home jurisdiction. */
   get homeJurisdictionText (): string {
-    const jurisdiction = this.business.homeJurisdiction // may be null
+    const jurisdiction = this.business.previousJurisdiction // may be null
 
     if (jurisdiction?.country === JurisdictionLocation.CA) {
       if (jurisdiction?.region === 'FEDERAL') return 'Federal'
@@ -435,16 +437,16 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     }
 
     this.business = {
-      bcFoundingDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.foundingDate)),
-      bcIdentifier: businessInfo.identifier,
-      bcLegalName: businessInfo.legalName,
-      homeJurisdiction: this.getHomeJurisdiction(businessInfo.jurisdiction || ''),
-      homeIdentifier: businessInfo.homeJurisdictionNumber,
-      homeIncorporationDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.homeRecognitionDate)),
-      homeLegalName: businessInfo.homeCompanyName,
+      bcRegistrationDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.foundingDate)),
+      bcRegistrationNumber: businessInfo.identifier,
+      bcRegisteredName: businessInfo.legalName,
+      previousJurisdiction: this.getHomeJurisdiction(businessInfo.jurisdiction || ''),
+      prevIncorporationNumber: businessInfo.homeJurisdictionNumber,
+      prevIncorporationDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.homeRecognitionDate)),
+      prevBusinessName: businessInfo.homeCompanyName,
       mode: 'EXPRO',
       status: result.status,
-      taxId: businessInfo.businessNumber?.substring(0, 9) || null
+      businessNumber: businessInfo.businessNumber?.substring(0, 9) || null
     }
     this.setExistingBusinessInfo(this.business)
     this.active = true
@@ -492,11 +494,11 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
 
   /** Called when user has selected a jurisdiction. */
   onJurisdictionChange (jurisdiction: any): void {
-    this.business.homeJurisdiction = null
+    this.business.previousJurisdiction = null
 
     if (jurisdiction?.group === 0) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: JurisdictionLocation.CA,
         region: (jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : jurisdiction.value
       })
@@ -504,7 +506,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
 
     if (jurisdiction?.group === 1) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: JurisdictionLocation.US,
         region: jurisdiction.value
       })
@@ -512,7 +514,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
 
     if (jurisdiction?.group === 2) {
       // set property reactively (in case it was null)
-      this.$set(this.business, 'homeJurisdiction', {
+      this.$set(this.business, 'previousJurisdiction', {
         country: jurisdiction.value,
         region: ''
       })
@@ -535,7 +537,7 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   /** Emits form validity. */
   @Watch('isBusinessActive')
   @Watch('business', { deep: true })
-  @Watch('isContinuationInAffidavitRequired')
+  @Watch('affidavitValid')
   @Watch('formValid')
   @Watch('getShowErrors')
   @Emit('valid')
@@ -552,9 +554,9 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     return (
       this.getShowErrors &&
       this.isBusinessActive &&
-      !!this.business.homeJurisdiction &&
-      !!this.business.homeIncorporationDate &&
-      (!this.isContinuationInAffidavitRequired || !!this.business.affidavitFileKey) &&
+      !!this.business.previousJurisdiction &&
+      !!this.business.prevIncorporationDate &&
+      (!this.isContinuationInAffidavitRequired || this.affidavitValid) &&
       this.formValid
     )
   }

@@ -241,17 +241,14 @@ export const useStore = defineStore('store', {
 
     /**
      * Whether a Continuation In Director's Affidavit is required.
-     * Is true if the business is a Continued In ULC from Alberta or Nova Scotia.
+     * Is true if the business is a Continued In ULC from Alberta.
      */
     isContinuationInAffidavitRequired (): boolean {
-      const homeJurisdiction = this.getExistingBusinessInfo?.homeJurisdiction
+      const previousJurisdiction = this.getExistingBusinessInfo?.previousJurisdiction
       return (
         this.isEntityUlcContinueIn &&
-        (homeJurisdiction?.country === JurisdictionLocation.CA) &&
-        (
-          homeJurisdiction?.region === 'AB' ||
-          homeJurisdiction?.region === 'NS'
-        )
+        (previousJurisdiction?.country === JurisdictionLocation.CA) &&
+        (previousJurisdiction?.region === 'AB')
       )
     },
 
@@ -1089,6 +1086,7 @@ export const useStore = defineStore('store', {
       switch (true) {
         case this.isFullRestorationFiling: return [this.resourceModel.filingData[0]]
         case this.isLimitedRestorationFiling: return [this.resourceModel.filingData[1]]
+        case (this.isRestorationFiling && !this.isFullRestorationFiling && !this.isLimitedRestorationFiling): return []
         case this.isAmalgamationFilingHorizontal: return [this.resourceModel.filingData[0]]
         case this.isAmalgamationFilingVertical: return [this.resourceModel.filingData[1]]
         default: return this.resourceModel.filingData

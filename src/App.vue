@@ -168,7 +168,7 @@
 
               <p
                 v-if="getPageBlurb"
-                class="mt-4"
+                class="mt-4 font-18"
               >
                 {{ getPageBlurb }}
               </p>
@@ -921,6 +921,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // set the resources
     if (!resources) throw new Error(`Invalid ${this.getEntityType} resources`)
     this.setResources(resources)
+
     // NB - for some reason, need to call this here so the store updates this getter
     const dummy = this.getFilingData // eslint-disable-line
 
