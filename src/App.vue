@@ -950,10 +950,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // set filing type and status
     this.setFilingType(draftFiling.header.name)
     this.setFilingStatus(draftFiling.header.status)
-    // *** TODO: remove after testing
-    if (draftFiling.header.status === FilingStatus.CHANGE_REQUESTED) {
-      this.setFilingStatus(FilingStatus.APPROVED)
-    }
 
     // check if filing is in a valid state to be edited
     this.filingNotExistDialog = (
