@@ -1,25 +1,21 @@
 <template>
   <div id="continuation-in-authorization">
-    <!-- Company Name -->
-    <section
-      v-if="getNameRequestNumber"
-      class="mt-10"
-    >
-      <header id="company-name-header">
-        <div class="h2 mb-4">
-          Company Name
-        </div>
-        <p>
-          The name request below has been linked to this continuation authorization. It is no longer
-          available to use with other businesses.
-        </p>
+    <!-- Name -->
+    <section class="mt-10">
+      <header id="name-header">
+        <h2>Name</h2>
       </header>
 
-      <v-card flat>
-        <NameRequestInfo
-          :displayNrNumber="false"
-          :displayApplicantInfo="false"
-        />
+      <v-card
+        flat
+        class="mt-4"
+      >
+        <NameRequestInfo />
+
+        <template v-if="!getNameRequestNumber">
+          <v-divider class="mx-6 mt-n2" />
+          <NameTranslations class="px-6 py-8" />
+        </template>
       </v-card>
     </section>
 
@@ -111,6 +107,7 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
+import NameTranslations from '@/components/common/NameTranslations.vue'
 
 @Component({
   components: {
@@ -118,12 +115,14 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
     BusinessContactInfo,
     ExtraproRegistration,
     ManualBusinessInfo,
-    NameRequestInfo
+    NameRequestInfo,
+    NameTranslations
   }
 })
 export default class ContinuationInAuthorization extends Mixins(CommonMixin, NameRequestMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getNameRequestNumber!: string
+  @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isFilingValid!: boolean
@@ -144,6 +143,7 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
 
   /** Array of valid components. Must match validFlags below. */
   readonly validComponents = [
+    'name-header',
     'existing-business-information',
     'contact-information',
     'proof-of-authorization'
@@ -152,6 +152,7 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
   /** Object of valid flags. Must match validComponents above. */
   get validFlags (): object {
     return {
+      validNameSection: this.getNameTranslationsValid,
       existingBusinessInformationValid: this.existingBusinessInformationValid,
       contactInformationValid: this.businessContactInfoValid,
       authorizationProofValid: this.authorizationProofValid
@@ -175,11 +176,13 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
   }
 
   /** Watch all components on this page and set validity in store accordingly. */
+  @Watch('getNameTranslationsValid', { immediate: true })
   @Watch('existingBusinessInformationValid', { immediate: true })
   @Watch('businessContactInfoValid', { immediate: true })
   @Watch('authorizationProofValid', { immediate: true })
   private onComponentValidityChanged () {
     this.setContinuationAuthorizationPageValid(
+      this.getNameTranslationsValid &&
       this.existingBusinessInformationValid &&
       this.businessContactInfoValid &&
       this.authorizationProofValid
@@ -205,13 +208,6 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
 
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
-
-// class that looks like an H2 but isn't (for numbering purposes)
-.h2 {
-  font-size: $px-18;
-  font-weight: bold;
-  color: $gray9;
-}
 
 .loading-container.grayed-out {
   // these are the same styles as dialog overlay:

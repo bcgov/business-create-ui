@@ -22,7 +22,10 @@
             class="pt-4 pt-sm-0"
           >
             <ul class="name-request-list-items pl-1">
-              <li id="name-request-title">
+              <li
+                id="name-request-title"
+                :class="{ 'space-for-button': spaceForButton }"
+              >
                 <span v-if="displayNrNumber"><strong>{{ getNameRequestNumber }}</strong> - </span>
                 <span>{{ getNameRequestApprovedName }}</span>
               </li>
@@ -97,6 +100,7 @@
             id="adopted-name-value"
             cols="12"
             sm="9"
+            :class="{ 'space-for-button': spaceForButton }"
           >
             {{ getNameRequestApprovedName }}
           </v-col>
@@ -144,7 +148,10 @@
             sm="9"
           >
             <ul class="numbered-company-list-items pl-0">
-              <li id="numbered-company-title">
+              <li
+                id="numbered-company-title"
+                :class="{ 'space-for-button': spaceForButton }"
+              >
                 <strong>[Incorporation Number]</strong> {{ numberedCompanySuffix }}
               </li>
               <li class="bullet-point mt-4 ml-6">
@@ -228,7 +235,10 @@
             sm="9"
           >
             <ul class="numbered-company-list-items pl-0">
-              <li id="numbered-company-title">
+              <li
+                id="numbered-company-title"
+                :class="{ 'space-for-button': spaceForButton }"
+              >
                 <strong>[Incorporation Number]</strong> {{ numberedCompanySuffix }}
               </li>
               <li class="mt-4">
@@ -275,6 +285,7 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
 
   @Prop({ default: true }) readonly displayNrNumber!: boolean
   @Prop({ default: true }) readonly displayApplicantInfo!: boolean
+  @Prop({ default: false }) readonly spaceForButton!: boolean
 
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getEntityType!: CorpTypeCd
@@ -373,17 +384,16 @@ ul {
 }
 
 #name-request-title,
-#numbered-company-title {
-  font-size: $px-20;
-}
-
 #numbered-company-title,
 #changed-name-value,
 #adopted-name-value {
   font-size: $px-22;
   font-weight: bold;
   color: $gray9;
-  padding-right: 80px; // to prevent overlap with button
+}
+
+.space-for-button {
+  padding-right: 80px !important; // to prevent overlap with button
 }
 
 .numbered-company-list-items {

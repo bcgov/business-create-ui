@@ -1,28 +1,28 @@
 <template>
   <div id="continuation-in-business-bc">
-    <!-- Company Name -->
+    <!-- Name -->
     <section class="mt-10">
-      <header id="company-name-header">
-        <h2 class="mb-4">
-          Company Name
-        </h2>
+      <header id="name-header">
+        <h2>Name</h2>
       </header>
 
-      <v-card flat>
-        <NameRequestInfo
-          :displayNrNumber="false"
-          :displayApplicantInfo="false"
-        />
-        <NameTranslations />
+      <v-card
+        flat
+        class="mt-4"
+      >
+        <NameRequestInfo />
+
+        <template v-if="!getNameRequestNumber">
+          <v-divider class="mx-6 mt-n2" />
+          <NameTranslations class="px-6 py-8" />
+        </template>
       </v-card>
     </section>
 
     <!-- Authorization Information -->
     <section class="mt-10">
       <header id="authorization-information-header">
-        <h2>
-          Authorization Information
-        </h2>
+        <h2>Authorization Information</h2>
         <p>
           The information that you submitted on your continuation authorization is displayed below. If
           you would like to change this information, please delete this application and submit a new
@@ -41,9 +41,7 @@
     <!-- Office Addresses -->
     <section class="mt-10">
       <header id="office-address-header">
-        <h2>
-          Office Addresses
-        </h2>
+        <h2>Office Addresses</h2>
         <p>
           Provide mailing and delivery addresses for the Registered Office and the Records Office.
           All addresses must be in B.C.
@@ -153,6 +151,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getFolioNumberValid!: boolean
+  @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
@@ -170,7 +169,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [
-    'company-name-header',
+    'name-header',
     'authorization-information-header',
     'office-address-header',
     'registered-office-contact-header',
@@ -180,7 +179,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   /** Object of valid flags. Must match validComponents. */
   get validFlags (): object {
     return {
-      validCompanyNameForm: this.getNameTranslationsValid,
+      validNameSection: this.getNameTranslationsValid,
       validAuthorizationInfo: this.authorizationInfoValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
@@ -232,19 +231,19 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
     })
   }
 
+  @Watch('getNameTranslationsValid', { immediate: true })
   @Watch('authorizationInfoValid', { immediate: true })
   @Watch('addressFormValid', { immediate: true })
   @Watch('businessContactFormValid', { immediate: true })
   @Watch('getFolioNumberValid', { immediate: true })
-  @Watch('getNameTranslationsValid', { immediate: true })
   // Update the overall Define Company Step validity
   private onDefineCompanyStepValid (): void {
     this.setDefineCompanyStepValidity(
+      this.getNameTranslationsValid &&
       this.authorizationInfoValid &&
       this.addressFormValid &&
       this.businessContactFormValid &&
-      (!this.isPremiumAccount || this.getFolioNumberValid) &&
-      this.getNameTranslationsValid
+      (!this.isPremiumAccount || this.getFolioNumberValid)
     )
   }
 

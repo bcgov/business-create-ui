@@ -12,6 +12,7 @@
           as a numbered company.
         </p>
       </header>
+
       <v-card
         flat
         class="mt-5"
@@ -21,7 +22,11 @@
           id="business-type"
           class="mt-n8"
         />
-        <NameTranslations id="name-translations" />
+        <v-divider class="mx-6" />
+        <NameTranslations
+          id="name-translations"
+          class="px-6 py-8"
+        />
       </v-card>
     </section>
 
@@ -36,6 +41,7 @@
           Determine the restoration and approval type.
         </p>
       </header>
+
       <v-card
         flat
         class="mt-5"

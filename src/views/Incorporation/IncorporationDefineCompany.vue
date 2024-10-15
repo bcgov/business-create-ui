@@ -11,7 +11,11 @@
         class="mt-5"
       >
         <NameRequestInfo />
-        <NameTranslations v-if="!isEntityCoop" />
+
+        <template v-if="!isEntityCoop">
+          <v-divider class="mx-6" />
+          <NameTranslations class="px-6 py-8" />
+        </template>
       </v-card>
     </section>
 
