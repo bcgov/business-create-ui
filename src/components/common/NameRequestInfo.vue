@@ -388,7 +388,6 @@ ul {
 #changed-name-value,
 #adopted-name-value {
   font-size: $px-22;
-  font-weight: bold;
   color: $gray9;
 }
 
