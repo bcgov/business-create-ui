@@ -79,8 +79,10 @@
       </section>
     </v-expand-transition>
 
-    <p>Your application must include the following:</p>
-    <ul>
+    <div class="mt-4 font-weight-bold">
+      Your application must include the following:
+    </div>
+    <ul class="mt-2">
       <li>
         <v-icon
           v-if="shareClasses.length > 0"

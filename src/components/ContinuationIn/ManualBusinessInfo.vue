@@ -118,7 +118,7 @@
               filled
               persistent-hint
               label="Business Number (Optional)"
-              hint="First 9 digits of the CRA Business Number if you have one"
+              hint="First 9 digits of the CRA Business Number, if you have one."
               :rules="getShowErrors ? Rules.BusinessNumberRules : []"
             />
 
@@ -130,7 +130,7 @@
               title="Date of Incorporation"
               :nudgeRight="40"
               :nudgeTop="85"
-              hint="Date of Incorporation, Continuation or Amalgamation in previous jurisdiction"
+              hint="Date of Incorporation, Continuation or Amalgamation in previous jurisdiction."
               :persistentHint="true"
               :initialValue="getExistingBusinessInfo.prevIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules : []"

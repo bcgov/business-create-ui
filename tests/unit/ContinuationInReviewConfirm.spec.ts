@@ -100,7 +100,7 @@ describe('Continuation In Review Confirm component', () => {
     // spot check some content (structure / text)
     const thirdSection = wrapper.findAll('#continuation-in-review-confirm > section').at(2)
     expect(thirdSection.find('header h2').text()).toBe('Document Delivery')
-    expect(thirdSection.find('header p').text()).toContain('Copies of the incorporation documents will')
+    expect(thirdSection.find('header p').text()).toContain('Copies of the continuation documents will')
     expect(thirdSection.findComponent(DocumentDelivery).exists()).toBe(true)
 
     wrapper.destroy()

@@ -27,7 +27,7 @@ describe('Continuation In Share Structure component', () => {
     // NB: third section is in the help block
 
     const fourthSection = wrapper.findAll('section').at(3)
-    expect(fourthSection.find('p').text()).toBe('Your application must include the following:')
+    expect(fourthSection.find('div').text()).toBe('Your application must include the following:')
 
     expect(wrapper.find('#btn-start-add-cp').exists()).toBe(true)
     wrapper.destroy()
