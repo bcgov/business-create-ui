@@ -30,7 +30,7 @@ describe('Continuation In Business BC component', () => {
     // spot check some content (structure / text)
     const firstSection = wrapper.findAll('section').at(0)
     expect(firstSection.find('header').exists()).toBe(true)
-    expect(firstSection.find('header h2').text()).toBe('Company Name')
+    expect(firstSection.find('header h2').text()).toBe('Name')
     expect(firstSection.findComponent(NameRequestInfo).exists()).toBe(true)
     expect(firstSection.findComponent(NameTranslations).exists()).toBe(true)
 

@@ -50,7 +50,7 @@
 
     <!-- Display Mode -->
     <template v-else>
-      <NameRequestInfo />
+      <NameRequestInfo :spaceForButton="true" />
 
       <v-btn
         text

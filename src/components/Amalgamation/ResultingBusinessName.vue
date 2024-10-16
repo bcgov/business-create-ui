@@ -52,23 +52,23 @@
 
       <!-- Display Mode -->
       <template v-else>
-        <NameRequestInfo />
-        <NameTranslations
-          v-if="isAmalgamationFilingRegular"
-        />
+        <NameRequestInfo :spaceForButton="isAmalgamationFilingRegular" />
 
-        <v-btn
-          v-if="isAmalgamationFilingRegular"
-          text
-          color="primary"
-          class="btn-undo"
-          @click="resetName()"
-        >
-          <v-icon small>
-            mdi-undo
-          </v-icon>
-          <span>Undo</span>
-        </v-btn>
+        <template v-if="isAmalgamationFilingRegular">
+          <v-divider class="mx-6" />
+          <NameTranslations class="px-6 py-8" />
+          <v-btn
+            text
+            color="primary"
+            class="btn-undo"
+            @click="resetName()"
+          >
+            <v-icon small>
+              mdi-undo
+            </v-icon>
+            <span>Undo</span>
+          </v-btn>
+        </template>
       </template>
     </v-card>
   </div>
