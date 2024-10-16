@@ -159,6 +159,7 @@
                   <v-btn
                     id="btn-remove"
                     large
+                    outlined
                     color="error"
                     :disabled="activeIndex === -1"
                     @click="removeShareStructure()"
@@ -180,6 +181,8 @@
                   <v-btn
                     id="btn-cancel"
                     large
+                    outlined
+                    color="primary"
                     @click="resetFormAndData(true)"
                   >
                     Cancel

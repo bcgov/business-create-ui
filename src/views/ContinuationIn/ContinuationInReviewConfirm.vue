@@ -119,7 +119,7 @@
       <header>
         <h2>Document Delivery</h2>
         <p class="mt-4">
-          Copies of the incorporation documents will be sent to the email addresses listed below.
+          Copies of the continuation documents will be sent to the email addresses listed below.
         </p>
       </header>
 
