@@ -20,8 +20,8 @@
           sm="9"
         >
           <p>
-            Dates of resolution or court orders to alter the company's share structure or the
-            special rights or restrictions to a class or a series of shares:
+            Dates of resolution or court orders to change the company's share structure. This includes dates for
+            adjusting the special rights or restrictions on a specific class or series of shares:
           </p>
         </v-col>
       </v-row>
