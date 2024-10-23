@@ -138,6 +138,7 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
   onClickAddDocumentButton (): void {
     this.$refs.fileUploadPreview.clickFileInput()
   }
+
   /**
    * Called when FileUploadPreview tells us whether a file is valid.
    * This is called right before the File Selected event.
