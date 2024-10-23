@@ -125,7 +125,7 @@
 
             <!-- Business or Corporation -->
             <template v-if="isOrg">
-              <!-- Business or Corporation Unregistered in B.C. (Registries Staff Only) -->
+              <!-- Business or Corporation Unregistered in B.C. (Registries Staff only) -->
               <article
                 v-if="!orgPerson.isLookupBusiness && isRoleStaff"
                 class="manual-add-article"
