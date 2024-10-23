@@ -6,10 +6,20 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import AuthorizationProof from '@/components/ContinuationIn/AuthorizationProof.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
+import UnlimitedLiabilityCorporationInformation
+  from '@/components/ContinuationIn/UnlimitedLiabilityCorporationInformation.vue'
 
 describe('Continuation In Authorization component', () => {
   it('renders the component correctly', async () => {
-    const wrapper = wrapperFactory(ContinuationInAuthorization)
+    const wrapper = wrapperFactory(
+      ContinuationInAuthorization,
+      null,
+      null,
+      null,
+      null,
+      { isUlcInfoRequired: () => true }
+    )
     await Vue.nextTick()
 
     // verify main component exists
@@ -40,6 +50,13 @@ describe('Continuation In Authorization component', () => {
     expect(fourthSection.find('header h2').text()).toBe('Proof of Authorization')
     expect(fourthSection.find('header p').text()).toContain('You must provide proof')
     expect(fourthSection.findComponent(AuthorizationProof).exists()).toBe(true)
+
+    const fifthSection = wrapper.findAll('section').at(4)
+    expect(fifthSection.find('header').exists()).toBe(true)
+    expect(fifthSection.find('header h2').text()).toBe('Unlimited Liability Corporation Information')
+    expect(fifthSection.find('header p').text()).toContain('Additional information is')
+    expect(fifthSection.findComponent(ExpandableHelp).exists()).toBe(true)
+    expect(fifthSection.findComponent(UnlimitedLiabilityCorporationInformation).exists()).toBe(true)
 
     wrapper.destroy()
   })

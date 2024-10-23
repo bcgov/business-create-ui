@@ -129,7 +129,10 @@
       <v-divider class="my-6" />
 
       <!-- Unlimited Liability Corporation Information -->
-      <v-row no-gutters>
+      <v-row
+        v-if="getExistingBusinessInfo.affidavitFile"
+        no-gutters
+      >
         <v-col
           cols="12"
           sm="3"
@@ -159,7 +162,10 @@
         </v-col>
       </v-row>
 
-      <v-divider class="my-6" />
+      <v-divider
+        v-if="getExistingBusinessInfo.affidavitFile"
+        class="my-6"
+      />
 
       <!-- Confirmation -->
       <v-row

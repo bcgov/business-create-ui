@@ -7,13 +7,11 @@ describe('Authorization Information component', () => {
     const wrapper = wrapperFactory(
       AuthorizationInformation,
       null,
-      null,
+      { continuationIn: { existingBusinessInfo: { affidavitFile: {} } } },
       null,
       null,
       // declare computed property to override computed property:
-      {
-        isExpro: () => true
-      }
+      { isExpro: () => true }
     )
     await Vue.nextTick()
 

@@ -139,30 +139,6 @@
             />
           </v-col>
         </v-row>
-
-        <!-- Unlimited Liability Corporation Information -->
-        <v-row
-          v-if="isContinuationInAffidavitRequired"
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Unlimited Liability Corporation Information</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <UploadAffidavit
-              :business="business"
-              @valid="affidavitValid = $event"
-            />
-          </v-col>
-        </v-row>
       </v-form>
     </template>
   </div>
@@ -183,14 +159,12 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { CountriesProvincesMixin } from '@/mixins/'
 import { FormIF } from '@bcrs-shared-components/interfaces'
-import UploadAffidavit from './UploadAffidavit.vue'
 
 @Component({
   components: {
     DatePickerShared,
     Jurisdiction,
-    MessageBox,
-    UploadAffidavit
+    MessageBox
   },
   directives: {
     mask
@@ -208,7 +182,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
@@ -217,7 +190,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
-  affidavitValid = false
 
   readonly identifyingNumberRules: Array<VuetifyRuleFunction> = [
     (v) => !!v?.trim() || 'Identifying Number is required',
@@ -309,7 +281,6 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
   /** Emits form validity. */
   @Watch('business', { deep: true })
   @Watch('formValid')
-  @Watch('affidavitValid')
   @Watch('getShowErrors')
   @Emit('valid')
   private onComponentValid (): boolean {
@@ -318,14 +289,11 @@ export default class ManualBusinessInfo extends Mixins(CountriesProvincesMixin, 
 
     // this form is valid if we have the previous jurisdiction (custom component)
     // and we have the incorporation date (custom component)
-    // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
-    // show tick mark only when user visits Review Page
     return (
       this.getShowErrors &&
       !!this.business.previousJurisdiction &&
       !!this.business.prevIncorporationDate &&
-      (!this.isContinuationInAffidavitRequired || this.affidavitValid) &&
       this.formValid
     )
   }

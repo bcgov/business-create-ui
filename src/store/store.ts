@@ -16,10 +16,7 @@ import {
   RelationshipTypes,
   RestorationTypes
 } from '@/enums'
-import {
-  CorrectNameOptions,
-  JurisdictionLocation
-} from '@bcrs-shared-components/enums/'
+import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import {
   AccountInformationIF,
@@ -237,19 +234,6 @@ export const useStore = defineStore('store', {
     /** The continuation in Existing Business Info object. */
     getExistingBusinessInfo (): ExistingBusinessInfoIF {
       return this.getContinuationIn.existingBusinessInfo
-    },
-
-    /**
-     * Whether a Continuation In Director's Affidavit is required.
-     * Is true if the business is a Continued In ULC from Alberta.
-     */
-    isContinuationInAffidavitRequired (): boolean {
-      const previousJurisdiction = this.getExistingBusinessInfo?.previousJurisdiction
-      return (
-        this.isEntityUlcContinueIn &&
-        (previousJurisdiction?.country === JurisdictionLocation.CA) &&
-        (previousJurisdiction?.region === 'AB')
-      )
     },
 
     /** The account folio number. */

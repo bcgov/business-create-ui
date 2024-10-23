@@ -1,8 +1,11 @@
 <template>
   <div id="continuation-in-authorization">
     <!-- Name -->
-    <section class="mt-10">
-      <header id="name-header">
+    <section
+      id="name-section"
+      class="mt-10"
+    >
+      <header>
         <h2>Name</h2>
       </header>
 
@@ -20,8 +23,11 @@
     </section>
 
     <!-- Existing Business Information -->
-    <section class="mt-10">
-      <header id="existing-business-information">
+    <section
+      id="existing-business-information"
+      class="mt-10"
+    >
+      <header>
         <h2>Existing Business Information</h2>
         <p>
           Enter information about your existing business. If your company is extraprovincially registered
@@ -55,8 +61,11 @@
     </section>
 
     <!-- Contact Information -->
-    <section class="mt-10">
-      <header id="contact-information">
+    <section
+      id="contact-information"
+      class="mt-10"
+    >
+      <header>
         <h2>Contact Information</h2>
         <p>
           Enter the contact information for the resulting business. BC Registries will use this to
@@ -80,12 +89,15 @@
     </section>
 
     <!-- Proof of Authorization -->
-    <section class="mt-10">
-      <header id="proof-of-authorization">
+    <section
+      id="proof-of-authorization"
+      class="mt-10"
+    >
+      <header>
         <h2>Proof of Authorization</h2>
         <p>
           You must provide proof of authorization to continue out of your previous jurisdiction. This
-          will be reviewed by BC Registries staff.
+          will be reviewed by BC Registries.
         </p>
       </header>
 
@@ -93,6 +105,37 @@
         @valid="authorizationProofValid = $event"
       />
     </section>
+
+    <!-- Unlimited Liability Corporation Information -->
+    <v-expand-transition>
+      <section
+        v-if="isUlcInfoRequired"
+        id="ulc-information-section"
+        class="mt-10"
+      >
+        <header>
+          <h2>Unlimited Liability Corporation Information</h2>
+          <p>
+            Additional information is required for an Unlimited Liability Corporation from Alberta.
+          </p>
+        </header>
+
+        <ExpandableHelp
+          class="mt-4"
+          helpLabel="Help with Unlimited Liability Corporation Information"
+        >
+          <template #content>
+            <UnlimitedLiabilityCorporationHelp />
+          </template>
+        </ExpandableHelp>
+
+        <UnlimitedLiabilityCorporationInformation
+          ref="ulcInformation"
+          class="mt-6"
+          @valid="ulcInformationValid = $event"
+        />
+      </section>
+    </v-expand-transition>
   </div>
 </template>
 
@@ -101,30 +144,46 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CommonMixin, NameRequestMixin } from '@/mixins'
+import { ExistingBusinessInfoIF } from '@/interfaces'
 import { ContactPointIF } from '@bcrs-shared-components/interfaces'
+import { ExpandableHelp } from '@bcrs-shared-components/expandable-help'
+import { JurisdictionLocation } from '@bcrs-shared-components/enums/'
 import AuthorizationProof from '@/components/ContinuationIn/AuthorizationProof.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import ExtraproRegistration from '@/components/ContinuationIn/ExtraproRegistration.vue'
 import ManualBusinessInfo from '@/components/ContinuationIn/ManualBusinessInfo.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import UnlimitedLiabilityCorporationInformation
+  from '@/components/ContinuationIn/UnlimitedLiabilityCorporationInformation.vue'
+import UnlimitedLiabilityCorporationHelp from '@/components/ContinuationIn/UnlimitedLiabilityCorporationHelp.vue'
 
 @Component({
   components: {
     AuthorizationProof,
     BusinessContactInfo,
+    ExpandableHelp,
     ExtraproRegistration,
     ManualBusinessInfo,
     NameRequestInfo,
-    NameTranslations
+    NameTranslations,
+    UnlimitedLiabilityCorporationHelp,
+    UnlimitedLiabilityCorporationInformation
   }
 })
 export default class ContinuationInAuthorization extends Mixins(CommonMixin, NameRequestMixin) {
+  // Refs
+  $refs!: {
+    ulcInformation: UnlimitedLiabilityCorporationInformation
+  }
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
+  @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getValidateSteps!: boolean
+  @Getter(useStore) isEntityUlcContinueIn!: boolean
   @Getter(useStore) isFilingValid!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
@@ -140,13 +199,15 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
   extraproRegistrationValid = false
   businessContactInfoValid = false
   authorizationProofValid = false
+  ulcInformationValid = false
 
   /** Array of valid components. Must match validFlags below. */
   readonly validComponents = [
-    'name-header',
+    'name-section',
     'existing-business-information',
     'contact-information',
-    'proof-of-authorization'
+    'proof-of-authorization',
+    'ulc-information-section'
   ]
 
   /** Object of valid flags. Must match validComponents above. */
@@ -155,8 +216,22 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
       validNameSection: this.getNameTranslationsValid,
       existingBusinessInformationValid: this.existingBusinessInformationValid,
       contactInformationValid: this.businessContactInfoValid,
-      authorizationProofValid: this.authorizationProofValid
+      authorizationProofValid: this.authorizationProofValid,
+      ulcInformationValid: this.ulcInformationValid
     }
+  }
+
+  /**
+   * Whether additional ULC information is required.
+   * Is true if the business is a Continued In ULC from Alberta.
+   */
+  get isUlcInfoRequired (): boolean {
+    const previousJurisdiction = this.getExistingBusinessInfo?.previousJurisdiction
+    return (
+      this.isEntityUlcContinueIn &&
+      (previousJurisdiction?.country === JurisdictionLocation.CA) &&
+      (previousJurisdiction?.region === 'AB')
+    )
   }
 
   /** Whether the Existing Business Information section is valid. */
@@ -175,17 +250,31 @@ export default class ContinuationInAuthorization extends Mixins(CommonMixin, Nam
     })
   }
 
-  /** Watch all components on this page and set validity in store accordingly. */
+  /** When ULC Info is no longer required, remove existing file info. */
+  @Watch('isUlcInfoRequired')
+  private onUlcInfoRequiredChanged (val: boolean): void {
+    if (!val) {
+      this.$refs.ulcInformation.onRemoveClicked()
+    }
+  }
+
+  /**
+   * Watch all components on this page and set validity in the store accordingly.
+   * Note: Only need 1 immediate watcher for initial update.
+   */
   @Watch('getNameTranslationsValid', { immediate: true })
-  @Watch('existingBusinessInformationValid', { immediate: true })
-  @Watch('businessContactInfoValid', { immediate: true })
-  @Watch('authorizationProofValid', { immediate: true })
+  @Watch('existingBusinessInformationValid')
+  @Watch('businessContactInfoValid')
+  @Watch('authorizationProofValid')
+  @Watch('isUlcInfoRequired')
+  @Watch('ulcInformationValid')
   private onComponentValidityChanged () {
     this.setContinuationAuthorizationPageValid(
       this.getNameTranslationsValid &&
       this.existingBusinessInformationValid &&
       this.businessContactInfoValid &&
-      this.authorizationProofValid
+      this.authorizationProofValid &&
+      (!this.isUlcInfoRequired || this.ulcInformationValid)
     )
   }
 

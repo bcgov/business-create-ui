@@ -173,30 +173,6 @@
             />
           </v-col>
         </v-row>
-
-        <!-- Unlimited Liability Corporation Information -->
-        <v-row
-          v-if="isContinuationInAffidavitRequired"
-          class="mt-6"
-          no-gutters
-        >
-          <v-col
-            cols="12"
-            sm="3"
-          >
-            <label>Unlimited Liability Corporation Information</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <UploadAffidavit
-              :business="business"
-              @valid="affidavitValid = $event"
-            />
-          </v-col>
-        </v-row>
       </v-form>
 
       <!-- historical business -->
@@ -317,7 +293,6 @@ import { Rules } from '@/rules'
 import ExtraproBusinessLookup from './ExtraproBusinessLookup.vue'
 import MessageBox from '@/components/common/MessageBox.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
-import UploadAffidavit from './UploadAffidavit.vue'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 
 @Component({
@@ -327,8 +302,7 @@ import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-pic
     GenericErrorDialog,
     Jurisdiction,
     MessageBox,
-    RegistriesContactInfo,
-    UploadAffidavit
+    RegistriesContactInfo
   },
   directives: {
     mask
@@ -346,7 +320,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isContinuationInAffidavitRequired!: boolean
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
@@ -355,7 +328,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   active = false
   business = {} as ExistingBusinessInfoIF
   formValid = false
-  affidavitValid = false
   uploadMemorandumDoc = null as File
   uploadMemorandumDocKey = null as string
   errorDialog = false
@@ -537,7 +509,6 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   /** Emits form validity. */
   @Watch('isBusinessActive')
   @Watch('business', { deep: true })
-  @Watch('affidavitValid')
   @Watch('formValid')
   @Watch('getShowErrors')
   @Emit('valid')
@@ -548,15 +519,12 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     // this component is valid if we have an active business
     // and we have the home jurisdiction (custom component)
     // and we have the home incorporation date (custom component)
-    // and we have the affidavit file, if required (custom component)
     // and the other form (Vuetify) components are valid
-    // show tick mark only when user visits Review Page
     return (
       this.getShowErrors &&
       this.isBusinessActive &&
       !!this.business.previousJurisdiction &&
       !!this.business.prevIncorporationDate &&
-      (!this.isContinuationInAffidavitRequired || this.affidavitValid) &&
       this.formValid
     )
   }
