@@ -36,7 +36,6 @@ describe('Unlimited Liability Corporation Information component', () => {
     expect(wrapper.find('#add-affidavit-button').attributes('disabled')).toBeUndefined()
     expect(wrapper.find('.document-details').exists()).toBe(false)
     expect(wrapper.find('.remove-document-button').exists()).toBe(false)
-    expect(wrapper.find('.info-text').text()).toContain('Uploaded files will be')
 
     wrapper.destroy()
   })

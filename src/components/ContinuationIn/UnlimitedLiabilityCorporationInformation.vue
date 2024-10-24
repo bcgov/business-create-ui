@@ -85,10 +85,6 @@
               </v-icon>
             </v-btn>
           </div>
-
-          <p class="info-text font-14 mt-6 mb-0">
-            Uploaded files will be renamed automatically.
-          </p>
         </v-col>
       </v-row>
     </v-card>
@@ -250,10 +246,5 @@ ul {
 // align the remove icon with the button label
 .v-icon.mdi-close {
   padding-top: 1px;
-}
-
-// show info text in lighter gray
-.info-text {
-  color: $gray7;
 }
 </style>
