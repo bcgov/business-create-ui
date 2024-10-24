@@ -76,7 +76,6 @@
         v-for="(document, index) in authorization.files"
         :key="document.fileKey"
         class="upload-file-row mt-5"
-        :class="{ 'mb-n2': (index < numFiles) }"
         no-gutters
       >
         <v-col
