@@ -419,9 +419,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // Add expro business information.
     if (this.getExistingBusinessInfo?.mode === 'EXPRO') {
-      const foundingDate = this.yyyyMmDdToDate(this.getExistingBusinessInfo?.bcRegistrationDate)
       filing.continuationIn.business = {
-        foundingDate: this.dateToApi(foundingDate),
+        foundingDate: this.getExistingBusinessInfo?.bcRegistrationDate,
         identifier: this.getExistingBusinessInfo?.bcRegistrationNumber,
         legalName: this.getExistingBusinessInfo?.bcRegisteredName
       }
@@ -464,14 +463,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore existing business information
     if (continuationIn.foreignJurisdiction) {
-      const foundingDate = this.apiToDate(continuationIn.business?.foundingDate)
       const exproConfirmation = (continuationIn.exproConfirmation === true) ? true
         : (continuationIn.exproConfirmation === false) ? false : undefined
       this.setExistingBusinessInfo({
         affidavitFile: continuationIn.foreignJurisdiction.affidavitFile,
         affidavitFileKey: continuationIn.foreignJurisdiction.affidavitFileKey,
         affidavitFileName: continuationIn.foreignJurisdiction.affidavitFileName,
-        bcRegistrationDate: this.dateToYyyyMmDd(foundingDate),
+        bcRegistrationDate: continuationIn.business?.foundingDate,
         bcRegistrationNumber: continuationIn.business?.identifier,
         bcRegisteredName: continuationIn.business?.legalName,
         // store previousJurisdiction as null if not saved
