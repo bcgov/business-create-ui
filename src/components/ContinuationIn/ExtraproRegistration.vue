@@ -168,7 +168,7 @@
               :persistentHint="true"
               :initialValue="business.prevIncorporationDate"
               :inputRules="getShowErrors ? incorporationDateRules: []"
-              :maxDate="business.bcRegistrationDate || getCurrentDate"
+              :maxDate="business.bcRegistrationDateFormatted || getCurrentDate"
               @emitDateSync="$set(business, 'prevIncorporationDate', $event)"
             />
           </v-col>
@@ -203,7 +203,7 @@
             </div>
             <div class="date-registration-bc font-15 mt-2">
               <label>Date of Registration in B.C.:</label>
-              {{ yyyyMmDdToPacificDate(business.bcRegistrationDate, true, false) || '[Unknown]' }}
+              {{ yyyyMmDdToPacificDate(business.bcRegistrationDateFormatted, true, false) || '[Unknown]' }}
             </div>
           </v-col>
         </v-row>
@@ -352,10 +352,10 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
   get incorporationDateRules (): Array<VuetifyRuleFunction> {
     return [
       (v) => !!v || 'Date of Incorporation is required',
-      () => (this.business.bcRegistrationDate && this.business.prevIncorporationDate <= this.getCurrentDate) ||
+      () => (this.business.bcRegistrationDateFormatted && this.business.prevIncorporationDate <= this.getCurrentDate) ||
         'Date of Incorporation cannot be in the future',
-      () => !this.business.bcRegistrationDate ||
-        (this.business.prevIncorporationDate <= this.business.bcRegistrationDate) ||
+      () => !this.business.bcRegistrationDateFormatted ||
+        (this.business.prevIncorporationDate <= this.business.bcRegistrationDateFormatted) ||
         'Date of Incorporation in previous jurisdiction must be before Date of Registration in B.C.'
     ]
   }
@@ -409,7 +409,8 @@ export default class ExtraproRegistration extends Mixins(DateMixin) {
     }
 
     this.business = {
-      bcRegistrationDate: this.dateToYyyyMmDd(this.apiToDate(businessInfo.foundingDate)),
+      bcRegistrationDate: businessInfo.foundingDate,
+      bcRegistrationDateFormatted: this.dateToYyyyMmDd(this.apiToDate(businessInfo.foundingDate)),
       bcRegistrationNumber: businessInfo.identifier,
       bcRegisteredName: businessInfo.legalName,
       previousJurisdiction: this.getHomeJurisdiction(businessInfo.jurisdiction || ''),
