@@ -4,8 +4,7 @@ export interface ExistingBusinessInfoIF {
   affidavitFile?: File // only used by UI
   affidavitFileKey?: string
   affidavitFileName?: string
-  bcRegistrationDate?: string
-  bcRegistrationDateFormatted?: string // expro only (YYYY-MM-DD)
+  bcRegistrationDate?: string // expro only (ISO date-time: '2007-04-25T22:42:42-00:00')
   bcRegistrationNumber?: string // expro only (aka Identifier)
   bcRegisteredName?: string // expro only
   previousJurisdiction: {
