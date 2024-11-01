@@ -309,7 +309,7 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff"
+          :disableEdit="false"
           :invalidSection="isCertifyInvalid"
           :isStaff="isRoleStaff"
         />
