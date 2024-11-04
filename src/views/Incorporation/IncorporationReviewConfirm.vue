@@ -307,7 +307,7 @@ export default class IncorporationReviewConfirm extends Vue {
    * In case submitting the incorporation failed, we want to reset the validity of Certify.
    * This is since the checkbox has to be ticked again after the save dialog has been closed.
    */
-   mounted (): void {
+  mounted (): void {
     this.setCertifyState({
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
