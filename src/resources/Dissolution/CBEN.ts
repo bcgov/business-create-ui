@@ -61,7 +61,7 @@ export const DissolutionResourceCben: DissolutionResourceIF = {
     completingPartyStatement: {
       certifyStatements: [],
       certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: GetCorpFullDescription(CorpTypeCd.BEN_CONTINUE_IN)
+      entityDisplay: 'business'
     }
   },
   createResolution: {

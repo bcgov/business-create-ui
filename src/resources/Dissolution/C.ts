@@ -60,7 +60,7 @@ export const DissolutionResourceC: DissolutionResourceIF = {
     completingPartyStatement: {
       certifyStatements: [],
       certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: GetCorpFullDescription(CorpTypeCd.CONTINUE_IN)
+      entityDisplay: 'business'
     }
   },
   createResolution: {
