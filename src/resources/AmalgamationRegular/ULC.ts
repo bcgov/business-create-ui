@@ -35,8 +35,7 @@ export const AmalgamationRegResourceUlc: AmalgamationResourceIF = {
       certifyStatements: [
         ResourcePhrases.AMALGAMATION_CANNOT_BE_REVERSED
       ],
-      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: 'business'
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427
     }
   }
 }
