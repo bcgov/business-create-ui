@@ -1,7 +1,7 @@
 export interface CompletingPartyStatementIF {
   certifyStatements: Array<string>
   certifyClause: string
-  entityDisplay: string
+  entityDisplay?: string
 }
 
 export const EmptyCompletingPartyStatement: CompletingPartyStatementIF = {

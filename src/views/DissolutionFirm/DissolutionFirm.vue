@@ -216,7 +216,7 @@
           class="py-8 px-6"
           :currentDate="getCurrentDate"
           :certifiedBy="getCertifyState.certifiedBy"
-          :entityDisplay="getCompletingPartyStatement.entityDisplay"
+          :entityDisplay="getCompletingPartyStatement.entityDisplay || 'firm'"
           :isCertified="getCertifyState.valid"
           :statements="getCompletingPartyStatement.certifyStatements"
           :message="getCompletingPartyStatement.certifyClause"

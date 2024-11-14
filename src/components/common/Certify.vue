@@ -3,7 +3,7 @@
     :certifiedBy="getCertifyState.certifiedBy"
     :currentDate="getCurrentDate"
     :disableEdit="disableEdit"
-    :entityDisplay="getCompletingPartyStatement.entityDisplay"
+    :entityDisplay="getCompletingPartyStatement.entityDisplay || 'business'"
     :firstColumn="3"
     :invalidSection="invalidSection"
     :isCertified="getCertifyState.valid"
