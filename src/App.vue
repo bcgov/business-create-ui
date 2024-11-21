@@ -199,7 +199,7 @@
               lg="3"
             >
               <!-- Render fee summary only after data is loaded. -->
-              <aside v-if="haveData">
+              <aside v-if="haveData && !isContinuationInAuthorization">
                 <affix
                   relative-element-selector=".col-lg-9"
                   :offset="{ top: 100, bottom: -100 }"
