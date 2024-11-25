@@ -482,8 +482,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   get filingLabel (): string {
     // special case for firm dissolutions
     if (this.isEntityFirm && this.isDissolutionFiling) return 'Dissolution'
-    // special case for continuation in authorizations
-    if (this.isContinuationInAuthorization) return 'Continuation Authorization'
     // otherwise, no special label
     return null
   }
