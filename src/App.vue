@@ -199,7 +199,7 @@
               lg="3"
             >
               <!-- Render fee summary only after data is loaded. -->
-              <aside v-if="haveData">
+              <aside v-if="haveData && !isContinuationInAuthorization">
                 <affix
                   relative-element-selector=".col-lg-9"
                   :offset="{ top: 100, bottom: -100 }"
@@ -482,8 +482,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   get filingLabel (): string {
     // special case for firm dissolutions
     if (this.isEntityFirm && this.isDissolutionFiling) return 'Dissolution'
-    // special case for continuation in authorizations
-    if (this.isContinuationInAuthorization) return 'Continuation Authorization'
     // otherwise, no special label
     return null
   }
