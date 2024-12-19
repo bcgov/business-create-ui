@@ -219,7 +219,8 @@ export const stateModel: StateModelIF = {
   continuationIn: {
     continuationAuthorizationPageValid: false,
     authorizationProof: null,
-    existingBusinessInfo: {} as ExistingBusinessInfoIF
+    existingBusinessInfo: {} as ExistingBusinessInfoIF,
+    consumerDocumentId: null
   },
   restoration: {
     applicationDate: null,

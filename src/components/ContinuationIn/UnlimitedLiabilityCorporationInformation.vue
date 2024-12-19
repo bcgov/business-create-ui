@@ -97,7 +97,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
-import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { ExistingBusinessInfoIF } from '@/interfaces'
 import FileUploadPreview from '../common/FileUploadPreview.vue'
 
 @Component({
@@ -115,9 +115,11 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getContinuationInConsumerDocumentId!: string
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
+  @Action(useStore) setContinuationConsumerDocumentId!: (x: string) => void
 
   // Local properties
   customErrorMessage = ''
@@ -164,13 +166,27 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
         return // don't add to array
       }
 
-      // try to upload to Minio
-      let psu: PresignedUrlIF
+      // try to upload to Document Record Service
       try {
         this.isDocumentLoading = true
-        psu = await this.getPresignedUrl(file.name)
-        const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+        const res = await this.uploadDocumentToDRS(
+          file,
+          this.DOCUMENT_TYPES.affidavitDocument.class,
+          this.DOCUMENT_TYPES.affidavitDocument.type,
+          this.getContinuationInConsumerDocumentId
+        )
         if (!res || res.status !== StatusCodes.OK) throw new Error()
+
+        // add properties reactively to business object
+        this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
+          name: file.name,
+          lastModified: file.lastModified,
+          size: file.size
+        } as File)
+        this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', res.data.documentServiceId)
+        this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
+
+        this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
       } catch {
         // set error message
         this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
@@ -178,15 +194,6 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
       } finally {
         this.isDocumentLoading = false
       }
-
-      // add properties reactively to business object
-      this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
-        name: file.name,
-        lastModified: file.lastModified,
-        size: file.size
-      } as File)
-      this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', psu.key)
-      this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
 
       // user has changed something
       this.setHaveChanges(true)
@@ -198,8 +205,8 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
    * May also be called by parent component to remove the file info.
    */
   onRemoveClicked (): void {
-    // delete file from Minio, not waiting for response and ignoring errors
-    this.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
+    // delete file from DRS, not waiting for response and ignoring errors
+    this.deleteDocumentFromDRS(this.getExistingBusinessInfo.affidavitFileKey).catch((res) => console.error(res.data))
 
     // delete properties reactively
     this.$delete(this.getExistingBusinessInfo, 'affidavitFile')
