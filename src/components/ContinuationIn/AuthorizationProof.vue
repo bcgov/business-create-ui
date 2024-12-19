@@ -163,7 +163,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
-import { AuthorizationProofIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { FilingStatus } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
@@ -189,8 +189,10 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
+  @Getter(useStore) getContinuationInConsumerDocumentId!: string
 
   @Action(useStore) setContinuationAuthorization!: (x: AuthorizationProofIF) => void
+  @Action(useStore) setContinuationConsumerDocumentId!: (x: string) => void
 
   // Local properties
   authorization = null as AuthorizationProofIF
@@ -277,12 +279,29 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
         return // don't add to array
       }
 
-      // try to upload to Minio
-      let psu: PresignedUrlIF
+      // try to upload to Document Record Service
       try {
         this.isDocumentLoading = true
-        psu = await this.getPresignedUrl(file.name)
-        const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+        const res = await this.uploadDocumentToDRS(
+          file,
+          this.DOCUMENT_TYPES.contInAuthorization.class,
+          this.DOCUMENT_TYPES.contInAuthorization.type,
+          this.getContinuationInConsumerDocumentId
+        )
+        // add file to array
+        this.authorization.files.push({
+          file: {
+            name: file.name,
+            lastModified: file.lastModified,
+            size: file.size
+          } as File,
+          fileKey: res.data.documentServiceId,
+          fileName: file.name
+        })
+
+        this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
+
+        this.isFileAdded = true
         if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
         // set error message
@@ -291,19 +310,6 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
       } finally {
         this.isDocumentLoading = false
       }
-
-      // add file to array
-      this.authorization.files.push({
-        file: {
-          name: file.name,
-          lastModified: file.lastModified,
-          size: file.size
-        } as File,
-        fileKey: psu.key,
-        fileName: file.name
-      })
-
-      this.isFileAdded = true
     }
   }
 
@@ -314,8 +320,9 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
   onRemoveClicked (index = NaN): void {
     // safety check
     if (index >= 0) {
-      // delete file from Minio, not waiting for response and ignoring errors
-      this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
+      // delete file from DRS, not waiting for response and ignoring errors
+      this.deleteDocumentFromDRS(this.authorization.files[index].fileKey).catch((res) => console.error(res.data))
+
       // remove file from array
       this.authorization.files.splice(index, 1)
       // clear any existing error message

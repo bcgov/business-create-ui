@@ -236,6 +236,11 @@ export const useStore = defineStore('store', {
       return this.getContinuationIn.existingBusinessInfo
     },
 
+    /** The document ID used for Document Record Service. */
+    getContinuationInConsumerDocumentId (): string {
+      return this.getContinuationIn.consumerDocumentId
+    },
+
     /** The account folio number. */
     getFolioNumber (): string {
       return this.stateModel.tombstone.folioNumber
@@ -1203,6 +1208,10 @@ export const useStore = defineStore('store', {
     },
     setExistingBusinessInfo (val: ExistingBusinessInfoIF) {
       this.stateModel.continuationIn.existingBusinessInfo = val
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setContinuationConsumerDocumentId (val: string) {
+      this.stateModel.continuationIn.consumerDocumentId = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setIsFutureEffective (isFutureEffective: boolean) {
