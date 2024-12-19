@@ -4,4 +4,5 @@ export interface ContinuationInStateIF {
   continuationAuthorizationPageValid: boolean
   authorizationProof: AuthorizationProofIF
   existingBusinessInfo: ExistingBusinessInfoIF
+  consumerDocumentId: string
 }
