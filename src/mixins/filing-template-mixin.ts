@@ -38,6 +38,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompletingParty!: CompletingPartyIF
   @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
+  @Getter(useStore) getContinuationInConsumerDocumentId!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateMemorandumStep!: CreateMemorandumIF
@@ -413,7 +414,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // Add continuation in authorization proof.
     if (this.getContinuationInAuthorizationProof) {
       filing.continuationIn.authorization = {
-        files: this.getContinuationInAuthorizationProof.files
+        files: this.getContinuationInAuthorizationProof.files,
+        consumerDocumentId: this.getContinuationInConsumerDocumentId
       }
     }
 

@@ -183,7 +183,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
   $refs!: {
     fileUploadPreview: FileUploadPreview
   }
-
+  @Getter(useStore) getBusinessId!: string
+  @Getter(useStore) getTempId!: string
   @Getter(useStore) getContinuationInAuthorizationProof!: AuthorizationProofIF
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getFilingStatus!: FilingStatus
@@ -288,6 +289,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
           this.DOCUMENT_TYPES.contInAuthorization.type,
           this.getContinuationInConsumerDocumentId
         )
+        if (!res || res.status !== StatusCodes.OK) throw new Error()
+
         // add file to array
         this.authorization.files.push({
           file: {
@@ -302,7 +305,6 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
         this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
 
         this.isFileAdded = true
-        if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
         // set error message
         this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
