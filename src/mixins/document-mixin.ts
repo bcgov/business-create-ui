@@ -250,4 +250,33 @@ export default class DocumentMixin extends Vue {
 
     return axios.delete(url)
   }
+
+  async downloadDocumentFromDRS (
+    documentKey: string,
+    documentName: string,
+    documentClass: string
+  ): Promise<AxiosResponse> {
+    // safety checks
+    if (!documentKey || !documentName) {
+      throw new Error('Invalid parameters')
+    }
+
+    const url = `documents/drs/${documentClass}/${documentKey}`
+
+    return axios.get(url).then(response => {
+      if (!response) throw new Error('Null response')
+
+      const a = window.document.createElement('a')
+      window.document.body.appendChild(a)
+      a.setAttribute('style', 'display: none')
+      a.href = response.data.documentURL
+      a.download = documentName
+      a.target = '_blank'
+      a.click()
+      window.URL.revokeObjectURL(url)
+      a.remove()
+
+      return response
+    })
+  }
 }

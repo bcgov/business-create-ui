@@ -285,7 +285,8 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
     if (!documentKey || !documentName) return // safety check
 
     this.isDownloading = true
-    await this.downloadDocument(documentKey, documentName).catch(error => {
+    const documentClass = 'CORP'
+    await this.downloadDocumentFromDRS(documentKey, documentName, documentClass).catch(error => {
       // eslint-disable-next-line no-console
       console.log('fetchDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
