@@ -208,26 +208,33 @@ export default class DocumentMixin extends Vue {
    * @param file the file to upload
    * @param documentClass the document class defined for the document service. e.g. 'CORP'
    * @param documentType the type of document. e.g. 'CNTA'
+   * @param temPid the temp business identifier
    * @param consumerDocumentId the identifier of one or more documents associated with the filing.
    * @returns a promise to return the axios response or the error response
    */
   async uploadDocumentToDRS (
-    file: File,
+    document: File,
     documentClass: string,
     documentType: string,
+    tempId: string,
     consumerDocumentId: string = undefined
   ): Promise<AxiosResponse> {
     const consumerFilingDate = new Date().toISOString()
-    let url = `documents/${documentClass}/${documentType}`
-    url += `?consumerFilingDate=${consumerFilingDate}&consumerFilename=${file.name}`
+
+    // Set request params.
+    let url = `${sessionStorage.getItem('DRS_API_URL')}/documents/${documentClass}/${documentType}`
+    url += `?consumerFilingDate=${consumerFilingDate}&consumerFilename=${document.name}`
+    url += `&consumerIdentifier=${tempId}`
     if (consumerDocumentId) {
       url += `&consumerDocumentId=${consumerDocumentId}`
     }
 
-    const formData = new FormData()
-    formData.append('file', file)
-
-    return axios.post(url, formData)
+    const headers = {
+      'x-apikey': sessionStorage.getItem('DRS_API_KEY'),
+      'Account-Id': sessionStorage.getItem('DRS_ACCOUNT_ID'),
+      'Content-Type': 'application/pdf'
+    }
+    return axios.post(url, document, { headers: headers })
       .then(response => {
         return response
       }).catch(error => {
@@ -251,11 +258,11 @@ export default class DocumentMixin extends Vue {
     return axios.delete(url)
   }
 
-  async downloadDocumentFromDRS (
+  async getDownloadLink (
     documentKey: string,
     documentName: string,
     documentClass: string
-  ): Promise<AxiosResponse> {
+  ): Promise<string> {
     // safety checks
     if (!documentKey || !documentName) {
       throw new Error('Invalid parameters')
@@ -265,18 +272,7 @@ export default class DocumentMixin extends Vue {
 
     return axios.get(url).then(response => {
       if (!response) throw new Error('Null response')
-
-      const a = window.document.createElement('a')
-      window.document.body.appendChild(a)
-      a.setAttribute('style', 'display: none')
-      a.href = response.data.documentURL
-      a.download = documentName
-      a.target = '_blank'
-      a.click()
-      window.URL.revokeObjectURL(url)
-      a.remove()
-
-      return response
+      return response.data.documentURL
     })
   }
 }

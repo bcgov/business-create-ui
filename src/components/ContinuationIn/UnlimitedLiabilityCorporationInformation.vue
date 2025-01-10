@@ -116,6 +116,7 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getContinuationInConsumerDocumentId!: string
+  @Getter(useStore) getTempId!: string
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
@@ -173,9 +174,10 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
           file,
           this.DOCUMENT_TYPES.affidavitDocument.class,
           this.DOCUMENT_TYPES.affidavitDocument.type,
+          this.getTempId,
           this.getContinuationInConsumerDocumentId
         )
-        if (!res || res.status !== StatusCodes.OK) throw new Error()
+        if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
 
         // add properties reactively to business object
         this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
