@@ -11,7 +11,8 @@ const instance = axios.create()
 instance.interceptors.request.use(
   request => {
     // don't add bearer token for Minio requests
-    if (request.url?.startsWith('https://minio')) {
+    console.log(sessionStorage.getItem)
+    if (request.url?.startsWith('https://minio') || request.url.startsWith(sessionStorage.getItem('DRS_API_URL'))) {
       return request
     }
 

@@ -287,9 +287,11 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
           file,
           this.DOCUMENT_TYPES.contInAuthorization.class,
           this.DOCUMENT_TYPES.contInAuthorization.type,
+          this.getTempId,
           this.getContinuationInConsumerDocumentId
         )
-        if (!res || res.status !== StatusCodes.OK) throw new Error()
+
+        if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
 
         // add file to array
         this.authorization.files.push({

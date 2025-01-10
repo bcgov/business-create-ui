@@ -286,14 +286,27 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
 
     this.isDownloading = true
     const documentClass = 'CORP'
-    await this.downloadDocumentFromDRS(documentKey, documentName, documentClass).catch(error => {
+    try {
+      const docUrl: string = await this.getDownloadLink(documentKey, documentName, documentClass)
+      const link = document.createElement('a')
+      link.href = docUrl
+      link.download = documentName
+      link.target = '_blank' // This opens the link in a new browser tab
+
+      // Append to the document and trigger the download
+      document.body.appendChild(link)
+      link.click()
+
+      // Remove the link after the download is triggered
+      document.body.removeChild(link)
+      this.isDownloading = false
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.log('fetchDocument() error =', error)
+      console.log('downloadDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
-      this.errorDialogText = 'We were unable to download your document. If this error persists, please contact us.'
+      this.errorDialogText = 'An error occurred while downloading the document. Please try again.'
       this.errorDialog = true
-    })
-    this.isDownloading = false
+    }
   }
 
   @Watch('isValid', { immediate: true })
