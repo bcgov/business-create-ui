@@ -109,7 +109,7 @@ export interface ContinuationInFilingIF {
       incorporationDate: string // YYYY-MM-DD
       taxId?: string // aka Business Number
       affidavitFile?: File
-      affidavitFileKey?: string
+      affidavitFileKey?: string // documentServiceId
       affidavitFileName?: string
     }
     authorization?: AuthorizationProofIF

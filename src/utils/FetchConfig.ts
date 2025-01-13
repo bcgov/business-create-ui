@@ -76,6 +76,16 @@ export async function FetchConfig (): Promise<any> {
   const keycloakClientId: string = import.meta.env.VUE_APP_KEYCLOAK_CLIENTID;
   (<any>window).keycloakClientId = keycloakClientId
 
+  // Document Record Service Configration
+  const drsAccountId: string = import.meta.env.VUE_APP_DRS_ACCOUNT_ID
+  sessionStorage.setItem('DRS_ACCOUNT_ID', drsAccountId)
+
+  const drsApiKey: string = import.meta.env.VUE_APP_DRS_API_KEY
+  sessionStorage.setItem('DRS_API_KEY', drsApiKey)
+
+  const drsApiUrl: string = (import.meta.env.VUE_APP_DRS_API_URL + '/' + import.meta.env.VUE_APP_DRS_API_VERSION)
+  sessionStorage.setItem('DRS_API_URL', drsApiUrl)
+
   const iaSurveyId: string = import.meta.env.VUE_APP_IA_SURVEY_ID
   // NB: set empty string if iaSurveyId is falsy (undefined, null or 0)
   sessionStorage.setItem('IA_SURVEY_ID', iaSurveyId || '')

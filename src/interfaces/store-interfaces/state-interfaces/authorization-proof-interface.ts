@@ -4,4 +4,5 @@ export interface AuthorizationProofIF {
     fileKey: string
     fileName: string
   }>
+  consumerDocumentId?: string
 }
