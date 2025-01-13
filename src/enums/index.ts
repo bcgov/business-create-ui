@@ -14,6 +14,7 @@ export * from './routeNames'
 export * from './ruleIds'
 export * from './views'
 export * from './errorTypes'
+export * from './documentTypes'
 
 // external enums
 export {

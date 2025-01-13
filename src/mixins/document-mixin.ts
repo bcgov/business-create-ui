@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
+import { DOCUMENT_TYPES } from '@/constants'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
 @Component({})
@@ -17,18 +18,9 @@ export default class DocumentMixin extends Vue {
       validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper.'
     }
   }
-  readonly DOCUMENT_TYPES = {
-    contInAuthorization: {
-      class: 'CORP',
-      type: 'CNTA'
-    },
-    affidavitDocument: {
-      class: 'CORP',
-      type: 'DIRECTOR_AFFIDAVIT'
-    }
-  }
 
   pdfjsLib: any
+  documentTypes: any
 
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
   async beforeCreate (): Promise<void> {
@@ -36,6 +28,7 @@ export default class DocumentMixin extends Vue {
     // NB: must use legacy build for unit tests not running in Node 18+
     this.pdfjsLib = pdfjs
     this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
+    this.documentTypes = DOCUMENT_TYPES
   }
 
   /**
@@ -258,21 +251,36 @@ export default class DocumentMixin extends Vue {
     return axios.delete(url)
   }
 
-  async getDownloadLink (
-    documentKey: string,
+  /**
+   * Download the specified file from Document Record Service.
+   * @param documentKey the unique id on Document Record Service
+   * @param documentClass the document class defined for the document service. e.g. 'CORP'
+   * @param documentName the document name to download
+   * @returns void
+   */
+  async downloadDocumentFromDRS (documentKey: string,
     documentName: string,
     documentClass: string
-  ): Promise<string> {
+  ): Promise<void> {
     // safety checks
     if (!documentKey || !documentName) {
       throw new Error('Invalid parameters')
     }
-
     const url = `documents/drs/${documentClass}/${documentKey}`
 
-    return axios.get(url).then(response => {
+    axios.get(url).then(response => {
       if (!response) throw new Error('Null response')
-      return response.data.documentURL
+      const link = document.createElement('a')
+      link.href = response.data.documentURL
+      link.download = documentName
+      link.target = '_blank' // This opens the link in a new browser tab
+
+      // Append to the document and trigger the download
+      document.body.appendChild(link)
+      link.click()
+
+      // Remove the link after the download is triggered
+      document.body.removeChild(link)
     })
   }
 }
