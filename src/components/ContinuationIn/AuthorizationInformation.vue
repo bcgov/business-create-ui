@@ -212,6 +212,7 @@ import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { DocumentClasses } from '@/enums'
 
 @Component({
   components: {
@@ -285,28 +286,19 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
     if (!documentKey || !documentName) return // safety check
 
     this.isDownloading = true
-    const documentClass = 'CORP'
-    try {
-      const docUrl: string = await this.getDownloadLink(documentKey, documentName, documentClass)
-      const link = document.createElement('a')
-      link.href = docUrl
-      link.download = documentName
-      link.target = '_blank' // This opens the link in a new browser tab
-
-      // Append to the document and trigger the download
-      document.body.appendChild(link)
-      link.click()
-
-      // Remove the link after the download is triggered
-      document.body.removeChild(link)
-      this.isDownloading = false
-    } catch (error) {
+    await this.downloadDocumentFromDRS(
+      documentKey,
+      documentName,
+      DocumentClasses.CORP
+    ).catch(error => {
       // eslint-disable-next-line no-console
       console.log('downloadDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
       this.errorDialogText = 'An error occurred while downloading the document. Please try again.'
       this.errorDialog = true
-    }
+    })
+
+    this.isDownloading = false
   }
 
   @Watch('isValid', { immediate: true })

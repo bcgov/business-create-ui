@@ -172,8 +172,8 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
         this.isDocumentLoading = true
         const res = await this.uploadDocumentToDRS(
           file,
-          this.DOCUMENT_TYPES.affidavitDocument.class,
-          this.DOCUMENT_TYPES.affidavitDocument.type,
+          this.documentTypes.affidavitDocument.class,
+          this.documentTypes.affidavitDocument.type,
           this.getTempId,
           this.getContinuationInConsumerDocumentId
         )

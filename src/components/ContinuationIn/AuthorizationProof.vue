@@ -285,8 +285,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
         this.isDocumentLoading = true
         const res = await this.uploadDocumentToDRS(
           file,
-          this.DOCUMENT_TYPES.contInAuthorization.class,
-          this.DOCUMENT_TYPES.contInAuthorization.type,
+          this.documentTypes.contInAuthorization.class,
+          this.documentTypes.contInAuthorization.type,
           this.getTempId,
           this.getContinuationInConsumerDocumentId
         )
