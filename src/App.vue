@@ -261,7 +261,7 @@ import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, Compl
   StepIF } from '@/interfaces'
 import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources,
   DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
-  getEntityDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getRegistryDashboardBreadcrumb,
+  getBusinessDashboardBreadcrumb, getMyBusinessRegistryBreadcrumb, getBcRegistriesDashboardBreadcrumb,
   getSbcStaffDashboardBreadcrumb, getStaffDashboardBreadcrumb } from '@/resources'
 import { AuthServices, LegalServices, PayServices } from '@/services/'
 
@@ -389,7 +389,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** The route breadcrumbs list. */
   get breadcrumbs (): Array<BreadcrumbIF> {
     const crumbs: Array<BreadcrumbIF> = [
-      getEntityDashboardBreadcrumb(),
+      getBusinessDashboardBreadcrumb(),
       {
         text: this.getFilingName,
         to: { name: this.$route.name }
@@ -405,7 +405,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
       // set Home and Dashboard crumbs
-      crumbs.unshift(getRegistryDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
+      crumbs.unshift(getBcRegistriesDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
     }
 
     return crumbs
@@ -582,21 +582,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.$root.$off('name-request-retrieve-error')
   }
 
-  /** Called to navigate to My Business Registry. */
-  goToManageBusinessDashboard (): void {
-    this.fileAndPayInvalidNameRequestDialog = false
-    const manageBusinessUrl = `${sessionStorage.getItem('AUTH_WEB_URL')}business`
-    this.setHaveChanges(false)
-    Navigate(manageBusinessUrl)
-  }
-
-  /** Called to navigate to entity's dashboard. */
+  /** Called to navigate to Business Dashboard. */
   goToDashboard (force = false): void {
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
-      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      Navigate(dashboardUrl + this.getEntityIdentifier)
+      const businessDashUrl = sessionStorage.getItem('BUSINESS_DASH_URL')
+      Navigate(businessDashUrl + this.getEntityIdentifier)
       return
     }
 
@@ -618,9 +610,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // if we get here, Cancel was clicked
       // ignore changes
       this.setHaveChanges(false)
-      // navigate to dashboard
-      const dashboardUrl = sessionStorage.getItem('DASHBOARD_URL')
-      Navigate(dashboardUrl + this.getEntityIdentifier)
+      // navigate to Business Dashboard
+      const businessDashUrl = sessionStorage.getItem('BUSINESS_DASH_URL')
+      Navigate(businessDashUrl + this.getEntityIdentifier)
     })
   }
 
