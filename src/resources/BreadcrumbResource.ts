@@ -35,17 +35,17 @@ function getParams (): string {
   return accountId ? `?accountid=${accountId}` : ''
 }
 
-/** Returns the breadcrumb to the entity (business) dashboard. */
-export function getEntityDashboardBreadcrumb (): BreadcrumbIF {
+/** Returns the breadcrumb to the Business Dashboard. */
+export function getBusinessDashboardBreadcrumb (): BreadcrumbIF {
   const getEntityIdentifier: string = store.getEntityIdentifier
   return {
     text: getLegalName() || getNumberedEntityName(),
-    href: `${sessionStorage.getItem('DASHBOARD_URL')}${getEntityIdentifier}/${getParams()}`
+    href: `${sessionStorage.getItem('BUSINESS_DASH_URL')}${getEntityIdentifier}/${getParams()}`
   }
 }
 
-/** Returns the breadcrumb to the BC Registries dashboard. */
-export function getRegistryDashboardBreadcrumb (): BreadcrumbIF {
+/** Returns the breadcrumb to the BC Registries Dashboard. */
+export function getBcRegistriesDashboardBreadcrumb (): BreadcrumbIF {
   return {
     text: 'BC Registries Dashboard',
     href: `${sessionStorage.getItem('REGISTRY_HOME_URL')}dashboard/${getParams()}`
