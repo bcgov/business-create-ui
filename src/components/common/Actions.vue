@@ -354,7 +354,7 @@ export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
       // special case for continuation in authorization -- no payment at this time
       if (paymentToken || this.isContinuationInAuthorization) {
         const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
-        const returnUrl = sessionStorage.getItem('DASHBOARD_URL') + this.getEntityIdentifier +
+        const returnUrl = sessionStorage.getItem('BUSINESS_DASH_URL') + this.getEntityIdentifier +
           `?filing_id=${this.getFilingId}`
 
         // if payment action is required, navigate to Pay URL
