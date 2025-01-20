@@ -164,7 +164,7 @@ import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
 import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
-import { FilingStatus } from '@/enums'
+import { FilingStatus, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
 import MessageBox from '@/components/common/MessageBox.vue'
@@ -285,8 +285,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
         this.isDocumentLoading = true
         const res = await this.uploadDocumentToDRS(
           file,
-          this.documentTypes.contInAuthorization.class,
-          this.documentTypes.contInAuthorization.type,
+          DocumentTypes.contInAuthorization.class,
+          DocumentTypes.contInAuthorization.type,
           this.getTempId,
           this.getContinuationInConsumerDocumentId
         )

@@ -212,7 +212,7 @@ import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
-import { DocumentClasses } from '@/enums'
+import { DocumentClassEnum } from '@/enums'
 
 @Component({
   components: {
@@ -289,7 +289,7 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
     await this.downloadDocumentFromDRS(
       documentKey,
       documentName,
-      DocumentClasses.CORP
+      DocumentClassEnum.CORP
     ).catch(error => {
       // eslint-disable-next-line no-console
       console.log('downloadDocument() error =', error)

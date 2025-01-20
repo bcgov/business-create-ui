@@ -3,7 +3,6 @@ import { AxiosResponse } from 'axios'
 import { AxiosInstance as axios } from '@/utils'
 import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
-import { DOCUMENT_TYPES } from '@/constants'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
 @Component({})
@@ -20,7 +19,6 @@ export default class DocumentMixin extends Vue {
   }
 
   pdfjsLib: any
-  documentTypes: any
 
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
   async beforeCreate (): Promise<void> {
@@ -28,7 +26,6 @@ export default class DocumentMixin extends Vue {
     // NB: must use legacy build for unit tests not running in Node 18+
     this.pdfjsLib = pdfjs
     this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
-    this.documentTypes = DOCUMENT_TYPES
   }
 
   /**

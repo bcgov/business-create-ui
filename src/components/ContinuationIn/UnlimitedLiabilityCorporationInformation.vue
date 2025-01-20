@@ -99,6 +99,7 @@ import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { ExistingBusinessInfoIF } from '@/interfaces'
 import FileUploadPreview from '../common/FileUploadPreview.vue'
+import { DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 
 @Component({
   components: {
@@ -172,8 +173,8 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
         this.isDocumentLoading = true
         const res = await this.uploadDocumentToDRS(
           file,
-          this.documentTypes.affidavitDocument.class,
-          this.documentTypes.affidavitDocument.type,
+          DocumentTypes.affidavitDocument.class,
+          DocumentTypes.affidavitDocument.type,
           this.getTempId,
           this.getContinuationInConsumerDocumentId
         )
