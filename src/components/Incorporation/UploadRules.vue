@@ -283,15 +283,15 @@
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import {
   CreateRulesIF,
   CreateRulesResourceIF,
   FormIF,
-  PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
-import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 
@@ -320,6 +320,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
+  @Getter(useStore) getTempId!: string
 
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setRulesStepValidity!: (x: ValidationDetailIF) => void
@@ -355,7 +356,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
       }
     } else {
       // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      await this.deleteDocumentFromDRS(this.uploadRulesDocKey).catch(() => null)
       // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null
@@ -369,14 +370,24 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadRulesDocKey
+    let res: any = null
+
     if (isPendingUpload && this.hasValidUploadFile) {
-      // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadRulesDoc.name)
-
-      // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
-
-      if (res && res.status === 200) {
+      if (this.getCreateRulesStep.docKey) {
+        res = await this.updateDocumentOnDRS(
+          this.uploadRulesDoc,
+          this.getCreateRulesStep.docKey,
+          this.uploadRulesDoc.name
+        )
+      } else {
+        res = await this.uploadDocumentToDRS(
+          this.uploadRulesDoc,
+          DocumentTypes.coopRules.class,
+          DocumentTypes.coopRules.type,
+          this.getTempId
+        )
+      }
+      if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const rulesFile = {
           name: this.uploadRulesDoc.name,
           lastModified: this.uploadRulesDoc.lastModified,
@@ -385,7 +396,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.setRules({
           ...this.getCreateRulesStep,
           rulesFile,
-          docKey: doc.key
+          docKey: res.data.documentServiceId
         })
       } else {
         // put file uploader into manual error mode by setting custom error message
