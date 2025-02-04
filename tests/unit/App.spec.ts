@@ -51,8 +51,8 @@ vi.mock('@/utils/feature-flags', () => {
 document.body.setAttribute('data-app', 'true')
 
 // Populate session variables
-sessionStorage.setItem('AUTH_WEB_URL', 'https://auth.web.url/')
-sessionStorage.setItem('DASHBOARD_URL', 'https://dashboard.url/')
+sessionStorage.setItem('AUTH_WEB_URL', 'https://auth-web.url/')
+sessionStorage.setItem('BUSINESS_DASH_URL', 'https://business-dash.url/')
 sessionStorage.setItem('AUTH_API_URL', 'https://auth.api.url/')
 sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
 sessionStorage.setItem('PAY_API_URL', 'https://pay.api.url/')
@@ -642,7 +642,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     expect(dialog.exists()).toBe(false)
 
     // verify redirection
-    const baseUrl = 'https://dashboard.url/T1234567?accountid=668'
+    const baseUrl = 'https://business-dash.url/T1234567?accountid=668'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
   })
 })
