@@ -255,15 +255,15 @@
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import {
   AffidavitResourceIF,
   FormIF,
-  PresignedUrlIF,
   ValidationDetailIF,
   UploadAffidavitIF
 } from '@/interfaces'
-import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { CorpTypeCd, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
@@ -295,6 +295,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) isEntityCoop!: boolean
+  @Getter(useStore) getBusinessId!: string
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAffidavitStepValidity!: (x: ValidationDetailIF) => void
@@ -348,7 +349,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
       }
     } else {
       // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadAffidavitDocKey).catch(() => null)
+      await this.deleteDocumentFromDRS(this.uploadAffidavitDocKey).catch(() => null)
       // clear local variables
       this.uploadAffidavitDoc = null
       this.uploadAffidavitDocKey = null
@@ -362,14 +363,24 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
 
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadAffidavitDocKey
+    let res: any = null
     if (isPendingUpload && this.hasValidUploadFile) {
-      // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
+      if (this.getAffidavitStep.docKey) {
+        res = await this.updateDocumentOnDRS(
+          this.uploadAffidavitDoc,
+          this.getAffidavitStep.docKey,
+          this.uploadAffidavitDoc.name
+        )
+      } else {
+        res = await this.uploadDocumentToDRS(
+          this.uploadAffidavitDoc,
+          DocumentTypes.corpAffidavit.class,
+          DocumentTypes.corpAffidavit.type,
+          this.getBusinessId
+        )
+      }
 
-      // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)
-
-      if (res && res.status === 200) {
+      if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const affidavitFile = {
           name: this.uploadAffidavitDoc.name,
           lastModified: this.uploadAffidavitDoc.lastModified,
@@ -378,7 +389,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
         this.setAffidavit({
           ...this.getAffidavitStep,
           affidavitFile,
-          docKey: doc.key
+          docKey: res.data.documentServiceId
         })
       } else {
         // put file uploader into manual error mode by setting custom error message

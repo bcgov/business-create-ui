@@ -198,7 +198,7 @@ export default class DocumentMixin extends Vue {
    * @param file the file to upload
    * @param documentClass the document class defined for the document service. e.g. 'CORP'
    * @param documentType the type of document. e.g. 'CNTA'
-   * @param temPid the temp business identifier
+   * @param businessId the business identifier(tempId or businessId)
    * @param consumerDocumentId the identifier of one or more documents associated with the filing.
    * @returns a promise to return the axios response or the error response
    */
@@ -206,7 +206,7 @@ export default class DocumentMixin extends Vue {
     document: File,
     documentClass: string,
     documentType: string,
-    tempId: string,
+    businessId: string,
     consumerDocumentId: string = undefined
   ): Promise<AxiosResponse> {
     const consumerFilingDate = new Date().toISOString()
@@ -214,7 +214,7 @@ export default class DocumentMixin extends Vue {
     // Set request params.
     let url = `${sessionStorage.getItem('DRS_API_URL')}/documents/${documentClass}/${documentType}`
     url += `?consumerFilingDate=${consumerFilingDate}&consumerFilename=${document.name}`
-    url += `&consumerIdentifier=${tempId}`
+    url += `&consumerIdentifier=${businessId}`
     if (consumerDocumentId) {
       url += `&consumerDocumentId=${consumerDocumentId}`
     }
@@ -225,6 +225,34 @@ export default class DocumentMixin extends Vue {
       'Content-Type': 'application/pdf'
     }
     return axios.post(url, document, { headers: headers })
+      .then(response => {
+        return response
+      }).catch(error => {
+        return error.response
+      })
+  }
+
+  /**
+   * Replace the existing document record specified by the document service ID.
+   * @param documentServiceId the unique identifier of document on Document Record Service
+   * @param file the file to replace
+   * @param documentName the file name to replace
+   * @returns a promise to return the axios response or the error response
+   */
+  async updateDocumentOnDRS (
+    document: File,
+    documentServiceId: string,
+    documentName: string
+  ) {
+    let url = `${sessionStorage.getItem('DRS_API_URL')}/documents/${documentServiceId}`
+    url += `?consumerFilename=${documentName}`
+    const headers = {
+      'x-apikey': sessionStorage.getItem('DRS_API_KEY'),
+      'Account-Id': sessionStorage.getItem('DRS_ACCOUNT_ID'),
+      'Content-Type': 'application/pdf'
+    }
+
+    return axios.put(url, document, { headers: headers })
       .then(response => {
         return response
       }).catch(error => {
