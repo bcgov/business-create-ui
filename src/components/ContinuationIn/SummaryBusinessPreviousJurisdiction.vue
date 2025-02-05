@@ -216,7 +216,7 @@ import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
-import { DocumentClassEnum } from '@/enums'
+import { DocumentClassEnum, DRS_ID_PATTERN } from '@/enums'
 
 @Component({
   components: {
@@ -271,17 +271,23 @@ export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixi
     if (!documentKey || !documentName) return // safety check
 
     this.isDownloading = true
-    await this.downloadDocumentFromDRS(
-      documentKey,
-      documentName,
-      DocumentClassEnum.CORP
-    ).catch(error => {
+    try {
+      if (DRS_ID_PATTERN.test(documentKey)) {
+        await this.downloadDocumentFromDRS(
+          documentKey,
+          documentName,
+          DocumentClassEnum.CORP
+        )
+      } else {
+        await this.downloadDocument(documentKey, documentName)
+      }
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.log('fetchDocument() error =', error)
+      console.log('downloadDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
-      this.errorDialogText = 'We were unable to download your document. If this error persists, please contact us.'
+      this.errorDialogText = 'An error occurred while downloading the document. Please try again.'
       this.errorDialog = true
-    })
+    }
     this.isDownloading = false
   }
 }
