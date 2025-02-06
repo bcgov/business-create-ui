@@ -17,6 +17,7 @@ export default class DocumentMixin extends Vue {
       validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper.'
     }
   }
+  readonly DRS_ID_PATTERN = /^DS\d{10}$/
 
   pdfjsLib: any
 
