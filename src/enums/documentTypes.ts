@@ -33,5 +33,3 @@ export const DOCUMENT_TYPES = {
     type: DocumetTypeEnum.COOP_RULES
   }
 }
-
-export const DRS_ID_PATTERN = /^DS\d{10}$/
