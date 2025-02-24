@@ -142,7 +142,7 @@ export default class EntityInfo extends Mixins(DateMixin) {
       case FilingTypes.REGISTRATION:
         return (this.getNameRequestApprovedName || numberedDescription)
       case FilingTypes.RESTORATION:
-        return (this.getBusinessLegalName || numberedDescription)
+        return (this.getNameRequestApprovedName || this.getBusinessLegalName || numberedDescription)
     }
     return '' // should never happen
   }
