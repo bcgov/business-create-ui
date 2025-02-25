@@ -332,23 +332,21 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
-
 // Interfaces
 import {
   CreateMemorandumIF,
   CreateMemorandumResourceIF,
   FormIF,
+  PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
-
 // Enums
 import { RouteNames, ItemTypes, PdfPageSize, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
-
 // Mixins
 import { CommonMixin, DocumentMixin } from '@/mixins'
-
 // Components
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
   components: {
@@ -414,8 +412,12 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         this.uploadMemorandumDocKey = null
       }
     } else {
-      // delete file from DRS; ignore errors
-      await this.deleteDocumentFromDRS(this.uploadMemorandumDocKey).catch(() => null)
+      // delete file from the storage; ignore errors
+      if (this.enableDocumentRecords) {
+        await DocumentServices.deleteDocumentFromDRS(this.uploadMemorandumDocKey).catch(() => null)
+      } else {
+        await this.deleteDocument(this.uploadMemorandumDocKey).catch(() => null)
+      }
       // clear local variables
       this.uploadMemorandumDoc = null
       this.uploadMemorandumDocKey = null
@@ -430,25 +432,32 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadMemorandumDocKey
     let res: any = null
-
+    let doc: PresignedUrlIF
     if (isPendingUpload && this.hasValidUploadFile) {
-      // Check if file was already uploaded
-      if (this.getCreateMemorandumStep.docKey) {
-        res = await this.updateDocumentOnDRS(
-          this.uploadMemorandumDoc,
-          this.getCreateMemorandumStep.docKey,
-          this.uploadMemorandumDoc.name
-        )
+      if (this.enableDocumentRecords) {
+        // Check if file was already uploaded
+        if (this.getCreateMemorandumStep.docKey) {
+          res = await DocumentServices.updateDocumentOnDRS(
+            this.uploadMemorandumDoc,
+            this.getCreateMemorandumStep.docKey,
+            this.uploadMemorandumDoc.name
+          )
+        } else {
+          res = await DocumentServices.uploadDocumentToDRS(
+            this.uploadMemorandumDoc,
+            DocumentTypes.coopMemorandum.class,
+            DocumentTypes.coopMemorandum.type,
+            this.getTempId
+          )
+        }
       } else {
-        res = await this.uploadDocumentToDRS(
-          this.uploadMemorandumDoc,
-          DocumentTypes.coopMemorandum.class,
-          DocumentTypes.coopMemorandum.type,
-          this.getTempId
-        )
-      }
+        // NB: will throw if API error
+        doc = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
 
-      console.log(res)
+        // NB: will return error response if API error
+        res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)
+      }
+    
       if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const memorandumFile = {
           name: this.uploadMemorandumDoc.name,
@@ -458,7 +467,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         this.setMemorandum({
           ...this.getCreateMemorandumStep,
           memorandumFile,
-          docKey: res.data.documentServiceId
+          docKey: this.enableDocumentRecords ? res.data.documentServiceId : doc.key
         })
       } else {
         // put file uploader into manual error mode by setting custom error message

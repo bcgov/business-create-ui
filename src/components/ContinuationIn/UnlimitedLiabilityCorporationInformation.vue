@@ -97,9 +97,10 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
-import { ExistingBusinessInfoIF } from '@/interfaces'
+import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import FileUploadPreview from '../common/FileUploadPreview.vue'
 import { DOCUMENT_TYPES as DocumentTypes } from '@/enums'
+import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
   components: {
@@ -168,28 +169,45 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
         return // don't add to array
       }
 
-      // try to upload to Document Record Service
+      // try to upload to the storage
+      let psu: PresignedUrlIF
+      let res
       try {
         this.isDocumentLoading = true
-        const res = await this.uploadDocumentToDRS(
-          file,
-          DocumentTypes.directorAffidavit.class,
-          DocumentTypes.directorAffidavit.type,
-          this.getTempId,
-          this.getContinuationInConsumerDocumentId
-        )
-        if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
+        if(this.enableDocumentRecords) {
+          const res = await DocumentServices.uploadDocumentToDRS(
+            file,
+            DocumentTypes.directorAffidavit.class,
+            DocumentTypes.directorAffidavit.type,
+            this.getTempId,
+            this.getContinuationInConsumerDocumentId
+          )
+          if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
 
-        // add properties reactively to business object
-        this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
-          name: file.name,
-          lastModified: file.lastModified,
-          size: file.size
-        } as File)
-        this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', res.data.documentServiceId)
-        this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
+          // add properties reactively to business object
+          this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
+            name: file.name,
+            lastModified: file.lastModified,
+            size: file.size
+          } as File)
+          this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', res.data.documentServiceId)
+          this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
 
-        this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
+          this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
+        } else {
+          psu = await this.getPresignedUrl(file.name)
+          const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+          if (!res || res.status !== StatusCodes.OK) throw new Error()
+
+          // add properties reactively to business object
+          this.$set(this.getExistingBusinessInfo, 'affidavitFile', {
+            name: file.name,
+            lastModified: file.lastModified,
+            size: file.size
+          } as File)
+          this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', psu.key)
+          this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
+        }
       } catch {
         // set error message
         this.customErrorMessage = this.UPLOAD_FAILED_MESSAGE
@@ -208,9 +226,13 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
    * May also be called by parent component to remove the file info.
    */
   onRemoveClicked (): void {
-    // delete file from DRS, not waiting for response and ignoring errors
-    this.deleteDocumentFromDRS(this.getExistingBusinessInfo.affidavitFileKey).catch((res) => console.error(res.data))
-
+    // delete file from the storage, not waiting for response and ignoring errors
+    if(this.enableDocumentRecords){
+      DocumentServices.deleteDocumentFromDRS(this.getExistingBusinessInfo.affidavitFileKey).catch((res) => console.error(res.data))
+    } else {
+      this.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
+    }
+    
     // delete properties reactively
     this.$delete(this.getExistingBusinessInfo, 'affidavitFile')
     this.$delete(this.getExistingBusinessInfo, 'affidavitFileKey')

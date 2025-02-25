@@ -14,7 +14,6 @@ export * from './routeNames'
 export * from './ruleIds'
 export * from './views'
 export * from './errorTypes'
-export * from './documentTypes'
 
 // external enums
 export {
@@ -29,5 +28,7 @@ export {
   RelationshipTypes,
   RestorationTypes,
   RoleTypes,
-  StaffPaymentOptions
+  StaffPaymentOptions,
+  DocumentClassEnum,
+  DOCUMENT_TYPES,
 } from '@bcrs-shared-components/enums'

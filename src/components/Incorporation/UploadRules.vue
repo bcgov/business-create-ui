@@ -289,11 +289,13 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   FormIF,
+  PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
 import { RouteNames, ItemTypes, PdfPageSize, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
   components: {
@@ -355,8 +357,13 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.uploadRulesDocKey = null
       }
     } else {
-      // delete file from Minio; ignore errors
-      await this.deleteDocumentFromDRS(this.uploadRulesDocKey).catch(() => null)
+      // delete file from storage; ignore errors
+      if (this.enableDocumentRecords) {
+        await DocumentServices.deleteDocumentFromDRS(this.uploadRulesDocKey).catch(() => null)
+      } else {
+        await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      }
+      
       // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null
@@ -371,21 +378,29 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadRulesDocKey
     let res: any = null
+    let doc: PresignedUrlIF
 
     if (isPendingUpload && this.hasValidUploadFile) {
-      if (this.getCreateRulesStep.docKey) {
-        res = await this.updateDocumentOnDRS(
-          this.uploadRulesDoc,
-          this.getCreateRulesStep.docKey,
-          this.uploadRulesDoc.name
-        )
+      if (this.enableDocumentRecords) {
+        if (this.getCreateRulesStep.docKey) {
+          res = await DocumentServices.updateDocumentOnDRS(
+            this.uploadRulesDoc,
+            this.getCreateRulesStep.docKey,
+            this.uploadRulesDoc.name
+          )
+        } else {
+          res = await DocumentServices.uploadDocumentToDRS(
+            this.uploadRulesDoc,
+            DocumentTypes.coopRules.class,
+            DocumentTypes.coopRules.type,
+            this.getTempId
+          )
+        }
       } else {
-        res = await this.uploadDocumentToDRS(
-          this.uploadRulesDoc,
-          DocumentTypes.coopRules.class,
-          DocumentTypes.coopRules.type,
-          this.getTempId
-        )
+        // NB: will throw if API error
+        doc = await this.getPresignedUrl(this.uploadRulesDoc.name)
+        // NB: will return error response if API error
+        res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
       }
       if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const rulesFile = {
@@ -396,7 +411,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.setRules({
           ...this.getCreateRulesStep,
           rulesFile,
-          docKey: res.data.documentServiceId
+          docKey: this.enableDocumentRecords ? res.data.documentServiceId : doc.key
         })
       } else {
         // put file uploader into manual error mode by setting custom error message

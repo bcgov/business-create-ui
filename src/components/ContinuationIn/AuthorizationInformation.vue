@@ -213,6 +213,7 @@ import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import { DocumentClassEnum } from '@/enums'
+import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
   components: {
@@ -289,7 +290,7 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
 
     try {
       if (this.DRS_ID_PATTERN.test(documentKey)) {
-        await this.downloadDocumentFromDRS(
+        await DocumentServices.downloadDocumentFromDRS(
           documentKey,
           documentName,
           DocumentClassEnum.CORP

@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
 import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
@@ -20,7 +20,8 @@ export default class DocumentMixin extends Vue {
   readonly DRS_ID_PATTERN = /^DS\d{10}$/
 
   pdfjsLib: any
-
+  enableDocumentRecords = GetFeatureFlag('enable-document-records')
+  
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
   async beforeCreate (): Promise<void> {
     // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)
@@ -192,121 +193,5 @@ export default class DocumentMixin extends Vue {
     if (sizeMB > 1) return `${sizeMB.toFixed(1)} MB`
     if (sizeKB > 1) return `${sizeKB.toFixed(0)} KB`
     return `${size} bytes`
-  }
-
-  /**
-   * Uploads the specified file to Document Record Service.
-   * @param file the file to upload
-   * @param documentClass the document class defined for the document service. e.g. 'CORP'
-   * @param documentType the type of document. e.g. 'CNTA'
-   * @param businessId the business identifier(tempId or businessId)
-   * @param consumerDocumentId the identifier of one or more documents associated with the filing.
-   * @returns a promise to return the axios response or the error response
-   */
-  async uploadDocumentToDRS (
-    document: File,
-    documentClass: string,
-    documentType: string,
-    businessId: string,
-    consumerDocumentId: string = undefined
-  ): Promise<AxiosResponse> {
-    const consumerFilingDate = new Date().toISOString()
-
-    // Set request params.
-    let url = `${sessionStorage.getItem('DRS_API_URL')}/documents/${documentClass}/${documentType}`
-    url += `?consumerFilingDate=${consumerFilingDate}&consumerFilename=${document.name}`
-    url += `&consumerIdentifier=${businessId}`
-    if (consumerDocumentId) {
-      url += `&consumerDocumentId=${consumerDocumentId}`
-    }
-
-    const headers = {
-      'x-apikey': sessionStorage.getItem('DRS_API_KEY'),
-      'Account-Id': sessionStorage.getItem('DRS_ACCOUNT_ID'),
-      'Content-Type': 'application/pdf'
-    }
-    return axios.post(url, document, { headers: headers })
-      .then(response => {
-        return response
-      }).catch(error => {
-        return error.response
-      })
-  }
-
-  /**
-   * Replace the existing document record specified by the document service ID.
-   * @param documentServiceId the unique identifier of document on Document Record Service
-   * @param file the file to replace
-   * @param documentName the file name to replace
-   * @returns a promise to return the axios response or the error response
-   */
-  async updateDocumentOnDRS (
-    document: File,
-    documentServiceId: string,
-    documentName: string
-  ) {
-    let url = `${sessionStorage.getItem('DRS_API_URL')}/documents/${documentServiceId}`
-    url += `?consumerFilename=${documentName}`
-    const headers = {
-      'x-apikey': sessionStorage.getItem('DRS_API_KEY'),
-      'Account-Id': sessionStorage.getItem('DRS_ACCOUNT_ID'),
-      'Content-Type': 'application/pdf'
-    }
-
-    return axios.put(url, document, { headers: headers })
-      .then(response => {
-        return response
-      }).catch(error => {
-        return error.response
-      })
-  }
-
-  /**
-   * Deletes a document from Document Record Service.
-   * @param documentServiceId the unique identifier of document on Document Record Service
-   * @returns a promise to return the axios response or the error response
-   */
-  async deleteDocumentFromDRS (documentServiceId: string): Promise<AxiosResponse> {
-    // safety checks
-    if (!documentServiceId) {
-      throw new Error('Invalid parameters')
-    }
-
-    const url = `documents/drs/${documentServiceId}`
-
-    return axios.delete(url)
-  }
-
-  /**
-   * Download the specified file from Document Record Service.
-   * @param documentKey the unique id on Document Record Service
-   * @param documentClass the document class defined for the document service. e.g. 'CORP'
-   * @param documentName the document name to download
-   * @returns void
-   */
-  async downloadDocumentFromDRS (documentKey: string,
-    documentName: string,
-    documentClass: string
-  ): Promise<void> {
-    // safety checks
-    if (!documentKey || !documentName) {
-      throw new Error('Invalid parameters')
-    }
-    const url = `documents/drs/${documentClass}/${documentKey}`
-
-    axios.get(url).then(response => {
-      if (!response) throw new Error('Null response')
-      const link = document.createElement('a')
-      link.href = response.data.documentURL
-      link.download = documentName
-      link.target = '_blank' // This opens the link in a new browser tab
-
-      // Append to the document and trigger the download
-      document.body.appendChild(link)
-      link.click()
-
-      // Remove the link after the download is triggered
-      document.body.removeChild(link)
-    })
   }
 }
