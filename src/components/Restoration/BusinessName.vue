@@ -91,7 +91,6 @@ import { NameRequestErrorDialog } from '@/dialogs/'
 export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameRequestMixin) {
   // Global getters
   @Getter(useStore) getBusinessId!: string
-  @Getter(useStore) getBusinessLegalName!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getNameRequest!: NameRequestIF
@@ -112,7 +111,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
 
   /** The company name. */
   get companyName (): string {
-    return (this.getNameRequestApprovedName || this.getBusinessLegalName)
+    return (this.getNameRequestApprovedName)
   }
 
   /** This section's validity state (when prompted by app). */
