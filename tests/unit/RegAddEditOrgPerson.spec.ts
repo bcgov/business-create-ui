@@ -692,13 +692,12 @@ describe('Registration Add/Edit Org/Person component', () => {
 
     // verify error messages
     const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(6)
+    expect(messages.length).toBe(5)
     expect(messages.at(0).text()).toBe('Email address is required') // email address
     expect(messages.at(1).text()).toBe('This field is required') // mailing - street address
     expect(messages.at(2).text()).toBe('This field is required') // mailing - city
     expect(messages.at(3).text()).toBe('This field is required') // mailing - postal code
-    expect(messages.at(4).text()).toBe('This field is required') // mailing - country
-    expect(messages.at(5).text()).toBe('')
+    expect(messages.at(4).text()).toBe('')
 
     // verify that no events were emitted
     expect(wrapper.emitted(removeCompletingPartyRoleEvent)).toBeUndefined()
