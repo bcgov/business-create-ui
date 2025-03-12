@@ -55,8 +55,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   businessLookupLabel = 'Business Name or Incorporation/Registration Number'
 
   // Address related properties
-  inProgressMailingAddress = {} as AddressIF
-  inProgressDeliveryAddress = {} as AddressIF
+  inProgressMailingAddress = EmptyAddress as AddressIF
+  inProgressDeliveryAddress = EmptyAddress as AddressIF
   inheritMailingAddress = true
   mailingAddressValid = false
   deliveryAddressValid = false
