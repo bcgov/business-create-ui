@@ -58,7 +58,8 @@ describe('Business Name component', () => {
     // tombstone data
     store.stateModel.business.businessId = 'BC1234567'
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
-    store.stateModel.business.legalName = 'My Business Name'
+    // business.legalName is always set to be null in the store
+    store.stateModel.business.legalName = null
     store.stateModel.tombstone.filingType = FilingTypes.RESTORATION
 
     // initial values
@@ -123,7 +124,7 @@ describe('Business Name component', () => {
   })
 
   it('computes companyName correctly', async () => {
-    expect(wrapper.vm.companyName).toBe('My Business Name') // initial value
+    expect(wrapper.vm.companyName).toBe(null) // initial value
 
     store.stateModel.nameRequestApprovedName = 'NR Approved Name'
     await Vue.nextTick()
