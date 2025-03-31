@@ -13,7 +13,7 @@ export const ContinuationInResourceCul: ContinuationInResourceIF = {
     filingTypeCode: FilingCodes.CONTINUATION_IN
   }],
   pageBlurbDraft: `To continue in to B.C., you must first submit a Continuation Authorization and
-    have it approved BC Registries before filing a Continuation Application.`,
+    have it approved by BC Registries before filing a Continuation Application.`,
   peopleAndRoles: {
     header: '1. Add People to your Application',
     blurb: `Add the people who will have a role in your company. People can
