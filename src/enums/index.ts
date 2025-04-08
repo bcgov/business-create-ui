@@ -29,6 +29,6 @@ export {
   RestorationTypes,
   RoleTypes,
   StaffPaymentOptions,
-  DocumentClassEnum,
+  DocumentClasses,
   DOCUMENT_TYPES,
 } from '@bcrs-shared-components/enums'

@@ -352,7 +352,9 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     } else {
       // delete file from the storage; ignore errors
       if (this.enableDocumentRecords) {
-        await DocumentServices.deleteDocumentFromDRS(this.uploadAffidavitDocKey).catch(() => null)
+        await DocumentServices.deleteDocumentFromDRS(
+          this.uploadAffidavitDocKey
+        ).catch(() => null)
       } else {
         await this.deleteDocument(this.uploadAffidavitDocKey).catch(() => null)
       }

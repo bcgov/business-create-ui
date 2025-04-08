@@ -359,7 +359,9 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     } else {
       // delete file from storage; ignore errors
       if (this.enableDocumentRecords) {
-        await DocumentServices.deleteDocumentFromDRS(this.uploadRulesDocKey).catch(() => null)
+        await DocumentServices.deleteDocumentFromDRS(
+          this.uploadRulesDocKey
+        ).catch(() => null)
       } else {
         await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
       }

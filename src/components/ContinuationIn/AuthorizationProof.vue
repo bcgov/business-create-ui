@@ -164,7 +164,7 @@ import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
 import { AuthorizationProofIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
-import { FilingStatus, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
+import { FilingStatus, DOCUMENT_TYPES } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
 import MessageBox from '@/components/common/MessageBox.vue'
@@ -290,8 +290,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
         if(this.enableDocumentRecords) {
           res = await DocumentServices.uploadDocumentToDRS(
             file,
-            DocumentTypes.contInAuthorization.class,
-            DocumentTypes.contInAuthorization.type,
+            DOCUMENT_TYPES.corpContInAuthorization.class,
+            DOCUMENT_TYPES.corpContInAuthorization.type,
             this.getTempId,
             this.getContinuationInConsumerDocumentId
           )
@@ -346,7 +346,9 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
     if (index >= 0) {
       // delete file from the storage, not waiting for response and ignoring errors
       if(this.enableDocumentRecords){
-        DocumentServices.deleteDocumentFromDRS(this.authorization.files[index].fileKey).catch((res) => console.error(res.data))
+        DocumentServices.deleteDocumentFromDRS(
+          this.authorization.files[index].fileKey
+        ).catch((res) => console.error(res.data))
       } else {
         this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       }

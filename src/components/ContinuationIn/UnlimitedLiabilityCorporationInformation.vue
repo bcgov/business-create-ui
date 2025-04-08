@@ -177,8 +177,8 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
         if(this.enableDocumentRecords) {
           const res = await DocumentServices.uploadDocumentToDRS(
             file,
-            DocumentTypes.directorAffidavit.class,
-            DocumentTypes.directorAffidavit.type,
+            DocumentTypes.corpDirectorAffidavit.class,
+            DocumentTypes.corpDirectorAffidavit.type,
             this.getTempId,
             this.getContinuationInConsumerDocumentId
           )
@@ -228,7 +228,9 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
   onRemoveClicked (): void {
     // delete file from the storage, not waiting for response and ignoring errors
     if(this.enableDocumentRecords){
-      DocumentServices.deleteDocumentFromDRS(this.getExistingBusinessInfo.affidavitFileKey).catch((res) => console.error(res.data))
+      DocumentServices.deleteDocumentFromDRS(
+        this.getExistingBusinessInfo.affidavitFileKey
+      ).catch((res) => console.error(res.data))
     } else {
       this.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
     }

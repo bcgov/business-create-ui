@@ -216,7 +216,7 @@ import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
-import { DocumentClassEnum } from '@/enums'
+import { DocumentClasses } from '@/enums'
 import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
@@ -277,7 +277,7 @@ export default class SummaryBusinessPreviousJurisdiction extends Mixins(DateMixi
         await DocumentServices.downloadDocumentFromDRS(
           documentKey,
           documentName,
-          DocumentClassEnum.CORP
+          DocumentClasses.CORP
         )
       } else {
         await this.downloadDocument(documentKey, documentName)

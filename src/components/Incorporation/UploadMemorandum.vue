@@ -414,7 +414,9 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     } else {
       // delete file from the storage; ignore errors
       if (this.enableDocumentRecords) {
-        await DocumentServices.deleteDocumentFromDRS(this.uploadMemorandumDocKey).catch(() => null)
+        await DocumentServices.deleteDocumentFromDRS(
+          this.uploadMemorandumDocKey
+        ).catch(() => null)
       } else {
         await this.deleteDocument(this.uploadMemorandumDocKey).catch(() => null)
       }
