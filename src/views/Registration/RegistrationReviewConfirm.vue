@@ -145,6 +145,29 @@
       </v-card>
     </section> -->
 
+    <!-- Document ID Component for Staff only -->
+    <section
+      v-if="isRoleStaff"
+      id="document-id-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Document ID</h2>
+        <p class="mt-4">
+          Enter or select your document ID preference. Upon submission,
+          a document record will be created with the details from this registration.
+        </p>
+      </header>
+
+      <DocumentId
+        :docApiUrl="getDrsApiUrl"
+        :docApiKey="getDrsApiKey"
+        :validate="getValidateSteps"
+        @updateDocId="docId=$event"
+        @isValid="isDocIdValid=$event"
+      />
+    </section>
+
     <template v-if="isRoleStaff">
       <!-- Staff Payment -->
       <section
@@ -168,14 +191,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
+import { ContactPointIF, CertifyIF, DocumentDeliveryIF, DocumentIdIF, PeopleAndRoleIF } from '@/interfaces'
 import { RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import DefineRegistrationSummary from '@/components/Registration/DefineRegistrationSummary.vue'
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
@@ -188,6 +212,7 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
     Certify,
     DefineRegistrationSummary,
     DocumentDelivery,
+    DocumentId,
     FeeAcknowledgement,
     ListPeopleAndRoles,
     StaffPayment,
@@ -208,11 +233,20 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
+  docId = ''
+  isDocIdValid = false
+
+  mounted (): void {
+    this.docId = this.getDocumentIdState.consumerDocumentId
+    this.isDocIdValid = this.getDocumentIdState.valid
+  }
   /** The Document Delivery additional email label. */
   get documentDeliveryAdditionalLabel (): string {
     if (this.isEntitySoleProp) return 'Proprietor'
@@ -257,6 +291,25 @@ export default class RegistrationReviewConfirm extends Vue {
    */
   get documentOptionalEmail (): string {
     return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
+  }
+
+  /** Get Document Record Service API URL */
+  get getDrsApiUrl (): string {
+    return sessionStorage.getItem('DOC_API_URL')
+  }
+
+  get getDrsApiKey (): string {
+    return sessionStorage.getItem('DOC_API_KEY')
+  }
+
+  @Watch('docId', { immediate: true })
+  @Watch('isDocIdValid', { immediate: true })
+  // Update Document Id state
+  private onDocumentIdStateChange (): void {
+    this.setDocumentIdState({
+      valid: this.isDocIdValid,
+      consumerDocumentId: this.docId
+    })
   }
 }
 </script>

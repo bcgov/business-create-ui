@@ -73,7 +73,8 @@ import {
   StepIF,
   UploadAffidavitIF,
   ValidationDetailIF,
-  ResolutionIF
+  ResolutionIF,
+  DocumentIdIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
 
@@ -237,8 +238,8 @@ export const useStore = defineStore('store', {
     },
 
     /** The document ID used for Document Record Service. */
-    getContinuationInConsumerDocumentId (): string {
-      return this.getContinuationIn.consumerDocumentId
+    getDocumentIdState (): DocumentIdIF {
+      return this.stateModel.documentIdState
     },
 
     /** The account folio number. */
@@ -677,7 +678,8 @@ export const useStore = defineStore('store', {
             isCourtOrderValid &&
             isStaffPaymentValid &&
             isDissolutionDateValid &&
-            isCompletingPartyValid
+            isCompletingPartyValid &&
+            this.getDocumentIdState.valid
         )
       }
       return (
@@ -733,7 +735,8 @@ export const useStore = defineStore('store', {
         this.getAmalgamationCourtApprovalValid &&
         isCourtOrderValid &&
         isCertifyValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -759,7 +762,8 @@ export const useStore = defineStore('store', {
         isEffectiveDateTimeValid &&
         isCertifyValid &&
         isCourtOrderValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -794,7 +798,8 @@ export const useStore = defineStore('store', {
         isDocumentValid &&
         isCertifyValid &&
         isCourtOrderValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -810,7 +815,8 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid &&
         isCertifyValid &&
         isFeeAcknowledgementValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -824,7 +830,8 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid && // step 2
         this.isDefineCompanyValid && // step 3
         isCertifyValid && // step 4
-        isStaffPaymentValid // step 4
+        isStaffPaymentValid && // step 4
+        this.getDocumentIdState.valid
       )
     },
 
@@ -1210,8 +1217,8 @@ export const useStore = defineStore('store', {
       this.stateModel.continuationIn.existingBusinessInfo = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    setContinuationConsumerDocumentId (val: string) {
-      this.stateModel.continuationIn.consumerDocumentId = val
+    setDocumentIdState (val: DocumentIdIF) {
+      this.stateModel.documentIdState = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setIsFutureEffective (isFutureEffective: boolean) {

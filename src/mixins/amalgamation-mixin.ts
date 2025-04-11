@@ -5,7 +5,7 @@ import {
   AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes, RoleTypes
 } from '@/enums'
 import {
-  AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
+  AmalgamatingBusinessIF, ContactPointIF, DocumentIdIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
   NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF,
   ShareClassIF, ResolutionIF
 } from '@/interfaces'
@@ -32,6 +32,7 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isEntityCccContinueIn!: boolean
   @Getter(useStore) isEntityUlcContinueIn!: boolean
   @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void

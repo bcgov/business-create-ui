@@ -85,6 +85,21 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#folio-section').exists()).toBe(test.isPremium)
     })
 
+    it('displays Document ID section only for staff', () => {
+      wrapper = shallowWrapperFactory(
+        RegistrationReviewConfirm,
+        null,
+        {
+          entityType: test.entityType,
+          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+        },
+        null,
+        RegistrationResources
+      )
+
+      expect(wrapper.find('#document-id-section').exists()).toBe(test.isStaff)
+    })
+
     it('displays Staff Payment section only for staff', () => {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,

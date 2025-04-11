@@ -21,7 +21,7 @@ export default class DocumentMixin extends Vue {
 
   pdfjsLib: any
   enableDocumentRecords = GetFeatureFlag('enable-document-records')
-  
+
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
   async beforeCreate (): Promise<void> {
     // NB: we load the lib and worker this way to avoid a memory leak (esp in unit tests)

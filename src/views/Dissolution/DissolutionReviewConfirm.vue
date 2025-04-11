@@ -349,6 +349,29 @@
       </v-card>
     </section>
 
+    <!-- Document ID Component for Staff only -->
+    <section
+      v-if="isRoleStaff"
+      id="document-id-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Document ID</h2>
+        <p class="mt-4">
+          Enter or select your document ID preference. Upon submission,
+          a document record will be created with the details from this registration.
+        </p>
+      </header>
+
+      <DocumentId
+        :docApiUrl="getDrsApiUrl"
+        :docApiKey="getDrsApiKey"
+        :validate="getValidateSteps"
+        @updateDocId="docId=$event"
+        @isValid="isDocIdValid=$event"
+      />
+    </section>
+
     <!-- Staff Payment -->
     <section
       v-if="isRoleStaff"
@@ -371,7 +394,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { DateMixin } from '@/mixins'
@@ -383,6 +406,7 @@ import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
@@ -394,6 +418,7 @@ import {
   CreateResolutionIF,
   CreateResolutionResourceIF,
   DocumentDeliveryIF,
+  DocumentIdIF,
   EffectiveDateTimeIF,
   FeesIF,
   UploadAffidavitIF
@@ -409,6 +434,7 @@ import {
     DestroyCertificate,
     DissolutionStatement,
     DocumentDelivery,
+    DocumentId,
     EffectiveDateTime,
     StaffPayment,
     TransactionalFolioNumber
@@ -437,6 +463,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -450,12 +477,15 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Enum for template
   readonly RouteNames = RouteNames
 
-  // Local variable
+  // Local variables
   isDissolutionCustodianValid = false
+  docId = ''
+  isDocIdValid = false
 
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
@@ -504,6 +534,25 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
    */
   get documentOptionalEmail (): string {
     return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
+  }
+
+  /** Get Document Record Service API URL */
+  get getDrsApiUrl (): string {
+    return sessionStorage.getItem('DOC_API_URL')
+  }
+
+  get getDrsApiKey (): string {
+    return sessionStorage.getItem('DOC_API_KEY')
+  }
+
+  @Watch('docId', { immediate: true })
+  @Watch('isDocIdValid', { immediate: true })
+  // Update Document Id state
+  private onDocumentIdStateChange (): void {
+    this.setDocumentIdState({
+      valid: this.isDocIdValid,
+      consumerDocumentId: this.docId
+    })
   }
 }
 </script>

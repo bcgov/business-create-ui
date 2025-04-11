@@ -10,6 +10,7 @@ import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { FilingStatus } from '@/enums'
 
@@ -150,7 +151,7 @@ describe('Continuation In Review Confirm component', () => {
     wrapper.destroy()
   })
 
-  it('renders the component correctly - Staff Payment section', async () => {
+  it('renders the component correctly - Document ID section', async () => {
     const wrapper = wrapperFactory(
       ContinuationInReviewConfirm,
       null,
@@ -170,6 +171,32 @@ describe('Continuation In Review Confirm component', () => {
 
     // spot check some content (structure / text)
     const sixthSection = wrapper.findAll('#continuation-in-review-confirm > section').at(5)
+    expect(sixthSection.find('header h2').text()).toBe('Document ID')
+    expect(sixthSection.findComponent(DocumentId).exists()).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('renders the component correctly - Staff Payment section', async () => {
+    const wrapper = wrapperFactory(
+      ContinuationInReviewConfirm,
+      null,
+      null,
+      null,
+      null,
+      // declare computed properties to override store getters:
+      {
+        isRoleStaff: () => true
+      }
+    )
+    await Vue.nextTick()
+
+    // verify that component exists
+    expect(wrapper.findComponent(ContinuationInReviewConfirm).exists()).toBe(true)
+    expect(wrapper.find('#continuation-in-review-confirm').exists()).toBe(true)
+
+    // spot check some content (structure / text)
+    const sixthSection = wrapper.findAll('#continuation-in-review-confirm > section').at(6)
     expect(sixthSection.find('header h2').text()).toBe('Staff Payment')
     expect(sixthSection.find('header p').text()).toBe('')
     expect(sixthSection.findComponent(StaffPayment).exists()).toBe(true)

@@ -459,7 +459,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         // NB: will return error response if API error
         res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)
       }
-    
+
       if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const memorandumFile = {
           name: this.uploadMemorandumDoc.name,

@@ -30,7 +30,8 @@ import {
   StaffPaymentStepIF,
   TombstoneIF,
   UploadAffidavitIF,
-  ResolutionIF
+  ResolutionIF,
+  DocumentIdIF
 } from '@/interfaces'
 
 // State model interface
@@ -86,6 +87,9 @@ export interface StateModelIF {
 
   // to calculate if this is a mobile screen
   windowWidth: number
+
+  // document record service
+  documentIdState: DocumentIdIF
 }
 
 export interface StateIF {

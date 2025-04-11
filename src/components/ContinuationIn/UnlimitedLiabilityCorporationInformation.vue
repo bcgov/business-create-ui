@@ -97,7 +97,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
-import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { DocumentIdIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import FileUploadPreview from '../common/FileUploadPreview.vue'
 import { DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import { DocumentServices } from '@bcrs-shared-components/services'
@@ -117,12 +117,12 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
   @Getter(useStore) getExistingBusinessInfo!: ExistingBusinessInfoIF
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getContinuationInConsumerDocumentId!: string
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getTempId!: string
 
   @Action(useStore) setExistingBusinessInfo!: (x: ExistingBusinessInfoIF) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
-  @Action(useStore) setContinuationConsumerDocumentId!: (x: string) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Local properties
   customErrorMessage = ''
@@ -171,16 +171,15 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
 
       // try to upload to the storage
       let psu: PresignedUrlIF
-      let res
       try {
         this.isDocumentLoading = true
-        if(this.enableDocumentRecords) {
+        if (this.enableDocumentRecords) {
           const res = await DocumentServices.uploadDocumentToDRS(
             file,
             DocumentTypes.corpDirectorAffidavit.class,
             DocumentTypes.corpDirectorAffidavit.type,
             this.getTempId,
-            this.getContinuationInConsumerDocumentId
+            this.getDocumentIdState.consumerDocumentId
           )
           if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
 
@@ -193,7 +192,10 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
           this.$set(this.getExistingBusinessInfo, 'affidavitFileKey', res.data.documentServiceId)
           this.$set(this.getExistingBusinessInfo, 'affidavitFileName', file.name)
 
-          this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
+          this.setDocumentIdState({
+            valid: true,
+            consumerDocumentId: res.data.consumerDocumentId
+          })
         } else {
           psu = await this.getPresignedUrl(file.name)
           const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
@@ -227,14 +229,14 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
    */
   onRemoveClicked (): void {
     // delete file from the storage, not waiting for response and ignoring errors
-    if(this.enableDocumentRecords){
+    if (this.enableDocumentRecords) {
       DocumentServices.deleteDocumentFromDRS(
         this.getExistingBusinessInfo.affidavitFileKey
       ).catch((res) => console.error(res.data))
     } else {
       this.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
     }
-    
+
     // delete properties reactively
     this.$delete(this.getExistingBusinessInfo, 'affidavitFile')
     this.$delete(this.getExistingBusinessInfo, 'affidavitFileKey')

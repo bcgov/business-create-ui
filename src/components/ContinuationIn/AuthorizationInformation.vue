@@ -299,8 +299,6 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
         await this.downloadDocument(documentKey, documentName)
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('downloadDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'
       this.errorDialogText = 'An error occurred while downloading the document. Please try again.'
       this.errorDialog = true

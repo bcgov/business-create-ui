@@ -395,7 +395,6 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
         // NB: will return error response if API error
         res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)
       }
-      
 
       if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const affidavitFile = {

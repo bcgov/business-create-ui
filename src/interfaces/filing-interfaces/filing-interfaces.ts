@@ -1,7 +1,6 @@
-import { AmalgamatingBusinessIF, BusinessAddressIF, AuthorizationProofIF, CourtOrderIF, NaicsIF,
+import { AmalgamatingBusinessIF, BusinessAddressIF, AuthorizationProofIF, CourtOrderIF, DocumentIdIF, NaicsIF,
   NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF, RegisteredRecordsAddressesIF, ShareClassIF,
-  SpecialResolutionIF,
-  ResolutionIF } from '@/interfaces'
+  SpecialResolutionIF, ResolutionIF } from '@/interfaces'
 import { AmalgamationTypes, ApprovalTypes, BusinessTypes, DissolutionStatementTypes, DissolutionTypes,
   FilingStatus, FilingTypes, RestorationTypes, RelationshipTypes } from '@/enums'
 import { CorrectNameOptions, EntityStates } from '@bcrs-shared-components/enums/'
@@ -38,7 +37,8 @@ export interface AmalgamationFilingIF {
     bcolAccountNumber?: string
     datNumber?: string
     waiveFees?: boolean
-    priority?: boolean
+    priority?: boolean,
+    documentIdState?: DocumentIdIF
   }
   business: {
     legalType: CorpTypeCd
@@ -90,6 +90,7 @@ export interface ContinuationInFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
+    documentIdState?: DocumentIdIF
   }
   business: {
     identifier: string
@@ -143,6 +144,7 @@ export interface IncorporationFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
+    documentIdState?: DocumentIdIF
   }
   business: {
     legalType: CorpTypeCd
@@ -202,6 +204,7 @@ export interface RegistrationFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
+    documentIdState?: DocumentIdIF
   }
   business: {
     legalType: CorpTypeCd
@@ -247,6 +250,7 @@ export interface DissolutionFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
+    documentIdState?: DocumentIdIF
   }
   business: {
     legalType: CorpTypeCd
@@ -296,6 +300,7 @@ export interface RestorationFilingIF {
     datNumber?: string
     waiveFees?: boolean
     priority?: boolean
+    documentIdState?: DocumentIdIF
   }
   business: {
     foundingDate: string

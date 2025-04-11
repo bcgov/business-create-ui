@@ -163,7 +163,7 @@ import { Action, Getter } from 'pinia-class'
 import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
-import { AuthorizationProofIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
+import { AuthorizationProofIF, DocumentIdIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import { FilingStatus, DOCUMENT_TYPES } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
@@ -191,10 +191,10 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) getContinuationInConsumerDocumentId!: string
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setContinuationAuthorization!: (x: AuthorizationProofIF) => void
-  @Action(useStore) setContinuationConsumerDocumentId!: (x: string) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Local properties
   authorization = null as AuthorizationProofIF
@@ -286,14 +286,14 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
       let res
       try {
         this.isDocumentLoading = true
-        
-        if(this.enableDocumentRecords) {
+
+        if (this.enableDocumentRecords) {
           res = await DocumentServices.uploadDocumentToDRS(
             file,
             DOCUMENT_TYPES.corpContInAuthorization.class,
             DOCUMENT_TYPES.corpContInAuthorization.type,
             this.getTempId,
-            this.getContinuationInConsumerDocumentId
+            this.getDocumentIdState.consumerDocumentId
           )
 
           if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
@@ -309,7 +309,10 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
             fileName: file.name
           })
 
-          this.setContinuationConsumerDocumentId(res.data.consumerDocumentId)
+          this.setDocumentIdState({
+            valid: true,
+            consumerDocumentId: res.data.consumerDocumentId
+          })
         } else {
           psu = await this.getPresignedUrl(file.name)
           res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
@@ -345,7 +348,7 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
     // safety check
     if (index >= 0) {
       // delete file from the storage, not waiting for response and ignoring errors
-      if(this.enableDocumentRecords){
+      if (this.enableDocumentRecords) {
         DocumentServices.deleteDocumentFromDRS(
           this.authorization.files[index].fileKey
         ).catch((res) => console.error(res.data))

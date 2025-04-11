@@ -365,7 +365,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
       } else {
         await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
       }
-      
+
       // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null

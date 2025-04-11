@@ -30,5 +30,5 @@ export {
   RoleTypes,
   StaffPaymentOptions,
   DocumentClasses,
-  DOCUMENT_TYPES,
+  DOCUMENT_TYPES
 } from '@bcrs-shared-components/enums'
