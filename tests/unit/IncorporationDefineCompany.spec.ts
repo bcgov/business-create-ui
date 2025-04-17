@@ -29,8 +29,7 @@ for (const mock of mockEntityInfo) {
 
     beforeEach(() => {
       wrapper = shallowWrapperFactory(DefineCompany, null, {
-        entityType: mock.entityType,
-        accountInformation: { accountType: 'PREMIUM' }
+        entityType: mock.entityType
       })
     })
 
@@ -53,7 +52,7 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
     })
 
-    it('displays folio number', () => {
+    it('displays folio number for non-staff', () => {
       expect(wrapper.find('#folio-number-header').exists()).toBe(true)
       expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (Optional)')
     })

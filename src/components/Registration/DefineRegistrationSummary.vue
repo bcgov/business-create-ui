@@ -101,16 +101,18 @@
         </v-row>
       </article>
 
-      <!-- DISABLED PER TICKET # 12306 -->
-      <!-- <v-divider class="mx-6" /> -->
+      <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
+      <template v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
+        <!-- DISABLED PER TICKET # 12306 -->
+        <!-- <v-divider class="mx-6" />
 
-      <!-- Folio or Reference Number -->
-      <!-- <article class="section-container">
-        <FolioNumber
-          :initialValue="getFolioNumber"
-          :isEditing="false"
-        />
-      </article> -->
+        <article class="section-container">
+          <FolioNumber
+            :initialValue="getFolioNumber"
+            :isEditing="false"
+          />
+        </article> -->
+      </template>
 
       <v-divider class="mx-6" />
 
@@ -145,8 +147,9 @@ import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { DateMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { AuthorizedActions, RouteNames } from '@/enums'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -156,6 +159,10 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
   }
 })
 export default class DefineRegistrationSummary extends Mixins(DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   // Getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getEntityType!: CorpTypeCd

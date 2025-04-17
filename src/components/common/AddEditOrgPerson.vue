@@ -50,7 +50,7 @@
           sm="9"
         >
           <MessageBox
-            v-if="isCompletingParty && !isRoleStaff && isEntityCoop"
+            v-if="isCompletingParty && !IsAuthorized(AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX) && isEntityCoop"
             color="gold"
           >
             <p>
@@ -65,7 +65,7 @@
           </MessageBox>
 
           <div
-            v-if="isCompletingParty && !isRoleStaff && isEntityCoop"
+            v-if="isCompletingParty && !IsAuthorized(AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX) && isEntityCoop"
             class="mt-8"
           />
 
@@ -88,7 +88,8 @@
                   class="item"
                   label="First Name"
                   :rules="enableRules ? Rules.FirstNameRules : []"
-                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
+                  :readonly="isEntityCoop && isCompletingParty &&
+                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   id="person__middle-name"
@@ -97,7 +98,8 @@
                   class="item"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRules: []"
-                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
+                  :readonly="isEntityCoop && isCompletingParty &&
+                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   id="person__last-name"
@@ -106,7 +108,8 @@
                   class="item"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isCompletingParty && !isRoleStaff && isEntityCoop"
+                  :readonly="isEntityCoop && isCompletingParty &&
+                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
               </div>
             </article>

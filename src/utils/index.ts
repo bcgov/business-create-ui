@@ -1,3 +1,4 @@
+export * from './Authorizations'
 export * from './AxiosInstance'
 export * from './Capitalize'
 export * from './FetchConfig'

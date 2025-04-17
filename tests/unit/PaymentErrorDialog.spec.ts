@@ -34,8 +34,9 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to Process Payment')
     expect(wrapper.findAll('p').length).toBe(1)
     expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
+
     expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(false)
-    expect(wrapper.find('#dialog-exit-button').exists()).toBe(false)
+    expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
     wrapper.destroy()
@@ -56,12 +57,15 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('p').at(0).text()).toContain('We are unable to process your payment')
     expect(wrapper.findAll('p').at(1).text()).toContain('PayBC is normally available')
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
+
     expect(wrapper.findAll('li').length).toBe(3)
     expect(wrapper.findAll('li').at(0).text()).toContain('Monday to Friday')
     expect(wrapper.findAll('li').at(1).text()).toContain('Saturday')
     expect(wrapper.findAll('li').at(2).text()).toContain('Sunday')
+
     expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
     wrapper.destroy()
   })
@@ -103,12 +107,14 @@ describe('Payment Error Dialog', () => {
       'We were unable to process your payment due to the following errors:'
     )
     expect(wrapper.findAll('p').at(2).text()).toContain('If this error persists')
+
     expect(wrapper.findAll('li').length).toBe(0)
     expect(wrapper.findAll('span').length).toBe(2)
     expect(wrapper.findAll('span').at(1).text()).toContain('Your account is in the 3 day PAD confirmation period.')
 
     expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
     wrapper.destroy()
   })
@@ -139,11 +145,9 @@ describe('Payment Error Dialog', () => {
     expect(wrapper.findAll('span').at(1).text()).toContain('Test Warning 1')
     expect(wrapper.findAll('span').at(3).text()).toContain('Test Warning 2')
 
-    expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
-    expect(wrapper.find('#dialog-okay-button').exists()).toBe(false)
-
     expect(wrapper.findComponent(RegistriesContactInfo).exists()).toBe(true)
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
+    expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
 
     wrapper.destroy()
   })

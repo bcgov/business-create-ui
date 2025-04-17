@@ -65,19 +65,20 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
     })
 
-    it('displays Folio number section', () => {
+    it('displays Folio number section for non-staff only', () => {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
         {
           entityType: test.entityType,
-          accountInformation: { accountType: 'PREMIUM' }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         RegistrationResources
       )
 
-      expect(wrapper.find('#folio-section').exists()).toBe(true)
+      // Folio Number is mutually exclusive with Staff Payment
+      expect(wrapper.find('#folio-section').exists()).toBe(!test.isStaff)
     })
 
     it('displays Staff Payment section only for staff', () => {

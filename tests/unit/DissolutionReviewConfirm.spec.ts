@@ -111,19 +111,20 @@ for (const test of reviewConfirmTestCases) {
       wrapper.destroy()
     })
 
-    it('displays Folio Number section', () => {
+    it('displays Folio Number section for non-staff only', () => {
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
         {
           entityType: test.entityType,
-          accountInformation: { accountType: 'PREMIUM' }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         DissolutionResources
       )
 
-      expect(wrapper.find('#folio-number-section').exists()).toBe(true)
+      // Folio Number is mutually exclusive with Staff Payment
+      expect(wrapper.find('#folio-number-section').exists()).toBe(!test.isStaff)
 
       wrapper.destroy()
     })

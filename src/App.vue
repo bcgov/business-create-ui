@@ -267,11 +267,12 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import { NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
-import { AuthorizationRoles, EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes,
-  RouteNames, StaffPaymentOptions } from '@/enums'
+import { AuthorizationRoles, AuthorizedActions, EntityStates, ErrorTypes, FilingCodes, FilingNames,
+  FilingStatus, FilingTypes, RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -318,7 +319,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
@@ -397,11 +397,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
     ]
 
-    // set base crumbs based on user type
-    if (this.isSbcStaff) {
+    // set base crumbs based on authorizations
+    if (IsAuthorized(AuthorizedActions.SBC_BREADCRUMBS)) {
       // set SbcStaffDashboard as Home crumb
       crumbs.unshift(getSbcStaffDashboardBreadcrumb())
-    } else if (this.isRoleStaff) {
+    } else if (IsAuthorized(AuthorizedActions.STAFF_BREADCRUMBS)) {
       // set StaffDashboard as Home crumb
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
@@ -642,7 +642,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!this.isRoleStaff && !this.isSbcStaff) { // if not staff
+
+    // do this except if we are authorized to skip it
+    if (!IsAuthorized(AuthorizedActions.BLANK_COMPLETING_PARTY)) {
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
@@ -659,7 +661,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         phone: this.getUserPhone
       }
     } else {
-      // if staff role then set blank completing party
       completingParty = {
         firstName: '',
         lastName: '',
@@ -723,11 +724,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // Now that we know what type of filing this is, and what the user's roles are,
       // add staff check for certain filings.
       // FUTURE: enable this?
-      // if (this.isContinuationInFiling && !this.isRoleStaff) {
+      // if (this.isContinuationInFiling && !IsAuthorized(AuthorizedActions.CONTINUATION_IN_FILING)) {
       //   this.accountAuthorizationDialog = true
       //   throw new Error('Only staff can access Continuation In filings')
       // }
-      // if (this.isRestorationFiling && !this.isRoleStaff) {
+      // if (this.isRestorationFiling && !IsAuthorized(AuthorizedActions.RESTORATION_FILING)) {
       //   this.accountAuthorizationDialog = true
       //   throw new Error('Only staff can access Restoration filings')
       // }
@@ -828,8 +829,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setFeePrices(filingFees)
 
       // set current profile name to store for field pre population
-      // do this only if we are not staff
-      if (userInfo && !this.isRoleStaff && !this.isSbcStaff) {
+      // do this except if we are authorized to skip it
+      if (userInfo && !IsAuthorized(AuthorizedActions.BLANK_CERTIFY_STATE)) {
         // pre-populate Certified By name
         this.setCertifyState(
           {
@@ -923,6 +924,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async handleDraftWithTempId (tempId: string): Promise<void> {
     // ensure user is authorized to use this IA
     await this.checkAuth(tempId).catch(error => {
+      console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error
     })
@@ -1139,7 +1141,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      // set folio number from auth info
+      // set Folio Number from auth info
       // (for an incorporation, this is set in IncorporationDefineCompany.vue)
       // (for a registration, this is set in RegistrationDefineBusiness.vue)
       this.setFolioNumber(folioNumber)

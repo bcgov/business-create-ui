@@ -68,7 +68,7 @@
           </ul>
         </div>
 
-        <template v-if="!isRoleStaff">
+        <template v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)">
           <p class="font-14">
             If this error persists, please contact us:
           </p>
@@ -120,7 +120,9 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import { AuthorizedActions } from '@/enums'
 import { FilingTypes } from '@bcrs-shared-components/enums'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -128,8 +130,11 @@ import { FilingTypes } from '@bcrs-shared-components/enums'
   }
 })
 export default class SaveErrorDialog extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) isContinuationInAuthorization!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) getFilingType!: FilingTypes
 
   /** Prop to display the dialog. */

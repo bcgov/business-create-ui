@@ -103,29 +103,32 @@
       </article>
     </template>
 
-    <v-divider class="mx-6" />
+    <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
+    <template v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
+      <v-divider class="mx-6" />
 
-    <!-- Folio Number -->
-    <article class="section-container">
-      <v-row no-gutters>
-        <v-col
-          cols="12"
-          sm="3"
-          class="pr-4"
-        >
-          <label>Folio or Reference Number</label>
-        </v-col>
+      <!-- Folio Number -->
+      <article class="section-container">
+        <v-row no-gutters>
+          <v-col
+            cols="12"
+            sm="3"
+            class="pr-4"
+          >
+            <label>Folio or Reference Number</label>
+          </v-col>
 
-        <v-col
-          cols="12"
-          sm="9"
-        >
-          <div id="lbl-folio-number">
-            {{ getFolioNumber || '(Not entered)' }}
-          </div>
-        </v-col>
-      </v-row>
-    </article>
+          <v-col
+            cols="12"
+            sm="9"
+          >
+            <div id="lbl-folio-number">
+              {{ getFolioNumber || '(Not entered)' }}
+            </div>
+          </v-col>
+        </v-row>
+      </article>
+    </template>
 
     <template v-if="showContactInfo">
       <v-divider class="mx-6" />
@@ -157,6 +160,8 @@ import { CommonMixin, DateMixin } from '@/mixins'
 import { isEmpty } from 'lodash'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
+import { AuthorizedActions } from '@/enums'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -167,6 +172,10 @@ import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   }
 })
 export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string

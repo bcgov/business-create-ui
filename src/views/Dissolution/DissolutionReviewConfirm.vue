@@ -245,7 +245,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :showCustodianEmail="true"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
@@ -259,8 +259,9 @@
       </v-card>
     </section>
 
-    <!-- Transactional Folio Number -->
+    <!-- Transactional Folio Number (mutually exclusive with Staff Payment) -->
     <section
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-number-section"
       class="mt-10"
     >
@@ -310,14 +311,14 @@
           :class="{ 'invalid-section': isCertifyInvalid }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -350,7 +351,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -385,18 +386,10 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RouteNames } from '@/enums'
-import {
-  ContactPointIF,
-  CertifyIF,
-  CourtOrderStepIF,
-  CreateResolutionIF,
-  CreateResolutionResourceIF,
-  DocumentDeliveryIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  UploadAffidavitIF
-} from '@/interfaces'
+import { AuthorizedActions, RouteNames } from '@/enums'
+import { ContactPointIF, CertifyIF, CourtOrderStepIF, CreateResolutionIF, CreateResolutionResourceIF,
+  DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF, UploadAffidavitIF } from '@/interfaces'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -414,6 +407,11 @@ import {
   }
 })
 export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+  readonly RouteNames = RouteNames
+
   // Global getters
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
@@ -434,7 +432,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
   @Getter(useStore) isEntityCoop!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -448,9 +445,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
-
-  // Enum for template
-  readonly RouteNames = RouteNames
 
   // Local variable
   isDissolutionCustodianValid = false

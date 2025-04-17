@@ -3,7 +3,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep, isEqual } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { PartyTypes, RoleTypes, RuleIds } from '@/enums'
+import { AuthorizedActions, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AddressIF, BusinessLookupIF, ConfirmDialogType, EmptyBusinessLookup,
   FormIF, OrgPersonIF, PeopleAndRolesResourceIF, RegistrationStateIF, RolesIF } from '@/interfaces'
@@ -12,6 +12,7 @@ import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
 import { LegalServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 /**
  * Mixin that provides common add/edit org/person methods.
@@ -25,6 +26,19 @@ export default class AddEditOrgPersonMixin extends Vue {
     deliveryAddressNew: any
     confirmDialog: ConfirmDialogType
   }
+
+  // For components that import this mixin
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
+  // Person Address schema for template
+  readonly PersonAddressSchema = PersonAddressSchema
+
+  // Enums and rules for template
+  readonly CorpTypeCd = CorpTypeCd
+  readonly RoleTypes = RoleTypes
+  readonly PartyTypes = PartyTypes
+  readonly Rules = Rules
 
   @Prop({ required: true }) readonly initialValue!: OrgPersonIF
   @Prop({ required: true }) readonly activeIndex!: number // is NaN for new org/person
@@ -40,8 +54,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
   @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
@@ -65,15 +77,6 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Model value for roles checboxes. */
   selectedRoles = [] as Array<RoleTypes>
-
-  // Person Address schema for template
-  readonly PersonAddressSchema = PersonAddressSchema
-
-  // Enums and rules for template
-  readonly CorpTypeCd = CorpTypeCd
-  readonly RoleTypes = RoleTypes
-  readonly PartyTypes = PartyTypes
-  readonly Rules = Rules
 
   /** Whether a Completing Party is required. */
   get requireCompletingParty (): boolean {
@@ -154,8 +157,12 @@ export default class AddEditOrgPersonMixin extends Vue {
 
     const showCompletingParty = this.orgPerson.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
     // either this is the completing party,
-    // or this is staff adding/editing a person
-    return (showCompletingParty || (this.isRoleStaff && this.isPerson))
+    // or must be authorized to add/edit a person
+    return (
+      showCompletingParty ||
+      (IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY) && this.isPerson) ||
+      (IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY) && this.isPerson)
+    )
   }
 
   /** Whether the Incorporator role should be shown. */
@@ -181,8 +188,11 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   /** Whether the Completing Party role should be disabled. */
   get disableCompletingPartyRole (): boolean {
-    // only staff can edit Completing Party role
-    return !this.isRoleStaff
+    // must be authorized to edit Completing Party role
+    return (
+      !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY) &&
+      !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
+    )
   }
 
   /** Whether the Incorporator role should be disabled. */
