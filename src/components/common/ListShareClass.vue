@@ -120,7 +120,9 @@
                         :disabled="!row.item.hasRightsOrRestrictions"
                         @click="emitAddSeries(row.index)"
                       >
-                        <v-list-item-subtitle><v-icon>mdi-playlist-plus</v-icon> Add Series</v-list-item-subtitle>
+                        <v-list-item-subtitle class="actions-item-subtitle">
+                          <v-icon>mdi-playlist-plus</v-icon> Add Series
+                        </v-list-item-subtitle>
                       </v-list-item>
                       <v-list-item
                         class="actions-dropdown_item"
@@ -128,7 +130,7 @@
                         :disabled="isMoveDisabled(row.index, 'up')"
                         @click="moveIndex(row.index, 'up')"
                       >
-                        <v-list-item-subtitle class="move-up-selector">
+                        <v-list-item-subtitle class="actions-item-subtitle">
                           <v-icon>mdi-arrow-up</v-icon> Move Up
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -138,7 +140,7 @@
                         :disabled="isMoveDisabled(row.index, 'down')"
                         @click="moveIndex(row.index, 'down')"
                       >
-                        <v-list-item-subtitle class="move-down-selector">
+                        <v-list-item-subtitle class="actions-item-subtitle">
                           <v-icon>mdi-arrow-down</v-icon> Move Down
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -146,7 +148,9 @@
                         class="actions-dropdown_item"
                         @click="emitRemoveClass(row.index)"
                       >
-                        <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
+                        <v-list-item-subtitle class="actions-item-subtitle">
+                          <v-icon>mdi-delete</v-icon> Remove
+                        </v-list-item-subtitle>
                       </v-list-item>
                     </v-list>
                   </v-menu>
@@ -210,7 +214,7 @@
                         :disabled="isMoveDisabled(row.index, 'up', index)"
                         @click="moveIndex(row.index, 'up', index)"
                       >
-                        <v-list-item-subtitle class="move-up-selector">
+                        <v-list-item-subtitle class="actions-item-subtitle">
                           <v-icon>mdi-arrow-up</v-icon> Move Up
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -220,7 +224,7 @@
                         :disabled="isMoveDisabled(row.index, 'down', index)"
                         @click="moveIndex(row.index, 'down', index)"
                       >
-                        <v-list-item-subtitle class="move-down-selector">
+                        <v-list-item-subtitle class="actions-item-subtitle">
                           <v-icon>mdi-arrow-down</v-icon> Move Down
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -228,7 +232,9 @@
                         class="actions-dropdown_item"
                         @click="emitRemoveSeries(row.index, index)"
                       >
-                        <v-list-item-subtitle><v-icon>mdi-delete</v-icon> Remove</v-list-item-subtitle>
+                        <v-list-item-subtitle class="actions-item-subtitle">
+                          <v-icon>mdi-delete</v-icon> Remove
+                        </v-list-item-subtitle>
                       </v-list-item>
                     </v-list>
                   </v-menu>
@@ -429,8 +435,13 @@ tbody {
   }
 
   .actions-dropdown_item {
-    min-height: 0!important;
+    min-height: 0 !important;
     margin: 1rem 0;
+
+    .v-icon,
+    .actions-item-subtitle {
+      color: $app-blue !important;
+    }
   }
 }
 
