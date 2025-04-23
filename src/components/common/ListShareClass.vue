@@ -130,7 +130,7 @@
                         :disabled="isMoveDisabled(row.index, 'up')"
                         @click="moveIndex(row.index, 'up')"
                       >
-                        <v-list-item-subtitle class="actions-item-subtitle">
+                        <v-list-item-subtitle class="actions-item-subtitle move-up-selector">
                           <v-icon>mdi-arrow-up</v-icon> Move Up
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -140,7 +140,7 @@
                         :disabled="isMoveDisabled(row.index, 'down')"
                         @click="moveIndex(row.index, 'down')"
                       >
-                        <v-list-item-subtitle class="actions-item-subtitle">
+                        <v-list-item-subtitle class="actions-item-subtitle move-down-selector">
                           <v-icon>mdi-arrow-down</v-icon> Move Down
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -214,7 +214,7 @@
                         :disabled="isMoveDisabled(row.index, 'up', index)"
                         @click="moveIndex(row.index, 'up', index)"
                       >
-                        <v-list-item-subtitle class="actions-item-subtitle">
+                        <v-list-item-subtitle class="actions-item-subtitle move-up-selector">
                           <v-icon>mdi-arrow-up</v-icon> Move Up
                         </v-list-item-subtitle>
                       </v-list-item>
@@ -224,7 +224,7 @@
                         :disabled="isMoveDisabled(row.index, 'down', index)"
                         @click="moveIndex(row.index, 'down', index)"
                       >
-                        <v-list-item-subtitle class="actions-item-subtitle">
+                        <v-list-item-subtitle class="actions-item-subtitle move-down-selector">
                           <v-icon>mdi-arrow-down</v-icon> Move Down
                         </v-list-item-subtitle>
                       </v-list-item>
