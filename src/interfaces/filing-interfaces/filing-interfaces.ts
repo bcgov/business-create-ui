@@ -236,7 +236,7 @@ export interface DissolutionFilingIF {
     date: string
     effectiveDate?: string // Optional and should be set only for future effective filings
     filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
-    folioNumber?: string // Optional - applies to diss reg ccounts or diss BCOL staff payments (not both)
+    folioNumber?: string // Optional - applies to diss reg accounts or diss BCOL staff payments (not both)
     isTransactionalFolioNumber?: boolean // Optional
     isFutureEffective: boolean
     documentOptionalEmail?: string // Optional for staff to provide user email
