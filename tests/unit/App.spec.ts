@@ -314,12 +314,12 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
         }
       })))
 
-    // GET authorizations (role)
+    // GET authorizations (roles)
     get.withArgs('https://auth.api.url/entities/T7654321/authorizations')
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: ['edit', 'view']
+          roles: ['view']
         }
       })))
 
@@ -368,11 +368,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       router,
       vuetify,
       stubs: { Affix: true }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -465,7 +460,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
         }
       })))
 
-    // GET authorizations (role)
+    // GET authorizations (roles)
     get.withArgs('https://auth.api.url/entities/T1234567/authorizations')
       .returns(new Promise(resolve => resolve({
         data:
@@ -515,11 +510,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       router,
       vuetify,
       stubs: { Affix: true, ConfirmDialog }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -696,7 +686,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         }
       })))
 
-    // GET authorizations (role)
+    // GET authorizations (roles)
     get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
       .returns(new Promise(resolve => resolve({
         data:
@@ -879,11 +869,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       stubs: { Affix: true }
     })
 
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
-    })
-
     // wait for all queries to complete
     await flushPromises()
   })
@@ -952,7 +937,7 @@ describe('Restoration - App page', () => {
         }
       })))
 
-    // GET authorizations (role)
+    // GET authorizations (roles)
     get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
       .returns(new Promise(resolve => resolve({
         data:
@@ -1079,11 +1064,6 @@ describe('Restoration - App page', () => {
       stubs: { Affix: true }
     })
 
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
-    })
-
     // wait for all queries to complete
     await flushPromises()
   })
@@ -1125,7 +1105,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          keycloakRoles: []
+          authRoles: []
         }
       }
     )
@@ -1153,7 +1133,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          keycloakRoles: []
+          authRoles: []
         }
       }
     )
@@ -1183,7 +1163,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          keycloakRoles: []
+          authRoles: []
         }
       }
     )
@@ -1211,7 +1191,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          keycloakRoles: []
+          authRoles: []
         }
       }
     )

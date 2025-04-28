@@ -6,7 +6,7 @@ import { useStore } from '@/store/store'
 import { mount, shallowMount } from '@vue/test-utils'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
-import { AmlRoles, AmlTypes, FilingStatus } from '@/enums'
+import { AmlRoles, AmlTypes, AuthorizationRoles, FilingStatus } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
@@ -32,7 +32,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as staff', async () => {
     // set state
-    store.setKeycloakRoles(['staff'])
+    store.setAuthRoles([AuthorizationRoles.STAFF])
     await Vue.nextTick()
 
     // verify components
@@ -47,7 +47,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as non-staff', async () => {
     // set state
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
     await Vue.nextTick()
 
     // verify components
@@ -202,7 +202,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })
@@ -265,7 +265,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   it('saves an amalgamating business - BC - unaffiliated - non-staff', async () => {
     // set state
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
     await Vue.nextTick()
 
     // open panel
@@ -611,7 +611,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })

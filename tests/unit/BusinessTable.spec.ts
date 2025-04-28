@@ -134,7 +134,7 @@ describe('Business Table - display', () => {
           },
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: []
+            authRoles: []
           }
         }
       )
@@ -307,7 +307,7 @@ describe.skip('Business Table - rule evaluation', () => {
           amalgamatingBusinesses: [{ /* dummy business */ }]
         },
         tombstone: {
-          keycloakRoles: ['staff']
+          authRoles: ['staff']
         }
       }
     )

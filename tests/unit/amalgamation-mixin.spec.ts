@@ -3,7 +3,7 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { AmalgamationTypes, AmlStatuses, AmlTypes, FilingTypes } from '@/enums'
+import { AmalgamationTypes, AmlStatuses, AmlTypes, AuthorizationRoles, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
@@ -26,15 +26,15 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "notAffiliated" rule', () => {
     // init
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify rule
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBe(AmlStatuses.ERROR_NOT_AFFILIATED)
 
     // verify staff only
-    store.setKeycloakRoles(['staff'])
+    store.setAuthRoles([AuthorizationRoles.STAFF])
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBeNull()
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify not LEAR only
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.FOREIGN, addresses: null })).toBeNull()
@@ -67,15 +67,15 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "notInGoodStanding" rule', () => {
     // init
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify rule
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.LEAR, isNotInGoodStanding: true })).toBe(AmlStatuses.ERROR_NOT_IN_GOOD_STANDING)
 
     // verify staff only
-    store.setKeycloakRoles(['staff'])
+    store.setAuthRoles([AuthorizationRoles.STAFF])
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.LEAR, isNotInGoodStanding: null })).toBeNull()
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify not LEAR only
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.FOREIGN, isNotInGoodStanding: true })).toBeNull()
@@ -86,15 +86,15 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "limitedRestoration" rule', () => {
     // init
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify rule
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.LEAR, isLimitedRestoration: true })).toBe(AmlStatuses.ERROR_LIMITED_RESTORATION)
 
     // verify staff only
-    store.setKeycloakRoles(['staff'])
+    store.setAuthRoles([AuthorizationRoles.STAFF])
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.LEAR, isLimitedRestoration: null })).toBeNull()
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify not LEAR only
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.FOREIGN, isLimitedRestoration: true })).toBeNull()
@@ -138,15 +138,15 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "foreign" rule', () => {
     // init
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify rule
     expect(wrapper.vm.foreign({ type: AmlTypes.FOREIGN })).toBe(AmlStatuses.ERROR_FOREIGN)
 
     // verify staff only
-    store.setKeycloakRoles(['staff'])
+    store.setAuthRoles([AuthorizationRoles.STAFF])
     expect(wrapper.vm.foreign({ type: AmlTypes.FOREIGN })).toBeNull()
-    store.setKeycloakRoles([])
+    store.setAuthRoles([])
 
     // verify not FOREIGN only
     expect(wrapper.vm.foreign({ type: AmlTypes.LEAR })).toBeNull()

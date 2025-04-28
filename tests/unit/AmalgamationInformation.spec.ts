@@ -49,7 +49,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: ['staff']
           }
         },
         null,
@@ -95,7 +95,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: ['staff']
           }
         },
         null,
@@ -139,7 +139,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: ['staff']
           }
         },
         null,

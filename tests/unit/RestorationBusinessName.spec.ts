@@ -46,7 +46,7 @@ for (const test of restorationBusinessInfo) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: { authRoles: ['staff'] }
         },
         null,
         RestorationResources

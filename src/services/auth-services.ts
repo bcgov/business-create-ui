@@ -15,7 +15,7 @@ export default class AuthServices {
   /**
    * Fetches authorizations of the specified entity.
    * @param id the temp or business identifier (eg, T1234567 or BC1219948)
-   * @returns a promise to return the roles object
+   * @returns a promise to return the authorizations object
    */
   static async fetchAuthorizations (id: string): Promise<any> {
     if (!id) throw new Error('Invalid id')
@@ -24,7 +24,7 @@ export default class AuthServices {
     const url = `${authApiUrl}entities/${id}/authorizations`
 
     return axios.get(url).then(response => {
-      if (response?.data?.roles) return response.data.roles
+      if (response?.data) return response.data
       throw new Error('Invalid response data')
     })
   }

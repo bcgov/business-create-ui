@@ -5,12 +5,13 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'
+import { AuthorizationRoles } from '@/enums'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
 store.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
-store.stateModel.tombstone.keycloakRoles = ['staff']
+store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
 store.stateModel.completingParty = {
   firstName: 'Wira',
   middleName: 'Rosmunda',

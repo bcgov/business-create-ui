@@ -30,7 +30,7 @@ for (const test of amalgamationRegularBusinessInfo) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: { authRoles: ['staff'] }
         },
         null,
         null

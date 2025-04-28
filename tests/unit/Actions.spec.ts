@@ -231,7 +231,7 @@ describe('Emits error event if NR validation fails in file and pay', () => {
     store.stateModel.tombstone = {
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
-      keycloakRoles: []
+      authRoles: []
     } as TombstoneIF
     store.stateModel.certifyState = {
       valid: true,
@@ -492,7 +492,7 @@ describe('Actions component - Filing Functionality', () => {
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
       folioNumber: '123456',
-      keycloakRoles: []
+      authRoles: []
     } as TombstoneIF
     store.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
     store.stateModel.businessContact = {
