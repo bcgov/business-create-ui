@@ -1286,7 +1286,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
     const authorizations = await AuthServices.fetchAuthorizations(id)
-    const authRoles: AuthorizationRoles = authorizations.roles || []
+    const authRoles: Array<AuthorizationRoles> = authorizations.roles || []
 
     if (!Array.isArray(authRoles)) {
       throw new Error('Invalid auth roles')
