@@ -72,7 +72,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityFirm!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) getResolutions!: ResolutionIF[]
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
@@ -338,15 +337,15 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Folio Number exists then restore it
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with staff Role
+    if (!this.isRoleStaff) {
+      // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
@@ -575,13 +574,13 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       this.parseStaffPayment({ header: { waiveFees: true } } as any)
     } else if (this.isRoleStaff) {
       // otherwise, restore normal Staff Payment data
-      // (NB: Staff role is mutually exclusive with premium account.)
+      // NB: Staff Role is mutually exclusive with Folio Number
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Folio Number exists then restore it
-    // (NB: Premium account is mutually exclusive with staff role.)
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
+      // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
@@ -809,15 +808,15 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Folio Number exists then restore it
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
+      // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
@@ -875,13 +874,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
 
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       this.buildFolioNumber(filing)
     }
 
@@ -954,13 +954,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         break
     }
 
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
 
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       this.buildFolioNumber(filing)
     }
 
@@ -1038,15 +1039,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // do not restore Fee Acknowledgement
     this.setRegistrationFeeAcknowledgement(false)
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Transactional Folio Number exists then restore it
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
@@ -1137,15 +1137,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // if this is a premium account and Transactional Folio Number exists then restore it
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
@@ -1282,18 +1281,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       if (this.getDocumentDelivery.documentOptionalEmail) {
         filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
       }
-
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
 
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       this.buildFolioNumber(filing)
     }
 
@@ -1385,17 +1383,16 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
 
-    // NB: Staff role is mutually exclusive with premium account.
+    // NB: Staff Role is mutually exclusive with Folio Number
     if (this.isRoleStaff) {
       // restore document optional email
       this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
-
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Premium account is mutually exclusive with staff role.
-    if (this.isPremiumAccount) {
+    // NB: Folio Number is mutually exclusive with Staff Role
+    if (!this.isRoleStaff) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)

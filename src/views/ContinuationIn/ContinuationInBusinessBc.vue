@@ -85,7 +85,6 @@
 
     <!-- Folio / Reference Number -->
     <section
-      v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
@@ -154,7 +153,6 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
@@ -183,7 +181,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
       validAuthorizationInfo: this.authorizationInfoValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
-      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
+      validFolioReferenceNumber: this.getFolioNumberValid
     }
   }
 
@@ -243,7 +241,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
       this.authorizationInfoValid &&
       this.addressFormValid &&
       this.businessContactFormValid &&
-      (!this.isPremiumAccount || this.getFolioNumberValid)
+      this.getFolioNumberValid
     )
   }
 

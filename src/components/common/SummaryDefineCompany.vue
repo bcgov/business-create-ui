@@ -186,17 +186,15 @@
         />
       </article>
 
-      <!-- Folio or Reference Number -->
-      <template v-if="isPremiumAccount">
-        <v-divider class="mx-6" />
+      <v-divider class="mx-6" />
 
-        <article class="section-container">
-          <FolioNumber
-            :initialValue="getFolioNumber"
-            :isEditing="false"
-          />
-        </article>
-      </template>
+      <!-- Folio or Reference Number -->
+      <article class="section-container">
+        <FolioNumber
+          :initialValue="getFolioNumber"
+          :isEditing="false"
+        />
+      </article>
     </section>
   </div>
 </template>
@@ -242,7 +240,6 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isEntityBcCcc!: boolean
   @Getter(useStore) isEntityBcUlcCompany!: boolean
   @Getter(useStore) isEntityCccContinueIn!: boolean

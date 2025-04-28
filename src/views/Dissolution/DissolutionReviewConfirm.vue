@@ -261,7 +261,6 @@
 
     <!-- Transactional Folio Number -->
     <section
-      v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
@@ -435,7 +434,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
   @Getter(useStore) isEntityCoop!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   // Global actions

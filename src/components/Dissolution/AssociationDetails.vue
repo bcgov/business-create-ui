@@ -103,31 +103,29 @@
       </article>
     </template>
 
+    <v-divider class="mx-6" />
+
     <!-- Folio Number -->
-    <template v-if="isPremiumAccount">
-      <v-divider class="mx-6" />
+    <article class="section-container">
+      <v-row no-gutters>
+        <v-col
+          cols="12"
+          sm="3"
+          class="pr-4"
+        >
+          <label>Folio or Reference Number</label>
+        </v-col>
 
-      <article class="section-container">
-        <v-row no-gutters>
-          <v-col
-            cols="12"
-            sm="3"
-            class="pr-4"
-          >
-            <label>Folio or Reference Number</label>
-          </v-col>
-
-          <v-col
-            cols="12"
-            sm="9"
-          >
-            <div id="lbl-folio-number">
-              {{ getFolioNumber || '(Not entered)' }}
-            </div>
-          </v-col>
-        </v-row>
-      </article>
-    </template>
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <div id="lbl-folio-number">
+            {{ getFolioNumber || '(Not entered)' }}
+          </div>
+        </v-col>
+      </v-row>
+    </article>
 
     <template v-if="showContactInfo">
       <v-divider class="mx-6" />
@@ -183,7 +181,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) isPremiumAccount!: boolean
 
   // Global setters
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void

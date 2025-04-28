@@ -340,11 +340,6 @@ export const useStore = defineStore('store', {
       )
     },
 
-    /** Whether the current account is a premium account. */
-    isPremiumAccount (): boolean {
-      return (this.getAccountInformation.accountType === AccountTypes.PREMIUM)
-    },
-
     /** Whether the user is SBC Staff (which is not the same as Staff). */
     isSbcStaff (): boolean {
       return (this.getAccountInformation.accountType === AccountTypes.SBC_STAFF)
@@ -650,9 +645,6 @@ export const useStore = defineStore('store', {
       const isDocumentDeliveryValid = this.getDocumentDelivery.valid
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
 
-      // only for Premium account
-      const isTransactionalFnValid = !this.isPremiumAccount || this.getTransactionalFolioNumberValid
-
       // only for Staff role
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
@@ -667,12 +659,12 @@ export const useStore = defineStore('store', {
       if (this.isEntityFirm) {
         return (
           isDocumentDeliveryValid &&
-            isTransactionalFnValid &&
-            isCertifyValid &&
-            isCourtOrderValid &&
-            isStaffPaymentValid &&
-            isDissolutionDateValid &&
-            isCompletingPartyValid
+          this.getTransactionalFolioNumberValid &&
+          isCertifyValid &&
+          isCourtOrderValid &&
+          isStaffPaymentValid &&
+          isDissolutionDateValid &&
+          isCompletingPartyValid
         )
       }
       return (
@@ -680,7 +672,7 @@ export const useStore = defineStore('store', {
         this.isAffidavitValid &&
         this.isResolutionValid &&
         isDocumentDeliveryValid &&
-        isTransactionalFnValid &&
+        this.getTransactionalFolioNumberValid &&
         isCertifyValid &&
         isEffectiveDateTimeValid &&
         isCourtOrderValid &&
@@ -713,7 +705,6 @@ export const useStore = defineStore('store', {
         this.isAmalgamationFilingVertical ||
         this.isCreateShareStructureValid
       )
-      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
       const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
       const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
@@ -724,7 +715,7 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid &&
         isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
-        isFolioNumberValid &&
+        this.getFolioNumberValid &&
         this.getAmalgamationCourtApprovalValid &&
         isCourtOrderValid &&
         isCertifyValid &&

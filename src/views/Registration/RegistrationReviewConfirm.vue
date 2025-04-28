@@ -74,7 +74,6 @@
 
     <!-- Transactional Folio Number -->
     <section
-      v-if="isPremiumAccount"
       id="folio-section"
       class="mt-10"
     >
@@ -205,7 +204,6 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isEntityPartnership!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 

@@ -6,38 +6,32 @@ import { DissolutionResources } from '@/resources/'
 const reviewConfirmTestCases = [
   {
     entityType: 'CP',
-    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'CP',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'CP',
-    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'BEN',
-    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'BEN',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'BEN',
-    isPremium: false,
     isStaff: false
   }
 ]
 
 for (const test of reviewConfirmTestCases) {
-  const type = test.isPremium ? 'premium' : test.isStaff ? 'staff' : 'regular'
+  const type = test.isStaff ? 'staff' : 'regular'
 
   describe(`Review Confirm view for a ${test.entityType} as a ${type} user`, () => {
     let wrapper: any
@@ -116,19 +110,19 @@ for (const test of reviewConfirmTestCases) {
       wrapper.destroy()
     })
 
-    it('displays Folio Number section only for premium', () => {
+    it('displays Folio Number section', () => {
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
         {
           entityType: test.entityType,
-          accountInformation: { accountType: test.isPremium ? 'PREMIUM' : 'BASIC' }
+          accountInformation: { accountType: 'PREMIUM' }
         },
         null,
         DissolutionResources
       )
 
-      expect(wrapper.find('#folio-number-section').exists()).toBe(test.isPremium)
+      expect(wrapper.find('#folio-number-section').exists()).toBe(true)
 
       wrapper.destroy()
     })

@@ -101,18 +101,16 @@
         </v-row>
       </article>
 
-      <!-- Folio or Reference Number -->
-      <template v-if="isPremiumAccount">
-        <!-- DISABLED PER TICKET # 12306 -->
-        <!-- <v-divider class="mx-6" />
+      <!-- DISABLED PER TICKET # 12306 -->
+      <!-- <v-divider class="mx-6" /> -->
 
-        <article class="section-container">
-          <FolioNumber
-            :initialValue="getFolioNumber"
-            :isEditing="false"
-          />
-        </article> -->
-      </template>
+      <!-- Folio or Reference Number -->
+      <!-- <article class="section-container">
+        <FolioNumber
+          :initialValue="getFolioNumber"
+          :isEditing="false"
+        />
+      </article> -->
 
       <v-divider class="mx-6" />
 
@@ -164,7 +162,6 @@ export default class DefineRegistrationSummary extends Mixins(DateMixin) {
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getRegistration!: RegistrationStateIF
-  @Getter(useStore) isPremiumAccount!: boolean
 
   /** The entity description. */
   get entityDescription (): string {
