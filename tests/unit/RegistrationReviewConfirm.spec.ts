@@ -6,38 +6,32 @@ import { RegistrationResources } from '@/resources'
 const reviewConfirmTestCases = [
   {
     entityType: 'SP',
-    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'SP',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'SP',
-    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'GP',
-    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'GP',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'GP',
-    isPremium: false,
     isStaff: true
   }
 ]
 
 for (const test of reviewConfirmTestCases) {
-  const type = test.isPremium ? 'premium' : test.isStaff ? 'staff' : 'regular'
+  const type = test.isStaff ? 'staff' : 'regular'
 
   describe(`Registration Review and Confirm view for a ${test.entityType} as a ${type} user`, () => {
     let wrapper: any
@@ -70,19 +64,19 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
     })
 
-    it('displays Folio number section for premium users', () => {
+    it('displays Folio number section', () => {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
         {
           entityType: test.entityType,
-          accountInformation: { accountType: test.isPremium ? 'PREMIUM' : 'BASIC' }
+          accountInformation: { accountType: 'PREMIUM' }
         },
         null,
         RegistrationResources
       )
 
-      expect(wrapper.find('#folio-section').exists()).toBe(test.isPremium)
+      expect(wrapper.find('#folio-section').exists()).toBe(true)
     })
 
     it('displays Staff Payment section only for staff', () => {

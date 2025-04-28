@@ -10,6 +10,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
+import FolioNumber from '@/components/common/FolioNumber.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import ListResolutions from '@/components/common/ListResolutions.vue'
@@ -102,15 +103,21 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    it('displays Amalgamation Statement section', () => {
+    it('displays Folio Number section', () => {
       const section = wrapper.findAll('section').at(3)
+      expect(section.find('header h2').text()).toBe('Folio or Reference Number for this Filing')
+      expect(section.findComponent(FolioNumber).exists()).toBe(true)
+    })
+
+    it('displays Amalgamation Statement section', () => {
+      const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
       expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
     it('displays Court Order and Plan of Arrangement section', () => {
-      const section = wrapper.findAll('section').at(4)
+      const section = wrapper.findAll('section').at(5)
       expect(section.find('header h2').text()).toBe('Court Order and Plan of Arrangement')
       expect(section.find('p').text()).toContain('If this filing is pursuant to a court order,')
       expect(section.find('p').text()).toContain('enter the court order number.')
@@ -118,7 +125,7 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays Certify section', () => {
-      const section = wrapper.findAll('section').at(5)
+      const section = wrapper.findAll('section').at(6)
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('p').text()).toContain('Confirm the legal name of the person authorized')
       expect(section.find('p').text()).toContain('to complete and submit this application.')
@@ -126,7 +133,7 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays Staff Payment section', () => {
-      const section = wrapper.findAll('section').at(6)
+      const section = wrapper.findAll('section').at(7)
       expect(section.find('header h2').text()).toBe('Staff Payment')
       expect(section.findComponent(StaffPayment).exists()).toBe(true)
     })
@@ -203,15 +210,21 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    it('displays Amalgamation Statement section', () => {
+    it('displays Folio Number section', () => {
       const section = wrapper.findAll('section').at(3)
+      expect(section.find('header h2').text()).toBe('Folio or Reference Number for this Filing')
+      expect(section.findComponent(FolioNumber).exists()).toBe(true)
+    })
+
+    it('displays Amalgamation Statement section', () => {
+      const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
       expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
     it('displays Certify section', () => {
-      const section = wrapper.findAll('section').at(4)
+      const section = wrapper.findAll('section').at(5)
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('p').text()).toContain('Confirm the legal name of the person authorized')
       expect(section.find('p').text()).toContain('to complete and submit this application.')

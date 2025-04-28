@@ -146,7 +146,7 @@
 
     <!-- Folio / Reference Number -->
     <section
-      v-if="isEntityType && isPremiumAccount"
+      v-if="isEntityType"
       class="mt-10"
     >
       <header id="folio-number-header">
@@ -210,7 +210,6 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void

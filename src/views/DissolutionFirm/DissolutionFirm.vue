@@ -137,7 +137,6 @@
 
     <!-- Folio or Reference Number -->
     <section
-      v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
@@ -353,7 +352,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isEntityFirm: boolean
   @Getter(useStore) isEntitySoleProp: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
   @Getter(useStore) isSbcStaff!: boolean
 

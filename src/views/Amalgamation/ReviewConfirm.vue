@@ -133,7 +133,6 @@
 
     <!-- Folio or Reference Number -->
     <section
-      v-if="isPremiumAccount"
       id="folio-number-section"
       class="mt-10"
     >
@@ -318,7 +317,6 @@ export default class AmalgamationReviewConfirm extends Vue {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
