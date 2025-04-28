@@ -3,6 +3,7 @@ import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { AmalgamationShareStructure } from '@/views'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import ShareStructure from '@/components/common/ShareStructure.vue'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const amalgamationRegularBusinessInfo = [
@@ -30,7 +31,7 @@ for (const test of amalgamationRegularBusinessInfo) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { authRoles: ['staff'] }
+          tombstone: { authRoles: [AuthorizationRoles.STAFF] }
         },
         null,
         null

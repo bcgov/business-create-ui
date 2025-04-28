@@ -14,6 +14,7 @@ import FolioNumber from '@/components/common/FolioNumber.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import ListResolutions from '@/components/common/ListResolutions.vue'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -44,7 +45,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            authRoles: ['staff']
+            authRoles: [AuthorizationRoles.STAFF]
           }
         },
         null,

@@ -19,6 +19,7 @@ import mockRouter from './MockRouter'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
+import { AuthorizationRoles } from '@/enums'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -319,7 +320,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: ['view']
+          roles: [AuthorizationRoles.VIEW]
         }
       })))
 
@@ -465,7 +466,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: ['edit', 'view']
+          roles: [AuthorizationRoles.VIEW]
         }
       })))
 
@@ -691,7 +692,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: ['edit', 'view']
+          roles: [AuthorizationRoles.VIEW]
         }
       })))
 
@@ -942,7 +943,7 @@ describe('Restoration - App page', () => {
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: ['edit', 'view']
+          roles: [AuthorizationRoles.VIEW]
         }
       })))
 
