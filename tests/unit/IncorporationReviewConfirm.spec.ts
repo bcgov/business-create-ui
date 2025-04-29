@@ -4,6 +4,7 @@ import { IncorporationResources } from '@/resources/'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import Certify from '@/components/common/Certify.vue'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -87,7 +88,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         IncorporationResources
@@ -102,7 +103,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         IncorporationResources

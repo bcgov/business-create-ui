@@ -6,6 +6,7 @@ import {
   AccountTypes,
   AmalgamationTypes,
   ApprovalTypes,
+  AuthorizationRoles,
   BusinessTypes,
   CoopTypes,
   DissolutionTypes,
@@ -211,9 +212,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.filingStatus
     },
 
-    /** Whether the user has "staff" Keycloak role. */
+    /** Whether the user has "staff" auth role. */
     isRoleStaff (): boolean {
-      return this.getKeycloakRoles.includes('staff')
+      return this.getAuthRoles.includes(AuthorizationRoles.STAFF)
     },
 
     /** Whether the entity type has been identified. */
@@ -860,9 +861,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.keycloakGuid
     },
 
-    /** The user's roles from the Keycloak token (JWT). */
-    getKeycloakRoles (): Array<string> {
-      return this.stateModel.tombstone.keycloakRoles
+    /** The user's roles from the Auth API "Authorizations" call. */
+    getAuthRoles (): Array<AuthorizationRoles> {
+      return this.stateModel.tombstone.authRoles
     },
 
     /** The user's address. */
@@ -1175,8 +1176,8 @@ export const useStore = defineStore('store', {
     setKeycloakGuid (keycloakGuid: string) {
       this.stateModel.tombstone.keycloakGuid = keycloakGuid
     },
-    setKeycloakRoles (keycloakRoles: Array<string>) {
-      this.stateModel.tombstone.keycloakRoles = keycloakRoles
+    setAuthRoles (roles: Array<AuthorizationRoles>) {
+      this.stateModel.tombstone.authRoles = roles
     },
     setUserAddress (userAddress: AddressIF) {
       this.stateModel.tombstone.userAddress = userAddress

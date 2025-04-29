@@ -267,8 +267,8 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import { NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
-import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, RouteNames,
-  StaffPaymentOptions } from '@/enums'
+import { AuthorizationRoles, EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes,
+  RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
@@ -294,6 +294,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     confirm: ConfirmDialogType
   }
 
+  @Getter(useStore) getAuthRoles!: Array<AuthorizationRoles>
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingData!: Array<FilingDataIF>
   @Getter(useStore) getFilingName!: FilingNames
@@ -322,6 +323,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
+  @Action(useStore) setAuthRoles!: (x: Array<AuthorizationRoles>) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
@@ -335,7 +337,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setGoodStanding!: (x: boolean) => void
   @Action(useStore) setIdentifier!: (x: string) => void
   @Action(useStore) setKeycloakGuid!: (x: string) => void
-  @Action(useStore) setKeycloakRoles!: (x: Array<string>) => void
   @Action(useStore) setLastAddressChangeDate!: (x: string) => void
   @Action(useStore) setLastAnnualReportDate!: (x: string) => void
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
@@ -696,13 +697,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // get Keycloak roles
-      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
-        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
-        this.accountAuthorizationDialog = true
-        throw error // go to catch()
-      })
-
       // handle the filing according to whether we have a business id or temp id
       try {
         // safety checks
@@ -750,7 +744,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       })
 
       // update Launch Darkly
-      await this.updateLaunchDarkly(userInfo, keycloakRoles).catch(error => {
+      await this.updateLaunchDarkly(userInfo).catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
@@ -1185,33 +1179,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return userInfo
   }
 
-  /** Gets Keycloak roles, stores them, and returns them. */
-  private async loadKeycloakRoles (): Promise<string[]> {
-    const jwt = getJWT()
-    const keycloakRoles = (jwt.roles || []) as Array<string>
-    if (keycloakRoles.length < 1) throw new Error('Invalid Keycloak roles')
-    this.setKeycloakRoles(keycloakRoles)
-    return keycloakRoles
-
-    /** Gets Keycloak JWT and parses it. */
-    function getJWT (): any {
-      // get KC token (JWT) from session storage
-      const keycloakToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-      if (!keycloakToken) throw new Error('Error getting Keycloak token')
-
-      // decode and parse the JWT
-      try {
-        const base64Url = keycloakToken.split('.')[1]
-        const base64 = decodeURIComponent(window.atob(base64Url).split('').map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        }).join(''))
-        return JSON.parse(base64)
-      } catch (error) {
-        throw new Error('Error parsing JWT - ' + error)
-      }
-    }
-  }
-
   /**
    * Gets account info and stores it.
    * Among other things, this is how we find out if this is a staff account.
@@ -1272,14 +1239,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Updates Launch Darkly with current user info. */
-  private async updateLaunchDarkly (userInfo: any, keycloakRoles: string[]): Promise<void> {
+  private async updateLaunchDarkly (userInfo: any): Promise<void> {
     // since username is unique, use it as the user key
     const key: string = userInfo.username
     const email: string = userInfo.contacts[0]?.email || userInfo.email
     const firstName: string = userInfo.firstname
     const lastName: string = userInfo.lastname
-    // store Keycloak roles in custom object
-    const custom = { roles: keycloakRoles } as any
+    // store auth roles in custom object
+    const custom = { roles: this.getAuthRoles } as any
 
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
@@ -1318,13 +1285,22 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** Fetches authorizations and verifies roles. */
   private async checkAuth (id: string): Promise<any> {
     // NB: will throw if API error
-    const authRoles = await AuthServices.fetchAuthorizations(id)
+    const authorizations = await AuthServices.fetchAuthorizations(id)
+    const authRoles: Array<AuthorizationRoles> = authorizations.roles || []
 
-    // verify that array has at least one role
-    // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-    if (!Array.isArray(authRoles) || authRoles.length < 1) {
+    if (!Array.isArray(authRoles)) {
       throw new Error('Invalid auth roles')
     }
+
+    // verify that array has "view" or "staff" roles
+    if (
+      !authRoles.includes(AuthorizationRoles.VIEW) &&
+      !authRoles.includes(AuthorizationRoles.STAFF)
+    ) {
+      throw new Error('Invalid auth roles')
+    }
+
+    this.setAuthRoles(authRoles)
   }
 
   /** Fetches and stores parties info . */

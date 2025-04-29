@@ -8,6 +8,7 @@ import { useStore } from '@/store/store'
 import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -330,7 +331,7 @@ describe('Add/Edit Org/Person component', () => {
   })
 
   it('Shows popup if there is already a completing party', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,
@@ -346,11 +347,11 @@ describe('Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$refs.confirmDialog).toBeTruthy()
 
     wrapper.destroy()
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
       validIncorporator,
       NaN,

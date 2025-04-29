@@ -7,6 +7,7 @@ import BusinessType from '@/components/Restoration/BusinessType.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const restorationBusinessInfo = [
@@ -46,7 +47,7 @@ for (const test of restorationBusinessInfo) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: { authRoles: [AuthorizationRoles.STAFF] }
         },
         null,
         RestorationResources

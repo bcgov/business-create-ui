@@ -4,6 +4,7 @@ import { AmalgamationRegResources, AmalgamationShortResources } from '@/resource
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -46,7 +47,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff'] }
+            authRoles: [AuthorizationRoles.STAFF] }
         },
         null,
         AmalgamationRegResources
@@ -82,7 +83,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff'] }
+            authRoles: [AuthorizationRoles.STAFF] }
         },
         null,
         AmalgamationShortResources

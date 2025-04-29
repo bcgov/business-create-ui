@@ -5,6 +5,7 @@ import { useStore } from '@/store/store'
 import { shallowMount, mount } from '@vue/test-utils'
 import SaveErrorDialog from '@/dialogs/SaveErrorDialog.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import { AuthorizationRoles } from '@/enums'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -15,7 +16,7 @@ document.body.setAttribute('data-app', 'true')
 
 describe('Save Error Dialog', () => {
   it('renders the component properly as a staff user with no errors or warnings', () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -35,7 +36,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user with no errors or warnings', () => {
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -57,7 +58,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only errors', () => {
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -84,7 +85,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only warnings', () => {
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -111,7 +112,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are both errors and warnings', () => {
-    store.stateModel.tombstone.keycloakRoles = []
+    store.stateModel.tombstone.authRoles = []
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,

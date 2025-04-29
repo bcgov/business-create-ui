@@ -1,6 +1,7 @@
 import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory'
 import DissolutionReviewConfirm from '@/views/Dissolution/DissolutionReviewConfirm.vue'
 import { DissolutionResources } from '@/resources/'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -147,7 +148,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         DissolutionResources
@@ -164,7 +165,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         DissolutionResources

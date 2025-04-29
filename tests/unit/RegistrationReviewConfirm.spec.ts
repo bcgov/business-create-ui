@@ -1,6 +1,7 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RegistrationReviewConfirm } from '@/views'
 import { RegistrationResources } from '@/resources'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -85,7 +86,7 @@ for (const test of reviewConfirmTestCases) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
+          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
         },
         null,
         RegistrationResources

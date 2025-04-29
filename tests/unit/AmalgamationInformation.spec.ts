@@ -7,6 +7,7 @@ import ResultingBusinessName from '@/components/Amalgamation/ResultingBusinessNa
 import BusinessTypeHelp from '@/components/Amalgamation/BusinessTypeHelp.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -49,7 +50,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: [AuthorizationRoles.STAFF]
           }
         },
         null,
@@ -95,7 +96,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: [AuthorizationRoles.STAFF]
           }
         },
         null,
@@ -139,7 +140,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authRoles: [AuthorizationRoles.STAFF]
           }
         },
         null,

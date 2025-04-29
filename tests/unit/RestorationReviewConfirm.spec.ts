@@ -9,6 +9,7 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
 
 // Test Case Data
 const restorationBusinessInfo = [
@@ -48,7 +49,7 @@ for (const test of restorationBusinessInfo) {
         null,
         {
           entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
+          tombstone: { authRoles: [AuthorizationRoles.STAFF] }
         },
         null,
         RestorationResources

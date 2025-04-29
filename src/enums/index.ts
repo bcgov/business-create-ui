@@ -1,4 +1,5 @@
 export * from './amalgamationEnums'
+export * from './authorizationRoles'
 export * from './bulletListTypes'
 export * from './dissolutionStatementTypes'
 export * from './dissolutionTypes'

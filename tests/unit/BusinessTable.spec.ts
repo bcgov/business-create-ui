@@ -1,4 +1,5 @@
-import { AmalgamationTypes, AmlRoles, AmlStatuses, AmlTypes, FilingTypes } from '@/enums'
+import { AmalgamationTypes, AmlRoles, AmlStatuses, AmlTypes, AuthorizationRoles, FilingTypes }
+  from '@/enums'
 import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -134,7 +135,7 @@ describe('Business Table - display', () => {
           },
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: []
+            authRoles: []
           }
         }
       )
@@ -307,7 +308,7 @@ describe.skip('Business Table - rule evaluation', () => {
           amalgamatingBusinesses: [{ /* dummy business */ }]
         },
         tombstone: {
-          keycloakRoles: ['staff']
+          authRoles: [AuthorizationRoles.STAFF]
         }
       }
     )
