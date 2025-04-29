@@ -56,7 +56,7 @@ export const DissolutionStepsCorp = [
     id: 'step-2-btn',
     step: 2,
     icon: 'mdi-handshake',
-    text: 'Complete\nResolution',
+    text: 'Confirm\nResolution',
     to: RouteNames.DISSOLUTION_RESOLUTION,
     component: Views.DISSOLUTION_RESOLUTION
 
@@ -65,7 +65,7 @@ export const DissolutionStepsCorp = [
     id: 'step-3-btn',
     step: 3,
     icon: 'mdi-book-variant-multiple',
-    text: 'Complete\nAffidavit',
+    text: 'Confirm\nAffidavit',
     to: RouteNames.DISSOLUTION_AFFIDAVIT,
     component: Views.DISSOLUTION_AFFIDAVIT
   },
