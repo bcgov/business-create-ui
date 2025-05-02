@@ -25,10 +25,7 @@
 
       <v-card-text id="dialog-text">
         <!-- display generic message (no errors or warnings) -->
-        <div
-          v-if="(numErrors + numWarnings) < 1"
-          class="font-14"
-        >
+        <div v-if="(numErrors + numWarnings) < 1">
           <p>
             We were unable to save your {{ filingTitle }}. You can continue to try to save this
             {{ filingTitle }} or you can exit without saving and re-create this {{ filingTitle }} at another time.
@@ -39,7 +36,7 @@
         <!-- display errors -->
         <div
           v-if="numErrors > 0"
-          class="font-14 mb-4"
+          class="mb-4"
         >
           <p>We were unable to save your {{ filingTitle }} due to the following errors:</p>
           <ul>
@@ -55,7 +52,7 @@
         <!-- display warnings-->
         <div
           v-if="numWarnings > 0"
-          class="font-14 mb-4"
+          class="mb-4"
         >
           <p>Please note the following warnings:</p>
           <ul>
@@ -69,7 +66,7 @@
         </div>
 
         <template v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)">
-          <p class="font-14">
+          <p>
             If this error persists, please contact us:
           </p>
           <RegistriesContactInfo />
