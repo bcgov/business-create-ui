@@ -23,7 +23,7 @@
         large
         outlined
         color="primary"
-        :disabled="!isEntityType || isBusySaving"
+        :disabled="!isEntityType || isBusySaving || !IsAuthorized(AuthorizedActions.SAVE_DRAFT)"
         :loading="isSaving"
         @click="onClickSave()"
       >
@@ -36,7 +36,7 @@
         large
         outlined
         color="primary"
-        :disabled="!isEntityType || isBusySaving"
+        :disabled="!isEntityType || isBusySaving || !IsAuthorized(AuthorizedActions.SAVE_DRAFT)"
         :loading="isSavingResuming"
         @click="onClickSaveResume()"
       >

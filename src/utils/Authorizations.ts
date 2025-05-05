@@ -73,6 +73,7 @@ const BusinessRegistryStaffRoles = [
   AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX,
   AuthorizedActions.NO_CONTACT_INFO,
   AuthorizedActions.RESTORATION_FILING,
+  AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.STAFF_BREADCRUMBS,
   AuthorizedActions.STAFF_COMMENTS,
   AuthorizedActions.STAFF_PAYMENT,
@@ -92,7 +93,7 @@ const MaximusStaffRoles = []
 const ContactCentreStaffRoles = []
 
 /**
- * The roles if the user is SBC Field  Office Staff.
+ * The roles if the user is SBC Field Office Staff.
  * Ultimately we won't need this list and we'll just check auth roles for everything.
  */
 const SbcFieldOfficeStaffRoles = [
@@ -102,6 +103,7 @@ const SbcFieldOfficeStaffRoles = [
   AuthorizedActions.FILE_AND_PAY,
   AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY,
   AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS,
+  AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.THIRD_PARTY_CERTIFY_STMT
 ]
@@ -111,5 +113,6 @@ const SbcFieldOfficeStaffRoles = [
  * Ultimately we won't need this list and we'll just check auth roles for everything.
  */
 const DefaultRoles = [
-  AuthorizedActions.FILE_AND_PAY
+  AuthorizedActions.FILE_AND_PAY,
+  AuthorizedActions.SAVE_DRAFT
 ]
