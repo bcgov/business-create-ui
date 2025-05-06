@@ -17,7 +17,7 @@
           application now, or you can exit and return to the dashboard.
         </p>
 
-        <template v-if="!isRoleStaff">
+        <template v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)">
           <p class="font-14">
             If this error persists, please contact us:
           </p>
@@ -52,9 +52,9 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
-import { Getter } from 'pinia-class'
-import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import { AuthorizedActions } from '@/enums'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -62,7 +62,9 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
   }
 })
 export default class FetchErrorDialog extends Vue {
-  @Getter(useStore) isRoleStaff!: boolean
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
 
   /** Prop to display the dialog. */
   @Prop({ default: false }) readonly dialog!: boolean

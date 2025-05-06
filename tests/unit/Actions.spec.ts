@@ -11,7 +11,7 @@ import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
-import { FilingStatus, FilingTypes } from '@/enums'
+import { AuthorizationRoles, FilingStatus, FilingTypes } from '@/enums'
 import { CorrectNameOptions, NameRequestStates } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
@@ -199,7 +199,7 @@ describe('Actions component - Continuation Application', () => {
   })
 })
 
-describe('Emits error event if NR validation fails in file and pay', () => {
+describe('Actions component - NR Validation', () => {
   let wrapper: any
   const { assign } = window.location
 
@@ -665,5 +665,55 @@ describe('Actions component - Filing Functionality', () => {
     // verify event emission
     const events = wrapper.emitted('goToDashboard')
     expect(events.length).toBe(1)
+  })
+})
+
+describe('Actions component - Conditionally disabled File and Pay button', () => {
+  let wrapper: any
+
+  beforeAll(() => {
+    store.stateModel.certifyState = {
+      valid: true,
+      certifiedBy: 'Some certifier'
+    }
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.defineCompanyStep = { valid: true } as DefineCompanyIF
+    store.stateModel.addPeopleAndRoleStep = { valid: true } as PeopleAndRoleIF
+    store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
+    store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
+    store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
+  })
+
+  beforeEach(() => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    wrapper = shallowMount(Actions, { localVue, router, vuetify })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('Enables File and Pay button for regular user', async () => {
+    store.setAuthRoles([AuthorizationRoles.VIEW])
+    await Vue.nextTick()
+    expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+  })
+
+  it('Enables File and Pay button for Business Registry Staff', async () => {
+    store.setAuthRoles([AuthorizationRoles.STAFF])
+    await Vue.nextTick()
+    expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
+  })
+
+  it('Disables File and Pay button for Maximus Staff', async () => {
+    store.setAuthRoles([AuthorizationRoles.MAXIMUS_STAFF])
+    await Vue.nextTick()
+    expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
+    expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')
   })
 })

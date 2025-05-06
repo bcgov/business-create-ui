@@ -245,7 +245,7 @@ import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
-import { BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
+import { AuthorizedActions, BusinessTypes, PartyTypes, RoleTypes } from '@/enums'
 import { PeopleRolesMixin } from '@/mixins'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
@@ -267,11 +267,11 @@ import RuleListItem from '@/components/common/RuleListItem.vue'
   }
 })
 export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
-  @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
-
   //
   // NB: see mixin for common properties, methods, etc.
   //
+
+  @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
 
   get subheader (): string {
     return (
@@ -317,12 +317,12 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     // assign party type (org or person)
     this.currentOrgPerson.officer.partyType = partyType
 
-    // pre-populate Completing Party's name, email address and mailing address only if logged in user is not staff
-    // (registries or sbc)
+    // pre-populate Completing Party's name, email address and mailing address
+    // only if not authorized to edit it
     if (
       (roleType === RoleTypes.COMPLETING_PARTY) &&
       (partyType === PartyTypes.PERSON) &&
-      !(this.isRoleStaff || this.isSbcStaff)
+      !this.IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
     ) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''

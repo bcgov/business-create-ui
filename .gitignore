@@ -66,6 +66,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# Vite build files
+.vite/
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

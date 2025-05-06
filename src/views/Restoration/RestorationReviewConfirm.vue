@@ -103,14 +103,14 @@
           :class="{ 'invalid-section': isCertifyInvalid }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -134,7 +134,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
-import { RoleTypes } from '@/enums'
+import { AuthorizedActions, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -143,6 +143,7 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusiness.vue'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -156,6 +157,10 @@ import SummaryRestoreBusiness from '@/components/Restoration/SummaryRestoreBusin
   }
 })
 export default class RestorationReviewConfirm extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
@@ -164,7 +169,6 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
 

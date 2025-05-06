@@ -943,7 +943,7 @@ describe('Restoration - App page', () => {
       .returns(new Promise(resolve => resolve({
         data:
         {
-          roles: [AuthorizationRoles.VIEW]
+          roles: [AuthorizationRoles.STAFF]
         }
       })))
 

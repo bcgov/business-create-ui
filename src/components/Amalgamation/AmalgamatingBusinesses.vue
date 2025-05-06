@@ -92,7 +92,7 @@
       </v-btn>
 
       <v-btn
-        v-if="isRoleStaff"
+        v-if="IsAuthorized(AuthorizedActions.AML_OVERRIDES)"
         id="add-foreign-business-button"
         outlined
         color="primary"
@@ -280,11 +280,12 @@ import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
 import { AmalgamatingBusinessIF, BusinessLookupResultIF, EmptyBusinessLookup } from '@/interfaces'
-import { AmlRoles, AmlTypes, EntityStates } from '@/enums'
+import { AuthorizedActions, AmlRoles, AmlTypes, EntityStates } from '@/enums'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { GenericErrorDialog } from '@/dialogs/'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -300,6 +301,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     foreignBusinessForm: any
   }
 
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
   readonly BusinessLookupServices = BusinessLookupServices
   readonly EmptyBusinessLookup = EmptyBusinessLookup
 

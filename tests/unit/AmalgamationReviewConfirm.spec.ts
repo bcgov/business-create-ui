@@ -104,21 +104,19 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    it('displays Folio Number section', () => {
-      const section = wrapper.findAll('section').at(3)
-      expect(section.find('header h2').text()).toBe('Folio or Reference Number for this Filing')
-      expect(section.findComponent(FolioNumber).exists()).toBe(true)
+    it('does not display Folio Number section for staff', () => {
+      const section = wrapper.find('#folio-number-section')
+      expect(section.exists()).toBe(false)
     })
 
     it('displays Amalgamation Statement section', () => {
-      const section = wrapper.findAll('section').at(4)
+      const section = wrapper.findAll('section').at(3)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
-      expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
-    it('displays Court Order and Plan of Arrangement section', () => {
-      const section = wrapper.findAll('section').at(5)
+    it('displays Court Order and Plan of Arrangement section for staff', () => {
+      const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Court Order and Plan of Arrangement')
       expect(section.find('p').text()).toContain('If this filing is pursuant to a court order,')
       expect(section.find('p').text()).toContain('enter the court order number.')
@@ -126,15 +124,15 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays Certify section', () => {
-      const section = wrapper.findAll('section').at(6)
+      const section = wrapper.findAll('section').at(5)
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('p').text()).toContain('Confirm the legal name of the person authorized')
       expect(section.find('p').text()).toContain('to complete and submit this application.')
       expect(section.findComponent(Certify).exists()).toBe(true)
     })
 
-    it('displays Staff Payment section', () => {
-      const section = wrapper.findAll('section').at(7)
+    it('displays Staff Payment section for staff', () => {
+      const section = wrapper.findAll('section').at(6)
       expect(section.find('header h2').text()).toBe('Staff Payment')
       expect(section.findComponent(StaffPayment).exists()).toBe(true)
     })
@@ -211,9 +209,10 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    it('displays Folio Number section', () => {
+    it('displays Folio Number section for non-staff', () => {
       const section = wrapper.findAll('section').at(3)
       expect(section.find('header h2').text()).toBe('Folio or Reference Number for this Filing')
+      expect(section.find('p').text()).toContain('Enter the folio or reference number you want to use')
       expect(section.findComponent(FolioNumber).exists()).toBe(true)
     })
 
@@ -224,12 +223,22 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
+    it('does not display Court Order/POA section for non-staff', () => {
+      const section = wrapper.find('#court-order-poa-section')
+      expect(section.exists()).toBe(false)
+    })
+
     it('displays Certify section', () => {
       const section = wrapper.findAll('section').at(5)
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('p').text()).toContain('Confirm the legal name of the person authorized')
       expect(section.find('p').text()).toContain('to complete and submit this application.')
       expect(section.findComponent(Certify).exists()).toBe(true)
+    })
+
+    it('does not display Staff Payment section for non-staff', () => {
+      const section = wrapper.find('#staff-payment-section')
+      expect(section.exists()).toBe(false)
     })
   })
 }

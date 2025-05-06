@@ -61,7 +61,7 @@
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :contactLabel="'Business Office'"
           :contactValue="getBusinessContact.email"
-          :editableCompletingParty="isRoleStaff || isSbcStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="documentOptionalEmail"
           :additionalLabel="documentDeliveryAdditionalLabel"
@@ -72,8 +72,9 @@
       </v-card>
     </section>
 
-    <!-- Transactional Folio Number -->
+    <!-- Transactional Folio Number (mutually exclusive with Staff Payment) -->
     <section
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-section"
       class="mt-10"
     >
@@ -121,9 +122,9 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff && !isSbcStaff"
+          :disableEdit="!IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff || isSbcStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
@@ -144,7 +145,7 @@
       </v-card>
     </section> -->
 
-    <template v-if="isRoleStaff">
+    <template v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
       <!-- Staff Payment -->
       <section
         id="staff-payment-section"
@@ -171,7 +172,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, CertifyIF, DocumentDeliveryIF, PeopleAndRoleIF } from '@/interfaces'
-import { RoleTypes } from '@/enums'
+import { AuthorizedActions, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -180,6 +181,7 @@ import DefineRegistrationSummary from '@/components/Registration/DefineRegistrat
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -194,6 +196,10 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
@@ -204,8 +210,6 @@ export default class RegistrationReviewConfirm extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isEntityPartnership!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void

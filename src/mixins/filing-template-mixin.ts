@@ -13,11 +13,13 @@ import {
   ShareStructureIF, SpecialResolutionIF, StaffPaymentIF, StaffPaymentStepIF, UploadAffidavitIF,
   ResolutionIF } from '@/interfaces'
 import {
-  AmalgamationTypes, ApprovalTypes, BusinessTypes, CoopTypes, DissolutionTypes, EffectOfOrders,
-  FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes, StaffPaymentOptions
+  AmalgamationTypes, ApprovalTypes, AuthorizedActions, BusinessTypes, CoopTypes, DissolutionTypes,
+  EffectOfOrders, FilingTypes, PartyTypes, RelationshipTypes, RestorationTypes, RoleTypes,
+  StaffPaymentOptions
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -64,6 +66,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getNameTranslations!: NameTranslationIF[]
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getResolution!: any
+  @Getter(useStore) getResolutions!: ResolutionIF[]
   @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
   @Getter(useStore) getTempId!: string
@@ -72,7 +75,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityFirm!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) getResolutions!: ResolutionIF[]
 
   @Action(useStore) setAffidavit!: (x: UploadAffidavitIF) => void
   @Action(useStore) setAmalgamationType!: (x: AmalgamationTypes) => void
@@ -80,6 +82,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
   @Action(useStore) setBusinessAddress!: (x: OfficeAddressIF) => void
   // @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
+  @Action(useStore) setBusinessStartDate!: (x: string) => void
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setContinuationAuthorization!: (x: AuthorizationProofIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
@@ -124,7 +127,6 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   // @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
-  @Action(useStore) setBusinessStartDate!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
 
   /**
@@ -206,7 +208,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
-    if (this.isRoleStaff) {
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
@@ -337,14 +339,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
@@ -440,7 +442,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
-    if (this.isRoleStaff) {
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
@@ -572,14 +574,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     if (this.isContinuationInAuthorization) {
       // if this is a continuation in authorization, show zero fees
       this.parseStaffPayment({ header: { waiveFees: true } } as any)
-    } else if (this.isRoleStaff) {
+    } else if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // otherwise, restore normal Staff Payment data
-      // NB: Staff Role is mutually exclusive with Folio Number
+      // NB: Staff Payment is mutually exclusive with Folio Number
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
@@ -679,7 +681,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
-    if (this.isRoleStaff) {
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
@@ -808,14 +810,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (effectiveDate >= this.getCurrentJsDate) this.setEffectiveDate(effectiveDate)
     }
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Folio Number exists then restore it
       if (draftFiling.header.folioNumber) {
         this.setFolioNumber(draftFiling.header.folioNumber)
@@ -874,14 +876,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       this.buildFolioNumber(filing)
     }
 
@@ -954,14 +956,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         break
     }
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       this.buildFolioNumber(filing)
     }
 
@@ -1039,14 +1041,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // do not restore Fee Acknowledgement
     this.setRegistrationFeeAcknowledgement(false)
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
@@ -1137,14 +1139,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
@@ -1281,8 +1283,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       }
     }
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       if (this.getDocumentDelivery.documentOptionalEmail) {
         filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
       }
@@ -1290,8 +1292,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       this.buildStaffPayment(filing)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       this.buildFolioNumber(filing)
     }
 
@@ -1383,16 +1385,16 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
 
-    // NB: Staff Role is mutually exclusive with Folio Number
-    if (this.isRoleStaff) {
+    // NB: Staff Payment is mutually exclusive with Folio Number
+    if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // restore document optional email
       this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
 
-    // NB: Folio Number is mutually exclusive with Staff Role
-    if (!this.isRoleStaff) {
+    // NB: Folio Number is mutually exclusive with Staff Payment
+    if (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
       // if Transactional Folio Number exists then restore it
       if (draftFiling.header.isTransactionalFolioNumber && draftFiling.header.folioNumber) {
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)

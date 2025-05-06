@@ -23,7 +23,7 @@
         large
         outlined
         color="primary"
-        :disabled="!isEntityType || isBusySaving"
+        :disabled="!isEntityType || isBusySaving || !IsAuthorized(AuthorizedActions.SAVE_DRAFT)"
         :loading="isSaving"
         @click="onClickSave()"
       >
@@ -36,7 +36,7 @@
         large
         outlined
         color="primary"
-        :disabled="!isEntityType || isBusySaving"
+        :disabled="!isEntityType || isBusySaving || !IsAuthorized(AuthorizedActions.SAVE_DRAFT)"
         :loading="isSavingResuming"
         @click="onClickSaveResume()"
       >
@@ -84,6 +84,7 @@
           large
           color="primary"
           :loading="isFilingPaying"
+          :disabled="!IsAuthorized(AuthorizedActions.FILE_AND_PAY)"
           @click="onClickFilePay()"
         >
           <span>{{ filePayButtonLabel }}</span>
@@ -110,15 +111,22 @@ import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { Navigate } from '@/utils'
-import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin }
+  from '@/mixins'
 import { LegalServices } from '@/services/'
-import { FilingStatus, FilingTypes, RouteNames } from '@/enums'
+import { AuthorizedActions, FilingStatus, FilingTypes, RouteNames } from '@/enums'
 import { NameRequestStates } from '@bcrs-shared-components/enums'
 import flushPromises from 'flush-promises'
+import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({})
-export default class Actions extends Mixins(AmalgamationMixin, CommonMixin,
-  DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class Actions extends Mixins(
+  AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin
+) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getCurrentStep!: number
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingStatus!: FilingStatus
