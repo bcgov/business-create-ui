@@ -863,8 +863,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // good to go - hide spinner and render components
       this.haveData = true
     } catch (error) {
-      // errors should be handled above
-      // just fall through to finally()
+      // log error to console
+      console.log(error) // eslint-disable-line no-console
     } finally {
       // wait for things to stabilize, then reset flag
       this.$nextTick(() => this.setHaveChanges(false))
