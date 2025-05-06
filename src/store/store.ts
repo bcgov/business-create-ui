@@ -170,6 +170,16 @@ export const useStore = defineStore('store', {
       return (this.getFilingType === FilingTypes.DISSOLUTION)
     },
 
+    /** Whether the current filing is a Firm Dissolution. */
+    isFirmDissolutionFiling (): boolean {
+      return (this.isDissolutionFiling && this.isEntityFirm)
+    },
+
+    /** Whether the current filing is a Non-Firm Dissolution. */
+    isOtherDissolutionFiling (): boolean {
+      return (this.isDissolutionFiling && !this.isEntityFirm)
+    },
+
     /** Whether the current filing is a Registration. */
     isRegistrationFiling (): boolean {
       return (this.getFilingType === FilingTypes.REGISTRATION)
