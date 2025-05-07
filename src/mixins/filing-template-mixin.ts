@@ -253,7 +253,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // restore Resolutions
     // NB - short-form amalg will overwrite this from the holding/primary business
     if (draftFiling.amalgamationApplication.resolutions) {
-      this.setShareClasses(draftFiling.amalgamationApplication.resolutions)
+      this.setResolutions(draftFiling.amalgamationApplication.resolutions)
     }
 
     // restore business name data
