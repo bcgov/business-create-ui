@@ -74,7 +74,7 @@
         </div>
 
         <template v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)">
-          <p class="font-15">
+          <p class="mt-5 font-15">
             If this error persists, please contact us:
           </p>
           <RegistriesContactInfo class="mt-5" />
