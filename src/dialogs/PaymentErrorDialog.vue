@@ -15,8 +15,8 @@
         <!-- display common message -->
         <div class="font-15">
           <p>
-            We are unable to process your payment at this time. This {{ filingName }} has been saved
-            as a DRAFT, you can retry your payment from your Business Registry dashboard at a later time.
+            We are unable to process your payment at this time. This {{ filingName }} has been saved as a
+            DRAFT and you can retry your payment from your Business Dashboard at a later time.
           </p>
         </div>
 
