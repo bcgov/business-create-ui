@@ -460,8 +460,18 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     const business = await this.fetchAmalgamatingBusinessInfo(businessLookup.identifier)
 
     // Check for unaffiliated business.
-    // NB: staff will never see this scenario
     if (business.authInfo?.status === 'FORBIDDEN') {
+      // Check for duplicate
+      if (this.checkForDuplicateInTable(business.businessInfo)) {
+        this.snackbarText = 'Business is already in table.'
+        this.snackbar = true
+
+        // Hide spinner.
+        this.$root.$emit('showSpinner', false)
+
+        return
+      }
+
       this.pushAmalgamatingBusiness({
         type: AmlTypes.LEAR,
         role: AmlRoles.AMALGAMATING,
