@@ -78,9 +78,13 @@ export default class BusinessTableSummary extends Vue {
     return '(Unknown)' // should never happen
   }
 
-  email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts[0]?.email
-    return null // should never happen
+  email (item: AmalgamatingBusinessIF): string | null {
+    if (item?.type !== AmlTypes.LEAR) {
+      return null // should never happen
+    }
+
+    const contact = item.authInfo?.contacts?.[0]
+    return contact?.email || 'Email not available'
   }
 
   registeredOfficeMailingAddress (item: AmalgamatingBusinessIF): AddressIF {
