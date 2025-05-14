@@ -207,7 +207,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts[0]?.email
+    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts?.[0]?.email || 'Email not available'
     return null // should never happen
   }
 
