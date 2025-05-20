@@ -718,14 +718,16 @@ export const useStore = defineStore('store', {
       const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
         ? this.getStaffPaymentStep.valid
         : true
-
+      const isFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getFolioNumberValid
+        : true
       return (
         this.isAmalgamationInformationValid &&
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         isCreateShareStructureValid &&
         this.getEffectiveDateTime.valid &&
-        this.getFolioNumberValid &&
+        isFolioNumberValid &&
         this.getAmalgamationCourtApprovalValid &&
         isCourtOrderValid &&
         isCertifyValid &&
