@@ -75,14 +75,14 @@ const BusinessRegistryStaffRoles = [
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
   AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX,
   AuthorizedActions.NO_CONTACT_INFO,
-  AuthorizedActions.OTHER_DISSOLUTION_FILING,
   AuthorizedActions.REGISTRATION_FILING,
   AuthorizedActions.RESTORATION_FILING,
   AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.STAFF_BREADCRUMBS,
   AuthorizedActions.STAFF_COMMENTS,
   AuthorizedActions.STAFF_PAYMENT,
-  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT
+  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
 ]
 
 /**
@@ -112,11 +112,11 @@ const SbcFieldOfficeStaffRoles = [
   AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY,
   AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS,
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
-  AuthorizedActions.OTHER_DISSOLUTION_FILING,
   AuthorizedActions.REGISTRATION_FILING,
   AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.SBC_BREADCRUMBS,
-  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT
+  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
 ]
 
 /**
@@ -129,7 +129,7 @@ const DefaultRoles = [
   AuthorizedActions.FILE_AND_PAY,
   AuthorizedActions.FIRM_DISSOLUTION_FILING,
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
-  AuthorizedActions.OTHER_DISSOLUTION_FILING,
   AuthorizedActions.REGISTRATION_FILING,
-  AuthorizedActions.SAVE_DRAFT
+  AuthorizedActions.SAVE_DRAFT,
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
 ]

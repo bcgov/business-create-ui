@@ -740,10 +740,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Incorporation Application filings.')
       }
-      if (this.isOtherDissolutionFiling && !IsAuthorized(AuthorizedActions.OTHER_DISSOLUTION_FILING)) {
-        this.accountAuthorizationDialog = true
-        throw new Error('You are not authorized to access Non-Firm Dissolution filings.')
-      }
       if (this.isRegistrationFiling && !IsAuthorized(AuthorizedActions.REGISTRATION_FILING)) {
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Registration filings.')
@@ -751,6 +747,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (this.isRestorationFiling && !IsAuthorized(AuthorizedActions.RESTORATION_FILING)) {
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Restoration filings.')
+      }
+      if (this.isOtherDissolutionFiling && !IsAuthorized(AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Non-Firm Dissolution filings.')
       }
 
       // get user info
@@ -1190,10 +1190,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return userInfo
   }
 
-  /**
-   * Gets account info and stores it.
-   * Among other things, this is how we find out if this is a staff account.
-   */
+  /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
     const currentAccount = await this.getCurrentAccount()
     if (currentAccount) {
