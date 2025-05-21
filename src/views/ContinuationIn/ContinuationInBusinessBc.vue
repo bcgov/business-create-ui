@@ -237,12 +237,17 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Watch('getFolioNumberValid', { immediate: true })
   // Update the overall Define Company Step validity
   private onDefineCompanyStepValid (): void {
+    // folio number is mutually exclusive with staff payment
+    const isFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+      ? this.getFolioNumberValid
+      : true
+
     this.setDefineCompanyStepValidity(
       this.getNameTranslationsValid &&
       this.authorizationInfoValid &&
       this.addressFormValid &&
       this.businessContactFormValid &&
-      (!IsAuthorized(AuthorizedActions.STAFF_PAYMENT) || this.getFolioNumberValid)
+      isFolioNumberValid
     )
   }
 

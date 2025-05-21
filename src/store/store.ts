@@ -652,6 +652,10 @@ export const useStore = defineStore('store', {
       const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
         ? this.getStaffPaymentStep.valid
         : true
+      // transactional folio number is mutually exclusive with staff payment
+      const isTransactionalFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getTransactionalFolioNumberValid
+        : true
 
       if (this.isEntityFirm) {
         const isDissolutionDateValid = !!this.getDissolutionDate
@@ -661,7 +665,7 @@ export const useStore = defineStore('store', {
 
         return (
           isDocumentDeliveryValid &&
-          this.getTransactionalFolioNumberValid &&
+          isTransactionalFolioNumberValid &&
           isCertifyValid &&
           isCourtOrderValid &&
           isStaffPaymentValid &&
@@ -676,7 +680,7 @@ export const useStore = defineStore('store', {
           this.isAffidavitValid &&
           this.isResolutionValid &&
           isDocumentDeliveryValid &&
-          this.getTransactionalFolioNumberValid &&
+          isTransactionalFolioNumberValid &&
           isCertifyValid &&
           isEffectiveDateTimeValid &&
           isCourtOrderValid &&
@@ -718,6 +722,7 @@ export const useStore = defineStore('store', {
       const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
         ? this.getStaffPaymentStep.valid
         : true
+      // folio number is mutually exclusive with staff payment
       const isFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
         ? this.getFolioNumberValid
         : true
