@@ -750,7 +750,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
       if (this.isOtherDissolutionFiling && !IsAuthorized(AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING)) {
         this.accountAuthorizationDialog = true
-        throw new Error('You are not authorized to access Non-Firm Dissolution filings.')
+        throw new Error('You are not authorized to access Voluntary Dissolution filings.')
       }
 
       // get user info
