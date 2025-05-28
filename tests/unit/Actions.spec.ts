@@ -97,6 +97,7 @@ describe('Actions component - Incorporation Application', () => {
     store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
     store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
     store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
+    store.setAuthRoles([AuthorizationRoles.PUBLIC_USER])
     await Vue.nextTick()
 
     // verify File and Pay button state
@@ -697,7 +698,7 @@ describe('Actions component - Conditionally disabled File and Pay button', () =>
   })
 
   it('Enables File and Pay button for regular user', async () => {
-    store.setAuthRoles([AuthorizationRoles.VIEW])
+    store.setAuthRoles([AuthorizationRoles.PUBLIC_USER])
     await Vue.nextTick()
     expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()

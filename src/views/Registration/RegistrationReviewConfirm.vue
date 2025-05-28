@@ -61,7 +61,7 @@
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :contactLabel="'Business Office'"
           :contactValue="getBusinessContact.email"
-          :editableCompletingParty="IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="documentOptionalEmail"
           :additionalLabel="documentDeliveryAdditionalLabel"

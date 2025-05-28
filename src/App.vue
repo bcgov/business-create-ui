@@ -239,7 +239,7 @@ import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { GetFeatureFlag, UpdateLdUser, Navigate, Sleep } from '@/utils'
+import { GetFeatureFlag, GetKeycloakRoles, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -744,7 +744,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Registration filings.')
       }
-      if (this.isRestorationFiling && !IsAuthorized(AuthorizedActions.RESTORATION_FILING)) {
+      if (this.isRestorationFiling && !IsAuthorized(AuthorizedActions.RESTORATION_REINSTATEMENT_FILING)) {
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Restoration filings.')
       }
@@ -876,12 +876,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only dissolutions/restorations have a Business ID.)
    */
   private async handleDraftWithBusinessId (businessId: string): Promise<void> {
-    // ensure user is authorized to use this business
-    await this.checkAuth(businessId).catch(error => {
+    // ensure user is authorized to access this business
+    try {
+      this.checkAuth()
+    } catch (error) {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error
-    })
+    }
 
     // load business info
     await this.loadBusinessInfo(businessId)
@@ -940,12 +942,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only amalgamations/continuation ins/incorporations/registrations have a Temp ID.)
    */
   private async handleDraftWithTempId (tempId: string): Promise<void> {
-    // ensure user is authorized to use this IA
-    await this.checkAuth(tempId).catch(error => {
+    // ensure user is authorized to access this bootstrap business
+    try {
+      this.checkAuth()
+    } catch (error) {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
       throw error
-    })
+    }
 
     // fetch draft filing
     // NB: will throw if API error
@@ -1153,7 +1157,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // set Folio Number from auth info
       // (for an incorporation, this is set in IncorporationDefineCompany.vue)
       // (for a registration, this is set in RegistrationDefineBusiness.vue)
-      this.setFolioNumber(folioNumber)
+      if (folioNumber) this.setFolioNumber(folioNumber)
     }
 
     // NB: will throw if API error
@@ -1291,21 +1295,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Fetches authorizations and verifies roles. */
-  private async checkAuth (id: string): Promise<any> {
-    // NB: will throw if API error
-    const authorizations = await AuthServices.fetchAuthorizations(id)
-    const authRoles: Array<AuthorizationRoles> = authorizations.roles || []
+  private checkAuth (): void {
+    // get roles from KC token
+    const authRoles = GetKeycloakRoles()
 
+    // safety check
     if (!Array.isArray(authRoles)) {
-      throw new Error('Invalid auth roles')
+      throw new Error('Invalid roles')
     }
 
-    // verify that array has "view" or "staff" roles
-    if (
-      !authRoles.includes(AuthorizationRoles.VIEW) &&
-      !authRoles.includes(AuthorizationRoles.STAFF)
-    ) {
-      throw new Error('Invalid auth roles')
+    // verify that response has one of the supported roles
+    // FUTURE: when we fetch authorized actions from Legal API, we'll instead check
+    //         that the list of actions isn't empty
+    const allRoles = Object.values(AuthorizationRoles)
+    if (!allRoles.some(role => authRoles.includes(role))) {
+      throw new Error('Missing valid role')
     }
 
     this.setAuthRoles(authRoles)

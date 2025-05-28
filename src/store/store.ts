@@ -659,7 +659,7 @@ export const useStore = defineStore('store', {
 
       if (this.isEntityFirm) {
         const isDissolutionDateValid = !!this.getDissolutionDate
-        const isCompletingPartyValid = IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
+        const isCompletingPartyValid = IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
           ? this.getCompletingParty?.valid
           : true
 
