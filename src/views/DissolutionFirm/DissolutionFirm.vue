@@ -119,7 +119,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
@@ -186,7 +186,7 @@
           class="py-8 px-6 section-container py-6"
           :invalidSection="isCompletingPartyInvalid"
           :completingParty="getCompletingParty"
-          :enableAddEdit="IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+          :enableAddEdit="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :addressSchema="PersonAddressSchema"
           :validate="isCompletingPartyInvalid"
           @update="onUpdate($event)"
@@ -388,7 +388,7 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
     return (
       this.getValidateSteps &&
       !this.completingPartyValid &&
-      IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
+      IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
     )
   }
 

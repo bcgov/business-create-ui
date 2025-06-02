@@ -102,7 +102,7 @@
                   :rules="enableRules ?
                     (isCompletingParty ? Rules.FirstNameRulesFirmsCP :
                       Rules.FirstNameRulesFirms) : []"
-                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.middleName"
@@ -110,7 +110,7 @@
                   class="item middle-name"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRulesFirms : []"
-                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.lastName"
@@ -118,7 +118,7 @@
                   class="item last-name"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
               </div>
             </article>

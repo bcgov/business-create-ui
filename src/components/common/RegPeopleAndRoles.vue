@@ -322,7 +322,7 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
     if (
       (roleType === RoleTypes.COMPLETING_PARTY) &&
       (partyType === PartyTypes.PERSON) &&
-      !this.IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
+      !this.IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
     ) {
       this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
       this.currentOrgPerson.officer.lastName = this.getUserLastName || ''

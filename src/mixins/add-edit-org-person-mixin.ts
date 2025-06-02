@@ -160,8 +160,7 @@ export default class AddEditOrgPersonMixin extends Vue {
     // or must be authorized to add/edit a person
     return (
       showCompletingParty ||
-      (IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY) && this.isPerson) ||
-      (IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY) && this.isPerson)
+      (IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY) && this.isPerson)
     )
   }
 
@@ -189,10 +188,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** Whether the Completing Party role should be disabled. */
   get disableCompletingPartyRole (): boolean {
     // must be authorized to edit Completing Party role
-    return (
-      !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY) &&
-      !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
-    )
+    return !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
   }
 
   /** Whether the Incorporator role should be disabled. */

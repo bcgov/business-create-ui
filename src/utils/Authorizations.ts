@@ -1,24 +1,25 @@
 import { useStore } from '@/store/store'
-import { AccountTypes, AuthorizationRoles, AuthorizedActions } from '@/enums'
+import { AuthorizationRoles, AuthorizedActions } from '@/enums'
 
 /**
  * Whether the specified action is authorized for the current user.
- * Ultimately we'll just check if the auth roles includes the specified action.
+ * Ultimately we'll just check if the fetched permissions includes the specified action.
  * @returns True or False
  */
 export function IsAuthorized (action: AuthorizedActions): boolean {
   switch (true) {
-    case isBusinessRegistryStaff(): return BusinessRegistryStaffRoles.includes(action)
-    case isMaximusStaff(): return MaximusStaffRoles.includes(action)
-    case isContactCentreStaff(): return ContactCentreStaffRoles.includes(action)
-    case isSbcFieldOfficeStaff(): return SbcFieldOfficeStaffRoles.includes(action)
-    default: return DefaultRoles.includes(action)
+    case isBusinessRegistryStaff(): return BusinessRegistryStaffActions.includes(action)
+    case isMaximusStaff(): return MaximusStaffActions.includes(action)
+    case isContactCentreStaff(): return ContactCentreStaffActions.includes(action)
+    case isSbcFieldOfficeStaff(): return SbcFieldOfficeStaffActions.includes(action)
+    case isPublicUser(): return PublicUserActions.includes(action)
+    default: return false
   }
 }
 
 /**
  * Whether the user is Business Registry Staff.
- * Ultimately we won't need this function and we'll just check auth roles for everything.
+ * Ultimately we won't need this function and we'll just fetch permissions.
  */
 function isBusinessRegistryStaff (): boolean {
   const store = useStore()
@@ -27,7 +28,7 @@ function isBusinessRegistryStaff (): boolean {
 
 /**
  * Whether the user is Maximus Staff.
- * Ultimately we won't need this function and we'll just check auth roles for everything.
+ * Ultimately we won't need this function and we'll just fetch permissions.
  */
 function isMaximusStaff (): boolean {
   const store = useStore()
@@ -36,7 +37,7 @@ function isMaximusStaff (): boolean {
 
 /**
  * Whether the user is Contact Centre Staff.
- * Ultimately we won't need this function and we'll just check auth roles for everything.
+ * Ultimately we won't need this function and we'll just fetch permissions.
  */
 function isContactCentreStaff (): boolean {
   const store = useStore()
@@ -45,19 +46,34 @@ function isContactCentreStaff (): boolean {
 
 /**
  * Whether the user is SBC Field Office Staff.
- * Ultimately we won't need this function and we'll just check auth roles for everything.
+ * Ultimately we won't need this function and we'll just fetch permissions.
  */
 function isSbcFieldOfficeStaff (): boolean {
   const store = useStore()
-  // return store.getAuthRoles.includes(AuthorizationRoles.SBC_STAFF) // *** TODO: uncomment this after #27536
-  return (store.getAccountInformation.accountType === AccountTypes.SBC_STAFF) // *** TODO: delete this after #27536
+  return store.getAuthRoles.includes(AuthorizationRoles.SBC_STAFF)
 }
 
 /**
- * The roles if the user is Business Registry Staff.
- * Ultimately we won't need this list and we'll just check auth roles for everything.
+ * Whether the user is Public User.
+ * Ultimately we won't need this function and we'll just fetch permissions.
  */
-const BusinessRegistryStaffRoles = [
+function isPublicUser (): boolean {
+  const store = useStore()
+  // need to check other functions since some accounts have overlapping roles
+  return (
+    !isBusinessRegistryStaff() &&
+    !isMaximusStaff() &&
+    !isContactCentreStaff() &&
+    !isSbcFieldOfficeStaff() &&
+    store.getAuthRoles.includes(AuthorizationRoles.PUBLIC_USER)
+  )
+}
+
+/**
+ * The authorized actions if the user is Business Registry Staff.
+ * Ultimately we won't need this array and we'll just fetch these.
+ */
+const BusinessRegistryStaffActions = [
   AuthorizedActions.AMALGAMATION_FILING,
   AuthorizedActions.AML_OVERRIDES,
   AuthorizedActions.BLANK_CERTIFY_STATE,
@@ -69,14 +85,13 @@ const BusinessRegistryStaffRoles = [
   AuthorizedActions.FILE_AND_PAY,
   AuthorizedActions.FIRM_ADD_BUSINESS,
   AuthorizedActions.FIRM_DISSOLUTION_FILING,
-  AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY,
   AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS,
   AuthorizedActions.FIRM_NO_MIN_START_DATE,
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
   AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX,
   AuthorizedActions.NO_CONTACT_INFO,
   AuthorizedActions.REGISTRATION_FILING,
-  AuthorizedActions.RESTORATION_FILING,
+  AuthorizedActions.RESTORATION_REINSTATEMENT_FILING,
   AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.STAFF_BREADCRUMBS,
   AuthorizedActions.STAFF_COMMENTS,
@@ -86,30 +101,46 @@ const BusinessRegistryStaffRoles = [
 ]
 
 /**
- * The roles if the user is Maximus Staff.
- * Ultimately we won't need this list and we'll just check auth roles for everything.
+ * The authorized actions if the user is Maximus Staff.
+ * Ultimately we won't need this array and we'll just fetch these.
  */
-const MaximusStaffRoles = []
+const MaximusStaffActions = [
+  AuthorizedActions.SBC_BREADCRUMBS,
+  AuthorizedActions.BLANK_CERTIFY_STATE,
+  AuthorizedActions.EDITABLE_CERTIFY_NAME,
+  AuthorizedActions.FIRM_DISSOLUTION_FILING,
+  AuthorizedActions.INCORPORATION_APPLICATION_FILING,
+  AuthorizedActions.REGISTRATION_FILING,
+  AuthorizedActions.SBC_BREADCRUMBS,
+  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+]
 
 /**
- * The roles if the user is Contact Centre Staff.
- * Ultimately we won't need this list and we'll just check auth roles for everything.
+ * The authorized actions if the user is Contact Centre Staff.
+ * Ultimately we won't need this array and we'll just fetch these.
  */
-const ContactCentreStaffRoles = []
+const ContactCentreStaffActions = [
+  AuthorizedActions.SBC_BREADCRUMBS,
+  AuthorizedActions.FIRM_DISSOLUTION_FILING,
+  AuthorizedActions.INCORPORATION_APPLICATION_FILING,
+  AuthorizedActions.REGISTRATION_FILING,
+  AuthorizedActions.SBC_BREADCRUMBS,
+  AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+]
 
 /**
- * The roles if the user is SBC Field Office Staff (aka SBC Staff Tier 2).
- * Ultimately we won't need this list and we'll just check auth roles for everything.
+ * The authorized actions if the user is SBC Field Office Staff (aka SBC Staff Tier 2).
+ * Ultimately we won't need this array and we'll just fetch these.
  */
-const SbcFieldOfficeStaffRoles = [
-  AuthorizedActions.AMALGAMATION_FILING,
+const SbcFieldOfficeStaffActions = [
   AuthorizedActions.BLANK_CERTIFY_STATE,
   AuthorizedActions.BLANK_COMPLETING_PARTY,
-  AuthorizedActions.CONTINUATION_IN_FILING,
   AuthorizedActions.EDITABLE_CERTIFY_NAME,
+  AuthorizedActions.EDITABLE_COMPLETING_PARTY,
   AuthorizedActions.FILE_AND_PAY,
   AuthorizedActions.FIRM_DISSOLUTION_FILING,
-  AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY,
   AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS,
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
   AuthorizedActions.REGISTRATION_FILING,
@@ -120,10 +151,10 @@ const SbcFieldOfficeStaffRoles = [
 ]
 
 /**
- * The roles if the user is none of the other types.
- * Ultimately we won't need this list and we'll just check auth roles for everything.
+ * The authorized actions if use is Public User.
+ * Ultimately we won't need this array and we'll just fetch these.
  */
-const DefaultRoles = [
+const PublicUserActions = [
   AuthorizedActions.AMALGAMATION_FILING,
   AuthorizedActions.CONTINUATION_IN_FILING,
   AuthorizedActions.FILE_AND_PAY,

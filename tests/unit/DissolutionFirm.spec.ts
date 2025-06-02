@@ -124,7 +124,7 @@ for (const test of dissolutionFirmTestCases) {
       )
 
       const isFirmEditableCompletingParty: boolean =
-        wrapper.vm.IsAuthorized(AuthorizedActions.FIRM_EDITABLE_COMPLETING_PARTY)
+        wrapper.vm.IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
 
       expect(wrapper.find('#completing-party-section').exists()).toBe(true)
       expect(wrapper.find('#completing-party').exists()).toBe(true)

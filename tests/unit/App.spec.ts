@@ -20,6 +20,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
 import { AuthorizationRoles } from '@/enums'
+import * as utils from '@/utils'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -315,15 +316,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
         }
       })))
 
-    // GET authorizations (roles)
-    get.withArgs('https://auth.api.url/entities/T7654321/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: [AuthorizationRoles.VIEW]
-        }
-      })))
-
     // GET IA filing
     get.withArgs('businesses/T7654321/filings')
       .returns(new Promise(resolve => resolve({
@@ -356,6 +348,9 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
           filingFees: { futureEffectiveFees: 100 }
         }
       })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
 
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
@@ -461,15 +456,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
         }
       })))
 
-    // GET authorizations (roles)
-    get.withArgs('https://auth.api.url/entities/T1234567/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: [AuthorizationRoles.VIEW]
-        }
-      })))
-
     // GET NR data
     get.withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
@@ -498,6 +484,9 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
           filingFees: { futureEffectiveFees: 100 }
         }
       })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
 
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
@@ -687,15 +676,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         }
       })))
 
-    // GET authorizations (roles)
-    get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: [AuthorizationRoles.VIEW]
-        }
-      })))
-
     // GET filing fees
     get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL')
       .returns(new Promise(resolve => resolve({
@@ -856,6 +836,9 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         data: []
       })))
 
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -935,15 +918,6 @@ describe('Restoration - App page', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
-        }
-      })))
-
-    // GET authorizations (roles)
-    get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: [AuthorizationRoles.STAFF]
         }
       })))
 
@@ -1050,6 +1024,9 @@ describe('Restoration - App page', () => {
           }]
         }
       })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.STAFF])
 
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
