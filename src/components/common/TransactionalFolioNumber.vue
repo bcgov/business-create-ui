@@ -75,18 +75,14 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   /** Called when user has changed the Local Folio Number. */
   @Watch('localFolioNumber')
-  private onLocalFolioNumberChanged (val: string): void {
-    this.emitChange(val)
-    this.emitValid(this.isValid)
-  }
-
   @Emit('change')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitChange (change: string): void {}
+  private emitChange (localFolioNumber: string): void {}
 
+  @Watch('isValid', { immediate: true })
   @Emit('valid')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private emitValid (valid: boolean): void {}
+  private emitValid (isValid: boolean): void {}
 }
 </script>
 
