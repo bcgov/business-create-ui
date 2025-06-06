@@ -46,6 +46,8 @@
                             filled
                             label="Maximum Number of Shares"
                             persistent-hint
+                            type="number"
+                            hide-spin-buttons
                             :hint="'Enter the maximum number of shares in the ' + shareStructure.type"
                             :rules="getMaximumShareRule()"
                             :disabled="hasNoMaximumShares"
@@ -86,6 +88,8 @@
                             :rules="getParValueRule()"
                             hint="Enter the initial value of each share"
                             persistent-hint
+                            type="number"
+                            hide-spin-buttons
                           />
                         </v-col>
                         <v-col cols="6">
@@ -292,8 +296,9 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
         v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
         v => v > 0 || 'Amount must be greater than 0',
         v => (v < 1)
-          ? (/^(\d+(\.\d{0,3})?|\.\d{0,3})$/.test(v) || 'Amounts less than 1 can be entered with up to 3 decimal place')
-          : (/^\d+(\.\d{1,2})?$/.test(v) || 'Amounts greater than 1 can be entered with up to 2 decimal place')]
+          ? (/^\d+(\.\d{0,6})?$/.test(v) || 'Amounts less than 1 can be entered with up to 6 decimal place')
+          : (/^\d+(\.\d{1,2})?$/.test(v) || 'Amounts greater than 1 can be entered with up to 2 decimal place')
+      ]
     }
     return []
   }
@@ -316,6 +321,9 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
         const name = this.shareStructure.name
         this.shareStructure.name = name.substr(0, name.indexOf(' Shares'))
       }
+
+      // validate initial data
+      this.$nextTick(() => this.$refs.shareStructureForm.validate())
     }
   }
 
