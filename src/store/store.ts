@@ -762,8 +762,7 @@ export const useStore = defineStore('store', {
         isEffectiveDateTimeValid &&
         isCertifyValid &&
         isCourtOrderValid &&
-        isStaffPaymentValid &&
-        this.getDocumentIdState.valid
+        isStaffPaymentValid
       )
     },
 

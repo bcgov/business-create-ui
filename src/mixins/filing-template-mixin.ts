@@ -6,7 +6,7 @@ import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
   AuthorizationProofIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
+  DissolutionStatementIF, DocumentDeliveryIF, DocumentIdIF, EffectiveDateTimeIF, EmptyNaics,
   ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
   NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
   RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
@@ -127,6 +127,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setBusinessStartDate!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   /**
    * Builds an amalgamation application filing from store data. Used when saving a filing.
@@ -352,6 +353,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -589,6 +593,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -826,6 +833,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -1058,6 +1068,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -1157,6 +1170,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   private partiesToOrgPersons (parties: PartyIF[]): OrgPersonIF[] {
@@ -1413,6 +1429,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     if (this.isEntityFirm) {
       this.setDissolutionDate(draftFiling.dissolution.dissolutionDate)
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**

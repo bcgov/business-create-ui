@@ -201,29 +201,6 @@
       </v-card>
     </section>
 
-    <!-- Document ID Component for Staff only -->
-    <section
-      v-if="isRoleStaff"
-      id="document-id-section"
-      class="mt-10"
-    >
-      <header>
-        <h2>Document ID</h2>
-        <p class="mt-4">
-          Enter or select your document ID preference. Upon submission,
-          a document record will be created with the details from this registration.
-        </p>
-      </header>
-
-      <DocumentId
-        :docApiUrl="getDrsApiUrl"
-        :docApiKey="getDrsApiKey"
-        :validate="getValidateSteps"
-        @updateDocId="docId=$event"
-        @isValid="isDocIdValid=$event"
-      />
-    </section>
-
     <!-- Staff Payment -->
     <section
       v-if="isRoleStaff"
@@ -250,12 +227,11 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { FilingStatus } from '@/enums'
-import { CertifyIF, ContactPointIF, CourtOrderStepIF, DocumentDeliveryIF, DocumentIdIF, EffectiveDateTimeIF,
+import { CertifyIF, ContactPointIF, CourtOrderStepIF, DocumentDeliveryIF, EffectiveDateTimeIF,
   ExistingBusinessInfoIF, ShareStructureIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
-import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import EffectiveDateTime from '@/components/common/EffectiveDateTime.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import ListShareClass from '@/components/common/ListShareClass.vue'
@@ -272,7 +248,6 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
     Certify,
     CourtOrderPoa,
     DocumentDelivery,
-    DocumentId,
     EffectiveDateTime,
     ListPeopleAndRoles,
     ListShareClass,
@@ -298,7 +273,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void
@@ -309,7 +283,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Action(useStore) setEffectiveDateTimeValid!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
-  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   docId = ''
   isDocIdValid = false
@@ -323,9 +296,6 @@ export default class ContinuationInReviewConfirm extends Vue {
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
     })
-
-    this.docId = this.getDocumentIdState.consumerDocumentId
-    this.isDocIdValid = this.getDocumentIdState.valid
   }
 
   /** Whether the existing business is an extrapro. */
@@ -373,16 +343,6 @@ export default class ContinuationInReviewConfirm extends Vue {
 
   get getDrsApiKey (): string {
     return sessionStorage.getItem('DOC_API_KEY')
-  }
-
-  @Watch('docId', { immediate: true })
-  @Watch('isDocIdValid', { immediate: true })
-  // Update Document Id state
-  private onDocumentIdStateChange (): void {
-    this.setDocumentIdState({
-      valid: this.isDocIdValid,
-      consumerDocumentId: this.docId
-    })
   }
 }
 </script>

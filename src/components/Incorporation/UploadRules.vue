@@ -288,6 +288,7 @@ import { useStore } from '@/store/store'
 import {
   CreateRulesIF,
   CreateRulesResourceIF,
+  DocumentIdIF,
   FormIF,
   PresignedUrlIF,
   ValidationDetailIF
@@ -326,6 +327,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setRulesStepValidity!: (x: ValidationDetailIF) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -415,6 +417,13 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
           rulesFile,
           docKey: this.enableDocumentRecords ? res.data.documentServiceId : doc.key
         })
+        // Update documentIdState for unique validation
+        if (this.enableDocumentRecords) {
+          this.setDocumentIdState({
+            valid: true,
+            consumerDocumentId: res.data.consumerDocumentId
+          })
+        }
       } else {
         // put file uploader into manual error mode by setting custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE
