@@ -131,7 +131,7 @@ export default class LegalServices {
     if (isDraft) {
       url += '?draft=true'
     }
-    const config = { headers: { 'Account-Id': store.getAccountId } }
+    const config = { headers: { 'Account-Id': store.getCurrentAccountId } }
 
     return axios.put(url, { filing }, config).then(response => {
       const filing = response?.data?.filing

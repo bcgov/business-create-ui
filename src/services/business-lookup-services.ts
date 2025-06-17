@@ -38,7 +38,7 @@ export default class BusinessLookupServices {
       headers: {
         Authorization: `Bearer ${kcToken}`,
         'x-apikey': this.searchApiKey,
-        'Account-Id': store.getAccountId
+        'Account-Id': store.getCurrentAccountId
       }
     }
 

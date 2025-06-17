@@ -22,7 +22,7 @@ export default class AuthServices {
 
     const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
     const url = `${authApiUrl}entities/${businessId}`
-    const config = { headers: { 'Account-Id': store.getAccountId } }
+    const config = { headers: { 'Account-Id': store.getCurrentAccountId } }
 
     return axios.get(url, config).then(response => {
       if (response?.data) {
