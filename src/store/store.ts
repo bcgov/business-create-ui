@@ -86,7 +86,11 @@ import { IsAuthorized } from '@/utils/Authorizations'
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
-    /** The Account ID, from session storage. */
+    /**
+     * The Account ID, from session storage.
+     * This is the same value as in the current account object.
+     * @deprecated use getCurrentAccountId instead
+     */
     getAccountId (): string {
       // if we can't get account id from ACCOUNT_ID
       // then try to get it from CURRENT_ACCOUNT
@@ -331,6 +335,11 @@ export const useStore = defineStore('store', {
     /** The Account Information object. */
     getAccountInformation (): AccountInformationIF {
       return this.stateModel.accountInformation
+    },
+
+    /** The current account id. */
+    getCurrentAccountId (): number {
+      return this.getAccountInformation?.id
     },
 
     /** Whether the entity is a base company (BC/BEN/CC/ULC or C/CBEN/CCC/CUL). */
