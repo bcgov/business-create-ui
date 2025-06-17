@@ -32,12 +32,13 @@ export default class BusinessLookupServices {
     let url = this.searchApiUrl + 'businesses/search/facets?start=0&rows=20'
     url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
     url += `&query=value:${encodeURIComponent(query)}`
+
     const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
 
     const config = {
       headers: {
         Authorization: `Bearer ${kcToken}`,
-        'x-apikey': this.searchApiKey,
+        'X-Apikey': this.searchApiKey,
         'Account-Id': store.getCurrentAccountId
       }
     }

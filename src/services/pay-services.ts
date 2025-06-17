@@ -7,6 +7,11 @@ import { FeesIF } from '@/interfaces'
  * Class that provides integration with the Pay API.
  */
 export default class PayServices {
+  /** The Pay API URL, from session storage. */
+  static get payauthApiUrl (): string {
+    return sessionStorage.getItem('PAY_API_URL')
+  }
+
   /**
    * Fetches filing fees.
    * @returns a promise to return the fees for a filing
@@ -16,7 +21,7 @@ export default class PayServices {
     entityType: CorpTypeCd,
     isFutureEffective: boolean
   ): Promise<FeesIF> {
-    let url = sessionStorage.getItem('PAY_API_URL') + 'fees/' + entityType + '/' + filingCode
+    let url = this.payauthApiUrl + 'fees/' + entityType + '/' + filingCode
     if (isFutureEffective) {
       url += '?futureEffective=true'
     }

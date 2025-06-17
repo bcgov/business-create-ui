@@ -4,11 +4,12 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 
 /**
- * This file exports an instance of Axios with a bearer token added to the request headers.
+ * This file exports an instance of Axios with some extra request headers.
  */
 
 setActivePinia(createPinia())
 const store = useStore()
+
 const instance = axios.create()
 
 // add request interceptor
