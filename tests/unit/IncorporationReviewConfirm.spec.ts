@@ -107,8 +107,8 @@ for (const test of reviewConfirmTestCases) {
         null,
         IncorporationResources
       )
-
-      expect(wrapper.find('#document-id-section').exists()).toBe(test.isStaff)
+      const shouldBeVisible = test.isStaff && test.entityType !== 'CP'
+      expect(wrapper.find('#document-id-section').exists()).toBe(shouldBeVisible)
 
       wrapper.destroy()
     })

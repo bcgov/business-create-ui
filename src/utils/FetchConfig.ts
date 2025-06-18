@@ -80,7 +80,7 @@ export async function FetchConfig (): Promise<any> {
 
   const docApiKey: string = import.meta.env.VUE_APP_DOC_API_KEY
   sessionStorage.setItem('DOC_API_KEY', docApiKey)
-  const docApiUrl: string = (import.meta.env.VUE_APP_DOC_API_URL + '/' + import.meta.env.VUE_APP_DOC_API_VERSION)
+  const docApiUrl: string = (import.meta.env.VUE_APP_DOC_API_URL + import.meta.env.VUE_APP_DOC_API_VERSION)
   sessionStorage.setItem('DOC_API_URL', docApiUrl)
 
   const iaSurveyId: string = import.meta.env.VUE_APP_IA_SURVEY_ID

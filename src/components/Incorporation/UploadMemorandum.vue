@@ -336,6 +336,8 @@ import { useStore } from '@/store/store'
 import {
   CreateMemorandumIF,
   CreateMemorandumResourceIF,
+  DocumentIdIF,
+  DocumentRequestIF,
   FormIF,
   PresignedUrlIF,
   ValidationDetailIF
@@ -365,9 +367,11 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getTempId!: string
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setMemorandum!: (x: CreateMemorandumIF) => void
   @Action(useStore) setMemorandumStepValidity!: (x: ValidationDetailIF) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Local variables
   fileUploadCustomErrorMsg = ''
@@ -441,15 +445,28 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
         if (this.getCreateMemorandumStep.docKey) {
           res = await DocumentServices.updateDocumentOnDRS(
             this.uploadMemorandumDoc,
-            this.getCreateMemorandumStep.docKey,
-            this.uploadMemorandumDoc.name
+            {
+              documentServiceId: this.getCreateMemorandumStep.docKey,
+              consumerFilename: this.uploadMemorandumDoc.name,
+              consumerDocumentId: this.getDocumentIdState.consumerDocumentId,
+              consumerFilingDate: new Date().toISOString()
+            }
           )
         } else {
+          const params: DocumentRequestIF = {
+            documentClass: DocumentTypes.coopMemorandum.class,
+            documentType: DocumentTypes.coopMemorandum.type,
+            consumerFilename: this.uploadMemorandumDoc.name,
+            consumerIdentifier: this.getTempId,
+            consumerFilingDate: new Date().toISOString()
+          }
+          // Include document ID if available
+          if (this.getDocumentIdState.valid) {
+            params.consumerDocumentId = this.getDocumentIdState.consumerDocumentId
+          }
           res = await DocumentServices.uploadDocumentToDRS(
             this.uploadMemorandumDoc,
-            DocumentTypes.coopMemorandum.class,
-            DocumentTypes.coopMemorandum.type,
-            this.getTempId
+            params
           )
         }
       } else {
@@ -471,6 +488,13 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
           memorandumFile,
           docKey: this.enableDocumentRecords ? res.data.documentServiceId : doc.key
         })
+        // Update documentIdState for unique validation
+        if (this.enableDocumentRecords) {
+          this.setDocumentIdState({
+            valid: true,
+            consumerDocumentId: res.data.consumerDocumentId
+          })
+        }
       } else {
         // put file uploader into manual error mode by setting custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE

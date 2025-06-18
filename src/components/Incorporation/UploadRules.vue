@@ -289,6 +289,7 @@ import {
   CreateRulesIF,
   CreateRulesResourceIF,
   DocumentIdIF,
+  DocumentRequestIF,
   FormIF,
   PresignedUrlIF,
   ValidationDetailIF
@@ -324,6 +325,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
   @Getter(useStore) getTempId!: string
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setRulesStepValidity!: (x: ValidationDetailIF) => void
@@ -389,15 +391,28 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         if (this.getCreateRulesStep.docKey) {
           res = await DocumentServices.updateDocumentOnDRS(
             this.uploadRulesDoc,
-            this.getCreateRulesStep.docKey,
-            this.uploadRulesDoc.name
+            {
+              documentServiceId: this.getCreateRulesStep.docKey,
+              consumerFilename: this.uploadRulesDoc.name,
+              consumerDocumentId: this.getDocumentIdState.consumerDocumentId,
+              consumerFilingDate: new Date().toISOString()
+            }
           )
         } else {
+          const params: DocumentRequestIF = {
+            documentClass: DocumentTypes.coopRules.class,
+            documentType: DocumentTypes.coopRules.type,
+            consumerFilename: this.uploadRulesDoc.name,
+            consumerIdentifier: this.getTempId,
+            consumerFilingDate: new Date().toISOString()
+          }
+          // Include document ID if available
+          if (this.getDocumentIdState.valid) {
+            params.consumerDocumentId = this.getDocumentIdState.consumerDocumentId
+          }
           res = await DocumentServices.uploadDocumentToDRS(
             this.uploadRulesDoc,
-            DocumentTypes.coopRules.class,
-            DocumentTypes.coopRules.type,
-            this.getTempId
+            params
           )
         }
       } else {

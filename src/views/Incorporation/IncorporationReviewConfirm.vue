@@ -222,7 +222,7 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="isRoleStaff"
+      v-if="isRoleStaff && !isEntityCoop"
       id="document-id-section"
       class="mt-10"
     >

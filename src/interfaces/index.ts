@@ -81,6 +81,7 @@ export type {
   BusinessLookupResultIF,
   CommentIF,
   ContactPointIF,
+  DocumentRequestIF,
   EffectiveDateTimeIF,
   NaicsIF,
   NaicsResultIF,
