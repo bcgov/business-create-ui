@@ -322,7 +322,7 @@ export const useStore = defineStore('store', {
     },
 
     /** The current account id. */
-    getCurrentAccountId (): number {
+    getAccountId (): number {
       return this.getAccountInformation?.id
     },
 

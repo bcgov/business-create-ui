@@ -31,7 +31,7 @@ function getNumberedEntityName (): string {
 
 /** Returns URL param string with Account ID if present, else empty string. */
 function getParams (): string {
-  const accountId = store.getCurrentAccountId
+  const accountId = store.getAccountId
   return accountId ? `?accountid=${accountId}` : ''
 }
 
@@ -56,7 +56,7 @@ export function getBcRegistriesDashboardBreadcrumb (): BreadcrumbIF {
 export function getMyBusinessRegistryBreadcrumb (): BreadcrumbIF {
   return {
     text: 'My Business Registry',
-    href: `${sessionStorage.getItem('BUSINESSES_URL')}account/${store.getCurrentAccountId}/business`
+    href: `${sessionStorage.getItem('BUSINESSES_URL')}account/${store.getAccountId}/business`
   }
 }
 

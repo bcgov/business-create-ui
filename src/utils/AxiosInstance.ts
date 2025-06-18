@@ -1,14 +1,9 @@
 import axios from 'axios'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
-import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
 
 /**
  * This file exports an instance of Axios with some extra request headers.
  */
-
-setActivePinia(createPinia())
-const store = useStore()
 
 const instance = axios.create()
 
@@ -26,11 +21,22 @@ instance.interceptors.request.use(
 
     // add these headers only if Vitest isn't running as it breaks some tests
     if (import.meta.env.VITEST === undefined) {
-      request.headers.common['Account-Id'] = store.getCurrentAccountId
+      request.headers.common['Account-Id'] = getAccountId()
       request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
     }
 
     return request
+
+    function getAccountId (): string {
+      // if we can't get account id from ACCOUNT_ID
+      // then try to get it from CURRENT_ACCOUNT
+      let accountId = sessionStorage.getItem('ACCOUNT_ID')
+      if (!accountId) {
+        const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+        accountId = JSON.parse(currentAccount)?.id
+      }
+      return accountId
+    }
   },
   error => Promise.reject(error)
 )
