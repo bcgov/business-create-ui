@@ -675,7 +675,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches user info, draft filing, NR data, etc. */
   async fetchData (): Promise<void> {
-    // reset errors in case this method is invoked more than once (ie, retry)
+    // reset errors in case this method is called more than once (ie, retry)
     this.resetFlags()
 
     // only check FF when not in Vitest tests

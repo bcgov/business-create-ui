@@ -41,15 +41,15 @@ Vue.use(VueObserveVisibility)
 
 // main code
 async function start () {
-  // fetch config from environment and API
-  // must come first as inits below depend on config
-  await FetchConfig()
-
   // initialize Launch Darkly
-  if ((window as any).ldClientId) {
+  window['ldClientId'] = import.meta.env.VUE_APP_BUSINESS_CREATE_LD_CLIENT_ID
+  if (window['ldClientId']) {
     console.info('Initializing Launch Darkly...') // eslint-disable-line no-console
     await InitLdClient()
   }
+
+  // fetch config from environment and API
+  await FetchConfig()
 
   if (GetFeatureFlag('sentry-enable')) {
     // initialize Sentry

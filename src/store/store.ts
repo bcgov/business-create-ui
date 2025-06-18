@@ -86,18 +86,6 @@ import { IsAuthorized } from '@/utils/Authorizations'
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
-    /** The Account ID, from session storage. */
-    getAccountId (): string {
-      // if we can't get account id from ACCOUNT_ID
-      // then try to get it from CURRENT_ACCOUNT
-      let accountId = sessionStorage.getItem('ACCOUNT_ID')
-      if (!accountId) {
-        const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
-        accountId = JSON.parse(currentAccount)?.id
-      }
-      return accountId
-    },
-
     /** True if current screen width is mobile. */
     isMobile (): boolean {
       // fall back to base window width if no window size changes have occurred
@@ -331,6 +319,11 @@ export const useStore = defineStore('store', {
     /** The Account Information object. */
     getAccountInformation (): AccountInformationIF {
       return this.stateModel.accountInformation
+    },
+
+    /** The current account id. */
+    getCurrentAccountId (): number {
+      return this.getAccountInformation?.id
     },
 
     /** Whether the entity is a base company (BC/BEN/CC/ULC or C/CBEN/CCC/CUL). */
