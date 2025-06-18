@@ -17,7 +17,7 @@ export const stateModel: StateModelIF = {
     filingStatus: null,
     filingType: null,
     keycloakGuid: null,
-    authRoles: [],
+    authorizedActions: [],
     legalName: '',
     userEmail: '',
     userPhone: '',

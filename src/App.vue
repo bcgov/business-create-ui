@@ -295,7 +295,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     confirm: ConfirmDialogType
   }
 
-  @Getter(useStore) getAuthRoles!: Array<AuthorizationRoles>
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingData!: Array<FilingDataIF>
   @Getter(useStore) getFilingName!: FilingNames
@@ -327,7 +326,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
-  @Action(useStore) setAuthRoles!: (x: Array<AuthorizationRoles>) => void
+  @Action(useStore) setAuthorizedActions!: (x: Array<AuthorizedActions>) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
@@ -376,6 +375,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   saveErrors = []
   saveWarnings = []
   fileAndPayInvalidNameRequestDialog = false
+  authRoles = [] as Array<AuthorizationRoles>
 
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
@@ -878,7 +878,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async handleDraftWithBusinessId (businessId: string): Promise<void> {
     // ensure user is authorized to access this business
     try {
-      this.checkAuth()
+      await this.checkAuth()
     } catch (error) {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
@@ -944,7 +944,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   private async handleDraftWithTempId (tempId: string): Promise<void> {
     // ensure user is authorized to access this bootstrap business
     try {
-      this.checkAuth()
+      await this.checkAuth()
     } catch (error) {
       console.log('Auth error =', error) // eslint-disable-line no-console
       this.accountAuthorizationDialog = true
@@ -1141,10 +1141,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.saveWarnings = []
   }
 
-  /**
-   * Fetches user info, stores it, and returns it.
-   * May also fetch and store auth info.
-   */
+  /** Fetches auth and user info, stores it, and returns it. */
   private async loadUserInfo (): Promise<any> {
     // fetch auth org info for dissolution/restoration only
     // do not set auth org/contact info for Restoration as it is likely to change
@@ -1258,7 +1255,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     const firstName: string = userInfo.firstname
     const lastName: string = userInfo.lastname
     // store auth roles in custom object
-    const custom = { roles: this.getAuthRoles } as any
+    const custom = { roles: this.authRoles } as any
 
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
@@ -1295,24 +1292,24 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Fetches authorizations and verifies roles. */
-  private checkAuth (): void {
+  private async checkAuth (): Promise<void> {
     // get roles from KC token
-    const authRoles = GetKeycloakRoles()
+    this.authRoles = GetKeycloakRoles()
 
     // safety check
-    if (!Array.isArray(authRoles)) {
+    if (!Array.isArray(this.authRoles)) {
       throw new Error('Invalid roles')
     }
 
-    // verify that response has one of the supported roles
-    // FUTURE: when we fetch authorized actions from Legal API, we'll instead check
-    //         that the list of actions isn't empty
-    const allRoles = Object.values(AuthorizationRoles)
-    if (!allRoles.some(role => authRoles.includes(role))) {
-      throw new Error('Missing valid role')
+    // get authorized actions (aka permissions)
+    // NB: will throw if API error
+    const authorizedActions = await LegalServices.fetchAuthorizedActions()
+
+    if (!Array.isArray(authorizedActions) || authorizedActions.length < 1) {
+      throw new Error('Invalid or missing authorized actions')
     }
 
-    this.setAuthRoles(authRoles)
+    this.setAuthorizedActions(authorizedActions)
   }
 
   /** Fetches and stores parties info . */
