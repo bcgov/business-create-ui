@@ -700,6 +700,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
+      // load authorized actions (aka permissions)
+      // must be called after we have current account info
+      await this.loadAuthorizedActions().catch(error => {
+        console.log('Authorized actions error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // load auth roles and store locally
+      this.authRoles = await this.loadAuthRoles().catch(error => {
+        console.log('Auth roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error
+      })
+
       // handle the filing according to whether we have a business id or temp id
       try {
         // safety checks
@@ -754,6 +769,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // get user info
+      // must be called after we know filing type
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
         if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
@@ -764,7 +780,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // update Launch Darkly
+      // update Launch Darkly with user info
+      // this allows targeted feature flags
       await this.updateLaunchDarkly(userInfo).catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
@@ -876,15 +893,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only dissolutions/restorations have a Business ID.)
    */
   private async handleDraftWithBusinessId (businessId: string): Promise<void> {
-    // ensure user is authorized to access this business
-    try {
-      await this.checkAuth()
-    } catch (error) {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    }
-
     // load business info
     await this.loadBusinessInfo(businessId)
 
@@ -942,15 +950,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only amalgamations/continuation ins/incorporations/registrations have a Temp ID.)
    */
   private async handleDraftWithTempId (tempId: string): Promise<void> {
-    // ensure user is authorized to access this bootstrap business
-    try {
-      await this.checkAuth()
-    } catch (error) {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    }
-
     // fetch draft filing
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
@@ -1193,7 +1192,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
-    const currentAccount = await this.getCurrentAccount()
+    const currentAccount = await getCurrentAccount()
     if (currentAccount) {
       const accountInfo: AccountInformationIF = {
         accountType: currentAccount.accountType,
@@ -1206,21 +1205,34 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get org info
       await this.loadOrgInfo(accountInfo?.id)
     }
+
+    /**
+     * Gets current account from object in session storage.
+     * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
+     */
+    async function getCurrentAccount (): Promise<any> {
+      let account = null
+      for (let i = 0; i < 50; i++) {
+        const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+        account = JSON.parse(currentAccount)
+        if (account) break
+        await Sleep(100)
+      }
+      return account
+    }
   }
 
-  /**
-   * Gets current account from object in session storage.
-   * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
-   */
-  private async getCurrentAccount (): Promise<any> {
-    let account = null
-    for (let i = 0; i < 50; i++) {
-      const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-      account = JSON.parse(currentAccount)
-      if (account) break
-      await Sleep(100)
+  /** Fetches and stores authorized actions (aka permissions). */
+  private async loadAuthorizedActions (): Promise<void> {
+    // NB: will throw if API error
+    const authorizedActions = await LegalServices.fetchAuthorizedActions()
+
+    // verify we have _some_ authorized actions
+    if (!Array.isArray(authorizedActions) || authorizedActions.length < 1) {
+      throw new Error('Invalid or missing authorized actions')
     }
-    return account
+
+    this.setAuthorizedActions(authorizedActions)
   }
 
   /** Fetches org info and stores it and user's address. */
@@ -1291,25 +1303,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setBusinessStartDate(business.startDate)
   }
 
-  /** Fetches authorizations and verifies roles. */
-  private async checkAuth (): Promise<void> {
+  /** Fetches auth roles. */
+  private async loadAuthRoles (): Promise<AuthorizationRoles[]> {
     // get roles from KC token
-    this.authRoles = GetKeycloakRoles()
+    const authRoles = GetKeycloakRoles()
 
     // safety check
-    if (!Array.isArray(this.authRoles)) {
+    if (!Array.isArray(authRoles)) {
       throw new Error('Invalid roles')
     }
 
-    // get authorized actions (aka permissions)
-    // NB: will throw if API error
-    const authorizedActions = await LegalServices.fetchAuthorizedActions()
-
-    if (!Array.isArray(authorizedActions) || authorizedActions.length < 1) {
-      throw new Error('Invalid or missing authorized actions')
-    }
-
-    this.setAuthorizedActions(authorizedActions)
+    return authRoles
   }
 
   /** Fetches and stores parties info . */

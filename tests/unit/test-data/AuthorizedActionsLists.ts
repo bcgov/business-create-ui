@@ -1,7 +1,7 @@
 import { AuthorizedActions } from '@/enums'
 
 /** The authorized actions if the user is Business Registry Staff. */
-const BusinessRegistryStaffActions = [
+export const BusinessRegistryStaffActions = [
   AuthorizedActions.AMALGAMATION_FILING,
   AuthorizedActions.AML_OVERRIDES,
   AuthorizedActions.BLANK_CERTIFY_STATE,
@@ -29,7 +29,7 @@ const BusinessRegistryStaffActions = [
 ]
 
 /** The authorized actions if the user is Maximus Staff. */
-const MaximusStaffActions = [
+export const MaximusStaffActions = [
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.BLANK_CERTIFY_STATE,
   AuthorizedActions.EDITABLE_CERTIFY_NAME,
@@ -42,7 +42,7 @@ const MaximusStaffActions = [
 ]
 
 /** The authorized actions if the user is Contact Centre Staff. */
-const ContactCentreStaffActions = [
+export const ContactCentreStaffActions = [
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.FIRM_DISSOLUTION_FILING,
   AuthorizedActions.INCORPORATION_APPLICATION_FILING,
@@ -53,7 +53,7 @@ const ContactCentreStaffActions = [
 ]
 
 /** The authorized actions if the user is SBC Field Office Staff (aka SBC Staff Tier 2). */
-const SbcFieldOfficeStaffActions = [
+export const SbcFieldOfficeStaffActions = [
   AuthorizedActions.BLANK_CERTIFY_STATE,
   AuthorizedActions.BLANK_COMPLETING_PARTY,
   AuthorizedActions.EDITABLE_CERTIFY_NAME,
@@ -70,7 +70,7 @@ const SbcFieldOfficeStaffActions = [
 ]
 
 /** The authorized actions if use is Public User. */
-const PublicUserActions = [
+export const PublicUserActions = [
   AuthorizedActions.AMALGAMATION_FILING,
   AuthorizedActions.CONTINUATION_IN_FILING,
   AuthorizedActions.FILE_AND_PAY,

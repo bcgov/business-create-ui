@@ -4,6 +4,12 @@ import { AmalgamationShareStructure } from '@/views'
 import ListShareClass from '@/components/common/ListShareClass.vue'
 import ShareStructure from '@/components/common/ShareStructure.vue'
 import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const amalgamationRegularBusinessInfo = [
@@ -30,12 +36,12 @@ for (const test of amalgamationRegularBusinessInfo) {
         AmalgamationShareStructure,
         null,
         {
-          entityType: test.entityType,
-          tombstone: { authRoles: [AuthorizationRoles.STAFF] }
+          entityType: test.entityType
         },
         null,
         null
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {

@@ -2,6 +2,12 @@ import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RegistrationReviewConfirm } from '@/views'
 import { RegistrationResources } from '@/resources'
 import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -41,9 +47,7 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
@@ -55,9 +59,7 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
@@ -66,13 +68,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Folio number section for non-staff only', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
@@ -82,13 +82,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Staff Payment section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )

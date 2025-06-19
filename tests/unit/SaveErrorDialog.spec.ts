@@ -6,6 +6,7 @@ import { shallowMount, mount } from '@vue/test-utils'
 import SaveErrorDialog from '@/dialogs/SaveErrorDialog.vue'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 import { AuthorizationRoles } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -16,7 +17,7 @@ document.body.setAttribute('data-app', 'true')
 
 describe('Save Error Dialog', () => {
   it('renders the component properly as a staff user with no errors or warnings', () => {
-    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -36,7 +37,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user with no errors or warnings', () => {
-    store.stateModel.tombstone.authRoles = []
+    setAuthRole(store)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -58,7 +59,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only errors', () => {
-    store.stateModel.tombstone.authRoles = []
+    setAuthRole(store)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -85,7 +86,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only warnings', () => {
-    store.stateModel.tombstone.authRoles = []
+    setAuthRole(store)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -112,7 +113,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are both errors and warnings', () => {
-    store.stateModel.tombstone.authRoles = []
+    setAuthRole(store)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
