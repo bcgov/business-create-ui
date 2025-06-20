@@ -239,7 +239,7 @@ import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { GetFeatureFlag, GetKeycloakRoles, UpdateLdUser, Navigate, Sleep } from '@/utils'
+import { GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -272,7 +272,6 @@ import { AuthorizationRoles, AuthorizedActions, EntityStates, ErrorTypes, Filing
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
-import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {

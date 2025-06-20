@@ -307,7 +307,7 @@ import { ContactPointIF, CertifyIF, CompletingPartyStatementIF, CourtOrderStepIF
   CompletingPartyIF, PartyIF, StaffPaymentStepIF } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

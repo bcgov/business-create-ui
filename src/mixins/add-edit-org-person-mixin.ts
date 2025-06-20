@@ -12,7 +12,7 @@ import { Rules } from '@/rules'
 import { PersonAddressSchema } from '@/schemas'
 import { LegalServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides common add/edit org/person methods.
