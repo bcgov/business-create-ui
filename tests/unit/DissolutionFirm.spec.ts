@@ -6,6 +6,7 @@ import { useStore } from '@/store/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'
 import { AuthorizationRoles, AuthorizedActions } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 
@@ -65,9 +66,7 @@ for (const test of dissolutionFirmTestCases) {
       wrapper = shallowWrapperFactory(
         DissolutionFirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -88,13 +87,11 @@ for (const test of dissolutionFirmTestCases) {
     })
 
     it('displays Folio Number section for non-staff only', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         DissolutionFirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -116,8 +113,7 @@ for (const test of dissolutionFirmTestCases) {
     })
 
     it('displays Completing Party section', async () => {
-      store.setAuthRoles(test.isStaff ? [AuthorizationRoles.STAFF] : [])
-
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = mount(
         DissolutionFirm,
         { vuetify }

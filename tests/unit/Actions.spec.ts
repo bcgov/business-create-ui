@@ -17,6 +17,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
 import { ShareClassIF } from '@bcrs-shared-components/interfaces'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -97,7 +98,7 @@ describe('Actions component - Incorporation Application', () => {
     store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
     store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
     store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
-    store.setAuthRoles([AuthorizationRoles.PUBLIC_USER])
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
 
     // verify File and Pay button state
@@ -232,7 +233,7 @@ describe('Actions component - NR Validation', () => {
     store.stateModel.tombstone = {
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
-      authRoles: []
+      authorizedActions: []
     } as TombstoneIF
     store.stateModel.certifyState = {
       valid: true,
@@ -493,7 +494,7 @@ describe('Actions component - Filing Functionality', () => {
       filingType: FilingTypes.INCORPORATION_APPLICATION,
       userEmail: 'completing-party@example.com',
       folioNumber: '123456',
-      authRoles: []
+      authorizedActions: []
     } as TombstoneIF
     store.stateModel.certifyState.certifiedBy = filing.header.certifiedBy
     store.stateModel.businessContact = {
@@ -698,21 +699,21 @@ describe('Actions component - Conditionally disabled File and Pay button', () =>
   })
 
   it('Enables File and Pay button for regular user', async () => {
-    store.setAuthRoles([AuthorizationRoles.PUBLIC_USER])
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
     expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })
 
   it('Enables File and Pay button for Business Registry Staff', async () => {
-    store.setAuthRoles([AuthorizationRoles.STAFF])
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
     expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBeUndefined()
   })
 
   it('Disables File and Pay button for Maximus Staff', async () => {
-    store.setAuthRoles([AuthorizationRoles.MAXIMUS_STAFF])
+    setAuthRole(store, AuthorizationRoles.MAXIMUS_STAFF)
     await Vue.nextTick()
     expect(wrapper.find('#file-pay-btn').exists()).toBe(true)
     expect(wrapper.find('#file-pay-btn').attributes('disabled')).toBe('true')

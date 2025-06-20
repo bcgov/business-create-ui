@@ -285,7 +285,7 @@ import { JurisdictionLocation } from '@bcrs-shared-components/enums'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { GenericErrorDialog } from '@/dialogs/'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import StartDate from '@/components/Registration/StartDate.vue'
 import { AuthorizationRoles } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 
@@ -35,7 +36,7 @@ describe('Start Date component', () => {
   it('has correct minimum and maximum dates for a staff user ', () => {
     // set datetime in UTC so tests pass both locally and in GitHub
     store.setCurrentJsDate(new Date('2023-06-14T12:00:00.000Z'))
-    store.setAuthRoles([AuthorizationRoles.STAFF])
+    setAuthRole(store, AuthorizationRoles.STAFF)
 
     expect(wrapper.vm.startDateMin).toBe(null) // no minimum date
     expect(wrapper.vm.startDateMax).toBe('2023-09-12') // 90 days from now
@@ -44,7 +45,7 @@ describe('Start Date component', () => {
   it('has correct minimum and maximum dates for a regular user', () => {
     // set datetime in UTC so tests pass both locally and in GitHub
     store.setCurrentJsDate(new Date('2023-06-14T12:00:00.000Z'))
-    store.setAuthRoles([])
+    setAuthRole(store)
 
     expect(wrapper.vm.startDateMin).toBe('2013-06-14') // 10 years ago
     expect(wrapper.vm.startDateMax).toBe('2023-09-12') // 90 days from now

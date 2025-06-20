@@ -239,7 +239,7 @@ import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { GetFeatureFlag, GetKeycloakRoles, UpdateLdUser, Navigate, Sleep } from '@/utils'
+import { GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -272,7 +272,6 @@ import { AuthorizationRoles, AuthorizedActions, EntityStates, ErrorTypes, Filing
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
-import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {
@@ -295,7 +294,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     confirm: ConfirmDialogType
   }
 
-  @Getter(useStore) getAuthRoles!: Array<AuthorizationRoles>
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingData!: Array<FilingDataIF>
   @Getter(useStore) getFilingName!: FilingNames
@@ -327,7 +325,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
-  @Action(useStore) setAuthRoles!: (x: Array<AuthorizationRoles>) => void
+  @Action(useStore) setAuthorizedActions!: (x: Array<AuthorizedActions>) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
@@ -376,6 +374,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   saveErrors = []
   saveWarnings = []
   fileAndPayInvalidNameRequestDialog = false
+  authRoles = [] as Array<AuthorizationRoles>
 
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
@@ -700,6 +699,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
+      // load authorized actions (aka permissions)
+      // must be called after we have current account info
+      await this.loadAuthorizedActions().catch(error => {
+        console.log('Authorized actions error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      })
+
+      // load auth roles and store locally
+      this.authRoles = await this.loadAuthRoles().catch(error => {
+        console.log('Auth roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error
+      })
+
       // handle the filing according to whether we have a business id or temp id
       try {
         // safety checks
@@ -754,6 +768,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // get user info
+      // must be called after we know filing type
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
         if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
@@ -764,7 +779,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // update Launch Darkly
+      // update Launch Darkly with user info
+      // this allows targeted feature flags
       await this.updateLaunchDarkly(userInfo).catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
@@ -876,15 +892,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only dissolutions/restorations have a Business ID.)
    */
   private async handleDraftWithBusinessId (businessId: string): Promise<void> {
-    // ensure user is authorized to access this business
-    try {
-      this.checkAuth()
-    } catch (error) {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    }
-
     // load business info
     await this.loadBusinessInfo(businessId)
 
@@ -942,15 +949,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only amalgamations/continuation ins/incorporations/registrations have a Temp ID.)
    */
   private async handleDraftWithTempId (tempId: string): Promise<void> {
-    // ensure user is authorized to access this bootstrap business
-    try {
-      this.checkAuth()
-    } catch (error) {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    }
-
     // fetch draft filing
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
@@ -1141,10 +1139,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.saveWarnings = []
   }
 
-  /**
-   * Fetches user info, stores it, and returns it.
-   * May also fetch and store auth info.
-   */
+  /** Fetches auth and user info, stores it, and returns it. */
   private async loadUserInfo (): Promise<any> {
     // fetch auth org info for dissolution/restoration only
     // do not set auth org/contact info for Restoration as it is likely to change
@@ -1196,7 +1191,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Gets account info and stores it. */
   private async loadAccountInformation (): Promise<any> {
-    const currentAccount = await this.getCurrentAccount()
+    const currentAccount = await getCurrentAccount()
     if (currentAccount) {
       const accountInfo: AccountInformationIF = {
         accountType: currentAccount.accountType,
@@ -1209,21 +1204,34 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get org info
       await this.loadOrgInfo(accountInfo?.id)
     }
+
+    /**
+     * Gets current account from object in session storage.
+     * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
+     */
+    async function getCurrentAccount (): Promise<any> {
+      let account = null
+      for (let i = 0; i < 50; i++) {
+        const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+        account = JSON.parse(currentAccount)
+        if (account) break
+        await Sleep(100)
+      }
+      return account
+    }
   }
 
-  /**
-   * Gets current account from object in session storage.
-   * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
-   */
-  private async getCurrentAccount (): Promise<any> {
-    let account = null
-    for (let i = 0; i < 50; i++) {
-      const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-      account = JSON.parse(currentAccount)
-      if (account) break
-      await Sleep(100)
+  /** Fetches and stores authorized actions (aka permissions). */
+  private async loadAuthorizedActions (): Promise<void> {
+    // NB: will throw if API error
+    const authorizedActions = await LegalServices.fetchAuthorizedActions()
+
+    // verify we have _some_ authorized actions
+    if (!Array.isArray(authorizedActions) || authorizedActions.length < 1) {
+      throw new Error('Invalid or missing authorized actions')
     }
-    return account
+
+    this.setAuthorizedActions(authorizedActions)
   }
 
   /** Fetches org info and stores it and user's address. */
@@ -1258,7 +1266,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     const firstName: string = userInfo.firstname
     const lastName: string = userInfo.lastname
     // store auth roles in custom object
-    const custom = { roles: this.getAuthRoles } as any
+    const custom = { roles: this.authRoles } as any
 
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
@@ -1294,8 +1302,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setBusinessStartDate(business.startDate)
   }
 
-  /** Fetches authorizations and verifies roles. */
-  private checkAuth (): void {
+  /** Fetches auth roles. */
+  private async loadAuthRoles (): Promise<AuthorizationRoles[]> {
     // get roles from KC token
     const authRoles = GetKeycloakRoles()
 
@@ -1304,15 +1312,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       throw new Error('Invalid roles')
     }
 
-    // verify that response has one of the supported roles
-    // FUTURE: when we fetch authorized actions from Legal API, we'll instead check
-    //         that the list of actions isn't empty
-    const allRoles = Object.values(AuthorizationRoles)
-    if (!allRoles.some(role => authRoles.includes(role))) {
-      throw new Error('Missing valid role')
-    }
-
-    this.setAuthRoles(authRoles)
+    return authRoles
   }
 
   /** Fetches and stores parties info . */

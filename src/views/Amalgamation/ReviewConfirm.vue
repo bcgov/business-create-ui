@@ -286,7 +286,7 @@ import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import ListResolutions from '@/components/common/ListResolutions.vue'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

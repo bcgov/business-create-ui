@@ -11,6 +11,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamatingBusinessIF } from '@/interfaces'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -32,7 +33,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as staff', async () => {
     // set state
-    store.setAuthRoles([AuthorizationRoles.STAFF])
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify components
@@ -47,7 +48,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as non-staff', async () => {
     // set state
-    store.setAuthRoles([])
+    setAuthRole(store)
     await Vue.nextTick()
 
     // verify components
@@ -202,7 +203,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.authRoles = []
+    setAuthRole(store)
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })
@@ -265,7 +266,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   it('saves an amalgamating business - BC - unaffiliated - non-staff', async () => {
     // set state
-    store.setAuthRoles([])
+    setAuthRole(store)
     await Vue.nextTick()
 
     // open panel
@@ -611,7 +612,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.authRoles = [AuthorizationRoles.STAFF]
+    setAuthRole(store, AuthorizationRoles.STAFF)
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })

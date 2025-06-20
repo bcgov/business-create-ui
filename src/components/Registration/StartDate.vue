@@ -39,7 +39,7 @@ import { RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
 import { AuthorizedActions } from '@/enums'
 import { DateMixin } from '@/mixins'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

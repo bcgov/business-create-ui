@@ -5,7 +5,7 @@ import { AuthorizedActions, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/en
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, RegistrationStateIF } from '@/interfaces'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides common people and roles methods.

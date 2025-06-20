@@ -181,7 +181,7 @@ import DefineRegistrationSummary from '@/components/Registration/DefineRegistrat
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

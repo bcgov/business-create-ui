@@ -15,6 +15,12 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import ListResolutions from '@/components/common/ListResolutions.vue'
 import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -45,12 +51,13 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            authRoles: [AuthorizationRoles.STAFF]
+            authorizedActions: []
           }
         },
         null,
         null
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {
@@ -150,7 +157,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            authRoles: []
+            authorizedActions: []
           }
         },
         null,

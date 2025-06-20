@@ -389,7 +389,7 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
 import { AuthorizedActions, RouteNames } from '@/enums'
 import { ContactPointIF, CertifyIF, CourtOrderStepIF, CreateResolutionIF, CreateResolutionResourceIF,
   DocumentDeliveryIF, EffectiveDateTimeIF, FeesIF, UploadAffidavitIF } from '@/interfaces'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

@@ -89,10 +89,9 @@ import { AuthorizedActions, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, IsAuthorized } from '@/utils'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
-import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({
   components: {

@@ -2,6 +2,12 @@ import { shallowWrapperFactory, wrapperFactory } from '../vitest-wrapper-factory
 import DissolutionReviewConfirm from '@/views/Dissolution/DissolutionReviewConfirm.vue'
 import { DissolutionResources } from '@/resources/'
 import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -56,9 +62,7 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -112,13 +116,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Folio Number section for non-staff only', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -144,13 +146,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Court Order and Plan of Arrangement section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -161,13 +161,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Staff Payment section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: test.isStaff ? [AuthorizationRoles.STAFF] : [] }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )

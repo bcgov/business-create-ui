@@ -13,6 +13,12 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AuthorizationRoles, FilingStatus } from '@/enums'
 import { ContinuationInResources } from '@/resources'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Continuation In Review Confirm component', () => {
   it('renders the component correctly - Review and Confirm section', async () => {
@@ -129,12 +135,12 @@ describe('Continuation In Review Confirm component', () => {
       ContinuationInReviewConfirm,
       null,
       {
-        entityType: 'C',
-        tombstone: { authRoles: AuthorizationRoles.STAFF }
+        entityType: 'C'
       },
       null,
       ContinuationInResources
     )
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify that component exists
@@ -155,12 +161,12 @@ describe('Continuation In Review Confirm component', () => {
       ContinuationInReviewConfirm,
       null,
       {
-        entityType: 'C',
-        tombstone: { authRoles: AuthorizationRoles.STAFF }
+        entityType: 'C'
       },
       null,
       ContinuationInResources
     )
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify that component exists

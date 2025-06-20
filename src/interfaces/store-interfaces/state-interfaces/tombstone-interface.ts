@@ -1,12 +1,12 @@
 import { AddressIF } from '@/interfaces'
-import { AuthorizationRoles, FilingStatus, FilingTypes } from '@/enums'
+import { AuthorizedActions, FilingStatus, FilingTypes } from '@/enums'
 
 // Tombstone State model
 export interface TombstoneIF {
   filingStatus?: FilingStatus
   filingType: FilingTypes
   keycloakGuid: string // from KC token
-  authRoles: Array<AuthorizationRoles>
+  authorizedActions: Array<AuthorizedActions>
   legalName: string
   userEmail: string // from auth user info
   userPhone: string // from auth user info

@@ -261,7 +261,7 @@ import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandum
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

@@ -10,6 +10,12 @@ import Certify from '@/components/common/Certify.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const restorationBusinessInfo = [
@@ -44,13 +50,11 @@ for (const test of restorationBusinessInfo) {
     let wrapper: any
 
     beforeAll(() => {
+      setAuthRole(store, AuthorizationRoles.STAFF)
       wrapper = shallowWrapperFactory(
         RestorationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { authRoles: [AuthorizationRoles.STAFF] }
-        },
+        { entityType: test.entityType },
         null,
         RestorationResources
       )

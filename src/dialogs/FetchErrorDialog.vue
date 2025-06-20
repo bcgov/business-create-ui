@@ -54,7 +54,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
 import { AuthorizedActions } from '@/enums'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
