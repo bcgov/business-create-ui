@@ -1,7 +1,4 @@
-/**
- * List of actions authorized via roles. See Authorizations module.
- * Ultimately, this will be combined into the Authorization Roles enum.
- */
+/** List of authorized actions (permissions). See IsAuthorized(). */
 export enum AuthorizedActions {
   AMALGAMATION_FILING = 'AMALGAMATION_FILING',
   AML_OVERRIDES = 'AML_OVERRIDES',
