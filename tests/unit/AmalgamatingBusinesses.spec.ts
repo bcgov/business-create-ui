@@ -48,7 +48,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as non-staff', async () => {
     // set state
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
 
     // verify components
@@ -203,7 +203,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   beforeEach(() => {
     // initial state
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })
@@ -266,7 +266,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   it('saves an amalgamating business - BC - unaffiliated - non-staff', async () => {
     // set state
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
 
     // open panel

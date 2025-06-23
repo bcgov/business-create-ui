@@ -44,7 +44,7 @@ describe('Payment Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,
@@ -92,7 +92,7 @@ describe('Payment Error Dialog', () => {
   })
 
   it('renders PAD error messages correctly when they are present', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,
@@ -121,7 +121,7 @@ describe('Payment Error Dialog', () => {
   })
 
   it('renders PAD warning messages correctly when they are present', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(PaymentErrorDialog,
       {
         vuetify,

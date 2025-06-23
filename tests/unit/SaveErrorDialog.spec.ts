@@ -37,7 +37,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly as a regular user with no errors or warnings', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -59,7 +59,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only errors', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -86,7 +86,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are only warnings', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,
@@ -113,7 +113,7 @@ describe('Save Error Dialog', () => {
   })
 
   it('renders the component properly when there are both errors and warnings', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = shallowMount(SaveErrorDialog,
       {
         vuetify,

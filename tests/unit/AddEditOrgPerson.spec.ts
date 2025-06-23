@@ -348,7 +348,7 @@ describe('Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$refs.confirmDialog).toBeTruthy()
 
     wrapper.destroy()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
   })
 
   it('Emits events correctly on confirming reassign completing party', async () => {
