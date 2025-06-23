@@ -159,7 +159,7 @@ import StartDate from '@/components/Registration/StartDate.vue'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { AuthorizedActions, RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {

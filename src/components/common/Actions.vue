@@ -110,14 +110,13 @@
 import { Component, Emit, Mixins } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { Navigate } from '@/utils'
+import { IsAuthorized, Navigate } from '@/utils'
 import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin }
   from '@/mixins'
 import { LegalServices } from '@/services/'
 import { AuthorizedActions, FilingStatus, FilingTypes, RouteNames } from '@/enums'
 import { NameRequestStates } from '@bcrs-shared-components/enums'
 import flushPromises from 'flush-promises'
-import { IsAuthorized } from '@/utils/Authorizations'
 
 @Component({})
 export default class Actions extends Mixins(

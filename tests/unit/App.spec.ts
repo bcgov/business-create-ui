@@ -21,6 +21,8 @@ import { FilingTypes } from '@bcrs-shared-components/enums'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
 import { AuthorizationRoles } from '@/enums'
 import * as utils from '@/utils'
+import { PublicUserActions, BusinessRegistryStaffActions } from './test-data/AuthorizedActionsLists'
+import { setAuthRole } from '../set-auth-role'
 
 // mock fetch() as it is not defined in Jest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -349,6 +351,15 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
         }
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
+        }
+      })))
+
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
 
@@ -482,6 +493,15 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
         data:
         {
           filingFees: { futureEffectiveFees: 100 }
+        }
+      })))
+
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
         }
       })))
 
@@ -836,6 +856,15 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         data: []
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
+        }
+      })))
+
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
 
@@ -1025,6 +1054,15 @@ describe('Restoration - App page', () => {
         }
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...BusinessRegistryStaffActions ]
+        }
+      })))
+
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.STAFF])
 
@@ -1083,10 +1121,11 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          authRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1111,10 +1150,11 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          authRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1141,10 +1181,11 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          authRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1169,10 +1210,11 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          authRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')

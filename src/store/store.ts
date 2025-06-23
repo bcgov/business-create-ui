@@ -5,7 +5,6 @@ import { resourceModel, stateModel } from './state'
 import {
   AmalgamationTypes,
   ApprovalTypes,
-  AuthorizationRoles,
   AuthorizedActions,
   BusinessTypes,
   CoopTypes,
@@ -77,7 +76,7 @@ import {
   ResolutionIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 // It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
@@ -882,9 +881,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.keycloakGuid
     },
 
-    /** The user's roles from the Auth API "authorizations" endpoint. */
-    getAuthRoles (): Array<AuthorizationRoles> {
-      return this.stateModel.tombstone.authRoles
+    /** The user's authorized actions (aka permissions). */
+    getAuthorizedActions (): Array<AuthorizedActions> {
+      return this.stateModel.tombstone.authorizedActions
     },
 
     /** The user's address. */
@@ -1197,8 +1196,8 @@ export const useStore = defineStore('store', {
     setKeycloakGuid (keycloakGuid: string) {
       this.stateModel.tombstone.keycloakGuid = keycloakGuid
     },
-    setAuthRoles (roles: Array<AuthorizationRoles>) {
-      this.stateModel.tombstone.authRoles = roles
+    setAuthorizedActions (actions: Array<AuthorizedActions>) {
+      this.stateModel.tombstone.authorizedActions = actions
     },
     setUserAddress (userAddress: AddressIF) {
       this.stateModel.tombstone.userAddress = userAddress

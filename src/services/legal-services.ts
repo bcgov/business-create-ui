@@ -2,7 +2,7 @@ import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
 import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF, ResolutionIF }
   from '@/interfaces'
-import { FilingTypes, RoleTypes } from '@/enums'
+import { AuthorizedActions, FilingTypes, RoleTypes } from '@/enums'
 import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
@@ -297,6 +297,18 @@ export default class LegalServices {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
       return data.business
+    })
+  }
+
+  /**
+   * Fetches the current account's authorized actions (permissions).
+   * @returns a promise to return the list of authorized actions
+   */
+  static async fetchAuthorizedActions (): Promise<AuthorizedActions[]> {
+    return axios.get('permissions').then(response => {
+      const data = response?.data
+      if (!data) throw new Error('Invalid API response')
+      return data.authorizedPermissions
     })
   }
 }

@@ -10,7 +10,7 @@ import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources'
-import { IsAuthorized } from '@/utils/Authorizations'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides amalgamation rules, etc.
