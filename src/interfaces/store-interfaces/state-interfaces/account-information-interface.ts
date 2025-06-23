@@ -5,6 +5,7 @@ export interface AccountInformationIF {
   label: string
   type: string
   // NB: there are other fields but we don't need them
+  [x: string | number | symbol]: unknown
 }
 
 export const EmptyAccountInformation: AccountInformationIF = {

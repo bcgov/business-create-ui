@@ -7,8 +7,8 @@ import { waitForUpdate } from '../wait-for-update'
 
 const vuetify = new Vuetify({})
 
-// Note: the following arrayBuffer code is needed as jest does not provide arrayBuffer
-//  and this is required to test the scenarios where the pdf.js library is used.
+// Note: the following arrayBuffer code is needed as Vitest does not provide arrayBuffer
+//       and this is required to test the scenarios where the pdf.js library is used.
 File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer as any
 Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer as any
 

@@ -7,20 +7,43 @@
     >
       <header id="office-address-header">
         <h2>Registered and Records Office Addresses</h2>
-        <p>
-          Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
-          located in B.C.
-        </p>
+
+        <template v-if="allowEditingOfficeAddresses">
+          <p>
+            Enter the Registered Office and Records Office Mailing and Delivery Addresses. All addresses must be
+            located in B.C.
+          </p>
+        </template>
+        <template v-else>
+          <p>
+            Here are the Registered Office and Records Office Mailing and Delivery Addresses from the time of
+            dissolution. If they need to be updated, an Address Change filing will need to be done.
+          </p>
+        </template>
       </header>
 
-      <div :class="{ 'invalid-section': getShowErrors && !addressFormValid }">
+      <div
+        v-if="allowEditingOfficeAddresses"
+        :class="{ 'invalid-section': getShowErrors && !addressFormValid }"
+      >
         <OfficeAddresses
           :showErrors="getShowErrors"
-          :inputAddresses="addresses"
+          :inputAddresses="officeAddresses"
           @update:addresses="setOfficeAddresses($event)"
           @valid="onAddressFormValidityChange($event)"
         />
       </div>
+
+      <v-card
+        v-else
+        flat
+        class="py-8 px-6"
+      >
+        <OfficeAddresses
+          :inputAddresses="officeAddresses"
+          :isEditing="false"
+        />
+      </v-card>
     </section>
 
     <!-- Registered Office Contact Information -->
@@ -57,7 +80,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF }
+import { AddressIF, ContactPointIF, DefineCompanyIF, EmptyAddress, RegisteredRecordsAddressesIF }
   from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
@@ -85,12 +108,13 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
 
   // Local variables
   businessContactFormValid = false
-  addressFormValid = false
+  addressFormValid = true
+  allowEditingOfficeAddresses = false
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
 
-  get addresses (): RegisteredRecordsAddressesIF {
+  get officeAddresses (): RegisteredRecordsAddressesIF {
     return this.getDefineCompanyStep.officeAddresses
   }
 
@@ -99,8 +123,10 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
-    // if no addresses were fetched or are 'undefined', set default addresses
+    // if no addresses were fetched or are empty, set default addresses
     if (this.isEmptyRecordsAddress || this.isEmptyRegisteredAddress) {
+      this.allowEditingOfficeAddresses = true
+      this.addressFormValid = false
       this.setDefaultAddresses()
     }
 
@@ -111,31 +137,24 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   }
 
   get isEmptyRecordsAddress () : boolean {
-    if (!this.addresses.recordsOffice?.mailingAddress || !this.addresses.recordsOffice?.deliveryAddress) {
-      return true
-    } else {
-      return false
-    }
+    return (
+      this.isEmptyAddress(this.officeAddresses.recordsOffice?.mailingAddress) ||
+      this.isEmptyAddress(this.officeAddresses.recordsOffice?.deliveryAddress)
+    )
   }
 
   get isEmptyRegisteredAddress () : boolean {
-    if (!this.addresses.registeredOffice?.mailingAddress || !this.addresses.registeredOffice?.deliveryAddress) {
-      return true
-    } else {
-      return false
-    }
+    return (
+      this.isEmptyAddress(this.officeAddresses.registeredOffice?.mailingAddress) ||
+      this.isEmptyAddress(this.officeAddresses.registeredOffice?.deliveryAddress)
+    )
   }
 
   /** Sets default addresses in filing. (Will get overwritten by a fetched draft filing if there is one.) */
   private setDefaultAddresses (): void {
     const defaultAddress: AddressIF = {
-      addressCity: '',
-      addressCountry: 'CA',
-      addressRegion: 'BC',
-      deliveryInstructions: '',
-      postalCode: '',
-      streetAddress: '',
-      streetAddressAdditional: ''
+      ...EmptyAddress,
+      addressRegion: 'BC'
     }
 
     if (this.isBaseCompany) {
