@@ -323,10 +323,9 @@
 import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { isEmpty } from 'lodash'
 import { OfficeAddressSchema } from '@/schemas'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
-import { AddressIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
+import { AddressIF, DefineCompanyIF, EmptyAddress, RegisteredRecordsAddressesIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 
 @Component({
@@ -364,13 +363,8 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   // Local properties
   protected addresses: RegisteredRecordsAddressesIF = this.inputAddresses
   readonly defaultAddress: AddressIF = {
-    addressCity: '',
-    addressCountry: 'CA',
-    addressRegion: 'BC',
-    deliveryInstructions: '',
-    postalCode: '',
-    streetAddress: '',
-    streetAddressAdditional: ''
+    ...EmptyAddress,
+    addressRegion: 'BC'
   }
 
   // The 4 addresses that are the current state of the BaseAddress components:
@@ -476,18 +470,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
       (this.recMailingAddressValid && (this.inheritRecMailingAddress || this.recDeliveryAddressValid))
 
     return registeredOfficeValid && recordsOfficeValid
-  }
-
-  /** Whether the address object is empty or with only with default input values */
-  isEmptyAddress (address: AddressIF): boolean {
-    return isEmpty(address) ||
-           (!address.addressCity &&
-           (!address.addressCountry || address.addressCountry === 'CA') &&
-           (!address.addressRegion || address.addressRegion === 'BC') &&
-           !address.deliveryInstructions &&
-           !address.postalCode &&
-           !address.streetAddress &&
-           !address.streetAddressAdditional)
   }
 
   /** Whether to show the delivery address by default. */
@@ -704,6 +686,11 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
 
 .summary-section-header {
   font-size: $px-14;
+  font-weight: bold;
+}
+
+#summary-registered-address label,
+#summary-records-address label {
   font-weight: bold;
 }
 </style>

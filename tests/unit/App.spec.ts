@@ -24,7 +24,7 @@ import * as utils from '@/utils'
 import { PublicUserActions, BusinessRegistryStaffActions } from './test-data/AuthorizedActionsLists'
 import { setAuthRole } from '../set-auth-role'
 
-// mock fetch() as it is not defined in Jest
+// mock fetch() as it is not defined in Vitest
 // NB: it should be `global.fetch` but that doesn't work and this does
 window.fetch = vi.fn().mockImplementation(() => {
   return {
@@ -34,7 +34,7 @@ window.fetch = vi.fn().mockImplementation(() => {
   }
 })
 
-// mock alert() as it is not defined in Jest
+// mock alert() as it is not defined in Vitest
 window.alert = vi.fn()
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -1054,6 +1054,46 @@ describe('Restoration - App page', () => {
         }
       })))
 
+    // GET addresses
+    get.withArgs('businesses/BC0870803/addresses')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          registeredOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          },
+          recordsOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          }
+        }
+      })))
+
     // GET permissions
     get.withArgs('permissions')
       .returns(new Promise(resolve => resolve({
@@ -1099,7 +1139,7 @@ describe('Restoration - App page', () => {
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
 
-  it('displays the fee summary amount properly for restoration application', async () => {
+  it('displays the fee summary amount properly for restoration application', () => {
     const feeSummary = wrapper.findComponent(SbcFeeSummary)
     // when restoration type is initially not chosen, the fee summary is called with empty []
     expect(feeSummary.props('filingData')).toEqual([])

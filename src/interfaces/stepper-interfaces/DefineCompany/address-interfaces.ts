@@ -11,7 +11,9 @@ export interface OfficeAddressIF {
 /** Interface to define an incorporation address. */
 export interface RegisteredRecordsAddressesIF {
   registeredOffice: OfficeAddressIF
-  // Records Address is required for BCOMPs.
-  // Records Address may be optional for other app types.
+  // Records Office is required for BCOMPs.
+  // Records Office may be optional for other app types.
   recordsOffice?: OfficeAddressIF
+  // Custodial Office is present for restoration filings
+  custodialOffice?: OfficeAddressIF
 }

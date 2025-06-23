@@ -351,6 +351,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setUserLastName!: (x: string) => void
   @Action(useStore) setUserPhone!: (x: string) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
+  // @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
   @Action(useStore) setOrgInformation!: (x: OrgInformationIF) => void
   @Action(useStore) setShowErrors!: (x: boolean) => void
   @Action(useStore) setTempId!: (x: string) => void
@@ -794,6 +795,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         await this.loadPartiesInformation(this.getBusinessId)
       }
 
+      // load office addresses only for restorations
+      if (this.isRestorationFiling) {
+        await this.loadOfficeAddresses(this.getBusinessId)
+      }
+
       // special route checks for Continuation In filing
       if (this.isContinuationInFiling) {
         if (this.isAuthorizationStatus) {
@@ -1190,7 +1196,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Gets account info and stores it. */
-  private async loadAccountInformation (): Promise<any> {
+  private async loadAccountInformation (): Promise<void> {
     const currentAccount = await getCurrentAccount()
     if (currentAccount) {
       const accountInfo: AccountInformationIF = {
@@ -1209,7 +1215,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
      * Gets current account from object in session storage.
      * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
      */
-    async function getCurrentAccount (): Promise<any> {
+    async function getCurrentAccount (): Promise<AccountInformationIF> {
       let account = null
       for (let i = 0; i < 50; i++) {
         const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
@@ -1316,7 +1322,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Fetches and stores parties info . */
-  private async loadPartiesInformation (businessId: string): Promise<any> {
+  private async loadPartiesInformation (businessId: string): Promise<void> {
     // NB: will throw if API error
     const parties = await LegalServices.fetchParties(businessId)
 
@@ -1324,6 +1330,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setParties(parties.parties)
     } else {
       throw new Error('Invalid parties')
+    }
+  }
+
+  private async loadOfficeAddresses (businessId: string): Promise<void> {
+    // NB: will throw if API error
+    const addresses = await LegalServices.fetchAddresses(businessId)
+
+    if (addresses) {
+      this.setOfficeAddresses(addresses)
+    } else {
+      throw new Error('Invalid office addresses')
     }
   }
 

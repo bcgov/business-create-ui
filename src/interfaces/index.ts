@@ -90,6 +90,7 @@ export type {
 } from '@bcrs-shared-components/interfaces'
 
 export {
+  EmptyAddress,
   EmptyBusinessLookup,
   EmptyContactPoint,
   EmptyNaics,
