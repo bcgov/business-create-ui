@@ -27,7 +27,7 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "notAffiliated" rule', () => {
     // init
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify rule
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBe(AmlStatuses.ERROR_NOT_AFFILIATED)
@@ -35,7 +35,7 @@ describe('Amalgamation Mixin - rules', () => {
     // verify staff only
     setAuthRole(store, AuthorizationRoles.STAFF)
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.LEAR, addresses: null })).toBeNull()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify not LEAR only
     expect(wrapper.vm.notAffiliated({ type: AmlTypes.FOREIGN, addresses: null })).toBeNull()
@@ -68,7 +68,7 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "notInGoodStanding" rule', () => {
     // init
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify rule
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.LEAR, isNotInGoodStanding: true })).toBe(AmlStatuses.ERROR_NOT_IN_GOOD_STANDING)
@@ -76,7 +76,7 @@ describe('Amalgamation Mixin - rules', () => {
     // verify staff only
     setAuthRole(store, AuthorizationRoles.STAFF)
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.LEAR, isNotInGoodStanding: null })).toBeNull()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify not LEAR only
     expect(wrapper.vm.notInGoodStanding({ type: AmlTypes.FOREIGN, isNotInGoodStanding: true })).toBeNull()
@@ -87,7 +87,7 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "limitedRestoration" rule', () => {
     // init
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify rule
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.LEAR, isLimitedRestoration: true })).toBe(AmlStatuses.ERROR_LIMITED_RESTORATION)
@@ -95,7 +95,7 @@ describe('Amalgamation Mixin - rules', () => {
     // verify staff only
     setAuthRole(store, AuthorizationRoles.STAFF)
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.LEAR, isLimitedRestoration: null })).toBeNull()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify not LEAR only
     expect(wrapper.vm.limitedRestoration({ type: AmlTypes.FOREIGN, isLimitedRestoration: true })).toBeNull()
@@ -139,7 +139,7 @@ describe('Amalgamation Mixin - rules', () => {
 
   it('correctly evaluates "foreign" rule', () => {
     // init
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify rule
     expect(wrapper.vm.foreign({ type: AmlTypes.FOREIGN })).toBe(AmlStatuses.ERROR_FOREIGN)
@@ -147,7 +147,7 @@ describe('Amalgamation Mixin - rules', () => {
     // verify staff only
     setAuthRole(store, AuthorizationRoles.STAFF)
     expect(wrapper.vm.foreign({ type: AmlTypes.FOREIGN })).toBeNull()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     // verify not FOREIGN only
     expect(wrapper.vm.foreign({ type: AmlTypes.LEAR })).toBeNull()

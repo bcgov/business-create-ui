@@ -391,7 +391,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -420,7 +420,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - edit - SBC staff or client', async () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
@@ -464,7 +464,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - business lookup - SBC staff or client', () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -506,7 +506,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - edit - SBC staff or client', async () => {
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validPartnerOrg, 0, null)
 
     // verify input values
@@ -606,7 +606,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()
-    setAuthRole(store)
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
   })
 
   it('does not display error message when user enters valid person names', async () => {
