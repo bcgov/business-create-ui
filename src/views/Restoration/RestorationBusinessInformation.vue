@@ -16,8 +16,8 @@
         </template>
         <template v-else>
           <p>
-            Here are the Registered Office and Records Office Mailing and Delivery Addresses from the time of
-            dissolution. If they need to be updated, an Address Change filing will need to be done.
+            The Registered and Records Office are shown with the addresses at the time of dissolution. If these are
+            no longer correct, you will need to file an Address Change once the Restoration has been completed.
           </p>
         </template>
       </header>
