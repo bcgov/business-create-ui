@@ -80,10 +80,10 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AddressIF, ContactPointIF, DefineCompanyIF, EmptyAddress, RegisteredRecordsAddressesIF }
-  from '@/interfaces'
+import { AddressIF, ContactPointIF, DefineCompanyIF, EmptyAddress, RegisteredRecordsAddressesIF,
+  RestorationStateIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { RestorationTypes, RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
@@ -97,10 +97,10 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 export default class RestorationBusinessInformation extends Mixins(CommonMixin) {
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
+  @Getter(useStore) getRestoration!: RestorationStateIF
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) isFullRestorationFiling!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
@@ -124,16 +124,8 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
-    // allow editing addresses if full restoration
-    if (this.isFullRestorationFiling) {
-      this.allowEditingOfficeAddresses = true
-      this.addressFormValid = false
-    }
-
-    // if no addresses were fetched or are empty, allow editing and set default addresses
+    // if no addresses were fetched or are empty, set default addresses
     if (this.isEmptyRecordsAddress || this.isEmptyRegisteredAddress) {
-      this.allowEditingOfficeAddresses = true
-      this.addressFormValid = false
       this.setDefaultAddresses()
     }
 
@@ -199,6 +191,20 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
       this.businessContactFormValid &&
       this.addressFormValid
     )
+  }
+
+  /** Updates flags when restoration type is set or changes. */
+  @Watch('getRestoration.type', { immediate: true })
+  private onRestorationTypeChanged (val: RestorationTypes) {
+    if (val === RestorationTypes.FULL) {
+      this.allowEditingOfficeAddresses = true
+      this.addressFormValid = false
+    }
+    if (val === RestorationTypes.LIMITED) {
+      this.allowEditingOfficeAddresses = false
+      this.addressFormValid = true
+    }
+    // else -- should never happen
   }
 
   @Watch('$route')
