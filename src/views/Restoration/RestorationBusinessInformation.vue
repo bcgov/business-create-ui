@@ -100,6 +100,7 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityType!: boolean
+  @Getter(useStore) isFullRestorationFiling!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
@@ -123,7 +124,13 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
     // temporarily ignore data changes
     this.setIgnoreChanges(true)
 
-    // if no addresses were fetched or are empty, set default addresses
+    // allow editing addresses if full restoration
+    if (this.isFullRestorationFiling) {
+      this.allowEditingOfficeAddresses = true
+      this.addressFormValid = false
+    }
+
+    // if no addresses were fetched or are empty, allow editing and set default addresses
     if (this.isEmptyRecordsAddress || this.isEmptyRegisteredAddress) {
       this.allowEditingOfficeAddresses = true
       this.addressFormValid = false

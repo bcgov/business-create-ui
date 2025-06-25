@@ -927,7 +927,12 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         },
         nameTranslations: this.getNameTranslations,
         noticeDate: this.getRestoration.noticeDate || undefined, // can't be null
-        offices: this.getDefineCompanyStep.officeAddresses,
+        offices: {
+          // only save records and registered office
+          // do not save custodial office (if present)
+          recordsOffice: { ...this.getDefineCompanyStep.officeAddresses.recordsOffice },
+          registeredOffice: { ...this.getDefineCompanyStep.officeAddresses.registeredOffice }
+        },
         parties: this.orgPersonsToParties(this.getAddPeopleAndRoleStep.orgPeople),
         relationships: this.getRestoration.relationships,
         type: this.getRestoration.type
