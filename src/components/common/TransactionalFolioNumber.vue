@@ -5,12 +5,15 @@
   >
     <header>
       <h2>Folio or Reference Number (Optional)</h2>
-        <p class="mt-4">
-          This is meant for your own tracking purposes and will appear on your receipt.
+      <p class="mt-4">
+        This is meant for your own tracking purposes and will appear on your receipt.
       </p>
     </header>
     <v-card flat>
-      <v-row no-gutters class="pl-4 pr-4 pt-4">
+      <v-row
+        no-gutters
+        class="pl-4 pr-4 pt-4"
+      >
         <v-col
           cols="12"
           sm="3"
