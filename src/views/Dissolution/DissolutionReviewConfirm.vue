@@ -265,29 +265,12 @@
       id="folio-number-section"
       class="mt-10"
     >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for your own tracking
-          purposes. The Business Folio or Reference Number is displayed below (if available).
-          Entering a different value below will not change the Business Folio or Reference Number.
-          Only the number below will appear on the transaction report and receipt for this filing.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <TransactionalFolioNumber
-          class="py-8 px-6"
-          :accountFolioNumber="getFolioNumber"
-          :transactionalFolioNumber="getTransactionalFolioNumber"
-          :doValidate="getValidateSteps"
-          @change="setTransactionalFolioNumber($event)"
-          @valid="setTransactionalFolioNumberValidity($event)"
-        />
-      </v-card>
+      <TransactionalFolioNumber
+        :transactionalFolioNumber="getTransactionalFolioNumber"
+        :doValidate="getValidateSteps"
+        @change="setTransactionalFolioNumber($event)"
+        @valid="setTransactionalFolioNumberValidity($event)"
+      />
     </section>
 
     <!-- Certify -->
@@ -504,12 +487,9 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 @import '@/assets/styles/theme.scss';
 
 #dissolution-review-confirm {
-  /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }
-
-h2::before {
-  /* Increment "header-counter" by 1 */
+#dissolution-review-confirm ::v-deep(section) h2::before {
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }

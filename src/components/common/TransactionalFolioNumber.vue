@@ -1,40 +1,54 @@
 <template>
   <div
     id="transactional-folio-number"
-    :class="{ 'invalid-section': !isValid }"
   >
-    <v-row no-gutters>
-      <v-col
-        cols="12"
-        sm="3"
-        class="pr-4"
+    <header>
+      <h2 class="mb-1 mt-6">
+        Folio or Reference Number (Optional)
+      </h2>
+      <p class="mt-4">
+        This is meant for your own tracking purposes and will appear on your receipt.
+      </p>
+    </header>
+    <v-card
+      flat
+      class="mt-6 pt-4 pb-5"
+      :class="{ 'invalid-section': !isValid }"
+    >
+      <v-row
+        no-gutters
+        class="pl-4 pr-4 pt-4"
       >
-        <label
-          class="title-label"
-          :class="{ 'error-text': !isValid }"
+        <v-col
+          cols="12"
+          sm="3"
         >
-          <strong>Folio or Reference Number</strong>
-        </label>
-      </v-col>
+          <label
+            class="title-label"
+            :class="{ 'error-text': !isValid }"
+          >
+            <strong>Folio or Reference Number</strong>
+          </label>
+        </v-col>
 
-      <v-col
-        cols="12"
-        sm="9"
-        class="pt-4 pt-sm-0"
-      >
-        <v-text-field
-          id="folio-number-input"
-          ref="folioNumberInput"
-          v-model.trim="localFolioNumber"
-          filled
-          persistent-hint
-          autocomplete="chrome-off"
-          label="Folio or Reference Number (Optional)"
-          :name="Math.random()"
-          :rules="doValidate ? Rules.FolioNumberRules: []"
-        />
-      </v-col>
-    </v-row>
+        <v-col
+          cols="12"
+          sm="9"
+        >
+          <v-text-field
+            id="folio-number-input"
+            ref="folioNumberInput"
+            v-model.trim="localFolioNumber"
+            filled
+            persistent-hint
+            autocomplete="chrome-off"
+            label="Folio or Reference Number (Optional)"
+            :name="Math.random()"
+            :rules="doValidate ? Rules.FolioNumberRules: []"
+          />
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -52,7 +66,6 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
   }
 
   // Props
-  @Prop({ default: null }) readonly accountFolioNumber!: string
   @Prop({ default: null }) readonly transactionalFolioNumber!: string
   @Prop({ default: false }) readonly doValidate!: boolean
 
@@ -64,8 +77,8 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 
   /** Called when component is mounted. */
   mounted (): void {
-    // restore transactional FN if it exists, otherwise use account FN
-    this.localFolioNumber = this.transactionalFolioNumber || this.accountFolioNumber
+    // assign transactional FN from draft if it exists, otherwise leave field empty
+    this.localFolioNumber = this.transactionalFolioNumber || ''
   }
 
   /** True if this component is valid. */
@@ -89,9 +102,17 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
+h2 {
+  font-size: $px-18;
+}
+
 #transactional-folio-number {
   font-size: $px-16;
   color: $gray7;
+}
+
+.v-card {
+  font-size: $px-16;
 }
 
 .title-label {

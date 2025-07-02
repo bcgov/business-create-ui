@@ -141,7 +141,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber,
+        folioNumber: this.getFolioNumber || undefined,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
       business: {
@@ -366,7 +366,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy || undefined, // remove for authorization
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber,
+        folioNumber: this.getFolioNumber || undefined,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
       business: {
@@ -601,7 +601,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber,
+        folioNumber: this.getFolioNumber || undefined,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective
       },
       business: {
@@ -837,7 +837,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        folioNumber: this.getFolioNumber || undefined, // default FN; may be overwritten by staff BCOL FN
         isFutureEffective: false
       },
       business: {
@@ -902,7 +902,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        folioNumber: this.getFolioNumber || undefined, // default FN; may be overwritten by staff BCOL FN
         isFutureEffective: false
       },
       business: {
@@ -1186,7 +1186,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN
+        folioNumber: this.getFolioNumber || undefined, // default FN;
+        // may be overwritten by Transactional FN or staff BCOL FN
         isFutureEffective: false
       },
       business: {
