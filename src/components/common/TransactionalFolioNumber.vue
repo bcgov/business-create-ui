@@ -103,7 +103,7 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 @import '@/assets/styles/theme.scss';
 
 h2 {
-  font-size: 1.125rem;
+  font-size: $px-18;
 }
 
 #transactional-folio-number {
@@ -112,7 +112,6 @@ h2 {
 }
 
 .v-card {
-  line-height: 1.2rem;
   font-size: $px-16;
 }
 
