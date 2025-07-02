@@ -1,15 +1,20 @@
 <template>
   <div
     id="transactional-folio-number"
-    :class="{ 'invalid-section': !isValid }"
   >
     <header>
-      <h2>Folio or Reference Number (Optional)</h2>
+      <h2 class="mb-1 mt-6">
+        Folio or Reference Number (Optional)
+      </h2>
       <p class="mt-4">
         This is meant for your own tracking purposes and will appear on your receipt.
       </p>
     </header>
-    <v-card flat>
+    <v-card
+      flat
+      class="mt-6 pt-4 pb-5"
+      :class="{ 'invalid-section': !isValid }"
+    >
       <v-row
         no-gutters
         class="pl-4 pr-4 pt-4"
@@ -98,8 +103,6 @@ export default class TransactionalFolioNumber extends Mixins(CommonMixin) {
 @import '@/assets/styles/theme.scss';
 
 h2 {
-  margin-bottom: 0.25rem;
-  margin-top: 3rem;
   font-size: 1.125rem;
 }
 
@@ -109,9 +112,6 @@ h2 {
 }
 
 .v-card {
-  margin-top: 1rem;
-  padding-bottom: 1.25rem;
-  padding-top: 1rem;
   line-height: 1.2rem;
   font-size: $px-16;
 }
