@@ -55,7 +55,7 @@ instance.interceptors.request.use(
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
           break
         default: // TODO: How to handle other request urls such as permissions/businesses etc.
-          console.log('Unknown API URL', request.url) // TODO: Remove this log after debugging not required
+          console.error('Unknown API URL', request.url) // TODO: Remove this log after debugging not required
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
 
           // throw new Error(`Unknown API URL: ${request.url}`)

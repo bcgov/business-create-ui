@@ -31,7 +31,7 @@ export default class AuthServices {
     if (!businessId) throw new Error('Invalid business id')
 
     const url = `${this.authApiUrl}entities/${businessId}`
-    const config = { headers: { 'Account-Id': store.getAccountId, 'x-apikey': this.authApiKey } }
+    const config = { headers: { 'Account-Id': store.getAccountId, 'X-Apikey': this.authApiKey } }
 
     return axios.get(url, config).then(response => {
       if (response?.data) {
