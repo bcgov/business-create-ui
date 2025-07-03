@@ -17,6 +17,11 @@ export default class AuthServices {
     return sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
   }
 
+  /** the Auth API Key, from session storage */
+  static get authApiKey (): string {
+    return import.meta.env.VUE_APP_AUTH_API_KEY
+  }
+
   /**
    * Fetches auth info of the specified business.
    * @param businessId the business id
@@ -26,7 +31,7 @@ export default class AuthServices {
     if (!businessId) throw new Error('Invalid business id')
 
     const url = `${this.authApiUrl}entities/${businessId}`
-    const config = { headers: { 'Account-Id': store.getAccountId } }
+    const config = { headers: { 'Account-Id': store.getAccountId, 'x-apikey': this.authApiKey } }
 
     return axios.get(url, config).then(response => {
       if (response?.data) {

@@ -18,7 +18,7 @@ export default class BusinessLookupServices {
 
   /** The Registries Search API Key, from session storage. */
   static get searchApiKey (): string {
-    return sessionStorage.getItem('REGISTRIES_SEARCH_API_KEY')
+    return import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
   }
 
   /**
