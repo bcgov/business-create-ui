@@ -8,15 +8,15 @@ setActivePinia(createPinia())
 const store = useStore()
 
 /**
- * Class that provides integration with the Business Lookup API.
+ * Class that provides integration with the Registries Search API.
  */
-export default class BusinessLookupServices {
+export default class RegistriesSearchServices {
   /** The Registries Search API URL, from session storage. */
   static get searchApiUrl (): string {
     return sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
   }
 
-  /** The Registries Search API Key, from session storage. */
+  /** The Registries Search API Key, from the environment. */
   static get searchApiKey (): string {
     return import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
   }

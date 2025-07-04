@@ -270,7 +270,7 @@
                   class="mt-5"
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
-                  :BusinessLookupServices="BusinessLookupServices"
+                  :BusinessLookupServices="RegistriesSearchServices"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
@@ -309,7 +309,7 @@
                   class="mt-5"
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
-                  :BusinessLookupServices="BusinessLookupServices"
+                  :BusinessLookupServices="RegistriesSearchServices"
                   label="Business Name or Incorporation/Registration Number"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
@@ -509,7 +509,7 @@ import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
 import { AddEditOrgPersonMixin } from '@/mixins'
-import { BusinessLookupServices } from '@/services'
+import { RegistriesSearchServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
 import MessageBox from '@/components/common/MessageBox.vue'
 
@@ -538,7 +538,7 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
 
-  readonly BusinessLookupServices = BusinessLookupServices
+  readonly RegistriesSearchServices = RegistriesSearchServices
 }
 </script>
 
