@@ -1,25 +1,37 @@
-import { AxiosInstance as axios } from '@/utils'
+import Axios from 'axios'
 import { FilingCodes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { FeesIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
+const axios = Axios.create()
 setActivePinia(createPinia())
 const store = useStore()
 
 /**
  * Class that provides integration with the Pay API.
+ * Note that SbcFeeSummary uses its own Axios call.
  */
 export default class PayServices {
-  /** The Pay API Gateway URL, from session storage. */
+  /** The Pay API Gateway URL. */
   static get payApiGwUrl (): string {
     return sessionStorage.getItem('PAY_API_GW_URL')
   }
 
-  /** The Pay API Key, from the environment. */
-  static get payApiKey (): string {
-    return import.meta.env.VUE_APP_PAY_API_KEY
+  /** The Axios config (request headers). */
+  static get config (): any {
+    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+    const payApiKey = import.meta.env.VUE_APP_PAY_API_KEY
+    return {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'App-Name': import.meta.env.APP_NAME,
+        'Authorization': `Bearer ${kcToken}`,
+        'X-Apikey': payApiKey
+      }
+    }
   }
 
   /**
@@ -35,14 +47,8 @@ export default class PayServices {
     if (isFutureEffective) {
       url += '?futureEffective=true'
     }
-    const config = {
-      headers: {
-        'Account-Id': store.getAccountId,
-        'X-Apikey': this.payApiKey
-      }
-    }
 
-    return axios.get(url, config)
+    return axios.get(url, this.config)
       .then(response => {
         const fees = response?.data
         if (!fees) {

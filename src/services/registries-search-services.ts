@@ -1,9 +1,10 @@
-import axios from 'axios'
+import Axios from 'axios'
 import { BusinessLookupResultIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-// import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
+const axios = Axios.create()
 setActivePinia(createPinia())
 const store = useStore()
 
@@ -11,14 +12,23 @@ const store = useStore()
  * Class that provides integration with the Registries Search API.
  */
 export default class RegistriesSearchServices {
-  /** The Registries Search API URL, from session storage. */
+  /** The Registries Search API URL. */
   static get searchApiUrl (): string {
     return sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
   }
 
-  /** The Registries Search API Key, from the environment. */
-  static get searchApiKey (): string {
-    return import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
+  /** The Axios config (request headers). */
+  static get config (): any {
+    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+    const searchApiKey = import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
+    return {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'App-Name': import.meta.env.APP_NAME,
+        'Authorization': `Bearer ${kcToken}`,
+        'X-Apikey': searchApiKey
+      }
+    }
   }
 
   /**
@@ -32,17 +42,8 @@ export default class RegistriesSearchServices {
     let url = this.searchApiUrl + 'businesses/search/facets?start=0&rows=20'
     url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
     url += `&query=value:${encodeURIComponent(query)}`
-    // const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-    const config = {
-      headers: {
-        // Authorization: `Bearer ${kcToken}`,
-        'X-Apikey': this.searchApiKey,
-        'Account-Id': store.getAccountId
-      }
-    }
 
-    // NOTE: this service uses a separate Axios instance from the rest of the app
-    return axios.get(url, config)
+    return axios.get(url, this.config)
       .then(response => {
         const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
         if (!results) {

@@ -1,8 +1,9 @@
-import axios from 'axios'
+import Axios from 'axios'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
  * This file exports an instance of Axios with some extra request headers.
+ * This Axios instance is used by Staff Comments and maybe others...
  */
 
 function getAccountId (): string {
@@ -16,7 +17,7 @@ function getAccountId (): string {
   return accountId
 }
 
-const instance = axios.create()
+const instance = Axios.create()
 
 // add request interceptor
 instance.interceptors.request.use(
@@ -26,38 +27,14 @@ instance.interceptors.request.use(
       return request
     }
 
-    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-    request.headers.common['Authorization'] = `Bearer ${kcToken}`
-    request.headers.common['App-Name'] = import.meta.env.APP_NAME
-
     // add these headers only if Vitest isn't running as it breaks some tests
+    // TODO: check if this is still true
     if (import.meta.env.VITEST === undefined) {
+      const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+      request.headers.common['Authorization'] = `Bearer ${kcToken}`
+      request.headers.common['App-Name'] = import.meta.env.APP_NAME
       request.headers.common['Account-Id'] = getAccountId()
-      switch (true) {
-        case request.url.includes(sessionStorage.getItem('AUTH_API_GW_URL')):
-          console.log('Auth API GW URL') // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_AUTH_API_KEY
-          break
-        case request.url.includes(sessionStorage.getItem('AUTH_WEB_URL')):
-          console.log('Auth Web URL') // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_AUTH_API_KEY
-          break
-        case request.url.includes(sessionStorage.getItem('PAY_API_GW_URL')):
-          console.log('Pay API GWURL') // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_PAY_API_KEY
-          break
-        case request.url.includes(sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')):
-          console.log('Search API URL') // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
-          break
-        case request.url.includes(axios.defaults.baseURL):
-          console.log('default API URL', axios.defaults.baseURL) // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
-          break
-        default: // TODO: How to handle other request urls such as permissions/businesses etc?
-          console.error('Unknown API URL', request.url) // TODO: Keep this or throw error?
-          // throw new Error(`Unknown API URL: ${request.url}`)
-      }
+      request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
     }
 
     return request

@@ -1391,7 +1391,6 @@ export const useStore = defineStore('store', {
       this.stateModel.registration.startDate = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
-    // need to test this a bit more
     setRegistrationBusinessAddress (val: BusinessAddressIF) {
       this.stateModel.registration.businessAddress = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true

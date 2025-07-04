@@ -1,9 +1,11 @@
-import { AxiosInstance as axios } from '@/utils'
+import Axios from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
+import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
+const axios = Axios.create()
 setActivePinia(createPinia())
 const store = useStore()
 
@@ -11,14 +13,23 @@ const store = useStore()
  * Class that provides integration with the Auth API.
  */
 export default class AuthServices {
-  /** The Auth API Gateway URL, from session storage. */
+  /** The Auth API Gateway URL. */
   static get authApiGwUrl (): string {
     return sessionStorage.getItem('AUTH_API_GW_URL')
   }
 
-  /** The Auth API Key, from the environment. */
-  static get authApiKey (): string {
-    return import.meta.env.VUE_APP_AUTH_API_KEY
+  /** The Axios config (request headers). */
+  static get config (): any {
+    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+    const authApiKey = import.meta.env.VUE_APP_AUTH_API_KEY
+    return {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'App-Name': import.meta.env.APP_NAME,
+        'Authorization': `Bearer ${kcToken}`,
+        'X-Apikey': authApiKey
+      }
+    }
   }
 
   /**
@@ -30,14 +41,8 @@ export default class AuthServices {
     if (!businessId) throw new Error('Invalid business id')
 
     const url = `${this.authApiGwUrl}entities/${businessId}`
-    const config = {
-      headers: {
-        'Account-Id': store.getAccountId,
-        'X-Apikey': this.authApiKey
-      }
-    }
 
-    return axios.get(url, config)
+    return axios.get(url, this.config)
       .then(response => {
         if (response?.data) {
           return {
@@ -68,14 +73,8 @@ export default class AuthServices {
    */
   static async fetchUserInfo (): Promise<any> {
     const url = `${this.authApiGwUrl}users/@me`
-    const config = {
-      headers: {
-        'Account-Id': store.getAccountId,
-        'X-Apikey': this.authApiKey
-      }
-    }
 
-    return axios.get(url, config)
+    return axios.get(url, this.config)
       .then(response => {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
@@ -91,14 +90,8 @@ export default class AuthServices {
     if (!orgId) throw new Error('Invalid org id')
 
     const url = `${this.authApiGwUrl}orgs/${orgId}`
-    const config = {
-      headers: {
-        'Account-Id': store.getAccountId,
-        'X-Apikey': this.authApiKey
-      }
-    }
 
-    return axios.get(url, config)
+    return axios.get(url, this.config)
       .then(response => {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
@@ -122,14 +115,8 @@ export default class AuthServices {
       phoneExtension: contactInfo.extension
     }
     const url = `${this.authApiGwUrl}entities/${businessId}/contacts`
-    const config = {
-      headers: {
-        'Account-Id': store.getAccountId,
-        'X-Apikey': this.authApiKey
-      }
-    }
 
-    return axios.put(url, data, config)
+    return axios.put(url, data, this.config)
       .then(response => {
         const contacts = response?.data?.contacts[0]
         if (!contacts) throw new Error('Invalid response data')

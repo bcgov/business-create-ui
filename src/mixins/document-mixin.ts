@@ -35,6 +35,7 @@ export default class DocumentMixin extends Vue {
    */
   async getPresignedUrl (fileName: string): Promise<PresignedUrlIF> {
     const url = `documents/${fileName}/signatures`
+    // *** TODO: test this common axio instance
     return axios.get(url)
       .then(response => {
         const data = response?.data
@@ -62,6 +63,7 @@ export default class DocumentMixin extends Vue {
         'Content-Disposition': `attachment; filename=${file.name}`
       }
     }
+    // *** TODO: test this common axio instance
     return axios.put(url, file, options)
       .then(response => {
         return response
@@ -83,6 +85,7 @@ export default class DocumentMixin extends Vue {
 
     const url = `documents/${documentKey}`
 
+    // *** TODO: test this common axio instance
     return axios.delete(url)
   }
 
@@ -104,6 +107,7 @@ export default class DocumentMixin extends Vue {
       responseType: 'blob' as 'json'
     }
 
+    // *** TODO: test this common axio instance
     return axios.get(url, config).then(response => {
       if (!response) throw new Error('Null response')
 

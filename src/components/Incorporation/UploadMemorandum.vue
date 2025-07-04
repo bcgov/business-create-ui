@@ -440,7 +440,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
           name: this.uploadMemorandumDoc.name,
           lastModified: this.uploadMemorandumDoc.lastModified,
           size: this.uploadMemorandumDoc.size
-        }
+        } as File
         this.setMemorandum({
           ...this.getCreateMemorandumStep,
           memorandumFile,
