@@ -2,7 +2,7 @@ import axios from 'axios'
 import { BusinessLookupResultIF } from '@/interfaces'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+// import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 setActivePinia(createPinia())
 const store = useStore()
@@ -32,29 +32,28 @@ export default class RegistriesSearchServices {
     let url = this.searchApiUrl + 'businesses/search/facets?start=0&rows=20'
     url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
     url += `&query=value:${encodeURIComponent(query)}`
-
-    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-
+    // const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
     const config = {
       headers: {
-        Authorization: `Bearer ${kcToken}`,
+        // Authorization: `Bearer ${kcToken}`,
         'X-Apikey': this.searchApiKey,
         'Account-Id': store.getAccountId
       }
     }
 
     // NOTE: this service uses a separate Axios instance from the rest of the app
-    return axios.get(url, config).then(response => {
-      const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
-      if (!results) {
-        throw new Error('Invalid API response')
-      }
+    return axios.get(url, config)
+      .then(response => {
+        const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
+        if (!results) {
+          throw new Error('Invalid API response')
+        }
 
-      // filter out results without a valid identifier
-      return results.filter(result => {
-        const pattern = /^[A-Z]{1,3}[0-9]{7}$/
-        return pattern.test(result.identifier)
+        // filter out results without a valid identifier
+        return results.filter(result => {
+          const pattern = /^[A-Z]{1,3}[0-9]{7}$/
+          return pattern.test(result.identifier)
+        })
       })
-    })
   }
 }

@@ -1,7 +1,6 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 
@@ -12,9 +11,9 @@ const store = useStore()
  * Class that provides integration with the Auth API.
  */
 export default class AuthServices {
-  /** The Auth API URL, from session storage. */
-  static get authApiUrl (): string {
-    return sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
+  /** The Auth API Gateway URL, from session storage. */
+  static get authApiGwUrl (): string {
+    return sessionStorage.getItem('AUTH_API_GW_URL')
   }
 
   /** The Auth API Key, from the environment. */
@@ -30,7 +29,7 @@ export default class AuthServices {
   static async fetchAuthInfo (businessId: string): Promise<AuthInformationIF> {
     if (!businessId) throw new Error('Invalid business id')
 
-    const url = `${this.authApiUrl}entities/${businessId}`
+    const url = `${this.authApiGwUrl}entities/${businessId}`
     const config = {
       headers: {
         'Account-Id': store.getAccountId,
@@ -38,28 +37,29 @@ export default class AuthServices {
       }
     }
 
-    return axios.get(url, config).then(response => {
-      if (response?.data) {
-        return {
-          contacts: response.data.contacts
-            // map phoneExtension -> extension in every element
-            .map(contact => ({
-              email: contact.email,
-              phone: contact.phone,
-              extension: contact.phoneExtension
-            })),
-          folioNumber: response.data.folioNumber
+    return axios.get(url, config)
+      .then(response => {
+        if (response?.data) {
+          return {
+            contacts: response.data.contacts
+              // map phoneExtension -> extension in every element
+              .map(contact => ({
+                email: contact.email,
+                phone: contact.phone,
+                extension: contact.phoneExtension
+              })),
+            folioNumber: response.data.folioNumber
+          }
         }
-      }
-      throw new Error('Invalid response data')
-    }).catch(error => {
-      if (error?.response?.status === StatusCodes.FORBIDDEN) {
-        return { status: 'FORBIDDEN' } as AuthInformationIF
-      } else if (error?.response?.status === StatusCodes.NOT_FOUND) {
-        return { status: 'NOT_FOUND' } as AuthInformationIF
-      }
-      throw error
-    })
+        throw new Error('Invalid response data')
+      }).catch(error => {
+        if (error?.response?.status === StatusCodes.FORBIDDEN) {
+          return { status: 'FORBIDDEN' } as AuthInformationIF
+        } else if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          return { status: 'NOT_FOUND' } as AuthInformationIF
+        }
+        throw error
+      })
   }
 
   /**
@@ -67,12 +67,19 @@ export default class AuthServices {
    * @returns a promise to return the user info object
    */
   static async fetchUserInfo (): Promise<any> {
-    const url = `${this.authApiUrl}users/@me`
+    const url = `${this.authApiGwUrl}users/@me`
+    const config = {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'X-Apikey': this.authApiKey
+      }
+    }
 
-    return axios.get(url).then(response => {
-      if (response?.data) return response.data
-      throw new Error('Invalid response data')
-    })
+    return axios.get(url, config)
+      .then(response => {
+        if (response?.data) return response.data
+        throw new Error('Invalid response data')
+      })
   }
 
   /**
@@ -83,9 +90,15 @@ export default class AuthServices {
   static async fetchOrgInfo (orgId: number): Promise<any> {
     if (!orgId) throw new Error('Invalid org id')
 
-    const url = `${this.authApiUrl}orgs/${orgId}`
+    const url = `${this.authApiGwUrl}orgs/${orgId}`
+    const config = {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'X-Apikey': this.authApiKey
+      }
+    }
 
-    return axios.get(url)
+    return axios.get(url, config)
       .then(response => {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
@@ -102,23 +115,30 @@ export default class AuthServices {
     if (!businessId) throw new Error('Invalid business id')
     if (!contactInfo) throw new Error('Invalid contact info')
 
-    // map extension -> phoneExtension
     const data = {
       email: contactInfo.email,
       phone: contactInfo.phone,
+      // map extension -> phoneExtension
       phoneExtension: contactInfo.extension
     }
-    const url = `${this.authApiUrl}entities/${businessId}/contacts`
-
-    return axios.put(url, data).then(response => {
-      const contacts = response?.data?.contacts[0]
-      if (!contacts) throw new Error('Invalid response data')
-      // map phoneExtension -> extension
-      return {
-        email: contacts.email,
-        phone: contacts.phone,
-        extension: contacts.phoneExtension
+    const url = `${this.authApiGwUrl}entities/${businessId}/contacts`
+    const config = {
+      headers: {
+        'Account-Id': store.getAccountId,
+        'X-Apikey': this.authApiKey
       }
-    })
+    }
+
+    return axios.put(url, data, config)
+      .then(response => {
+        const contacts = response?.data?.contacts[0]
+        if (!contacts) throw new Error('Invalid response data')
+        return {
+          email: contacts.email,
+          phone: contacts.phone,
+          // map phoneExtension -> extension
+          extension: contacts.phoneExtension
+        }
+      })
   }
 }

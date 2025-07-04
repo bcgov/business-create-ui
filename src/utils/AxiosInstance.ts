@@ -21,7 +21,7 @@ const instance = axios.create()
 // add request interceptor
 instance.interceptors.request.use(
   request => {
-    // don't add bearer token for Minio requests
+    // don't add headers (esp bearer token) for Minio requests
     if (request.url?.startsWith('https://minio')) {
       return request
     }
@@ -34,16 +34,16 @@ instance.interceptors.request.use(
     if (import.meta.env.VITEST === undefined) {
       request.headers.common['Account-Id'] = getAccountId()
       switch (true) {
-        case request.url.includes(sessionStorage.getItem('AUTH_API_URL')):
-          console.log('Auth API URL') // TODO: Remove this log after debugging not required
+        case request.url.includes(sessionStorage.getItem('AUTH_API_GW_URL')):
+          console.log('Auth API GW URL') // TODO: Remove this log after debugging not required
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_AUTH_API_KEY
           break
         case request.url.includes(sessionStorage.getItem('AUTH_WEB_URL')):
-          console.log('Auth web URL') // TODO: Remove this log after debugging not required
+          console.log('Auth Web URL') // TODO: Remove this log after debugging not required
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_AUTH_API_KEY
           break
-        case request.url.includes(sessionStorage.getItem('PAY_API_URL')):
-          console.log('Pay API URL') // TODO: Remove this log after debugging not required
+        case request.url.includes(sessionStorage.getItem('PAY_API_GW_URL')):
+          console.log('Pay API GWURL') // TODO: Remove this log after debugging not required
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_PAY_API_KEY
           break
         case request.url.includes(sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')):
@@ -54,10 +54,8 @@ instance.interceptors.request.use(
           console.log('default API URL', axios.defaults.baseURL) // TODO: Remove this log after debugging not required
           request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
           break
-        default: // TODO: How to handle other request urls such as permissions/businesses etc.
-          console.error('Unknown API URL', request.url) // TODO: Remove this log after debugging not required
-          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
-
+        default: // TODO: How to handle other request urls such as permissions/businesses etc?
+          console.error('Unknown API URL', request.url) // TODO: Keep this or throw error?
           // throw new Error(`Unknown API URL: ${request.url}`)
       }
     }

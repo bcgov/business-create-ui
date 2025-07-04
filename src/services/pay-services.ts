@@ -12,9 +12,9 @@ const store = useStore()
  * Class that provides integration with the Pay API.
  */
 export default class PayServices {
-  /** The Pay API URL, from session storage. */
-  static get payApiUrl (): string {
-    return sessionStorage.getItem('PAY_API_URL')
+  /** The Pay API Gateway URL, from session storage. */
+  static get payApiGwUrl (): string {
+    return sessionStorage.getItem('PAY_API_GW_URL')
   }
 
   /** The Pay API Key, from the environment. */
@@ -31,11 +31,10 @@ export default class PayServices {
     entityType: CorpTypeCd,
     isFutureEffective: boolean
   ): Promise<FeesIF> {
-    let url = this.payApiUrl + 'fees/' + entityType + '/' + filingCode
+    let url = this.payApiGwUrl + 'fees/' + entityType + '/' + filingCode
     if (isFutureEffective) {
       url += '?futureEffective=true'
     }
-
     const config = {
       headers: {
         'Account-Id': store.getAccountId,
