@@ -26,6 +26,7 @@
               :key="getBusinessId"
               :axios="axios"
               :businessId="getBusinessId"
+              :url="commentsUrl"
               maxLength="2000"
             />
           </div>
@@ -89,7 +90,7 @@ import { AuthorizedActions, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
-import { AxiosInstance as axios, IsAuthorized } from '@/utils'
+import { AxiosInstance as axios, GetFeatureFlag, IsAuthorized } from '@/utils'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
 
@@ -125,6 +126,15 @@ export default class EntityInfo extends Mixins(DateMixin) {
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRegistrationFiling!: boolean
+
+  /** The URL to get or post staff comments. */
+  get commentsUrl (): string {
+    if (GetFeatureFlag('use-business-api-gw-url')) {
+      return `${sessionStorage.getItem('BUSINESS_API_GW_URL')}businesses/${this.getBusinessId}/comments`
+    } else {
+      return `${sessionStorage.getItem('LEGAL_API_URL')}businesses/${this.getBusinessId}/comments`
+    }
+  }
 
   /** The entity legal name (old name, new name, or numbered description). */
   get entityLegalName (): string {

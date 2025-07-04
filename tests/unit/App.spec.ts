@@ -57,9 +57,9 @@ document.body.setAttribute('data-app', 'true')
 // Populate session variables
 sessionStorage.setItem('AUTH_WEB_URL', 'https://auth-web.url/')
 sessionStorage.setItem('BUSINESS_DASH_URL', 'https://business-dash.url/')
-sessionStorage.setItem('AUTH_API_URL', 'https://auth.api.url/')
+sessionStorage.setItem('AUTH_API_GW_URL', 'https://auth.api-gw.url/')
 sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
-sessionStorage.setItem('PAY_API_URL', 'https://pay.api.url/')
+sessionStorage.setItem('PAY_API_GW_URL', 'https://pay.api-gw.url/')
 
 // sample filing data
 const filingData = {
@@ -286,7 +286,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
+    get.withArgs('https://auth.api-gw.url/users/@me')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -302,7 +302,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       })))
 
     // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
+    get.withArgs('https://auth.api-gw.url/orgs/668')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -343,7 +343,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       })))
 
     // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
+    get.withArgs('https://pay.api-gw.url/fees/BEN/BCINC?futureEffective=true')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -435,7 +435,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
+    get.withArgs('https://auth.api-gw.url/users/@me')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -451,7 +451,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       })))
 
     // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
+    get.withArgs('https://auth.api-gw.url/orgs/668')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -488,7 +488,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       })))
 
     // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
+    get.withArgs('https://pay.api-gw.url/fees/BEN/BCINC?futureEffective=true')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -664,7 +664,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
+    get.withArgs('https://auth.api-gw.url/users/@me')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -680,7 +680,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       })))
 
     // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
+    get.withArgs('https://auth.api-gw.url/orgs/668')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -697,7 +697,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       })))
 
     // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL')
+    get.withArgs('https://pay.api-gw.url/fees/BEN/DIS_VOL')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -717,7 +717,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       })))
 
     // GET filing fees with future effective flag
-    get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL?futureEffective=true')
+    get.withArgs('https://pay.api-gw.url/fees/BEN/DIS_VOL?futureEffective=true')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -737,7 +737,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       })))
 
     // GET auth info
-    get.withArgs('https://auth.api.url/entities/BC0870803')
+    get.withArgs('https://auth.api-gw.url/entities/BC0870803')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -918,7 +918,7 @@ describe('Restoration - App page', () => {
     const get = sinon.stub(axios, 'get')
 
     // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
+    get.withArgs('https://auth.api-gw.url/users/@me')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -934,7 +934,7 @@ describe('Restoration - App page', () => {
       })))
 
     // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
+    get.withArgs('https://auth.api-gw.url/orgs/668')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -951,7 +951,7 @@ describe('Restoration - App page', () => {
       })))
 
     // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/RESTF?futureEffective=true')
+    get.withArgs('https://pay.api-gw.url/fees/BEN/RESTF?futureEffective=true')
       .returns(new Promise(resolve => resolve({
         data:
         {
@@ -960,7 +960,7 @@ describe('Restoration - App page', () => {
       })))
 
     // GET auth info
-    get.withArgs('https://auth.api.url/entities/BC0870803')
+    get.withArgs('https://auth.api-gw.url/entities/BC0870803')
       .returns(new Promise(resolve => resolve({
         data:
         {

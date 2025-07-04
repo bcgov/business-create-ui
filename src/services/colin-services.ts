@@ -5,7 +5,7 @@ import { ColinBusinessIF } from '@/interfaces'
  * Class that provides integration with the COLIN API.
  */
 export default class ColinServices {
-  /** The COLIN API URL, from session storage. */
+  /** The COLIN API URL. */
   static get colinApiUrl (): string {
     return sessionStorage.getItem('COLIN_API_URL')
   }
@@ -18,6 +18,7 @@ export default class ColinServices {
   static async fetchPublicBusiness (businessId: string): Promise<ColinBusinessIF> {
     const url = `${this.colinApiUrl}businesses/${businessId}/public`
 
+    // *** TODO: test this common axio instance
     return axios.get(url).then(response => {
       const data = response?.data
       if (!data) throw new Error('Invalid API response')
