@@ -461,7 +461,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
             consumerFilingDate: new Date().toISOString()
           }
           // Include document ID if available
-          if (this.getDocumentIdState.valid) {
+          if (this.getDocumentIdState.valid && this.getDocumentIdState.consumerDocumentId) {
             params.consumerDocumentId = this.getDocumentIdState.consumerDocumentId
           }
           res = await DocumentServices.uploadDocumentToDRS(

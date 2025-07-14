@@ -164,7 +164,7 @@ import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import { DocumentMixin } from '@/mixins'
 import { AuthorizationProofIF, DocumentIdIF, ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
-import { FilingStatus, DOCUMENT_TYPES } from '@/enums'
+import { FilingStatus, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
 import MessageBox from '@/components/common/MessageBox.vue'
@@ -289,13 +289,17 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
 
         if (this.enableDocumentRecords) {
           res = await DocumentServices.uploadDocumentToDRS(
-            file,
-            DOCUMENT_TYPES.corpContInAuthorization.class,
-            DOCUMENT_TYPES.corpContInAuthorization.type,
-            this.getTempId,
-            this.getDocumentIdState.consumerDocumentId
+            file,{
+              documentClass: DocumentTypes.corpContInAuthorization.class,
+              documentType: DocumentTypes.corpContInAuthorization.type,
+              consumerFilename: file.name,
+              consumerIdentifier: this.getTempId,
+              consumerFilingDate: new Date().toISOString(),
+              ...(this.getDocumentIdState.valid && this.getDocumentIdState.consumerDocumentId && {
+                consumerDocumentId: this.getDocumentIdState.consumerDocumentId
+              })
+            }
           )
-
           if (!res || ![StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) throw new Error()
 
           // add file to array
