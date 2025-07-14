@@ -289,7 +289,7 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
 
         if (this.enableDocumentRecords) {
           res = await DocumentServices.uploadDocumentToDRS(
-            file,{
+            file, {
               documentClass: DocumentTypes.corpContInAuthorization.class,
               documentType: DocumentTypes.corpContInAuthorization.type,
               consumerFilename: file.name,
