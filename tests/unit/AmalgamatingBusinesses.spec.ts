@@ -6,11 +6,12 @@ import { useStore } from '@/store/store'
 import { mount, shallowMount } from '@vue/test-utils'
 import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusinesses.vue'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
-import { AmlRoles, AmlTypes, FilingStatus } from '@/enums'
+import { AmlRoles, AmlTypes, AuthorizationRoles, FilingStatus } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamatingBusinessIF } from '@/interfaces'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -32,7 +33,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as staff', async () => {
     // set state
-    store.setKeycloakRoles(['staff'])
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify components
@@ -47,7 +48,7 @@ describe('Amalgamating Businesses - components and validity', () => {
 
   it('renders as non-staff', async () => {
     // set state
-    store.setKeycloakRoles([])
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
 
     // verify components
@@ -202,7 +203,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.keycloakRoles = []
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })
@@ -265,7 +266,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
 
   it('saves an amalgamating business - BC - unaffiliated - non-staff', async () => {
     // set state
-    store.setKeycloakRoles([])
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
 
     // open panel
@@ -611,7 +612,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
 
   beforeEach(() => {
     // initial state
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     store.stateModel.amalgamation.amalgamatingBusinesses = []
 
     wrapper = mount(AmalgamatingBusinesses, { vuetify })

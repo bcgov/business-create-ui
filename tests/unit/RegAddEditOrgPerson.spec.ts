@@ -8,6 +8,8 @@ import { useStore } from '@/store/store'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -363,7 +365,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - manual add - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -376,7 +378,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - business lookup - registries staff', () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.findAll('.business-lookup-article label').at(0).text())
@@ -389,7 +391,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -400,7 +402,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - edit - registries staff', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
@@ -418,7 +420,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for proprietor-org (SP) - edit - SBC staff or client', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validProprietorOrg, 0, null)
 
     // verify input values
@@ -436,7 +438,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - manual add - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -449,7 +451,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - business lookup - registries staff', () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     expect(wrapper.findAll('.business-lookup-article label').at(0).text())
@@ -462,7 +464,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - business lookup - SBC staff or client', () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validPartnerOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
@@ -473,7 +475,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - edit - registries staff', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validPartnerOrg, 0, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -504,7 +506,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays form data for partner-org (GP) - edit - SBC staff or client', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['']
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validPartnerOrg, 0, null)
 
     // verify input values
@@ -568,7 +570,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('does not display error message when user enters valid org name - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -587,7 +589,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('displays error message when user enters invalid org name - registries staff only', async () => {
-    store.stateModel.tombstone.keycloakRoles = ['staff']
+    setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, NaN, null)
 
     await wrapper.find('.lookup-toggle').trigger('click')
@@ -604,7 +606,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
 
     wrapper.destroy()
-    store.stateModel.tombstone.keycloakRoles = ['']
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
   })
 
   it('does not display error message when user enters valid person names', async () => {

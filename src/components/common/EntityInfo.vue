@@ -19,7 +19,7 @@
         <menu class="mt-5">
           <!-- Staff Comments -->
           <div
-            v-if="getBusinessId && isRoleStaff"
+            v-if="getBusinessId && IsAuthorized(AuthorizedActions.STAFF_COMMENTS)"
             class=" ml-n3"
           >
             <StaffComments
@@ -85,11 +85,11 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { FilingNames, FilingTypes } from '@/enums'
+import { AuthorizedActions, FilingNames, FilingTypes } from '@/enums'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
 import { DateMixin } from '@/mixins'
 import { StaffComments } from '@bcrs-shared-components/staff-comments'
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, IsAuthorized } from '@/utils'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
 
@@ -99,6 +99,11 @@ import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   }
 })
 export default class EntityInfo extends Mixins(DateMixin) {
+  // declarations for template
+  readonly axios = axios
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getBusinessFoundingDate!: string
@@ -120,10 +125,6 @@ export default class EntityInfo extends Mixins(DateMixin) {
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isRegistrationFiling!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-
-  // declaration for template
-  readonly axios = axios
 
   /** The entity legal name (old name, new name, or numbered description). */
   get entityLegalName (): string {

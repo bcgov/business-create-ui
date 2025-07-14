@@ -61,7 +61,7 @@
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
           :contactLabel="'Business Office'"
           :contactValue="getBusinessContact.email"
-          :editableCompletingParty="isRoleStaff || isSbcStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="documentOptionalEmail"
           :additionalLabel="documentDeliveryAdditionalLabel"
@@ -72,35 +72,19 @@
       </v-card>
     </section>
 
-    <!-- Transactional Folio Number -->
+    <!-- Transactional Folio Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isPremiumAccount"
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-section"
       class="mt-10"
     >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for your own tracking purposes.
-          The Business Folio or Reference Number is displayed below (if available).
-          Entering a different value below will not change the Business Folio or Reference Number.
-          Only the number below will appear on the transaction report and receipt for this filing.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <TransactionalFolioNumber
-          class="py-8 px-6"
-          :accountFolioNumber="getFolioNumber"
-          :transactionalFolioNumber="getTransactionalFolioNumber"
-          :doValidate="getValidateSteps"
-          @change="setTransactionalFolioNumber($event)"
-          @valid="setTransactionalFolioNumberValidity($event)"
-        />
-      </v-card>
+      <TransactionalFolioNumber
+        class="py-8 px-6"
+        :transactionalFolioNumber="getTransactionalFolioNumber"
+        :doValidate="getValidateSteps"
+        @change="setTransactionalFolioNumber($event)"
+        @valid="setTransactionalFolioNumberValidity($event)"
+      />
     </section>
 
     <!-- Certify -->
@@ -122,9 +106,9 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff && !isSbcStaff"
+          :disableEdit="!IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff || isSbcStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
@@ -147,7 +131,7 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS)"
       id="document-id-section"
       class="mt-10"
     >
@@ -167,8 +151,7 @@
         @isValid="isDocIdValid=$event"
       />
     </section>
-
-    <template v-if="isRoleStaff">
+    <template v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
       <!-- Staff Payment -->
       <section
         id="staff-payment-section"
@@ -195,7 +178,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, CertifyIF, DocumentDeliveryIF, DocumentIdIF, PeopleAndRoleIF } from '@/interfaces'
-import { RoleTypes } from '@/enums'
+import { AuthorizedActions, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
@@ -205,6 +188,7 @@ import DefineRegistrationSummary from '@/components/Registration/DefineRegistrat
 import FeeAcknowledgement from '@/components/Registration/FeeAcknowledgement.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -220,20 +204,21 @@ import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumb
   }
 })
 export default class RegistrationReviewConfirm extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isEntityPartnership!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setDocumentOptionalEmailValidity!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
@@ -318,12 +303,9 @@ export default class RegistrationReviewConfirm extends Vue {
 @import '@/assets/styles/theme.scss';
 
 #registration-review-confirm {
-  /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }
-
-h2::before {
-  /* Increment "header-counter" by 1 */
+#registration-review-confirm ::v-deep(section) h2::before {
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }

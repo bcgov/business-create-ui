@@ -149,7 +149,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
@@ -180,16 +180,16 @@
         <Certify
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid }"
-          :disableEdit="!isRoleStaff && isEntityCoop"
+          :disableEdit="isEntityCoop && !IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isBaseCompany && isRoleStaff"
+      v-if="isBaseCompany && IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -222,7 +222,7 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="isRoleStaff && !isEntityCoop"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT) && !isEntityCoop"
       id="document-id-section"
       class="mt-10"
     >
@@ -245,7 +245,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -270,6 +270,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ContactPointIF, CertifyIF, DocumentIdIF, EffectiveDateTimeIF, IncorporationAgreementIF,
   ShareStructureIF, CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
+import { AuthorizedActions } from '@/enums'
 import AgreementType from '@/components/common/AgreementType.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
@@ -284,6 +285,7 @@ import UploadMemorandumSummary from '@/components/Incorporation/UploadMemorandum
 import UploadRulesSummary from '@/components/Incorporation/UploadRulesSummary.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -303,12 +305,17 @@ import StaffPayment from '@/components/common/StaffPayment.vue'
   }
 })
 export default class IncorporationReviewConfirm extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCompanyDisplayName!: string
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getIncorporationAgreementStep!: IncorporationAgreementIF
@@ -316,8 +323,6 @@ export default class IncorporationReviewConfirm extends Vue {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityCoop!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void

@@ -92,7 +92,7 @@
 
     <!-- Display WebChat for SP/GP registrations only -->
     <WebChat
-      v-if="enableOldWebchat && getFilingType === FilingTypes.REGISTRATION"
+      v-if="enableOldWebchat && isRegistrationFiling"
       :axios="axios"
       :isMobile="isMobile"
       :webChatReason="window['webChatReason']"
@@ -102,7 +102,7 @@
 
     <!-- Display the Genesys WebMessage for SP/GP registrations only -->
     <GenesysWebMessage
-      v-if="enableGenesysWebMessage && getFilingType === FilingTypes.REGISTRATION"
+      v-if="enableGenesysWebMessage && isRegistrationFiling"
       :genesysURL="window['genesysUrl']"
       :environmentKey="window['genesysEnv']"
       :deploymentKey="window['genesysId']"
@@ -239,7 +239,7 @@ import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import * as Sentry from '@sentry/browser'
-import { GetFeatureFlag, UpdateLdUser, Navigate, Sleep } from '@/utils'
+import { GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -267,8 +267,8 @@ import { AuthServices, LegalServices, PayServices } from '@/services/'
 
 // Enums and Constants
 import { NameRequestStates, NrRequestActionCodes } from '@bcrs-shared-components/enums'
-import { EntityStates, ErrorTypes, FilingCodes, FilingNames, FilingStatus, FilingTypes, RouteNames,
-  StaffPaymentOptions } from '@/enums'
+import { AuthorizationRoles, AuthorizedActions, EntityStates, ErrorTypes, FilingCodes, FilingNames,
+  FilingStatus, FilingTypes, RouteNames, StaffPaymentOptions } from '@/enums'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/steps'
@@ -307,6 +307,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getUserLastName!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
+  @Getter(useStore) isAmalgamationFiling: boolean
   // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   // @Getter(useStore) isAmalgamationFilingRegular!: boolean
   // @Getter(useStore) isAmalgamationFilingVertical!: boolean
@@ -314,14 +315,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   // @Getter(useStore) isContinuationInAuthorization!: boolean
   @Getter(useStore) isContinuationInFiling!: boolean
   @Getter(useStore) isDissolutionFiling!: boolean
+  @Getter(useStore) isFirmDissolutionFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
+  @Getter(useStore) isOtherDissolutionFiling!: boolean
+  @Getter(useStore) isRegistrationFiling!: boolean
   @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAccountInformation!: (x: AccountInformationIF) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
+  @Action(useStore) setAuthorizedActions!: (x: Array<AuthorizedActions>) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
@@ -335,7 +339,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setGoodStanding!: (x: boolean) => void
   @Action(useStore) setIdentifier!: (x: string) => void
   @Action(useStore) setKeycloakGuid!: (x: string) => void
-  @Action(useStore) setKeycloakRoles!: (x: Array<string>) => void
   @Action(useStore) setLastAddressChangeDate!: (x: string) => void
   @Action(useStore) setLastAnnualReportDate!: (x: string) => void
   @Action(useStore) setLastDirectorChangeDate!: (x: string) => void
@@ -348,6 +351,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Action(useStore) setUserLastName!: (x: string) => void
   @Action(useStore) setUserPhone!: (x: string) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
+  // @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
   @Action(useStore) setOrgInformation!: (x: OrgInformationIF) => void
   @Action(useStore) setShowErrors!: (x: boolean) => void
   @Action(useStore) setTempId!: (x: string) => void
@@ -371,6 +375,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   saveErrors = []
   saveWarnings = []
   fileAndPayInvalidNameRequestDialog = false
+  authRoles = [] as Array<AuthorizationRoles>
 
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
@@ -378,8 +383,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   // declarations for template
   readonly RouteNames = RouteNames
-  readonly FilingStatus = FilingStatus
-  readonly FilingTypes = FilingTypes
   readonly axios = axios
   readonly window = window
 
@@ -396,11 +399,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
     ]
 
-    // set base crumbs based on user type
-    if (this.isSbcStaff) {
+    // set base crumbs based on authorizations
+    if (IsAuthorized(AuthorizedActions.SBC_BREADCRUMBS)) {
       // set SbcStaffDashboard as Home crumb
       crumbs.unshift(getSbcStaffDashboardBreadcrumb())
-    } else if (this.isRoleStaff) {
+    } else if (IsAuthorized(AuthorizedActions.STAFF_BREADCRUMBS)) {
       // set StaffDashboard as Home crumb
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
@@ -481,7 +484,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** The (optional) fee summary filing label. */
   get filingLabel (): string {
     // special case for firm dissolutions
-    if (this.isEntityFirm && this.isDissolutionFiling) return 'Dissolution'
+    if (this.isFirmDissolutionFiling) return 'Dissolution'
     // otherwise, no special label
     return null
   }
@@ -641,7 +644,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   /** The list of completing parties. */
   private getCompletingParties (): CompletingPartyIF {
     let completingParty = null as CompletingPartyIF
-    if (!this.isRoleStaff && !this.isSbcStaff) { // if not staff
+
+    // do this except if we are authorized to skip it
+    if (!IsAuthorized(AuthorizedActions.BLANK_COMPLETING_PARTY)) {
       completingParty = {
         firstName: this.getUserFirstName,
         middleName: '',
@@ -658,7 +663,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         phone: this.getUserPhone
       }
     } else {
-      // if staff role then set blank completing party
       completingParty = {
         firstName: '',
         lastName: '',
@@ -671,7 +675,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches user info, draft filing, NR data, etc. */
   async fetchData (): Promise<void> {
-    // reset errors in case this method is invoked more than once (ie, retry)
+    // reset errors in case this method is called more than once (ie, retry)
     this.resetFlags()
 
     // only check FF when not in Vitest tests
@@ -696,11 +700,19 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // get Keycloak roles
-      const keycloakRoles = await this.loadKeycloakRoles().catch(error => {
-        console.log('Keycloak roles error =', error) // eslint-disable-line no-console
+      // load authorized actions (aka permissions)
+      // must be called after we have current account info
+      await this.loadAuthorizedActions().catch(error => {
+        console.log('Authorized actions error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
         throw error // go to catch()
+      })
+
+      // load auth roles and store locally
+      this.authRoles = await this.loadAuthRoles().catch(error => {
+        console.log('Auth roles error =', error) // eslint-disable-line no-console
+        this.accountAuthorizationDialog = true
+        throw error
       })
 
       // handle the filing according to whether we have a business id or temp id
@@ -726,19 +738,38 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       }
 
-      // Now that we know what type of filing this is, and what the user's roles are,
-      // add staff check for certain filings.
-      // FUTURE: enable this?
-      // if (this.isContinuationInFiling && !this.isRoleStaff) {
-      //   this.accountAuthorizationDialog = true
-      //   throw new Error('Only staff can access Continuation In filings')
-      // }
-      // if (this.isRestorationFiling && !this.isRoleStaff) {
-      //   this.accountAuthorizationDialog = true
-      //   throw new Error('Only staff can access Restoration filings')
-      // }
+      // Now that we know what type of filing this is, and what the user's roles are, check if authorized.
+      if (this.isAmalgamationFiling && !IsAuthorized(AuthorizedActions.AMALGAMATION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Amalgamation filings.')
+      }
+      if (this.isContinuationInFiling && !IsAuthorized(AuthorizedActions.CONTINUATION_IN_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Continuation In filings.')
+      }
+      if (this.isFirmDissolutionFiling && !IsAuthorized(AuthorizedActions.FIRM_DISSOLUTION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Firm Dissolution filings.')
+      }
+      if (this.isIncorporationFiling && !IsAuthorized(AuthorizedActions.INCORPORATION_APPLICATION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Incorporation Application filings.')
+      }
+      if (this.isRegistrationFiling && !IsAuthorized(AuthorizedActions.REGISTRATION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Registration filings.')
+      }
+      if (this.isRestorationFiling && !IsAuthorized(AuthorizedActions.RESTORATION_REINSTATEMENT_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Restoration filings.')
+      }
+      if (this.isOtherDissolutionFiling && !IsAuthorized(AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING)) {
+        this.accountAuthorizationDialog = true
+        throw new Error('You are not authorized to access Voluntary Dissolution filings.')
+      }
 
       // get user info
+      // must be called after we know filing type
       const userInfo = await this.loadUserInfo().catch(error => {
         console.log('User info error =', error) // eslint-disable-line no-console
         if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
@@ -749,8 +780,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // update Launch Darkly
-      await this.updateLaunchDarkly(userInfo, keycloakRoles).catch(error => {
+      // update Launch Darkly with user info
+      // this allows targeted feature flags
+      await this.updateLaunchDarkly(userInfo).catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
@@ -761,6 +793,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // load parties only for SP/GP businesses
       if (this.isEntityFirm && this.getBusinessId) {
         await this.loadPartiesInformation(this.getBusinessId)
+      }
+
+      // load office addresses only for restorations
+      if (this.isRestorationFiling) {
+        await this.loadOfficeAddresses(this.getBusinessId)
       }
 
       // special route checks for Continuation In filing
@@ -781,11 +818,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // default route check:
-      // if user is on a route not valid for the current filing type
-      // then try to re-route them
+      // if user is on a route not valid for the current filing type then try to re-route them
       if (this.$route.meta.filingType !== this.getFilingType) {
-        switch (this.getFilingType) {
-          case FilingTypes.AMALGAMATION_APPLICATION:
+        switch (true) {
+          case this.isAmalgamationFiling:
             if (this.isAmalgamationFilingRegular) {
               this.$router.replace(RouteNames.AMALG_REG_INFORMATION).catch(() => {})
             } else if (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical) {
@@ -794,23 +830,22 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
               throw new Error('Invalid amalgamation filing type')
             }
             return
-          case FilingTypes.CONTINUATION_IN:
+          case this.isContinuationInFiling:
             // should never get here -- already handled above
             throw new Error('Invalid code path for Continuation In')
-          case FilingTypes.DISSOLUTION:
-            if (this.isEntityFirm) {
-              this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
-            } else {
-              this.$router.replace(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
-            }
+          case this.isFirmDissolutionFiling:
+            this.$router.replace(RouteNames.DISSOLUTION_FIRM).catch(() => {})
             return
-          case FilingTypes.INCORPORATION_APPLICATION:
+          case this.isIncorporationFiling:
             this.$router.replace(RouteNames.INCORPORATION_DEFINE_COMPANY).catch(() => {})
             return
-          case FilingTypes.REGISTRATION:
+          case this.isOtherDissolutionFiling:
+            this.$router.replace(RouteNames.DISSOLUTION_DEFINE_DISSOLUTION).catch(() => {})
+            return
+          case this.isRegistrationFiling:
             this.$router.replace(RouteNames.REGISTRATION_DEFINE_BUSINESS).catch(() => {})
             return
-          case FilingTypes.RESTORATION:
+          case this.isRestorationFiling:
             this.$router.replace(RouteNames.RESTORATION_BUSINESS_NAME).catch(() => {})
             return
           default:
@@ -834,8 +869,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setFeePrices(filingFees)
 
       // set current profile name to store for field pre population
-      // do this only if we are not staff
-      if (userInfo && !this.isRoleStaff && !this.isSbcStaff) {
+      // do this except if we are authorized to skip it
+      if (userInfo && !IsAuthorized(AuthorizedActions.BLANK_CERTIFY_STATE)) {
         // pre-populate Certified By name
         this.setCertifyState(
           {
@@ -850,8 +885,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // good to go - hide spinner and render components
       this.haveData = true
     } catch (error) {
-      // errors should be handled above
-      // just fall through to finally()
+      // log error to console
+      console.log(error) // eslint-disable-line no-console
     } finally {
       // wait for things to stabilize, then reset flag
       this.$nextTick(() => this.setHaveChanges(false))
@@ -863,13 +898,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only dissolutions/restorations have a Business ID.)
    */
   private async handleDraftWithBusinessId (businessId: string): Promise<void> {
-    // ensure user is authorized to use this business
-    await this.checkAuth(businessId).catch(error => {
-      console.log('Auth error =', error) // eslint-disable-line no-console
-      this.accountAuthorizationDialog = true
-      throw error
-    })
-
     // load business info
     await this.loadBusinessInfo(businessId)
 
@@ -887,8 +915,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
-    switch (this.getFilingType) {
-      case FilingTypes.DISSOLUTION:
+    switch (true) {
+      case this.isDissolutionFiling:
         draftFiling = {
           ...this.buildDissolutionFiling(),
           ...draftFiling
@@ -896,7 +924,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.parseDissolutionDraft(draftFiling)
         resources = DissolutionResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
-      case FilingTypes.RESTORATION:
+      case this.isRestorationFiling:
         draftFiling = {
           ...this.buildRestorationFiling(),
           ...draftFiling
@@ -927,12 +955,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
    * (Only amalgamations/continuation ins/incorporations/registrations have a Temp ID.)
    */
   private async handleDraftWithTempId (tempId: string): Promise<void> {
-    // ensure user is authorized to use this IA
-    await this.checkAuth(tempId).catch(error => {
-      this.accountAuthorizationDialog = true
-      throw error
-    })
-
     // fetch draft filing
     // NB: will throw if API error
     let draftFiling = await LegalServices.fetchFirstOrOnlyFiling(tempId)
@@ -951,8 +973,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // parse draft filing into the store and get the resources
     let resources: ResourceIF
-    switch (this.getFilingType) {
-      case FilingTypes.AMALGAMATION_APPLICATION:
+    switch (true) {
+      case this.isAmalgamationFiling:
         draftFiling = {
           ...this.buildAmalgamationFiling(),
           ...draftFiling
@@ -966,7 +988,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           throw new Error('Invalid amalgamation filing type')
         }
         break
-      case FilingTypes.CONTINUATION_IN:
+      case this.isContinuationInFiling:
         draftFiling = {
           ...this.buildContinuationInFiling(),
           ...draftFiling
@@ -978,7 +1000,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           resources.steps = ContinuationInStepsAuthorization
         }
         break
-      case FilingTypes.INCORPORATION_APPLICATION:
+      case this.isIncorporationFiling:
         draftFiling = {
           ...this.buildIncorporationFiling(),
           ...this.formatEmptyIncorporationApplication(draftFiling)
@@ -986,7 +1008,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.parseIncorporationDraft(draftFiling)
         resources = IncorporationResources.find(x => x.entityType === this.getEntityType) as ResourceIF
         break
-      case FilingTypes.REGISTRATION:
+      case this.isRegistrationFiling:
         draftFiling = {
           ...this.buildRegistrationFiling(),
           ...this.formatEmptyRegistration(draftFiling)
@@ -1063,22 +1085,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // match action code
-      if ((
-        this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION &&
-        nrResponse.request_action_cd !== NrRequestActionCodes.AMALGAMATE
-      ) || (
-        this.getFilingType === FilingTypes.CONTINUATION_IN &&
-        nrResponse.request_action_cd !== NrRequestActionCodes.MOVE
-      ) || (
-        this.getFilingType === FilingTypes.INCORPORATION_APPLICATION &&
-        nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS
-      ) || (
-        this.getFilingType === FilingTypes.REGISTRATION &&
-        nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS
-      ) || (
-        this.getFilingType === FilingTypes.RESTORATION &&
-        nrResponse.request_action_cd !== NrRequestActionCodes.RESTORE
-      )) {
+      if (
+        (this.isAmalgamationFiling && nrResponse.request_action_cd !== NrRequestActionCodes.AMALGAMATE) ||
+        (this.isContinuationInFiling && nrResponse.request_action_cd !== NrRequestActionCodes.MOVE) ||
+        (this.isIncorporationFiling && nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS) ||
+        (this.isRegistrationFiling && nrResponse.request_action_cd !== NrRequestActionCodes.NEW_BUSINESS) ||
+        (this.isRestorationFiling && nrResponse.request_action_cd !== NrRequestActionCodes.RESTORE)
+      ) {
         console.log('NR request action code doesn\'t match filing type') // eslint-disable-line no-console
         this.invalidFilingError = NameRequestStates.INVALID
         this.invalidFilingDialog = true
@@ -1132,10 +1145,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.saveWarnings = []
   }
 
-  /**
-   * Fetches user info, stores it, and returns it.
-   * May also fetch and store auth info.
-   */
+  /** Fetches auth and user info, stores it, and returns it. */
   private async loadUserInfo (): Promise<any> {
     // fetch auth org info for dissolution/restoration only
     // do not set auth org/contact info for Restoration as it is likely to change
@@ -1145,10 +1155,10 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       if (contacts?.length > 0) {
         this.setBusinessContact(contacts[0])
       }
-      // set folio number from auth info
+      // set Folio Number from auth info
       // (for an incorporation, this is set in IncorporationDefineCompany.vue)
       // (for a registration, this is set in RegistrationDefineBusiness.vue)
-      this.setFolioNumber(folioNumber)
+      if (folioNumber) this.setFolioNumber(folioNumber)
     }
 
     // NB: will throw if API error
@@ -1185,39 +1195,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     return userInfo
   }
 
-  /** Gets Keycloak roles, stores them, and returns them. */
-  private async loadKeycloakRoles (): Promise<string[]> {
-    const jwt = getJWT()
-    const keycloakRoles = (jwt.roles || []) as Array<string>
-    if (keycloakRoles.length < 1) throw new Error('Invalid Keycloak roles')
-    this.setKeycloakRoles(keycloakRoles)
-    return keycloakRoles
-
-    /** Gets Keycloak JWT and parses it. */
-    function getJWT (): any {
-      // get KC token (JWT) from session storage
-      const keycloakToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-      if (!keycloakToken) throw new Error('Error getting Keycloak token')
-
-      // decode and parse the JWT
-      try {
-        const base64Url = keycloakToken.split('.')[1]
-        const base64 = decodeURIComponent(window.atob(base64Url).split('').map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        }).join(''))
-        return JSON.parse(base64)
-      } catch (error) {
-        throw new Error('Error parsing JWT - ' + error)
-      }
-    }
-  }
-
-  /**
-   * Gets account info and stores it.
-   * Among other things, this is how we find out if this is a staff account.
-   */
-  private async loadAccountInformation (): Promise<any> {
-    const currentAccount = await this.getCurrentAccount()
+  /** Gets account info and stores it. */
+  private async loadAccountInformation (): Promise<void> {
+    const currentAccount = await getCurrentAccount()
     if (currentAccount) {
       const accountInfo: AccountInformationIF = {
         accountType: currentAccount.accountType,
@@ -1230,21 +1210,34 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // get org info
       await this.loadOrgInfo(accountInfo?.id)
     }
+
+    /**
+     * Gets current account from object in session storage.
+     * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
+     */
+    async function getCurrentAccount (): Promise<AccountInformationIF> {
+      let account = null
+      for (let i = 0; i < 50; i++) {
+        const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+        account = JSON.parse(currentAccount)
+        if (account) break
+        await Sleep(100)
+      }
+      return account
+    }
   }
 
-  /**
-   * Gets current account from object in session storage.
-   * Waits up to 5 sec for current account to be synced (typically by SbcHeader).
-   */
-  private async getCurrentAccount (): Promise<any> {
-    let account = null
-    for (let i = 0; i < 50; i++) {
-      const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-      account = JSON.parse(currentAccount)
-      if (account) break
-      await Sleep(100)
+  /** Fetches and stores authorized actions (aka permissions). */
+  private async loadAuthorizedActions (): Promise<void> {
+    // NB: will throw if API error
+    const authorizedActions = await LegalServices.fetchAuthorizedActions()
+
+    // verify we have _some_ authorized actions
+    if (!Array.isArray(authorizedActions) || authorizedActions.length < 1) {
+      throw new Error('Invalid or missing authorized actions')
     }
-    return account
+
+    this.setAuthorizedActions(authorizedActions)
   }
 
   /** Fetches org info and stores it and user's address. */
@@ -1272,14 +1265,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   }
 
   /** Updates Launch Darkly with current user info. */
-  private async updateLaunchDarkly (userInfo: any, keycloakRoles: string[]): Promise<void> {
+  private async updateLaunchDarkly (userInfo: any): Promise<void> {
     // since username is unique, use it as the user key
     const key: string = userInfo.username
     const email: string = userInfo.contacts[0]?.email || userInfo.email
     const firstName: string = userInfo.firstname
     const lastName: string = userInfo.lastname
-    // store Keycloak roles in custom object
-    const custom = { roles: keycloakRoles } as any
+    // store auth roles in custom object
+    const custom = { roles: this.authRoles } as any
 
     await UpdateLdUser(key, email, firstName, lastName, custom)
   }
@@ -1315,20 +1308,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setBusinessStartDate(business.startDate)
   }
 
-  /** Fetches authorizations and verifies roles. */
-  private async checkAuth (id: string): Promise<any> {
-    // NB: will throw if API error
-    const authRoles = await AuthServices.fetchAuthorizations(id)
+  /** Fetches auth roles. */
+  private async loadAuthRoles (): Promise<AuthorizationRoles[]> {
+    // get roles from KC token
+    const authRoles = GetKeycloakRoles()
 
-    // verify that array has at least one role
-    // NB: roles array may contain 'view', 'edit', 'staff' or nothing
-    if (!Array.isArray(authRoles) || authRoles.length < 1) {
-      throw new Error('Invalid auth roles')
+    // safety check
+    if (!Array.isArray(authRoles)) {
+      throw new Error('Invalid roles')
     }
+
+    return authRoles
   }
 
   /** Fetches and stores parties info . */
-  private async loadPartiesInformation (businessId: string): Promise<any> {
+  private async loadPartiesInformation (businessId: string): Promise<void> {
     // NB: will throw if API error
     const parties = await LegalServices.fetchParties(businessId)
 
@@ -1336,6 +1330,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       this.setParties(parties.parties)
     } else {
       throw new Error('Invalid parties')
+    }
+  }
+
+  private async loadOfficeAddresses (businessId: string): Promise<void> {
+    // NB: will throw if API error
+    const addresses = await LegalServices.fetchAddresses(businessId)
+
+    if (addresses) {
+      this.setOfficeAddresses(addresses)
+    } else {
+      throw new Error('Invalid office addresses')
     }
   }
 

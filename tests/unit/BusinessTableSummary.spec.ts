@@ -121,7 +121,7 @@ describe('Business Table Summary', () => {
           },
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: []
+            authorizedActions: []
           }
         }
       )

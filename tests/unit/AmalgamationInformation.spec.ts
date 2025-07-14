@@ -7,6 +7,13 @@ import ResultingBusinessName from '@/components/Amalgamation/ResultingBusinessNa
 import BusinessTypeHelp from '@/components/Amalgamation/BusinessTypeHelp.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -49,12 +56,13 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authorizedActions: []
           }
         },
         null,
         AmalgamationRegResources
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {
@@ -95,12 +103,13 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authorizedActions: []
           }
         },
         null,
         AmalgamationShortResources
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {
@@ -139,12 +148,13 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authorizedActions: []
           }
         },
         null,
         AmalgamationShortResources
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {

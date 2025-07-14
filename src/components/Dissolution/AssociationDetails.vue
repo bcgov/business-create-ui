@@ -103,10 +103,11 @@
       </article>
     </template>
 
-    <!-- Folio Number -->
-    <template v-if="isPremiumAccount">
+    <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
+    <template v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
       <v-divider class="mx-6" />
 
+      <!-- Folio Number -->
       <article class="section-container">
         <v-row no-gutters>
           <v-col
@@ -159,6 +160,8 @@ import { CommonMixin, DateMixin } from '@/mixins'
 import { isEmpty } from 'lodash'
 import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   from '@bcrs-shared-components/corp-type-module'
+import { AuthorizedActions } from '@/enums'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -169,6 +172,10 @@ import { CorpTypeCd, GetCorpFullDescription, GetCorpNumberedDescription }
   }
 })
 export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Prop({ default: false }) readonly isSummary!: boolean
   @Prop({ default: 'Address' }) readonly addressLabel!: string
   @Prop({ default: 'Company' }) readonly entityLabel!: string
@@ -183,7 +190,6 @@ export default class AssociationDetails extends Mixins(CommonMixin, DateMixin) {
   @Getter(useStore) getBusinessStartDate!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFolioNumber!: string
-  @Getter(useStore) isPremiumAccount!: boolean
 
   // Global setters
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void

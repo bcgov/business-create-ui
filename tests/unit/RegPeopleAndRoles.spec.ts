@@ -9,9 +9,10 @@ import { RegistrationResourceSp } from '@/resources/Registration/SP'
 import { RegistrationResourceGp } from '@/resources/Registration/GP'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import { RoleTypes } from '@/enums'
+import { AuthorizationRoles, RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { OrgPersonIF, ResourceIF } from '@/interfaces'
+import { setAuthRole } from '../set-auth-role'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -73,7 +74,9 @@ describe('Registration People And Roles component - SP', () => {
 
   beforeEach(() => {
     store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+    setAuthRole(store, AuthorizationRoles.STAFF)
     store.resourceModel = RegistrationResourceSp as ResourceIF
+
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       vuetify,
       stubs: {
@@ -213,7 +216,9 @@ describe('Registration People And Roles component - GP', () => {
 
   beforeEach(() => {
     store.stateModel.entityType = CorpTypeCd.PARTNERSHIP
+    setAuthRole(store, AuthorizationRoles.STAFF)
     store.resourceModel = RegistrationResourceGp as ResourceIF
+
     wrapperFactory = () => mount(RegPeopleAndRoles, {
       vuetify,
       stubs: {

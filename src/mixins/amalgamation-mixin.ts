@@ -1,18 +1,16 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import {
-  AmlRoles, AmlStatuses, AmlTypes, EntityStates, FilingStatus, RestorationTypes, RoleTypes
-} from '@/enums'
-import {
-  AmalgamatingBusinessIF, ContactPointIF, DocumentIdIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
-  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF,
-  ShareClassIF, ResolutionIF
-} from '@/interfaces'
+import { AmlRoles, AmlStatuses, AmlTypes, AuthorizedActions, EntityStates, FilingStatus, RestorationTypes,
+  RoleTypes } from '@/enums'
+import { AmalgamatingBusinessIF, ContactPointIF, DocumentIdIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
+  NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF, ShareClassIF,
+  ResolutionIF } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides amalgamation rules, etc.
@@ -24,6 +22,7 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
@@ -31,8 +30,6 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) isEntityBcUlcCompany!: boolean
   @Getter(useStore) isEntityCccContinueIn!: boolean
   @Getter(useStore) isEntityUlcContinueIn!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setAmalgamatingBusinesses!: (x: Array<any>) => void
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
@@ -67,9 +64,13 @@ export default class AmalgamationMixin extends Vue {
     this.foreignHorizontal
   ]
 
-  /** If we don't have addresses, assume business is not affiliated (except for staff). */
+  /** If we don't have addresses, assume business is not affiliated (except if authorized). */
   notAffiliated (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && !business.addresses) {
+    if (
+      business.type === AmlTypes.LEAR &&
+      !business.addresses &&
+      !IsAuthorized(AuthorizedActions.AML_OVERRIDES)
+    ) {
       return AmlStatuses.ERROR_NOT_AFFILIATED
     }
     return null
@@ -94,17 +95,25 @@ export default class AmalgamationMixin extends Vue {
     return null
   }
 
-  /** Disallow if NIGS (except for staff). */
+  /** Disallow if NIGS (except if authorized). */
   notInGoodStanding (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.isNotInGoodStanding) {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.isNotInGoodStanding &&
+      !IsAuthorized(AuthorizedActions.AML_OVERRIDES)
+    ) {
       return AmlStatuses.ERROR_NOT_IN_GOOD_STANDING
     }
     return null
   }
 
-  /** Disallow if limited restoration (except for staff). */
+  /** Disallow if limited restoration (except if authorized). */
   limitedRestoration (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (!this.isRoleStaff && business.type === AmlTypes.LEAR && business.isLimitedRestoration) {
+    if (
+      business.type === AmlTypes.LEAR &&
+      business.isLimitedRestoration &&
+      !IsAuthorized(AuthorizedActions.AML_OVERRIDES)
+    ) {
       return AmlStatuses.ERROR_LIMITED_RESTORATION
     }
     return null
@@ -135,11 +144,14 @@ export default class AmalgamationMixin extends Vue {
   }
 
   /**
-   * Disallow altogether if foreign or extrapro (except for staff).
+   * Disallow altogether if foreign or extrapro (except if authorized).
    * (Could happen if staff added it and regular user resumes draft.)
    */
   foreign (business: AmalgamatingBusinessIF): AmlStatuses {
-    if (!this.isRoleStaff && business.type === AmlTypes.FOREIGN) {
+    if (
+      business.type === AmlTypes.FOREIGN &&
+      !IsAuthorized(AuthorizedActions.AML_OVERRIDES)
+    ) {
       return AmlStatuses.ERROR_FOREIGN
     }
     return null

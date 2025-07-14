@@ -12,21 +12,9 @@ const store = useStore()
  * Class that provides integration with the Auth API.
  */
 export default class AuthServices {
-  /**
-   * Fetches authorizations of the specified entity.
-   * @param id the temp or business identifier (eg, T1234567 or BC1219948)
-   * @returns a promise to return the roles object
-   */
-  static async fetchAuthorizations (id: string): Promise<any> {
-    if (!id) throw new Error('Invalid id')
-
-    const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
-    const url = `${authApiUrl}entities/${id}/authorizations`
-
-    return axios.get(url).then(response => {
-      if (response?.data?.roles) return response.data.roles
-      throw new Error('Invalid response data')
-    })
+  /** The Auth API URL, from session storage. */
+  static get authApiUrl (): string {
+    return sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
   }
 
   /**
@@ -37,8 +25,7 @@ export default class AuthServices {
   static async fetchAuthInfo (businessId: string): Promise<AuthInformationIF> {
     if (!businessId) throw new Error('Invalid business id')
 
-    const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
-    const url = `${authApiUrl}entities/${businessId}`
+    const url = `${this.authApiUrl}entities/${businessId}`
     const config = { headers: { 'Account-Id': store.getAccountId } }
 
     return axios.get(url, config).then(response => {
@@ -70,8 +57,7 @@ export default class AuthServices {
    * @returns a promise to return the user info object
    */
   static async fetchUserInfo (): Promise<any> {
-    const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
-    const url = `${authApiUrl}users/@me`
+    const url = `${this.authApiUrl}users/@me`
 
     return axios.get(url).then(response => {
       if (response?.data) return response.data
@@ -87,8 +73,7 @@ export default class AuthServices {
   static async fetchOrgInfo (orgId: number): Promise<any> {
     if (!orgId) throw new Error('Invalid org id')
 
-    const authApiUrl = sessionStorage.getItem(SessionStorageKeys.AuthApiUrl)
-    const url = `${authApiUrl}orgs/${orgId}`
+    const url = `${this.authApiUrl}orgs/${orgId}`
 
     return axios.get(url)
       .then(response => {
@@ -113,8 +98,7 @@ export default class AuthServices {
       phone: contactInfo.phone,
       phoneExtension: contactInfo.extension
     }
-    const authApiUrl = sessionStorage.getItem('AUTH_API_URL')
-    const url = `${authApiUrl}entities/${businessId}/contacts`
+    const url = `${this.authApiUrl}entities/${businessId}/contacts`
 
     return axios.put(url, data).then(response => {
       const contacts = response?.data?.contacts[0]

@@ -106,7 +106,7 @@
       <header id="business-start-date-header">
         <h2>Business Start Date</h2>
         <p class="mt-4">
-          <template v-if="isRoleStaff">
+          <template v-if="IsAuthorized(AuthorizedActions.FIRM_NO_MIN_START_DATE)">
             Enter the start date of the business. The start date can be no more than 90 days in the future.
           </template>
           <template v-else>
@@ -157,8 +157,9 @@ import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NatureOfBusiness from '@/components/Registration/NatureOfBusiness.vue'
 import StartDate from '@/components/Registration/StartDate.vue'
 import { ContactPointIF, RegistrationStateIF } from '@/interfaces'
-import { RouteNames } from '@/enums'
+import { AuthorizedActions, RouteNames } from '@/enums'
 import { CommonMixin } from '@/mixins'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -172,12 +173,15 @@ import { CommonMixin } from '@/mixins'
   }
 })
 export default class RegistrationDefineBusiness extends Mixins(CommonMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) isEntityPartnership!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void

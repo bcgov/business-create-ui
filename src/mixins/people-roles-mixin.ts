@@ -1,10 +1,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
+import { AuthorizedActions, NumWord, PartyTypes, RoleTypes, RuleIds } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AddressIF, ConfirmDialogType, OrgPersonIF, PeopleAndRoleIF,
   PeopleAndRolesResourceIF, RegistrationStateIF } from '@/interfaces'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides common people and roles methods.
@@ -15,6 +16,17 @@ export default class PeopleRolesMixin extends Vue {
   $refs!: {
     confirmDialog: ConfirmDialogType
   }
+
+  // For components that import this mixin
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
+  // Enums for template
+  readonly CorpTypeCd = CorpTypeCd
+  readonly RoleTypes = RoleTypes
+  readonly PartyTypes = PartyTypes
+  readonly NumWord = NumWord
+  readonly RuleIds = RuleIds
 
   // NB: some of these are used by components that use this mixin
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
@@ -29,20 +41,11 @@ export default class PeopleRolesMixin extends Vue {
   @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
   @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
   @Action(useStore) setOrgPersonList!: (x: OrgPersonIF[]) => void
   @Action(useStore) setRegistrationBusinessNumber!: (x: string) => void
-
-  // Enums for template
-  readonly CorpTypeCd = CorpTypeCd
-  readonly RoleTypes = RoleTypes
-  readonly PartyTypes = PartyTypes
-  readonly NumWord = NumWord
-  readonly RuleIds = RuleIds
 
   // Local variables
   currentOrgPerson = null as OrgPersonIF

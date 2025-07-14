@@ -24,15 +24,12 @@ const mockEntityInfo = [
 const itIf = (condition) => condition ? it : it.skip
 
 for (const mock of mockEntityInfo) {
-  describe(`Define Company view for a Premium ${mock.entityType}`, () => {
+  describe(`Define Company view for a ${mock.entityType}`, () => {
     let wrapper: any
 
     beforeEach(() => {
       wrapper = shallowWrapperFactory(DefineCompany, null, {
-        entityType: mock.entityType,
-        accountInformation: {
-          accountType: 'PREMIUM'
-        }
+        entityType: mock.entityType
       })
     })
 
@@ -55,35 +52,9 @@ for (const mock of mockEntityInfo) {
       expect(wrapper.vm.$el.querySelector('#office-address-header').textContent).toContain('Records')
     })
 
-    it('displays folio number when it is a premium account', () => {
+    it('displays folio number for non-staff', () => {
       expect(wrapper.find('#folio-number-header').exists()).toBe(true)
       expect(wrapper.find('#folio-number-header').text()).toContain('Folio / Reference Number (Optional)')
-    })
-  })
-
-  describe(`Define Company view for a Basic ${mock.entityType}`, () => {
-    let wrapper: any
-
-    beforeEach(() => {
-      wrapper = shallowWrapperFactory(DefineCompany, null, {
-        entityType: mock.entityType,
-        accountInformation: {
-          accountType: 'BASIC'
-        }
-      })
-    })
-
-    afterEach(() => {
-      wrapper.destroy()
-    })
-
-    it(`renders the component properly for a ${mock.entityType}`, () => {
-      // verify page content
-      expect(wrapper.find('h2').text()).toContain('Name')
-    })
-
-    it('doesn\'t display folio number when it is not a premium account', () => {
-      expect(wrapper.find('#folio-number-header').exists()).toBe(false)
     })
   })
 }

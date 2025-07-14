@@ -3,9 +3,9 @@ import { defineStore } from 'pinia'
 import Vuetify from 'vuetify'
 import { resourceModel, stateModel } from './state'
 import {
-  AccountTypes,
   AmalgamationTypes,
   ApprovalTypes,
+  AuthorizedActions,
   BusinessTypes,
   CoopTypes,
   DissolutionTypes,
@@ -77,6 +77,7 @@ import {
   DocumentIdIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
+import { IsAuthorized } from '@/utils'
 
 // It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
@@ -85,18 +86,6 @@ import { GetFeatureFlag } from '@/utils/feature-flag-utils'
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
-    /** The Account ID, from session storage. */
-    getAccountId (): string {
-      // if we can't get account id from ACCOUNT_ID
-      // then try to get it from CURRENT_ACCOUNT
-      let accountId = sessionStorage.getItem('ACCOUNT_ID')
-      if (!accountId) {
-        const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
-        accountId = JSON.parse(currentAccount)?.id
-      }
-      return accountId
-    },
-
     /** True if current screen width is mobile. */
     isMobile (): boolean {
       // fall back to base window width if no window size changes have occurred
@@ -169,6 +158,16 @@ export const useStore = defineStore('store', {
       return (this.getFilingType === FilingTypes.DISSOLUTION)
     },
 
+    /** Whether the current filing is a Firm Dissolution. */
+    isFirmDissolutionFiling (): boolean {
+      return (this.isDissolutionFiling && this.isEntityFirm)
+    },
+
+    /** Whether the current filing is a Non-Firm Dissolution. */
+    isOtherDissolutionFiling (): boolean {
+      return (this.isDissolutionFiling && !this.isEntityFirm)
+    },
+
     /** Whether the current filing is a Registration. */
     isRegistrationFiling (): boolean {
       return (this.getFilingType === FilingTypes.REGISTRATION)
@@ -210,11 +209,6 @@ export const useStore = defineStore('store', {
 
     getFilingStatus (): FilingStatus {
       return this.stateModel.tombstone.filingStatus
-    },
-
-    /** Whether the user has "staff" Keycloak role. */
-    isRoleStaff (): boolean {
-      return this.getKeycloakRoles.includes('staff')
     },
 
     /** Whether the entity type has been identified. */
@@ -332,6 +326,11 @@ export const useStore = defineStore('store', {
       return this.stateModel.accountInformation
     },
 
+    /** The current account id. */
+    getAccountId (): number {
+      return this.getAccountInformation?.id
+    },
+
     /** Whether the entity is a base company (BC/BEN/CC/ULC or C/CBEN/CCC/CUL). */
     isBaseCompany (): boolean {
       return (
@@ -344,16 +343,6 @@ export const useStore = defineStore('store', {
         this.isEntityCccContinueIn ||
         this.isEntityUlcContinueIn
       )
-    },
-
-    /** Whether the current account is a premium account. */
-    isPremiumAccount (): boolean {
-      return (this.getAccountInformation.accountType === AccountTypes.PREMIUM)
-    },
-
-    /** Whether the user is SBC Staff (which is not the same as Staff). */
-    isSbcStaff (): boolean {
-      return (this.getAccountInformation.accountType === AccountTypes.SBC_STAFF)
     },
 
     /** The Org Information object. */
@@ -655,44 +644,49 @@ export const useStore = defineStore('store', {
     isDissolutionValid (): boolean {
       const isDocumentDeliveryValid = this.getDocumentDelivery.valid
       const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
-
-      // only for Premium account
-      const isTransactionalFnValid = !this.isPremiumAccount || this.getTransactionalFolioNumberValid
-
-      // only for Staff role
-      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
-      const isCompletingPartyValid = this.isRoleStaff ? this.getCompletingParty?.valid : true
-
-      const isDissolutionDateValid = !!this.getDissolutionDate
-
-      const isEffectiveDateTimeValid = (this.isBaseCompany)
-        ? this.getEffectiveDateTime.valid
+      const isCourtOrderValid = IsAuthorized(AuthorizedActions.COURT_ORDER_POA)
+        ? this.getCourtOrderStep.valid
+        : true
+      const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getStaffPaymentStep.valid
+        : true
+      // transactional folio number is mutually exclusive with staff payment
+      const isTransactionalFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getTransactionalFolioNumberValid
         : true
 
       if (this.isEntityFirm) {
+        const isDissolutionDateValid = !!this.getDissolutionDate
+        const isCompletingPartyValid = IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
+          ? this.getCompletingParty?.valid
+          : true
+
         return (
           isDocumentDeliveryValid &&
-            isTransactionalFnValid &&
-            isCertifyValid &&
-            isCourtOrderValid &&
-            isStaffPaymentValid &&
-            isDissolutionDateValid &&
-            isCompletingPartyValid &&
-            this.getDocumentIdState.valid
+          isTransactionalFolioNumberValid &&
+          isCertifyValid &&
+          isCourtOrderValid &&
+          isStaffPaymentValid &&
+          isDissolutionDateValid &&
+          isCompletingPartyValid &&
+          this.getDocumentIdState.valid
+        )
+      } else {
+        const isEffectiveDateTimeValid = this.isBaseCompany ? this.getEffectiveDateTime.valid : true
+
+        return (
+          this.isDissolutionDefineDissolutionValid &&
+          this.isAffidavitValid &&
+          this.isResolutionValid &&
+          isDocumentDeliveryValid &&
+          isTransactionalFolioNumberValid &&
+          isCertifyValid &&
+          isEffectiveDateTimeValid &&
+          isCourtOrderValid &&
+          isStaffPaymentValid &&
+          this.getDocumentIdState.valid
         )
       }
-      return (
-        this.isDissolutionDefineDissolutionValid &&
-        this.isAffidavitValid &&
-        this.isResolutionValid &&
-        isDocumentDeliveryValid &&
-        isTransactionalFnValid &&
-        isCertifyValid &&
-        isEffectiveDateTimeValid &&
-        isCourtOrderValid &&
-        isStaffPaymentValid
-      )
     },
 
     /** Whether Amalgamation Information step is valid. */
@@ -720,11 +714,18 @@ export const useStore = defineStore('store', {
         this.isAmalgamationFilingVertical ||
         this.isCreateShareStructureValid
       )
-      const isFolioNumberValid = !this.isPremiumAccount || this.getFolioNumberValid
-      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
 
+      const isCourtOrderValid = IsAuthorized(AuthorizedActions.COURT_ORDER_POA)
+        ? this.getCourtOrderStep.valid
+        : true
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
+      const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getStaffPaymentStep.valid
+        : true
+      // folio number is mutually exclusive with staff payment
+      const isFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getFolioNumberValid
+        : true
       return (
         this.isAmalgamationInformationValid &&
         this.isDefineCompanyValid &&
@@ -750,10 +751,14 @@ export const useStore = defineStore('store', {
       // otherwise, it's a continuation in application
       const isEffectiveDateTimeValid =
         (this.getFilingStatus === FilingStatus.DRAFT) ? this.getEffectiveDateTime.valid : true
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
-      const isCourtOrderValid = this.isRoleStaff ? this.getCourtOrderStep.valid : true
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
+      const isCourtOrderValid = IsAuthorized(AuthorizedActions.COURT_ORDER_POA)
+        ? this.getCourtOrderStep.valid
+        : true
       const isStaffPaymentValid =
-        (this.isRoleStaff && this.getFilingStatus === FilingStatus.DRAFT) ? this.getStaffPaymentStep.valid : true
+        (IsAuthorized(AuthorizedActions.STAFF_PAYMENT) && this.getFilingStatus === FilingStatus.DRAFT)
+          ? this.getStaffPaymentStep.valid
+          : true
 
       return (
         this.isDefineCompanyValid &&
@@ -785,11 +790,15 @@ export const useStore = defineStore('store', {
       // Validate different steps for Base Companies vs Coops
       const isDocumentValid = this.isBaseCompany ? isBaseStepsValid : isCoopStepsValid
 
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
 
-      const isCourtOrderValid = (this.isBaseCompany && this.isRoleStaff) ? this.getCourtOrderStep.valid : true
+      const isCourtOrderValid = (this.isBaseCompany && IsAuthorized(AuthorizedActions.COURT_ORDER_POA))
+        ? this.getCourtOrderStep.valid
+        : true
 
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+      const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getStaffPaymentStep.valid
+        : true
 
       return (
         this.isDefineCompanyValid &&
@@ -804,10 +813,12 @@ export const useStore = defineStore('store', {
 
     /** Whether all the registration steps are valid. */
     isRegistrationValid (): boolean {
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
       // const isFeeAcknowledgementValid = getRegistration.feeAcknowledgement
       const isFeeAcknowledgementValid = true // FUTURE: use line above instead
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+      const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getStaffPaymentStep.valid
+        : true
 
       return (
         this.getRegistration.defineBusinessValid &&
@@ -821,8 +832,10 @@ export const useStore = defineStore('store', {
 
     /** Whether all the restoration steps are valid. */
     isRestorationValid (): boolean {
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
-      const isStaffPaymentValid = this.isRoleStaff ? this.getStaffPaymentStep.valid : true
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
+      const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+        ? this.getStaffPaymentStep.valid
+        : true
 
       return (
         this.isRestoreBusinessNameValid && // step 1
@@ -880,9 +893,9 @@ export const useStore = defineStore('store', {
       return this.stateModel.tombstone.keycloakGuid
     },
 
-    /** The user's roles from the Keycloak token (JWT). */
-    getKeycloakRoles (): Array<string> {
-      return this.stateModel.tombstone.keycloakRoles
+    /** The user's authorized actions (aka permissions). */
+    getAuthorizedActions (): Array<AuthorizedActions> {
+      return this.stateModel.tombstone.authorizedActions
     },
 
     /** The user's address. */
@@ -1195,8 +1208,8 @@ export const useStore = defineStore('store', {
     setKeycloakGuid (keycloakGuid: string) {
       this.stateModel.tombstone.keycloakGuid = keycloakGuid
     },
-    setKeycloakRoles (keycloakRoles: Array<string>) {
-      this.stateModel.tombstone.keycloakRoles = keycloakRoles
+    setAuthorizedActions (actions: Array<AuthorizedActions>) {
+      this.stateModel.tombstone.authorizedActions = actions
     },
     setUserAddress (userAddress: AddressIF) {
       this.stateModel.tombstone.userAddress = userAddress

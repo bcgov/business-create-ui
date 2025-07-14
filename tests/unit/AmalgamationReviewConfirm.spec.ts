@@ -11,9 +11,17 @@ import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import Certify from '@/components/common/Certify.vue'
+import FolioNumber from '@/components/common/FolioNumber.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { AmalgamationTypes, FilingTypes } from '@bcrs-shared-components/enums'
 import ListResolutions from '@/components/common/ListResolutions.vue'
+import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const amalgamationBusinessInfo = [
@@ -44,12 +52,13 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: ['staff']
+            authorizedActions: []
           }
         },
         null,
         null
       )
+      setAuthRole(store, AuthorizationRoles.STAFF)
     })
 
     afterAll(() => {
@@ -103,14 +112,18 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
+    it('does not display Folio Number section for staff', () => {
+      const section = wrapper.find('#folio-number-section')
+      expect(section.exists()).toBe(false)
+    })
+
     it('displays Amalgamation Statement section', () => {
       const section = wrapper.findAll('section').at(3)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
-      expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
-    it('displays Court Order and Plan of Arrangement section', () => {
+    it('displays Court Order and Plan of Arrangement section for staff', () => {
       const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Court Order and Plan of Arrangement')
       expect(section.find('p').text()).toContain('If this filing is pursuant to a court order,')
@@ -151,7 +164,7 @@ for (const test of amalgamationBusinessInfo) {
           entityType: test.entityType,
           tombstone: {
             filingType: FilingTypes.AMALGAMATION_APPLICATION,
-            keycloakRoles: []
+            authorizedActions: []
           }
         },
         null,
@@ -210,19 +223,36 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(DocumentDelivery).exists()).toBe(true)
     })
 
-    it('displays Amalgamation Statement section', () => {
+    it('displays Folio Number section for non-staff', () => {
       const section = wrapper.findAll('section').at(3)
+      expect(section.find('header h2').text()).toBe('Folio or Reference Number for this Filing')
+      expect(section.find('p').text()).toContain('Enter the folio or reference number you want to use')
+      expect(section.findComponent(FolioNumber).exists()).toBe(true)
+    })
+
+    it('displays Amalgamation Statement section', () => {
+      const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Amalgamation Statement')
       expect(section.find('p').text()).toContain('Please indicate the statement applicable to this amalgamation.')
       expect(section.findComponent(AmalgamationStatement).exists()).toBe(true)
     })
 
+    it('does not display Court Order/POA section for non-staff', () => {
+      const section = wrapper.find('#court-order-poa-section')
+      expect(section.exists()).toBe(false)
+    })
+
     it('displays Certify section', () => {
-      const section = wrapper.findAll('section').at(4)
+      const section = wrapper.findAll('section').at(5)
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('p').text()).toContain('Confirm the legal name of the person authorized')
       expect(section.find('p').text()).toContain('to complete and submit this application.')
       expect(section.findComponent(Certify).exists()).toBe(true)
+    })
+
+    it('does not display Staff Payment section for non-staff', () => {
+      const section = wrapper.find('#staff-payment-section')
+      expect(section.exists()).toBe(false)
     })
   })
 }

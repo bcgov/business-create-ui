@@ -13,21 +13,18 @@ const tests = [
   },
   {
     props: {
-      accountFolioNumber: '1234',
       transactionalFolioNumber: null,
       doValidate: false
     }
   },
   {
     props: {
-      accountFolioNumber: '1234',
       transactionalFolioNumber: '4321',
       doValidate: false
     }
   },
   {
     props: {
-      accountFolioNumber: '',
       transactionalFolioNumber: 'x'.repeat(50), // valid length
       doValidate: true
     },
@@ -35,7 +32,6 @@ const tests = [
   },
   {
     props: {
-      accountFolioNumber: '',
       transactionalFolioNumber: 'x'.repeat(51), // invalid length
       doValidate: true
     },
@@ -43,7 +39,6 @@ const tests = [
   },
   {
     props: {
-      accountFolioNumber: '',
       transactionalFolioNumber: '',
       doValidate: true
     },
@@ -52,7 +47,6 @@ const tests = [
   },
   {
     props: {
-      accountFolioNumber: '',
       transactionalFolioNumber: '',
       doValidate: true
     },
@@ -80,8 +74,8 @@ for (const [i, test] of tests.entries()) {
       expect(wrapper.findComponent(TransactionalFolioNumber).exists()).toBe(true)
     })
 
-    itIf(!test.props.transactionalFolioNumber && !!test.props.accountFolioNumber)('displays the default account folio number', () => {
-      expect(wrapper.vm.localFolioNumber).toBe(test.props.accountFolioNumber)
+    itIf(!test.props.transactionalFolioNumber && !!test.props.accountFolioNumber)('displays an empty field if there is no transactional folio number', () => {
+      expect(wrapper.vm.localFolioNumber).toBe('')
     })
 
     itIf(!!test.props.transactionalFolioNumber)('displays the transactional folio number', () => {

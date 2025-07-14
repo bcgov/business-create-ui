@@ -119,7 +119,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
@@ -131,9 +131,9 @@
       </v-card>
     </section>
 
-    <!-- Folio or Reference Number -->
+    <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isPremiumAccount"
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-number-section"
       class="mt-10"
     >
@@ -187,7 +187,7 @@
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -239,7 +239,7 @@
           :class="{ 'invalid-section': isCertifyInvalid }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
@@ -269,7 +269,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -292,6 +292,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
+import { AuthorizedActions } from '@/enums'
 import { ContactPointIF, CertifyIF, DocumentIdIF, EffectiveDateTimeIF, ShareStructureIF,
   CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
@@ -309,6 +310,7 @@ import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import ListResolutions from '@/components/common/ListResolutions.vue'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -329,12 +331,17 @@ import ListResolutions from '@/components/common/ListResolutions.vue'
   }
 })
 export default class AmalgamationReviewConfirm extends Vue {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getAmalgamatingBusinessesValid!: boolean
   @Getter(useStore) getAmalgamationCourtApprovalValid!: boolean
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
@@ -343,9 +350,6 @@ export default class AmalgamationReviewConfirm extends Vue {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setAmalgamationCourtApproval!: (x: boolean) => void
   @Action(useStore) setAmalgamationCourtApprovalValid!: (x: boolean) => void

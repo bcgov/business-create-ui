@@ -10,17 +10,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 
 describe('Continuation In Business BC component', () => {
   it('renders the component correctly', async () => {
-    const wrapper = wrapperFactory(
-      ContinuationInBusinessBc,
-      null,
-      null,
-      null,
-      null,
-      // declare computed property to override store getter:
-      {
-        isPremiumAccount: () => true
-      }
-    )
+    const wrapper = wrapperFactory(ContinuationInBusinessBc)
     await Vue.nextTick()
 
     // verify main component exists

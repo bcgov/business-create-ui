@@ -5,12 +5,16 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import DissolutionFirm from '@/views/DissolutionFirm/DissolutionFirm.vue'
 import { DissolutionResources } from '@/resources/'
+import { AuthorizationRoles, AuthorizedActions } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
+
 setActivePinia(createPinia())
 const store = useStore()
+
+// init store
 store.stateModel.business.foundingDate = '2022-06-07T00:00:00.000+00:00'
-store.stateModel.tombstone.keycloakRoles = ['staff']
 store.stateModel.completingParty = {
   firstName: 'Wira',
   middleName: 'Rosmunda',
@@ -23,18 +27,24 @@ store.stateModel.completingParty = {
 const dissolutionFirmTestCases = [
   {
     entityType: 'SP',
-    isPremium: false,
+    isStaff: false
+  },
+  {
+    entityType: 'SP',
+    isStaff: true
+  },
+  {
+    entityType: 'GP',
     isStaff: false
   },
   {
     entityType: 'GP',
-    isPremium: true,
-    isStaff: false
+    isStaff: true
   }
 ]
 
 for (const test of dissolutionFirmTestCases) {
-  const type = test.isPremium ? 'premium' : test.isStaff ? 'staff' : 'regular'
+  const type = test.isStaff ? 'staff' : 'regular'
 
   describe(`Dissolution Firm view for a ${test.entityType} as a ${type} user`, () => {
     let wrapper: any
@@ -56,9 +66,7 @@ for (const test of dissolutionFirmTestCases) {
       wrapper = shallowWrapperFactory(
         DissolutionFirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
@@ -78,19 +86,18 @@ for (const test of dissolutionFirmTestCases) {
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
     })
 
-    it('displays Folio Number section only for premium', () => {
+    it('displays Folio Number section for non-staff only', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         DissolutionFirm,
         null,
-        {
-          entityType: test.entityType,
-          accountInformation: { accountType: test.isPremium ? 'PREMIUM' : 'BASIC' }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )
 
-      expect(wrapper.find('#folio-number-section').exists()).toBe(test.isPremium)
+      // Folio Number is mutually exclusive with Staff Payment
+      expect(wrapper.find('#folio-number-section').exists()).toBe(!test.isStaff)
     })
 
     it('displays Certify section', () => {
@@ -106,37 +113,45 @@ for (const test of dissolutionFirmTestCases) {
     })
 
     it('displays Completing Party section', async () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = mount(
         DissolutionFirm,
         { vuetify }
       )
+
+      const isFirmEditableCompletingParty: boolean =
+        wrapper.vm.IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
+
       expect(wrapper.find('#completing-party-section').exists()).toBe(true)
       expect(wrapper.find('#completing-party').exists()).toBe(true)
       const input1 = wrapper.find('#person__first-name')
       const input2 = wrapper.find('#person__middle-name')
       const input3 = wrapper.find('#person__last-name')
-      expect(input1.exists()).toBe(true)
-      expect(input2.exists()).toBe(true)
-      expect(input3.exists()).toBe(true)
+      expect(input1.exists()).toBe(isFirmEditableCompletingParty)
+      expect(input2.exists()).toBe(isFirmEditableCompletingParty)
+      expect(input3.exists()).toBe(isFirmEditableCompletingParty)
 
-      // verify name lengths are valid
-      await input1.setValue('Name length is okay')
-      await input2.setValue('Name length is okay')
-      await input3.setValue('Name length is okay')
-      expect(input1.element.value).toBe('Name length is okay')
-      expect(input2.element.value).toBe('Name length is okay')
-      expect(input3.element.value).toBe('Name length is okay')
-      const validMessages = wrapper.findAll('#completing-party .v-messages__message')
-      expect(validMessages.length).toBe(0)
+      // fields are onlly editable when authorized
+      if (isFirmEditableCompletingParty) {
+        // verify name lengths are valid
+        await input1.setValue('Name length is okay')
+        await input2.setValue('Name length is okay')
+        await input3.setValue('Name length is okay')
+        expect(input1.element.value).toBe('Name length is okay')
+        expect(input2.element.value).toBe('Name length is okay')
+        expect(input3.element.value).toBe('Name length is okay')
+        const validMessages = wrapper.findAll('#completing-party .v-messages__message')
+        expect(validMessages.length).toBe(0)
 
-      // verify name lengths are invalid
-      await input1.setValue('Name length is over 20')
-      await input2.setValue('Name length is over 20')
-      await input3.setValue('Name length is over 30 with many characters')
-      const errorMessages = wrapper.findAll('#completing-party .v-messages__message')
-      expect(errorMessages.length).toBe(2) // length should be 3 theoretically
-      expect(errorMessages.at(0).text()).toBe('Cannot exceed 20 characters')
-      expect(errorMessages.at(1).text()).toBe('Cannot exceed 20 characters')
+        // verify name lengths are invalid
+        await input1.setValue('Name length is over 20')
+        await input2.setValue('Name length is over 20')
+        await input3.setValue('Name length is over 30 with many characters')
+        const errorMessages = wrapper.findAll('#completing-party .v-messages__message')
+        expect(errorMessages.length).toBe(2) // length should be 3 theoretically
+        expect(errorMessages.at(0).text()).toBe('Cannot exceed 20 characters')
+        expect(errorMessages.at(1).text()).toBe('Cannot exceed 20 characters')
+      }
     })
 
     it('display correct date rules', async () => {

@@ -119,7 +119,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :showCustodianEmail="false"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
@@ -135,35 +135,19 @@
       </v-card>
     </section>
 
-    <!-- Folio or Reference Number -->
+    <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isPremiumAccount"
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-number-section"
       class="mt-10"
     >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4 mb-6">
-          Enter the folio or reference number you want to use for this filing for your own tracking
-          purposes. The Business Folio or Reference Number is displayed below (if available).
-          Entering a different value below will not change the Business Folio or Reference Number.
-          Only the number below will appear on the transaction report and receipt for this filing.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <TransactionalFolioNumber
-          class="py-8 px-6"
-          :accountFolioNumber="getFolioNumber"
-          :transactionalFolioNumber="getTransactionalFolioNumber"
-          :doValidate="getValidateSteps"
-          @change="setTransactionalFolioNumber($event)"
-          @valid="setTransactionalFolioNumberValidity($event)"
-        />
-      </v-card>
+      <TransactionalFolioNumber
+        class="py-8 px-6"
+        :transactionalFolioNumber="getTransactionalFolioNumber"
+        :doValidate="getValidateSteps"
+        @change="setTransactionalFolioNumber($event)"
+        @valid="setTransactionalFolioNumberValidity($event)"
+      />
     </section>
 
     <!-- Completing Party -->
@@ -186,7 +170,7 @@
           class="py-8 px-6 section-container py-6"
           :invalidSection="isCompletingPartyInvalid"
           :completingParty="getCompletingParty"
-          :enableAddEdit="isRoleStaff || isSbcStaff"
+          :enableAddEdit="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :addressSchema="PersonAddressSchema"
           :validate="isCompletingPartyInvalid"
           @update="onUpdate($event)"
@@ -220,11 +204,11 @@
           :isCertified="getCertifyState.valid"
           :statements="getCompletingPartyStatement.certifyStatements"
           :message="getCompletingPartyStatement.certifyClause"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
           :firstColumn="3"
           :secondColumn="9"
           :invalidSection="isCertifyInvalid"
-          :disableEdit="!isRoleStaff && !isSbcStaff"
+          :disableEdit="!IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)"
           @update:certifiedBy="onCertifiedBy($event)"
           @update:isCertified="onIsCertified($event)"
         />
@@ -233,7 +217,7 @@
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -266,7 +250,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -300,22 +284,14 @@ import { RuleHelpers } from '@/rules'
 import { CompletingParty } from '@bcrs-shared-components/completing-party'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RoleTypes, RouteNames } from '@/enums'
+import { AuthorizedActions, RoleTypes, RouteNames } from '@/enums'
 import { VuetifyRuleFunction } from '@/types'
 import MessageBox from '@/components/common/MessageBox.vue'
-
-import {
-  ContactPointIF,
-  CertifyIF,
-  CompletingPartyStatementIF,
-  CourtOrderStepIF,
-  DocumentDeliveryIF,
-  CompletingPartyIF,
-  PartyIF,
-  StaffPaymentStepIF
-} from '@/interfaces'
+import { ContactPointIF, CertifyIF, CompletingPartyStatementIF, CourtOrderStepIF, DocumentDeliveryIF,
+  CompletingPartyIF, PartyIF, StaffPaymentStepIF } from '@/interfaces'
 import { PersonAddressSchema } from '@/schemas/'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -332,6 +308,12 @@ import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp
   }
 })
 export default class DissolutionFirm extends Mixins(DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+  readonly PersonAddressSchema = PersonAddressSchema
+  readonly RouteNames = RouteNames
+
   // Global getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getBusinessFoundingDate!: string
@@ -353,9 +335,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isEntityFirm: boolean
   @Getter(useStore) isEntitySoleProp: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) isSbcStaff!: boolean
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -369,12 +348,6 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
   @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
-
-  // Enum for template
-  readonly RouteNames = RouteNames
-
-  // declaration for template
-  readonly PersonAddressSchema = PersonAddressSchema
 
   // local variable
   private completingPartyValid = true
@@ -396,7 +369,11 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 
   /** Is true when the completing party conditions are not met. */
   get isCompletingPartyInvalid ():boolean {
-    return (this.getValidateSteps && !this.completingPartyValid && this.isRoleStaff)
+    return (
+      this.getValidateSteps &&
+      !this.completingPartyValid &&
+      IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
+    )
   }
 
   /** Is true when the dissolution date conditions are not met. */
@@ -528,13 +505,10 @@ export default class DissolutionFirm extends Mixins(DateMixin) {
 <style lang="scss" scoped>
 @import '@/assets/styles/theme.scss';
 
-#dissolution-firm {
-  /* Set "header-counter" to 0 */
+#dissolution-review-confirm {
   counter-reset: header-counter;
 }
-
-h2::before {
-  /* Increment "header-counter" by 1 */
+#dissolution-review-confirm ::v-deep(section) h2::before {
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }

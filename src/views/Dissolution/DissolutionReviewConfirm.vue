@@ -245,7 +245,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :showCustodianEmail="true"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
@@ -259,35 +259,18 @@
       </v-card>
     </section>
 
-    <!-- Transactional Folio Number -->
+    <!-- Transactional Folio Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isPremiumAccount"
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-number-section"
       class="mt-10"
     >
-      <header>
-        <h2>Folio or Reference Number for this Filing</h2>
-        <p class="mt-4">
-          Enter the folio or reference number you want to use for this filing for your own tracking
-          purposes. The Business Folio or Reference Number is displayed below (if available).
-          Entering a different value below will not change the Business Folio or Reference Number.
-          Only the number below will appear on the transaction report and receipt for this filing.
-        </p>
-      </header>
-
-      <v-card
-        flat
-        class="mt-6"
-      >
-        <TransactionalFolioNumber
-          class="py-8 px-6"
-          :accountFolioNumber="getFolioNumber"
-          :transactionalFolioNumber="getTransactionalFolioNumber"
-          :doValidate="getValidateSteps"
-          @change="setTransactionalFolioNumber($event)"
-          @valid="setTransactionalFolioNumberValidity($event)"
-        />
-      </v-card>
+      <TransactionalFolioNumber
+        :transactionalFolioNumber="getTransactionalFolioNumber"
+        :doValidate="getValidateSteps"
+        @change="setTransactionalFolioNumber($event)"
+        @valid="setTransactionalFolioNumberValidity($event)"
+      />
     </section>
 
     <!-- Certify -->
@@ -311,14 +294,14 @@
           :class="{ 'invalid-section': isCertifyInvalid }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
 
     <!-- Court Order and Plan of Arrangement -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -351,7 +334,7 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS)"
       id="document-id-section"
       class="mt-10"
     >
@@ -374,7 +357,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -410,19 +393,10 @@ import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import TransactionalFolioNumber from '@/components/common/TransactionalFolioNumber.vue'
-import { RouteNames } from '@/enums'
-import {
-  ContactPointIF,
-  CertifyIF,
-  CourtOrderStepIF,
-  CreateResolutionIF,
-  CreateResolutionResourceIF,
-  DocumentDeliveryIF,
-  DocumentIdIF,
-  EffectiveDateTimeIF,
-  FeesIF,
-  UploadAffidavitIF
-} from '@/interfaces'
+import { AuthorizedActions, RouteNames } from '@/enums'
+import { ContactPointIF, CertifyIF, CourtOrderStepIF, CreateResolutionIF, CreateResolutionResourceIF,
+  DocumentDeliveryIF, DocumentIdIF, EffectiveDateTimeIF, FeesIF, UploadAffidavitIF } from '@/interfaces'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -441,6 +415,11 @@ import {
   }
 })
 export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+  readonly RouteNames = RouteNames
+
   // Global getters
   @Getter(useStore) getAffidavitStep!: UploadAffidavitIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
@@ -451,6 +430,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) getDissolutionCustodianEmail!: string
   @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getFeePrices!: Array<FeesIF>
   @Getter(useStore) getFolioNumber!: string
@@ -461,9 +441,6 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) isAffidavitValid!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
   @Getter(useStore) isEntityCoop!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
-  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   // Global actions
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
@@ -479,10 +456,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Action(useStore) setTransactionalFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
-  // Enum for template
-  readonly RouteNames = RouteNames
-
-  // Local variables
+  // Local variable
   isDissolutionCustodianValid = false
   docId = ''
   isDocIdValid = false
@@ -561,12 +535,9 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 @import '@/assets/styles/theme.scss';
 
 #dissolution-review-confirm {
-  /* Set "header-counter" to 0 */
   counter-reset: header-counter;
 }
-
-h2::before {
-  /* Increment "header-counter" by 1 */
+#dissolution-review-confirm ::v-deep(section) h2::before {
   counter-increment: header-counter;
   content: counter(header-counter) '. ';
 }

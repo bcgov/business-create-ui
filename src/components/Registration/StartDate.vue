@@ -37,7 +37,9 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { RegistrationStateIF } from '@/interfaces'
 import { DatePicker as DatePickerShared } from '@bcrs-shared-components/date-picker'
+import { AuthorizedActions } from '@/enums'
 import { DateMixin } from '@/mixins'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -56,14 +58,13 @@ export default class StartDate extends Mixins(DateMixin) {
   // Global getters
   @Getter(useStore) getRegistration!: RegistrationStateIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   protected dateText = ''
 
   /** The minimum start date that can be entered (up to 10 years before today). */
   get startDateMin (): string {
     // no min date for staff
-    if (this.isRoleStaff) return null
+    if (IsAuthorized(AuthorizedActions.FIRM_NO_MIN_START_DATE)) return null
 
     const date = new Date(this.getCurrentJsDate) // make a copy
     date.setFullYear(date.getFullYear() - 10)

@@ -21,7 +21,7 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <div v-if="isRoleStaff">
+            <div v-if="IsAuthorized(AuthorizedActions.FIRM_ADD_BUSINESS)">
               <span v-if="isNaN(activeIndex)">Add Business or Corporation</span>
               <span v-else>Edit Business or Corporation</span>
             </div>
@@ -63,7 +63,7 @@
           sm="9"
         >
           <MessageBox
-            v-if="isCompletingParty && !isRoleStaff"
+            v-if="isCompletingParty && !IsAuthorized(AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX)"
             color="gold"
           >
             <p>
@@ -78,7 +78,7 @@
           </MessageBox>
 
           <div
-            v-if="isCompletingParty && !isRoleStaff"
+            v-if="isCompletingParty && !IsAuthorized(AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX)"
             class="mt-8"
           />
 
@@ -93,7 +93,7 @@
             <article v-if="isPerson">
               <label>Person's Name</label>
               <div class="three-column mt-4 mb-n6">
-                <!-- NB: only staff can change Completing Party names -->
+                <!-- NB: need authorization to change Completing Party names -->
                 <v-text-field
                   v-model.trim="orgPerson.officer.firstName"
                   filled
@@ -102,7 +102,7 @@
                   :rules="enableRules ?
                     (isCompletingParty ? Rules.FirstNameRulesFirmsCP :
                       Rules.FirstNameRulesFirms) : []"
-                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.middleName"
@@ -110,7 +110,7 @@
                   class="item middle-name"
                   label="Middle Name (Optional)"
                   :rules="enableRules ? Rules.MiddleNameRulesFirms : []"
-                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
                 <v-text-field
                   v-model.trim="orgPerson.officer.lastName"
@@ -118,16 +118,16 @@
                   class="item last-name"
                   label="Last Name"
                   :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
+                  :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
                 />
               </div>
             </article>
 
             <!-- Business or Corporation -->
             <template v-if="isOrg">
-              <!-- Business or Corporation Unregistered in B.C. (Registries Staff only) -->
+              <!-- Business or Corporation Unregistered in B.C. (if authorized) -->
               <article
-                v-if="!orgPerson.isLookupBusiness && isRoleStaff"
+                v-if="!orgPerson.isLookupBusiness && IsAuthorized(AuthorizedActions.FIRM_ADD_BUSINESS)"
                 class="manual-add-article"
               >
                 <label>
@@ -209,9 +209,9 @@
                 <v-divider class="mt-8" />
               </article>
 
-              <!-- Business or Corporation Look up with Registries Staff-->
+              <!-- Business or Corporation Look up (if authorized)-->
               <article
-                v-else-if="isRoleStaff"
+                v-else-if="IsAuthorized(AuthorizedActions.FIRM_ADD_BUSINESS)"
                 class="business-lookup-article"
               >
                 <label>Business or Corporation Registered in B.C.</label>
@@ -276,7 +276,7 @@
                 />
               </article>
 
-              <!-- Business or Corporation Look up with SBC Staff or Clients-->
+              <!-- Business or Corporation Look up (if not authorized above)-->
               <article
                 v-else
                 class="business-lookup-article"
@@ -400,13 +400,14 @@
               <p class="mt-4 mb-0">
                 Copies of the registration documents will be sent to this email address.
               </p>
+              <!-- NB: need authorization to change email address -->
               <v-text-field
                 v-model.trim="orgPerson.officer.email"
                 filled
                 class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 :rules="enableRules ? Rules.EmailRules : []"
-                :readonly="isCompletingParty && !(isRoleStaff || isSbcStaff)"
+                :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS)"
               />
             </article>
 

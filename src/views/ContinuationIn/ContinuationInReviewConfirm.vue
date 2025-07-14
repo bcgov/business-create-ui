@@ -130,7 +130,7 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="isRoleStaff"
+          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
           :completingPartyEmail="getUserEmail"
@@ -163,14 +163,14 @@
           :class="{ 'invalid-section': isCertifyInvalid }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
-          :isStaff="isRoleStaff"
+          :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
         />
       </v-card>
     </section>
 
     <!-- Court Order / POA -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.COURT_ORDER_POA)"
       id="court-order-poa-section"
       class="mt-10"
     >
@@ -203,7 +203,7 @@
 
     <!-- Staff Payment -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="staff-payment-section"
       class="mt-10"
     >
@@ -226,7 +226,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { FilingStatus } from '@/enums'
+import { AuthorizedActions, FilingStatus } from '@/enums'
 import { CertifyIF, ContactPointIF, CourtOrderStepIF, DocumentDeliveryIF, EffectiveDateTimeIF,
   ExistingBusinessInfoIF, ShareStructureIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
@@ -241,6 +241,7 @@ import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -260,6 +261,8 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 export default class ContinuationInReviewConfirm extends Vue {
   // enum for template
   readonly FilingStatus = FilingStatus
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
 
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
@@ -272,7 +275,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
-  @Getter(useStore) isRoleStaff!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
   @Action(useStore) setCourtOrderFileNumber!: (x: string) => void

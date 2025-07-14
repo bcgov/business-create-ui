@@ -1,43 +1,44 @@
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import { RegistrationReviewConfirm } from '@/views'
 import { RegistrationResources } from '@/resources'
+import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [
   {
     entityType: 'SP',
-    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'SP',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'SP',
-    isPremium: false,
     isStaff: true
   },
   {
     entityType: 'GP',
-    isPremium: false,
     isStaff: false
   },
   {
     entityType: 'GP',
-    isPremium: true,
     isStaff: false
   },
   {
     entityType: 'GP',
-    isPremium: false,
     isStaff: true
   }
 ]
 
 for (const test of reviewConfirmTestCases) {
-  const type = test.isPremium ? 'premium' : test.isStaff ? 'staff' : 'regular'
+  const type = test.isStaff ? 'staff' : 'regular'
 
   describe(`Registration Review and Confirm view for a ${test.entityType} as a ${type} user`, () => {
     let wrapper: any
@@ -46,9 +47,7 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
@@ -60,9 +59,7 @@ for (const test of reviewConfirmTestCases) {
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
@@ -70,19 +67,18 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#document-delivery-section').exists()).toBe(true)
     })
 
-    it('displays Folio number section for premium users', () => {
+    it('displays Folio number section for non-staff only', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          accountInformation: { accountType: test.isPremium ? 'PREMIUM' : 'BASIC' }
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
 
-      expect(wrapper.find('#folio-section').exists()).toBe(test.isPremium)
+      // Folio Number is mutually exclusive with Staff Payment
+      expect(wrapper.find('#folio-section').exists()).toBe(!test.isStaff)
     })
 
     it('displays Document ID section only for staff', () => {
@@ -101,13 +97,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Staff Payment section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )

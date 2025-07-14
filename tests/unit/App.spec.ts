@@ -19,8 +19,12 @@ import mockRouter from './MockRouter'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
+import { AuthorizationRoles } from '@/enums'
+import * as utils from '@/utils'
+import { PublicUserActions, BusinessRegistryStaffActions } from './test-data/AuthorizedActionsLists'
+import { setAuthRole } from '../set-auth-role'
 
-// mock fetch() as it is not defined in Jest
+// mock fetch() as it is not defined in Vitest
 // NB: it should be `global.fetch` but that doesn't work and this does
 window.fetch = vi.fn().mockImplementation(() => {
   return {
@@ -30,7 +34,7 @@ window.fetch = vi.fn().mockImplementation(() => {
   }
 })
 
-// mock alert() as it is not defined in Jest
+// mock alert() as it is not defined in Vitest
 window.alert = vi.fn()
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -314,15 +318,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
         }
       })))
 
-    // GET authorizations (role)
-    get.withArgs('https://auth.api.url/entities/T7654321/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: ['edit', 'view']
-        }
-      })))
-
     // GET IA filing
     get.withArgs('businesses/T7654321/filings')
       .returns(new Promise(resolve => resolve({
@@ -356,6 +351,18 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
         }
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
+        }
+      })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -368,11 +375,6 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
       router,
       vuetify,
       stubs: { Affix: true }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -465,15 +467,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
         }
       })))
 
-    // GET authorizations (role)
-    get.withArgs('https://auth.api.url/entities/T1234567/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: ['edit', 'view']
-        }
-      })))
-
     // GET NR data
     get.withArgs('nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
@@ -503,6 +496,18 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
         }
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
+        }
+      })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -515,11 +520,6 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
       router,
       vuetify,
       stubs: { Affix: true, ConfirmDialog }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -696,15 +696,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         }
       })))
 
-    // GET authorizations (role)
-    get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: ['edit', 'view']
-        }
-      })))
-
     // GET filing fees
     get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL')
       .returns(new Promise(resolve => resolve({
@@ -865,6 +856,18 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
         data: []
       })))
 
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...PublicUserActions ]
+        }
+      })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -877,11 +880,6 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
       router,
       vuetify,
       stubs: { Affix: true }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -949,15 +947,6 @@ describe('Restoration - App page', () => {
             street: '1234 Some Street',
             streetAdditional: 'Suite ABC'
           }
-        }
-      })))
-
-    // GET authorizations (role)
-    get.withArgs('https://auth.api.url/entities/BC0870803/authorizations')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          roles: ['edit', 'view']
         }
       })))
 
@@ -1065,6 +1054,58 @@ describe('Restoration - App page', () => {
         }
       })))
 
+    // GET addresses
+    get.withArgs('businesses/BC0870803/addresses')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          registeredOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          },
+          recordsOffice: {
+            deliveryAddress: {
+              streetAddress: 'delivery_address - address line one',
+              addressCity: 'delivery_address city',
+              addressCountry: 'delivery_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            },
+            mailingAddress: {
+              streetAddress: 'mailing_address - address line one',
+              addressCity: 'mailing_address city',
+              addressCountry: 'mailing_address country',
+              postalCode: 'H0H0H0',
+              addressRegion: 'BC'
+            }
+          }
+        }
+      })))
+
+    // GET permissions
+    get.withArgs('permissions')
+      .returns(new Promise(resolve => resolve({
+        data:
+        {
+          authorizedPermissions: [ ...BusinessRegistryStaffActions ]
+        }
+      })))
+
+    // mock GetKeycloakRoles so we don't need a KC token
+    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.STAFF])
+
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
     localVue.use(VueRouter)
@@ -1077,11 +1118,6 @@ describe('Restoration - App page', () => {
       router,
       vuetify,
       stubs: { Affix: true }
-    })
-
-    // return some valid Keycloak roles
-    vi.spyOn(wrapper.vm, 'loadKeycloakRoles').mockImplementation(() => {
-      return Promise.resolve(['edit', 'view'])
     })
 
     // wait for all queries to complete
@@ -1103,7 +1139,7 @@ describe('Restoration - App page', () => {
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
 
-  it('displays the fee summary amount properly for restoration application', async () => {
+  it('displays the fee summary amount properly for restoration application', () => {
     const feeSummary = wrapper.findComponent(SbcFeeSummary)
     // when restoration type is initially not chosen, the fee summary is called with empty []
     expect(feeSummary.props('filingData')).toEqual([])
@@ -1125,10 +1161,11 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          keycloakRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1153,10 +1190,11 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          keycloakRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1183,10 +1221,11 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
           filingType: FilingTypes.REGISTRATION,
-          keycloakRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
@@ -1211,10 +1250,11 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
         alternateName: 'My Alternate Name',
         tombstone: {
           filingType: FilingTypes.DISSOLUTION,
-          keycloakRoles: []
+          authorizedActions: []
         }
       }
     )
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')

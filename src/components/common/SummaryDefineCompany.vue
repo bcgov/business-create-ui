@@ -186,10 +186,11 @@
         />
       </article>
 
-      <!-- Folio or Reference Number -->
-      <template v-if="isPremiumAccount">
+      <!-- Folio or Reference Number (mutually exclusive with Staff Payment) -->
+      <template v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)">
         <v-divider class="mx-6" />
 
+        <!-- Folio or Reference Number -->
         <article class="section-container">
           <FolioNumber
             :initialValue="getFolioNumber"
@@ -209,9 +210,9 @@ import { ContactPointIF, DefineCompanyIF, NameTranslationIF } from '@/interfaces
 import BusinessContactInfo from './BusinessContactInfo.vue'
 import FolioNumber from './FolioNumber.vue'
 import OfficeAddresses from './OfficeAddresses.vue'
-import { CoopTypes, RouteNames } from '@/enums'
+import { AuthorizedActions, CoopTypes, RouteNames } from '@/enums'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
-import { CoopTypeToDescription } from '@/utils'
+import { CoopTypeToDescription, IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -223,6 +224,8 @@ import { CoopTypeToDescription } from '@/utils'
 export default class SummaryDefineCompany extends Vue {
   // for template
   readonly RouteNames = RouteNames
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
 
   // Getters
   @Getter(useStore) getBusinessContact!: ContactPointIF
@@ -242,7 +245,6 @@ export default class SummaryDefineCompany extends Vue {
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isIncorporationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
   @Getter(useStore) isEntityBcCcc!: boolean
   @Getter(useStore) isEntityBcUlcCompany!: boolean
   @Getter(useStore) isEntityCccContinueIn!: boolean

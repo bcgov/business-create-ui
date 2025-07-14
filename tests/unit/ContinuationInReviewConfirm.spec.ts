@@ -11,7 +11,14 @@ import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import StaffPayment from '@/components/common/StaffPayment.vue'
-import { FilingStatus } from '@/enums'
+import { AuthorizationRoles, FilingStatus } from '@/enums'
+import { ContinuationInResources } from '@/resources'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 describe('Continuation In Review Confirm component', () => {
   it('renders the component correctly - Review and Confirm section', async () => {
@@ -127,14 +134,13 @@ describe('Continuation In Review Confirm component', () => {
     const wrapper = wrapperFactory(
       ContinuationInReviewConfirm,
       null,
-      null,
-      null,
-      null,
-      // declare computed property to override store getter:
       {
-        isRoleStaff: () => true
-      }
+        entityType: 'C'
+      },
+      null,
+      ContinuationInResources
     )
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify that component exists
@@ -154,14 +160,13 @@ describe('Continuation In Review Confirm component', () => {
     const wrapper = wrapperFactory(
       ContinuationInReviewConfirm,
       null,
-      null,
-      null,
-      null,
-      // declare computed properties to override store getters:
       {
-        isRoleStaff: () => true
-      }
+        entityType: 'C'
+      },
+      null,
+      ContinuationInResources
     )
+    setAuthRole(store, AuthorizationRoles.STAFF)
     await Vue.nextTick()
 
     // verify that component exists

@@ -13,20 +13,17 @@
 
       <v-card-text id="dialog-text">
         <!-- display common message -->
-        <div
-          v-if="!isRoleStaff"
-          class="font-15"
-        >
+        <div class="font-15">
           <p>
             We are unable to process your payment at this time. This {{ filingName }} has been saved
-            as a DRAFT, you can retry your payment from your Business Registry dashboard at a later time.
+            as a DRAFT and you can retry your payment from your Business Dashboard at a later time.
           </p>
         </div>
 
         <!-- display generic message (no errors or warnings) -->
         <template v-if="(numErrors + numWarnings) < 1">
           <div
-            v-if="!isRoleStaff"
+            v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)"
             class="font-15"
           >
             <p>PayBC is normally available:</p>
@@ -35,12 +32,6 @@
               <li>Saturday: 12:00am to 7:00pm</li>
               <li>Sunday: 12:00pm to 12:00am</li>
             </ul>
-          </div>
-          <div
-            v-else
-            class="font-15"
-          >
-            <p>We are unable to process your payment at this time.</p>
           </div>
         </template>
 
@@ -82,8 +73,8 @@
           </div>
         </div>
 
-        <template v-if="!isRoleStaff">
-          <p class="font-15">
+        <template v-if="!IsAuthorized(AuthorizedActions.NO_CONTACT_INFO)">
+          <p class="mt-5 font-15">
             If this error persists, please contact us:
           </p>
           <RegistriesContactInfo class="mt-5" />
@@ -93,24 +84,22 @@
       <v-divider class="my-0" />
 
       <v-card-actions>
-        <v-spacer />
         <v-btn
-          v-if="isRoleStaff"
-          id="dialog-okay-button"
-          color="primary"
-          text
-          @click="okay()"
-        >
-          OK
-        </v-btn>
-        <v-btn
-          v-else
           id="dialog-exit-button"
           color="primary"
           text
           @click="exit()"
         >
           Back to My Dashboard
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          id="dialog-okay-button"
+          color="primary"
+          text
+          @click="okay()"
+        >
+          OK
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -119,9 +108,9 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
-import { Getter } from 'pinia-class'
-import { useStore } from '@/store/store'
 import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue'
+import { AuthorizedActions } from '@/enums'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -129,7 +118,9 @@ import RegistriesContactInfo from '@/components/common/RegistriesContactInfo.vue
   }
 })
 export default class PaymentErrorDialog extends Vue {
-  @Getter(useStore) isRoleStaff!: boolean
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
 
   /** Prop containing filing name. */
   @Prop({ default: 'Filing' }) readonly filingName!: string

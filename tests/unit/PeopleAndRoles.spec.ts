@@ -9,6 +9,8 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
 import { ResourceIF } from '@/interfaces'
 import { AmalgamationShortResourceBc } from '@/resources/AmalgamationShort'
+import { AuthorizationRoles } from '@/enums'
+import { setAuthRole } from '../set-auth-role'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -73,6 +75,7 @@ describe('People And Roles component', () => {
     const router = mockRouter.mock()
 
     store.resourceModel = IncorporationResourceBen as ResourceIF
+    setAuthRole(store, AuthorizationRoles.STAFF)
 
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {

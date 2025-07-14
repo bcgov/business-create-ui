@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
 
 /**
  * Fetches config from environment and API.
@@ -34,10 +33,18 @@ export async function FetchConfig (): Promise<any> {
   const businessDashUrl: string = import.meta.env.VUE_APP_BUSINESS_DASH_URL
   sessionStorage.setItem('BUSINESS_DASH_URL', businessDashUrl)
 
-  const legalApiUrl: string =
-    (import.meta.env.VUE_APP_LEGAL_API_URL + import.meta.env.VUE_APP_LEGAL_API_VERSION_2 + '/')
-  // set base URL for axios calls
-  axios.defaults.baseURL = legalApiUrl
+  // set Legal API URL or Business API GW URL depending on FF
+  if (GetFeatureFlag('use-business-api-gw-url')) {
+    const businessApiGwUrl: string =
+      (import.meta.env.VUE_APP_BUSINESS_API_GW_URL + import.meta.env.VUE_APP_BUSINESS_API_VERSION_2 + '/')
+    // set base URL for axios calls
+    axios.defaults.baseURL = businessApiGwUrl
+  } else {
+    const legalApiUrl: string =
+      (import.meta.env.VUE_APP_LEGAL_API_URL + import.meta.env.VUE_APP_LEGAL_API_VERSION_2 + '/')
+    // set base URL for axios calls
+    axios.defaults.baseURL = legalApiUrl
+  }
 
   const naicsUrl: string = (import.meta.env.VUE_APP_NAICS_API_URL + import.meta.env.VUE_APP_NAICS_API_VERSION_2 + '/')
   sessionStorage.setItem('NAICS_URL', naicsUrl)
@@ -93,9 +100,6 @@ export async function FetchConfig (): Promise<any> {
   const addressCompleteKey: string = import.meta.env.VUE_APP_ADDRESS_COMPLETE_KEY;
   (<any>window).addressCompleteKey = addressCompleteKey
 
-  const ldClientId: string = import.meta.env.VUE_APP_BUSINESS_CREATE_LD_CLIENT_ID;
-  (<any>window).ldClientId = ldClientId
-
   const sentryDsn: string = import.meta.env.VUE_APP_SENTRY_DSN;
   (<any>window).sentryDsn = sentryDsn
 
@@ -113,9 +117,13 @@ export async function FetchConfig (): Promise<any> {
 
   const webChatStatusUrl: string = import.meta.env.VUE_APP_WEBCHAT_STATUS_URL;
   (<any>window).webChatStatusUrl = webChatStatusUrl
-  if (webChatStatusUrl) console.info('Set WebChat Status URL to: ' + webChatStatusUrl)
+  if (webChatStatusUrl) {
+    console.info('Set WebChat Status URL to: ' + webChatStatusUrl) // eslint-disable-line no-console
+  }
 
   const webChatUrl: string = import.meta.env.VUE_APP_WEBCHAT_URL;
   (<any>window).webChatUrl = webChatUrl
-  if (webChatUrl) console.info('Set WebChat URL to: ' + webChatUrl)
+  if (webChatUrl) {
+    console.info('Set WebChat URL to: ' + webChatUrl) // eslint-disable-line no-console
+  }
 }

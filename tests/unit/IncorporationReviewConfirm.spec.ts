@@ -4,6 +4,13 @@ import { IncorporationResources } from '@/resources/'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import Certify from '@/components/common/Certify.vue'
+import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -82,16 +89,15 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Court Order and POA only for BEN, ULC, CC, BC; and only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         IncorporationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
-        },
+        { entityType: test.entityType },
         null,
         IncorporationResources
       )
+
       const shouldBeVisible = ['BEN', 'ULC', 'CC', 'BC'].includes(test.entityType) && test.isStaff
       expect(wrapper.find('#court-order-poa-section').exists()).toBe(shouldBeVisible)
     })
@@ -114,13 +120,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Staff Payment section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         IncorporationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
-        },
+        { entityType: test.entityType },
         null,
         IncorporationResources
       )

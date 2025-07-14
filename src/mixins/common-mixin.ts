@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { isEqual, omit } from 'lodash'
-import { ValidationItemDetailIF } from '@/interfaces'
+import { isEmpty, isEqual, omit } from 'lodash'
+import { AddressIF, ValidationItemDetailIF } from '@/interfaces'
 import { getName } from 'country-list'
 
 /**
@@ -129,5 +129,21 @@ export default class CommonMixin extends Vue {
     }
 
     return null
+  }
+
+  /**
+   * Whether the address object is empty or with only with default input values.
+   * See also EmptyAddress.
+   */
+  isEmptyAddress (address: AddressIF): boolean {
+    return isEmpty(address) || (
+      !address.addressCity &&
+      (!address.addressCountry || address.addressCountry === 'CA') &&
+      (!address.addressRegion || address.addressRegion === 'BC') &&
+      !address.deliveryInstructions &&
+      !address.postalCode &&
+      !address.streetAddress &&
+      !address.streetAddressAdditional
+    )
   }
 }

@@ -83,9 +83,9 @@
       </v-card>
     </section>
 
-    <!-- Folio / Reference Number -->
+    <!-- Folio / Reference Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isPremiumAccount"
+      v-if="!IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       id="folio-number-section"
       class="mt-10"
     >
@@ -121,20 +121,16 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import {
-  AddressIF,
-  ContactPointIF,
-  DefineCompanyIF,
-  RegisteredRecordsAddressesIF
-} from '@/interfaces'
+import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { RouteNames } from '@/enums'
+import { AuthorizedActions, RouteNames } from '@/enums'
 import AuthorizationInformation from '@/components/ContinuationIn/AuthorizationInformation.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -147,6 +143,10 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   }
 })
 export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
@@ -154,7 +154,6 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Getter(useStore) getNameRequestNumber!: string
   @Getter(useStore) getNameTranslationsValid!: boolean
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setDefineCompanyStepValidity!: (x: boolean) => void
@@ -183,7 +182,7 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
       validAuthorizationInfo: this.authorizationInfoValid,
       validAddressForm: this.addressFormValid,
       validBusinessContactForm: this.businessContactFormValid,
-      validFolioReferenceNumber: !this.isPremiumAccount || this.getFolioNumberValid
+      validFolioReferenceNumber: !IsAuthorized(AuthorizedActions.STAFF_PAYMENT) || this.getFolioNumberValid
     }
   }
 
@@ -238,12 +237,17 @@ export default class ContinuationInBusinessBc extends Mixins(CommonMixin) {
   @Watch('getFolioNumberValid', { immediate: true })
   // Update the overall Define Company Step validity
   private onDefineCompanyStepValid (): void {
+    // folio number is mutually exclusive with staff payment
+    const isFolioNumberValid = !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
+      ? this.getFolioNumberValid
+      : true
+
     this.setDefineCompanyStepValidity(
       this.getNameTranslationsValid &&
       this.authorizationInfoValid &&
       this.addressFormValid &&
       this.businessContactFormValid &&
-      (!this.isPremiumAccount || this.getFolioNumberValid)
+      isFolioNumberValid
     )
   }
 

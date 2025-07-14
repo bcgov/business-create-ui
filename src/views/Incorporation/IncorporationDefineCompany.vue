@@ -144,9 +144,9 @@
       </v-card>
     </section>
 
-    <!-- Folio / Reference Number -->
+    <!-- Folio / Reference Number (mutually exclusive with Staff Payment) -->
     <section
-      v-if="isEntityType && isPremiumAccount"
+      v-if="isEntityType && !IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
       class="mt-10"
     >
       <header id="folio-number-header">
@@ -175,14 +175,9 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import {
-  AddressIF,
-  ContactPointIF,
-  DefineCompanyIF,
-  RegisteredRecordsAddressesIF
-} from '@/interfaces'
+import { AddressIF, ContactPointIF, DefineCompanyIF, RegisteredRecordsAddressesIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
-import { CoopTypes, RouteNames } from '@/enums'
+import { AuthorizedActions, CoopTypes, RouteNames } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import CooperativeType from '@/components/Dissolution/CooperativeType.vue'
@@ -190,6 +185,7 @@ import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -202,6 +198,11 @@ import NameTranslations from '@/components/common/NameTranslations.vue'
   }
 })
 export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
+  // for template
+  readonly CorpTypeCd = CorpTypeCd
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getDefineCompanyStep!: DefineCompanyIF
   @Getter(useStore) getFolioNumber!: string
@@ -210,7 +211,6 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityCoop!: boolean
   @Getter(useStore) isEntityType!: boolean
-  @Getter(useStore) isPremiumAccount!: boolean
 
   @Action(useStore) setBusinessContact!: (x: ContactPointIF) => void
   @Action(useStore) setCooperativeType!: (x: CoopTypes) => void
@@ -223,9 +223,6 @@ export default class IncorporationDefineCompany extends Mixins(CommonMixin) {
   addressFormValid = false
   hasValidCooperativeType = false
   coopHelpToggle = false
-
-  // Enum for template
-  readonly CorpTypeCd = CorpTypeCd
 
   /** Array of valid components. Must match validFlags. */
   readonly validComponents = [

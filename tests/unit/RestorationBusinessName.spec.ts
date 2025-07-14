@@ -7,6 +7,13 @@ import BusinessType from '@/components/Restoration/BusinessType.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
 import RestorationType from '@/components/Restoration/RestorationType.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { AuthorizationRoles } from '@/enums'
+import { createPinia, setActivePinia } from 'pinia'
+import { useStore } from '@/store/store'
+import { setAuthRole } from '../set-auth-role'
+
+setActivePinia(createPinia())
+const store = useStore()
 
 // Test Case Data
 const restorationBusinessInfo = [
@@ -41,13 +48,11 @@ for (const test of restorationBusinessInfo) {
     let wrapper: any
 
     beforeAll(() => {
+      setAuthRole(store, AuthorizationRoles.STAFF)
       wrapper = shallowWrapperFactory(
         RestorationBusinessName,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: ['staff'] }
-        },
+        { entityType: test.entityType },
         null,
         RestorationResources
       )
