@@ -1,9 +1,9 @@
-import Axios from 'axios'
+import axios from 'axios'
 import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 /**
  * This file exports an instance of Axios with some extra request headers.
- * This Axios instance is used by Staff Comments and maybe others...
+ * This Axios instance is used by Staff Comments, Document Mixin, COLIN Services and NAICS Services.
  */
 
 function getAccountId (): string {
@@ -17,7 +17,8 @@ function getAccountId (): string {
   return accountId
 }
 
-const instance = Axios.create()
+// create a new, independent instance of Axios
+const instance = axios.create()
 
 // add request interceptor
 instance.interceptors.request.use(
@@ -27,12 +28,13 @@ instance.interceptors.request.use(
       return request
     }
 
+    const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
+    request.headers.common['Authorization'] = `Bearer ${kcToken}`
+    request.headers.common['App-Name'] = import.meta.env.APP_NAME
+
     // add these headers only if Vitest isn't running as it breaks some tests
     // TODO: check if this is still true
     if (import.meta.env.VITEST === undefined) {
-      const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-      request.headers.common['Authorization'] = `Bearer ${kcToken}`
-      request.headers.common['App-Name'] = import.meta.env.APP_NAME
       request.headers.common['Account-Id'] = getAccountId()
       request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
     }

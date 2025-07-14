@@ -36,16 +36,16 @@ export function FetchConfig (): void {
   if (GetFeatureFlag('use-business-api-gw-url')) {
     const businessApiGwUrl: string =
       (import.meta.env.VUE_APP_BUSINESS_API_GW_URL + import.meta.env.VUE_APP_BUSINESS_API_VERSION_2 + '/')
+    sessionStorage.setItem('BUSINESS_API_GW_URL', businessApiGwUrl)
     // set base URL for axios calls
     axios.defaults.baseURL = businessApiGwUrl
-    sessionStorage.setItem('BUSINESS_API_GW_URL', businessApiGwUrl)
   } else {
     const legalApiUrl: string =
       (import.meta.env.VUE_APP_LEGAL_API_URL + import.meta.env.VUE_APP_LEGAL_API_VERSION_2 + '/')
+    sessionStorage.setItem('LEGAL_API_URL', legalApiUrl)
     // set base URL for axios calls
     axios.defaults.baseURL = legalApiUrl
-    sessionStorage.setItem('LEGAL_API_URL', legalApiUrl)
-}
+  }
 
   const naicsUrl: string = (import.meta.env.VUE_APP_NAICS_API_URL + import.meta.env.VUE_APP_NAICS_API_VERSION_2 + '/')
   sessionStorage.setItem('NAICS_URL', naicsUrl)
