@@ -246,10 +246,10 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="isRoleStaff"
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS)"
       id="document-id-section"
       class="mt-10"
-    >
+    > 
       <header>
         <h2>Document ID</h2>
         <p class="mt-4">
