@@ -300,7 +300,7 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
       }
     } catch (error) {
       this.errorDialogTitle = 'Unable to download document'
-      this.errorDialogText = 'An error occurred while downloading the document. Please try again.'
+      this.errorDialogText = 'We were unable to download your document. If this error persists, please contact us.'
       this.errorDialog = true
     }
 
