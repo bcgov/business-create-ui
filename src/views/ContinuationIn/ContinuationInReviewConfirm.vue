@@ -337,15 +337,6 @@ export default class ContinuationInReviewConfirm extends Vue {
   get documentOptionalEmail (): string {
     return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
   }
-
-  /** Get Document Record Service API URL */
-  get getDrsApiUrl (): string {
-    return sessionStorage.getItem('DOC_API_URL')
-  }
-
-  get getDrsApiKey (): string {
-    return sessionStorage.getItem('DOC_API_KEY')
-  }
 }
 </script>
 

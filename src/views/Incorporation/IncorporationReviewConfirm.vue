@@ -391,7 +391,7 @@ export default class IncorporationReviewConfirm extends Vue {
   }
 
   get getDrsApiKey (): string {
-    return sessionStorage.getItem('DOC_API_KEY')
+    return import.meta.env.VUE_APP_DOC_API_KEY
   }
 
   @Watch('docId', { immediate: true })
