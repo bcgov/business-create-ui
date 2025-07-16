@@ -25,7 +25,8 @@ export const BusinessRegistryStaffActions = [
   AuthorizedActions.STAFF_COMMENTS,
   AuthorizedActions.STAFF_PAYMENT,
   AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
-  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING,
+  AuthorizedActions.DOCUMENT_RECORDS
 ]
 
 /** The authorized actions if the user is Maximus Staff. */
@@ -38,7 +39,8 @@ export const MaximusStaffActions = [
   AuthorizedActions.REGISTRATION_FILING,
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
-  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING,
+  AuthorizedActions.DOCUMENT_RECORDS
 ]
 
 /** The authorized actions if the user is Contact Centre Staff. */
@@ -49,7 +51,8 @@ export const ContactCentreStaffActions = [
   AuthorizedActions.REGISTRATION_FILING,
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
-  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING,
+  AuthorizedActions.DOCUMENT_RECORDS
 ]
 
 /** The authorized actions if the user is SBC Field Office Staff (aka SBC Staff Tier 2). */
@@ -66,7 +69,8 @@ export const SbcFieldOfficeStaffActions = [
   AuthorizedActions.SAVE_DRAFT,
   AuthorizedActions.SBC_BREADCRUMBS,
   AuthorizedActions.THIRD_PARTY_CERTIFY_STMT,
-  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING
+  AuthorizedActions.VOLUNTARY_DISSOLUTION_FILING,
+  AuthorizedActions.DOCUMENT_RECORDS
 ]
 
 /** The authorized actions if use is Public User. */

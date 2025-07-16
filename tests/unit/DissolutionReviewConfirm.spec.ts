@@ -161,13 +161,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Document Id section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(
         DissolutionReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
-        },
+        { entityType: test.entityType },
         null,
         DissolutionResources
       )

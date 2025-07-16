@@ -82,13 +82,11 @@ for (const test of reviewConfirmTestCases) {
     })
 
     it('displays Document ID section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(
         RegistrationReviewConfirm,
         null,
-        {
-          entityType: test.entityType,
-          tombstone: { keycloakRoles: test.isStaff ? ['staff'] : [] }
-        },
+        { entityType: test.entityType },
         null,
         RegistrationResources
       )
