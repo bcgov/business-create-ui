@@ -168,6 +168,7 @@ import { FilingStatus } from '@/enums'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import AutoResize from 'vue-auto-resize'
 import MessageBox from '@/components/common/MessageBox.vue'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -281,8 +282,8 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
       let psu: PresignedUrlIF
       try {
         this.isDocumentLoading = true
-        psu = await this.getPresignedUrl(file.name)
-        const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+        psu = await LegalServices.getPresignedUrl(file.name)
+        const res = await LegalServices.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
         if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
         // set error message
@@ -315,7 +316,7 @@ export default class AuthorizationProof extends Mixins(DocumentMixin) {
     // safety check
     if (index >= 0) {
       // delete file from Minio, not waiting for response and ignoring errors
-      this.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
+      LegalServices.deleteDocument(this.authorization.files[index].fileKey).catch(() => null)
       // remove file from array
       this.authorization.files.splice(index, 1)
       // clear any existing error message

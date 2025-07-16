@@ -7,7 +7,6 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { shallowMount, createLocalVue, createWrapper } from '@vue/test-utils'
 import sinon from 'sinon'
-import { AxiosInstance as axios } from '@/utils'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
@@ -18,6 +17,7 @@ import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAg
   OrgPersonIF, PeopleAndRoleIF, ShareStructureIF, TombstoneIF } from '@/interfaces'
 import { ShareClassIF } from '@bcrs-shared-components/interfaces'
 import { setAuthRole } from '../set-auth-role'
+import { AxiosInstance as axios } from '@/utils'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -29,6 +29,7 @@ const mockUpdateFiling = vi.spyOn((LegalServices as any), 'updateFiling').mockIm
 // Populate session variables
 sessionStorage.setItem('AUTH_WEB_URL', 'https://auth-web.url/')
 sessionStorage.setItem('BUSINESS_DASH_URL', 'https://business-dash.url/')
+sessionStorage.setItem('LEGAL_API_URL', 'https://legal-api.url/')
 
 // Mock NR data
 const nrData = {
@@ -216,7 +217,7 @@ describe('Actions component - NR Validation', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
+      .withArgs('https://legal-api.url/nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: expiredNR
       })))
@@ -261,7 +262,7 @@ describe('Actions component - NR Validation', () => {
   })
 
   it('Emits the error event for an expired NR', async () => {
-    // mock the console.log function to hide "Eror on onClickFilePay():"
+    // mock the console.log function to hide "Error on onClickFilePay():"
     const { log } = console
     delete console.log
     console.log = vi.fn()
@@ -475,7 +476,7 @@ describe('Actions component - Filing Functionality', () => {
 
     // GET NR data
     sinon.stub(axios, 'get')
-      .withArgs('nameRequests/NR 1234567/validate?phone=&email=')
+      .withArgs('https://legal-api.url/nameRequests/NR 1234567/validate?phone=&email=')
       .returns(new Promise(resolve => resolve({
         data: { ...nrData }
       })))
@@ -590,7 +591,7 @@ describe('Actions component - Filing Functionality', () => {
   })
 
   it('Emits the error event for a PAD error', async () => {
-    // mock the console.log function to hide "Eror on onClickFilePay():"
+    // mock the console.log function to hide "Error on onClickFilePay():"
     const { log } = console
     delete console.log
     console.log = vi.fn()
@@ -606,7 +607,8 @@ describe('Actions component - Filing Functionality', () => {
       filing
     }
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    mockUpdateFiling.mockReset()
+    mockUpdateFiling
+      .mockReset()
       .mockImplementation(() => {
         return Promise.reject(padErrorFiling)
       })
@@ -634,7 +636,8 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Calls the buildIncorporationFiling and updateFiling methods when onClickFilePay is called', async () => {
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    mockUpdateFiling.mockReset()
+    mockUpdateFiling
+      .mockReset()
       .mockImplementation(() => Promise.resolve({
         header: {
           paymentToken: 789,
@@ -657,7 +660,9 @@ describe('Actions component - Filing Functionality', () => {
 
   it('Emits "Go To Dashboard" event when onClickCancel is called', async () => {
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
-    mockUpdateFiling.mockReset().mockImplementation(() => {})
+    mockUpdateFiling
+      .mockReset()
+      .mockImplementation(() => {})
 
     await wrapper.vm.onClickCancel()
 

@@ -1,11 +1,25 @@
 import sinon from 'sinon'
-import { AxiosInstance as axios } from '@/utils'
 import LegalServices from '@/services/legal-services'
+import * as FeatureFlags from '@/utils/feature-flag-utils'
+import { AxiosInstance as axios } from '@/utils'
+
+// Populate session variables
+sessionStorage.setItem('BUSINESS_API_GW_URL', 'https://business-api-gw.url/')
+
+// Mock feature flag
+vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
+  if (flag === 'use-business-api-gw-url') return true
+  return null
+})
 
 describe('Legal Services', () => {
-  it('fetches a draft application as a single item', async () => {
+  it.skip('fetches the filings list', async () => {
+    // FUTURE
+  })
+
+  it('fetches the only filing', async () => {
     // mock single item response
-    sinon.stub(axios, 'get').withArgs('businesses/123/filings')
+    sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/filings')
       .returns(new Promise(resolve => resolve({
         data: {
           filing: {
@@ -27,6 +41,8 @@ describe('Legal Services', () => {
     expect(draft).not.toBeFalsy()
     expect(draft).toHaveProperty('header')
     expect(draft).toHaveProperty('registration')
+    expect(draft.header).toHaveProperty('name')
+    expect(draft.header).toHaveProperty('filingId')
     expect(draft.registration).toHaveProperty('offices')
     expect(draft.registration).toHaveProperty('contactPoint')
     expect(draft.registration).toHaveProperty('parties')
@@ -34,9 +50,9 @@ describe('Legal Services', () => {
     sinon.restore()
   })
 
-  it('fetches a draft application as the first filing in a list', async () => {
+  it('fetches the first filing', async () => {
     // mock list response
-    sinon.stub(axios, 'get').withArgs('businesses/123/filings')
+    sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/filings')
       .returns(new Promise(resolve => resolve({
         data: {
           filings: [
@@ -57,9 +73,37 @@ describe('Legal Services', () => {
     sinon.restore()
   })
 
+  it.skip('fetches the first task', async () => {
+    // FUTURE
+  })
+
+  it.skip('fetches a filing from its url', async () => {
+    // FUTURE
+  })
+
+  it.skip('updates an existing filing', async () => {
+    // FUTURE
+  })
+
+  it.skip('fetches a name request', async () => {
+    // FUTURE
+  })
+
+  it.skip('fetches parties', async () => {
+    // FUTURE
+  })
+
+  it.skip('fetches directors', async () => {
+    // FUTURE
+  })
+
+  it.skip('fetches share structure', async () => {
+    // FUTURE
+  })
+
   it('fetches resolutions', async () => {
     // mock list response
-    sinon.stub(axios, 'get').withArgs('businesses/123/resolutions')
+    sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/resolutions')
       .returns(new Promise(resolve => resolve({
         data: {
           resolutions: [
@@ -86,15 +130,31 @@ describe('Legal Services', () => {
     sinon.restore()
   })
 
-  it.skip('fetches a draft dissolution', async () => {
+  it.skip('fetches addresses', async () => {
     // FUTURE
   })
 
-  it.skip('updates a filing', async () => {
+  it.skip('fetches business info', async () => {
     // FUTURE
   })
 
-  it.skip('fetches a name request', async () => {
+  it.skip('fetches authorized actions', async () => {
+    // FUTURE
+  })
+
+  it.skip('gets a pre-signed URL', async () => {
+    // FUTURE
+  })
+
+  it.skip('uploads a file to URL', async () => {
+    // FUTURE
+  })
+
+  it.skip('deletes a document', async () => {
+    // FUTURE
+  })
+
+  it.skip('downloads a document', async () => {
     // FUTURE
   })
 })

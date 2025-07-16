@@ -685,6 +685,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
+
     return filing
   }
 

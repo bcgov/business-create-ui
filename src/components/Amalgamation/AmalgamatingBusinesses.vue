@@ -134,7 +134,7 @@
               class="mt-5"
               :showErrors="false"
               :businessLookup="{ ...EmptyBusinessLookup }"
-              :BusinessLookupServices="BusinessLookupServices"
+              :BusinessLookupServices="RegistriesSearchServices"
               legalTypes="A,BC,BEN,C,CBEN,CC,CCC,CUL,ULC"
               label="Business Name or Incorporation Number"
               @setBusiness="saveAmalgamatingBusiness($event)"
@@ -275,7 +275,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmalgamationMixin, CommonMixin } from '@/mixins'
-import { BusinessLookupServices } from '@/services'
+import { RegistriesSearchServices } from '@/services'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { Jurisdiction } from '@bcrs-shared-components/jurisdiction'
 import { MrasJurisdictions } from '@bcrs-shared-components/jurisdiction/list-data'
@@ -304,7 +304,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
   // for template
   readonly AuthorizedActions = AuthorizedActions
   readonly IsAuthorized = IsAuthorized
-  readonly BusinessLookupServices = BusinessLookupServices
+  readonly RegistriesSearchServices = RegistriesSearchServices
   readonly EmptyBusinessLookup = EmptyBusinessLookup
 
   // @Getter(useStore) getAmalgamatingBusinesses!: Array<AmalgamatingBusinessIF>

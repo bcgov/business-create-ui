@@ -99,6 +99,7 @@ import { useStore } from '@/store/store'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { ExistingBusinessInfoIF, PresignedUrlIF } from '@/interfaces'
 import FileUploadPreview from '../common/FileUploadPreview.vue'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -168,8 +169,8 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
       let psu: PresignedUrlIF
       try {
         this.isDocumentLoading = true
-        psu = await this.getPresignedUrl(file.name)
-        const res = await this.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
+        psu = await LegalServices.getPresignedUrl(file.name)
+        const res = await LegalServices.uploadToUrl(psu.preSignedUrl, file, psu.key, this.getKeycloakGuid)
         if (!res || res.status !== StatusCodes.OK) throw new Error()
       } catch {
         // set error message
@@ -199,7 +200,7 @@ export default class UnlimitedLiabilityCorporationInformation extends Mixins(Dat
    */
   onRemoveClicked (): void {
     // delete file from Minio, not waiting for response and ignoring errors
-    this.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
+    LegalServices.deleteDocument(this.getExistingBusinessInfo.affidavitFileKey).catch(() => null)
 
     // delete properties reactively
     this.$delete(this.getExistingBusinessInfo, 'affidavitFile')

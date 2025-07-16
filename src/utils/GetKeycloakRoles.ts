@@ -10,7 +10,7 @@ export function GetKeycloakRoles (): Array<AuthorizationRoles> {
 
   /** Gets Keycloak JWT and parses it. */
   function getJWT (): any {
-    // get KC token (JWT) from session storage
+    // get KC token (JWT)
     const keycloakToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
     if (!keycloakToken) throw new Error('Error getting Keycloak token')
 

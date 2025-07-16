@@ -1,6 +1,6 @@
-import axios from 'axios'
+import { AxiosInstance as axios } from '@/utils'
 import sinon from 'sinon'
-import BusinessLookupServices from '@/services/business-lookup-services'
+import RegistriesSearchServices from '@/services/registries-search-services'
 
 describe('Business Lookup Services', () => {
   beforeAll(() => {
@@ -24,7 +24,7 @@ describe('Business Lookup Services', () => {
       .returns(new Promise(resolve => resolve({ data: { searchResults: { results: [result] } } })))
 
     // search and look at results
-    const results = await BusinessLookupServices.search(
+    const results = await RegistriesSearchServices.search(
       'FM1000002', 'ACTIVE', 'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,CC,XL,FI,XCP,PA'
     )
     expect(results.length).toBe(1)
@@ -41,7 +41,7 @@ describe('Business Lookup Services', () => {
       .returns(new Promise(resolve => resolve({ data: { searchResults: { results: [] } } })))
 
     // search and look at results
-    const results = await BusinessLookupServices.search(
+    const results = await RegistriesSearchServices.search(
       'FM1000003', 'ACTIVE', 'BC,A,ULC,C,S,XP,GP,LP,CUL,XS,LLC,LL,BEN,CP,CC,XL,FI,XCP,PA'
     )
     expect(results.length).toBe(0)

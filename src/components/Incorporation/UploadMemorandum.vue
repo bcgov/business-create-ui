@@ -349,6 +349,7 @@ import { CommonMixin, DocumentMixin } from '@/mixins'
 
 // Components
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -414,7 +415,7 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
       }
     } else {
       // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadMemorandumDocKey).catch(() => null)
+      await LegalServices.deleteDocument(this.uploadMemorandumDocKey).catch(() => null)
       // clear local variables
       this.uploadMemorandumDoc = null
       this.uploadMemorandumDocKey = null
@@ -430,17 +431,18 @@ export default class UploadMemorandum extends Mixins(CommonMixin, DocumentMixin)
     const isPendingUpload = !this.uploadMemorandumDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadMemorandumDoc.name)
+      const doc: PresignedUrlIF = await LegalServices.getPresignedUrl(this.uploadMemorandumDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)
+      const res =
+        await LegalServices.uploadToUrl(doc.preSignedUrl, this.uploadMemorandumDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const memorandumFile = {
           name: this.uploadMemorandumDoc.name,
           lastModified: this.uploadMemorandumDoc.lastModified,
           size: this.uploadMemorandumDoc.size
-        }
+        } as File
         this.setMemorandum({
           ...this.getCreateMemorandumStep,
           memorandumFile,
