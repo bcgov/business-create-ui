@@ -102,6 +102,21 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#court-order-poa-section').exists()).toBe(shouldBeVisible)
     })
 
+    it('displays Document Id section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
+      wrapper = shallowWrapperFactory(
+        IncorporationReviewConfirm,
+        null,
+        { entityType: test.entityType },
+        null,
+        IncorporationResources
+      )
+      const shouldBeVisible = test.isStaff && test.entityType !== 'CP'
+      expect(wrapper.find('#document-id-section').exists()).toBe(shouldBeVisible)
+
+      wrapper.destroy()
+    })
+
     it('displays Staff Payment section only for staff', () => {
       setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(

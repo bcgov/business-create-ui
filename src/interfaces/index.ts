@@ -58,6 +58,7 @@ export * from './store-interfaces/state-interfaces/org-information-interface'
 export * from './store-interfaces/state-interfaces/registration-state-interface'
 export * from './store-interfaces/state-interfaces/restoration-state-interface'
 export * from './store-interfaces/state-interfaces/tombstone-interface'
+export * from './store-interfaces/state-interfaces/document-state-interface'
 export * from './store-interfaces/state-interface'
 
 // Utils interfaces
@@ -80,6 +81,7 @@ export type {
   BusinessLookupResultIF,
   CommentIF,
   ContactPointIF,
+  DocumentRequestIF,
   EffectiveDateTimeIF,
   NaicsIF,
   NaicsResultIF,

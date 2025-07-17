@@ -30,5 +30,7 @@ export {
   RelationshipTypes,
   RestorationTypes,
   RoleTypes,
-  StaffPaymentOptions
+  StaffPaymentOptions,
+  DocumentClasses,
+  DOCUMENT_TYPES
 } from '@bcrs-shared-components/enums'

@@ -73,7 +73,8 @@ import {
   StepIF,
   UploadAffidavitIF,
   ValidationDetailIF,
-  ResolutionIF
+  ResolutionIF,
+  DocumentIdIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
 import { IsAuthorized } from '@/utils'
@@ -228,6 +229,11 @@ export const useStore = defineStore('store', {
     /** The continuation in Existing Business Info object. */
     getExistingBusinessInfo (): ExistingBusinessInfoIF {
       return this.getContinuationIn.existingBusinessInfo
+    },
+
+    /** The document ID used for Document Record Service. */
+    getDocumentIdState (): DocumentIdIF {
+      return this.stateModel.documentIdState
     },
 
     /** The account folio number. */
@@ -662,7 +668,8 @@ export const useStore = defineStore('store', {
           isCourtOrderValid &&
           isStaffPaymentValid &&
           isDissolutionDateValid &&
-          isCompletingPartyValid
+          isCompletingPartyValid &&
+          this.getDocumentIdState.valid
         )
       } else {
         const isEffectiveDateTimeValid = this.isBaseCompany ? this.getEffectiveDateTime.valid : true
@@ -676,7 +683,8 @@ export const useStore = defineStore('store', {
           isCertifyValid &&
           isEffectiveDateTimeValid &&
           isCourtOrderValid &&
-          isStaffPaymentValid
+          isStaffPaymentValid &&
+          this.getDocumentIdState.valid
         )
       }
     },
@@ -728,7 +736,8 @@ export const useStore = defineStore('store', {
         this.getAmalgamationCourtApprovalValid &&
         isCourtOrderValid &&
         isCertifyValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -797,7 +806,8 @@ export const useStore = defineStore('store', {
         isDocumentValid &&
         isCertifyValid &&
         isCourtOrderValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -815,7 +825,8 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid &&
         isCertifyValid &&
         isFeeAcknowledgementValid &&
-        isStaffPaymentValid
+        isStaffPaymentValid &&
+        this.getDocumentIdState.valid
       )
     },
 
@@ -831,7 +842,8 @@ export const useStore = defineStore('store', {
         this.isAddPeopleAndRolesValid && // step 2
         this.isDefineCompanyValid && // step 3
         isCertifyValid && // step 4
-        isStaffPaymentValid // step 4
+        isStaffPaymentValid && // step 4
+        this.getDocumentIdState.valid
       )
     },
 
@@ -1215,6 +1227,10 @@ export const useStore = defineStore('store', {
     },
     setExistingBusinessInfo (val: ExistingBusinessInfoIF) {
       this.stateModel.continuationIn.existingBusinessInfo = val
+      if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
+    },
+    setDocumentIdState (val: DocumentIdIF) {
+      this.stateModel.documentIdState = val
       if (!this.stateModel.ignoreChanges) this.stateModel.haveChanges = true
     },
     setIsFutureEffective (isFutureEffective: boolean) {

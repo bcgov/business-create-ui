@@ -108,6 +108,29 @@
       </v-card>
     </section>
 
+    <!-- Document ID Component for Staff only -->
+    <section
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS)"
+      id="document-id-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Document ID</h2>
+        <p class="mt-4">
+          Enter or select your document ID preference. Upon submission,
+          a document record will be created with the details from this registration.
+        </p>
+      </header>
+
+      <DocumentId
+        :docApiUrl="getDrsApiUrl"
+        :docApiKey="getDrsApiKey"
+        :validate="getValidateSteps"
+        @updateDocId="docId=$event"
+        @isValid="isDocIdValid=$event"
+      />
+    </section>
+
     <!-- Staff Payment -->
     <section
       v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
@@ -130,14 +153,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { CertifyIF, ContactPointIF, PeopleAndRoleIF } from '@/interfaces'
+import { CertifyIF, ContactPointIF, DocumentIdIF, PeopleAndRoleIF } from '@/interfaces'
 import { AuthorizedActions, RoleTypes } from '@/enums'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -150,6 +174,7 @@ import { IsAuthorized } from '@/utils'
     CardHeader,
     Certify,
     DocumentDelivery,
+    DocumentId,
     ListPeopleAndRoles,
     StaffPayment,
     SummaryDefineCompany,
@@ -164,6 +189,7 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
@@ -171,6 +197,15 @@ export default class RestorationReviewConfirm extends Vue {
   @Getter(useStore) isLimitedRestorationFiling!: boolean
 
   @Action(useStore) setCertifyState!: (x: CertifyIF) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
+
+  docId = ''
+  isDocIdValid = false
+
+  mounted (): void {
+    this.docId = this.getDocumentIdState.consumerDocumentId
+    this.isDocIdValid = this.getDocumentIdState.valid
+  }
 
   /** The entity description,  */
   get getEntityDescription (): string {
@@ -192,6 +227,25 @@ export default class RestorationReviewConfirm extends Vue {
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
+  }
+
+  /** Get Document Record Service API URL */
+  get getDrsApiUrl (): string {
+    return sessionStorage.getItem('DOC_API_URL')
+  }
+
+  get getDrsApiKey (): string {
+    return import.meta.env.VUE_APP_DOC_API_KEY
+  }
+
+  @Watch('docId', { immediate: true })
+  @Watch('isDocIdValid', { immediate: true })
+  // Update Document Id state
+  private onDocumentIdStateChange (): void {
+    this.setDocumentIdState({
+      valid: this.isDocIdValid,
+      consumerDocumentId: this.docId
+    })
   }
 }
 </script>

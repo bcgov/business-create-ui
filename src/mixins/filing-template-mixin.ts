@@ -6,7 +6,7 @@ import {
   AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, CompletingPartyIF,
   AuthorizationProofIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DefineCompanyIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
+  DissolutionStatementIF, DocumentDeliveryIF, DocumentIdIF, EffectiveDateTimeIF, EmptyNaics,
   ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
   NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
   RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
@@ -128,6 +128,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   // @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   /**
    * Builds an amalgamation application filing from store data. Used when saving a filing.
@@ -141,8 +142,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined,
-        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         legalType: this.getEntityType,
@@ -352,6 +354,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -366,8 +371,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy || undefined, // remove for authorization
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined,
-        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         identifier: this.getTempId,
@@ -414,7 +420,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     // Add continuation in authorization proof.
     if (this.getContinuationInAuthorizationProof) {
       filing.continuationIn.authorization = {
-        files: this.getContinuationInAuthorizationProof.files
+        files: this.getContinuationInAuthorizationProof.files,
+        consumerDocumentId: this.getDocumentIdState.consumerDocumentId
       }
     }
 
@@ -587,6 +594,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -601,8 +611,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined,
-        isFutureEffective: this.getEffectiveDateTime.isFutureEffective
+        folioNumber: this.getFolioNumber,
+        isFutureEffective: this.getEffectiveDateTime.isFutureEffective,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         legalType: this.getEntityType,
@@ -823,6 +834,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -837,8 +851,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined, // default FN; may be overwritten by staff BCOL FN
-        isFutureEffective: false
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        isFutureEffective: false,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         legalType: this.getEntityType,
@@ -902,8 +917,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined, // default FN; may be overwritten by staff BCOL FN
-        isFutureEffective: false
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by staff BCOL FN
+        isFutureEffective: false,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         legalType: this.getEntityType,
@@ -1059,6 +1075,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**
@@ -1157,6 +1176,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         this.setTransactionalFolioNumber(draftFiling.header.folioNumber)
       }
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   private partiesToOrgPersons (parties: PartyIF[]): OrgPersonIF[] {
@@ -1186,9 +1208,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
-        folioNumber: this.getFolioNumber || undefined, // default FN;
-        // may be overwritten by Transactional FN or staff BCOL FN
-        isFutureEffective: false
+        folioNumber: this.getFolioNumber, // default FN; may be overwritten by Transactional FN or staff BCOL FN
+        isFutureEffective: false,
+        documentIdState: this.getDocumentIdState
       },
       business: {
         legalType: this.getEntityType,
@@ -1411,6 +1433,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     if (this.isEntityFirm) {
       this.setDissolutionDate(draftFiling.dissolution.dissolutionDate)
     }
+
+    // restore document ID state
+    draftFiling.header.documentIdState && this.setDocumentIdState(draftFiling.header.documentIdState)
   }
 
   /**

@@ -3,7 +3,7 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmlRoles, AmlStatuses, AmlTypes, AuthorizedActions, EntityStates, FilingStatus, RestorationTypes,
   RoleTypes } from '@/enums'
-import { AmalgamatingBusinessIF, ContactPointIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
+import { AmalgamatingBusinessIF, ContactPointIF, DocumentIdIF, EmptyContactPoint, EmptyNameRequest, NameRequestIF,
   NameTranslationIF, OrgPersonIF, PeopleAndRoleIF, RegisteredRecordsAddressesIF, ResourceIF, ShareClassIF,
   ResolutionIF } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
@@ -22,6 +22,7 @@ export default class AmalgamationMixin extends Vue {
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
   @Getter(useStore) getCurrentDate!: string
   @Getter(useStore) getEntityType!: CorpTypeCd
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingRegular!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean

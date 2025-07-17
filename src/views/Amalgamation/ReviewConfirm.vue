@@ -244,6 +244,29 @@
       </v-card>
     </section>
 
+    <!-- Document ID Component for Staff only -->
+    <section
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS)"
+      id="document-id-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Document ID</h2>
+        <p class="mt-4">
+          Enter or select your document ID preference. Upon submission,
+          a document record will be created with the details from this registration.
+        </p>
+      </header>
+
+      <DocumentId
+        :docApiUrl="getDrsApiUrl"
+        :docApiKey="getDrsApiKey"
+        :validate="getValidateSteps"
+        @updateDocId="docId=$event"
+        @isValid="isDocIdValid=$event"
+      />
+    </section>
+
     <!-- Staff Payment -->
     <section
       v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT)"
@@ -266,16 +289,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AuthorizedActions } from '@/enums'
-import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
+import { ContactPointIF, CertifyIF, DocumentIdIF, EffectiveDateTimeIF, ShareStructureIF,
   CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import BusinessTableSummary from '@/components/Amalgamation/BusinessTableSummary.vue'
 import AmalgamationStatement from '@/components/Amalgamation/AmalgamationStatement.vue'
@@ -296,6 +320,7 @@ import { IsAuthorized } from '@/utils'
     Certify,
     CourtOrderPoa,
     DocumentDelivery,
+    DocumentId,
     FolioNumber,
     EffectiveDateTime,
     ListPeopleAndRoles,
@@ -316,6 +341,7 @@ export default class AmalgamationReviewConfirm extends Vue {
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getCourtOrderStep!: CourtOrderStepIF
   @Getter(useStore) getCreateShareStructureStep!: ShareStructureIF
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
   @Getter(useStore) getEntityType!: CorpTypeCd
@@ -338,6 +364,10 @@ export default class AmalgamationReviewConfirm extends Vue {
   @Action(useStore) setFolioNumberValidity!: (x: boolean) => void
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
+
+  docId = ''
+  isDocIdValid = false
 
   /**
    * In case submitting the amalgamation failed, we want to reset the validity of Certify.
@@ -348,6 +378,9 @@ export default class AmalgamationReviewConfirm extends Vue {
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
     })
+
+    this.docId = this.getDocumentIdState.consumerDocumentId
+    this.isDocIdValid = this.getDocumentIdState.valid
   }
 
   /** Whether to show the List Share Class error summary -- only for regular amalgamations. */
@@ -397,6 +430,25 @@ export default class AmalgamationReviewConfirm extends Vue {
    */
   get documentOptionalEmail (): string {
     return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
+  }
+
+  /** Get Document Record Service API URL */
+  get getDrsApiUrl (): string {
+    return sessionStorage.getItem('DOC_API_URL')
+  }
+
+  get getDrsApiKey (): string {
+    return import.meta.env.VUE_APP_DOC_API_KEY
+  }
+
+  @Watch('docId', { immediate: true })
+  @Watch('isDocIdValid', { immediate: true })
+  // Update Document Id state
+  private onDocumentIdStateChange (): void {
+    this.setDocumentIdState({
+      valid: this.isDocIdValid,
+      consumerDocumentId: this.docId
+    })
   }
 }
 </script>

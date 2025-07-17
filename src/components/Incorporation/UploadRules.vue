@@ -283,17 +283,21 @@
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
+import { StatusCodes } from 'http-status-codes'
 import { useStore } from '@/store/store'
 import {
   CreateRulesIF,
   CreateRulesResourceIF,
+  DocumentIdIF,
+  DocumentRequestIF,
   FormIF,
   PresignedUrlIF,
   ValidationDetailIF
 } from '@/interfaces'
-import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
+import { RouteNames, ItemTypes, PdfPageSize, DOCUMENT_TYPES as DocumentTypes } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { DocumentServices } from '@bcrs-shared-components/services'
 
 @Component({
   components: {
@@ -320,9 +324,12 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
   @Getter(useStore) getNameRequestApprovedName!: string
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getKeycloakGuid!: string
+  @Getter(useStore) getTempId!: string
+  @Getter(useStore) getDocumentIdState!: DocumentIdIF
 
   @Action(useStore) setRules!: (x: CreateRulesIF) => void
   @Action(useStore) setRulesStepValidity!: (x: ValidationDetailIF) => void
+  @Action(useStore) setDocumentIdState!: (x: DocumentIdIF) => void
 
   // Enum for template
   readonly RouteNames = RouteNames
@@ -354,8 +361,15 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.uploadRulesDocKey = null
       }
     } else {
-      // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      // delete file from storage; ignore errors
+      if (this.enableDocumentRecords) {
+        await DocumentServices.deleteDocumentFromDRS(
+          this.uploadRulesDocKey
+        ).catch(() => null)
+      } else {
+        await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      }
+
       // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null
@@ -369,14 +383,45 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
 
   public async uploadPendingDocsToStorage () {
     const isPendingUpload = !this.uploadRulesDocKey
+    let res: any = null
+    let doc: PresignedUrlIF
+
     if (isPendingUpload && this.hasValidUploadFile) {
-      // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadRulesDoc.name)
-
-      // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
-
-      if (res && res.status === 200) {
+      if (this.enableDocumentRecords) {
+        if (this.getCreateRulesStep.docKey) {
+          res = await DocumentServices.updateDocumentOnDRS(
+            this.uploadRulesDoc,
+            {
+              documentServiceId: this.getCreateRulesStep.docKey,
+              consumerFilename: this.uploadRulesDoc.name,
+              consumerDocumentId: this.getDocumentIdState.consumerDocumentId,
+              consumerFilingDate: new Date().toISOString()
+            }
+          )
+        } else {
+          const params: DocumentRequestIF = {
+            documentClass: DocumentTypes.coopRules.class,
+            documentType: DocumentTypes.coopRules.type,
+            consumerFilename: this.uploadRulesDoc.name,
+            consumerIdentifier: this.getTempId,
+            consumerFilingDate: new Date().toISOString()
+          }
+          // Include document ID if available
+          if (this.getDocumentIdState.valid) {
+            params.consumerDocumentId = this.getDocumentIdState.consumerDocumentId
+          }
+          res = await DocumentServices.uploadDocumentToDRS(
+            this.uploadRulesDoc,
+            params
+          )
+        }
+      } else {
+        // NB: will throw if API error
+        doc = await this.getPresignedUrl(this.uploadRulesDoc.name)
+        // NB: will return error response if API error
+        res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
+      }
+      if (res && [StatusCodes.OK, StatusCodes.CREATED].includes(res.status)) {
         const rulesFile = {
           name: this.uploadRulesDoc.name,
           lastModified: this.uploadRulesDoc.lastModified,
@@ -385,8 +430,15 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
         this.setRules({
           ...this.getCreateRulesStep,
           rulesFile,
-          docKey: doc.key
+          docKey: this.enableDocumentRecords ? res.data.documentServiceId : doc.key
         })
+        // Update documentIdState for unique validation
+        if (this.enableDocumentRecords) {
+          this.setDocumentIdState({
+            valid: true,
+            consumerDocumentId: res.data.consumerDocumentId
+          })
+        }
       } else {
         // put file uploader into manual error mode by setting custom error message
         this.fileUploadCustomErrorMsg = this.UPLOAD_FAILED_MESSAGE

@@ -7,6 +7,7 @@ import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import Certify from '@/components/common/Certify.vue'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthorizationRoles } from '@/enums'
@@ -100,8 +101,14 @@ for (const test of restorationBusinessInfo) {
       expect(section.findComponent(Certify).exists()).toBe(true)
     })
 
-    it('displays Staff Payment section', () => {
+    it('displays Document ID section', () => {
       const section = wrapper.findAll('section').at(3)
+      expect(section.find('header h2').text()).toBe('Document ID')
+      expect(section.findComponent(DocumentId).exists()).toBe(true)
+    })
+
+    it('displays Staff Payment section', () => {
+      const section = wrapper.findAll('section').at(4)
       expect(section.find('header h2').text()).toBe('Staff Payment')
       expect(section.findComponent(StaffPayment).exists()).toBe(true)
     })

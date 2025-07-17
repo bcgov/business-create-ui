@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
 import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
@@ -17,8 +17,10 @@ export default class DocumentMixin extends Vue {
       validationErrorMsg: 'Document must be set to fit onto 8.5” x 11” letter-size paper.'
     }
   }
+  readonly DRS_ID_PATTERN = /^DS\d{10}$/
 
   pdfjsLib: any
+  enableDocumentRecords = GetFeatureFlag('enable-document-records')
 
   // use beforeCreate() instead of created() to avoid type conflict with components that use this mixin
   async beforeCreate (): Promise<void> {

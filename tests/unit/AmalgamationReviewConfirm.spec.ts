@@ -9,6 +9,7 @@ import ListShareClass from '@/components/common/ListShareClass.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
 import SummaryDefineCompany from '@/components/common/SummaryDefineCompany.vue'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
+import DocumentId from '@bcrs-shared-components/document-id/DocumentId.vue'
 import Certify from '@/components/common/Certify.vue'
 import FolioNumber from '@/components/common/FolioNumber.vue'
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -138,8 +139,14 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.findComponent(Certify).exists()).toBe(true)
     })
 
-    it('displays Staff Payment section for staff', () => {
+    it('displays Document ID section', () => {
       const section = wrapper.findAll('section').at(6)
+      expect(section.find('header h2').text()).toBe('Document ID')
+      expect(section.findComponent(DocumentId).exists()).toBe(true)
+    })
+
+    it('displays Staff Payment section', () => {
+      const section = wrapper.findAll('section').at(7)
       expect(section.find('header h2').text()).toBe('Staff Payment')
       expect(section.findComponent(StaffPayment).exists()).toBe(true)
     })

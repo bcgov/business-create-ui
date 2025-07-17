@@ -160,6 +160,21 @@ for (const test of reviewConfirmTestCases) {
       wrapper.destroy()
     })
 
+    it('displays Document Id section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
+      wrapper = shallowWrapperFactory(
+        DissolutionReviewConfirm,
+        null,
+        { entityType: test.entityType },
+        null,
+        DissolutionResources
+      )
+
+      expect(wrapper.find('#document-id-section').exists()).toBe(test.isStaff)
+
+      wrapper.destroy()
+    })
+
     it('displays Staff Payment section only for staff', () => {
       setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : null)
       wrapper = shallowWrapperFactory(

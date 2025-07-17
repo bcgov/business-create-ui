@@ -81,6 +81,19 @@ for (const test of reviewConfirmTestCases) {
       expect(wrapper.find('#folio-section').exists()).toBe(!test.isStaff)
     })
 
+    it('displays Document ID section only for staff', () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
+      wrapper = shallowWrapperFactory(
+        RegistrationReviewConfirm,
+        null,
+        { entityType: test.entityType },
+        null,
+        RegistrationResources
+      )
+
+      expect(wrapper.find('#document-id-section').exists()).toBe(test.isStaff)
+    })
+
     it('displays Staff Payment section only for staff', () => {
       setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
       wrapper = shallowWrapperFactory(

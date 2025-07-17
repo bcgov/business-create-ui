@@ -238,5 +238,9 @@ export const stateModel: StateModelIF = {
   completingParty: null,
   parties: null,
   resolutions: [],
-  windowWidth: 0
+  windowWidth: 0,
+  documentIdState: {
+    valid: false,
+    consumerDocumentId: ''
+  }
 }

@@ -239,6 +239,10 @@ describe('Actions component - NR Validation', () => {
       valid: true,
       certifiedBy: 'Some certifier'
     }
+    store.stateModel.documentIdState = {
+      valid: true,
+      consumerDocumentId: '12345678'
+    }
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
     store.stateModel.defineCompanyStep = { valid: true } as DefineCompanyIF
     store.stateModel.addPeopleAndRoleStep = { valid: true } as PeopleAndRoleIF
@@ -297,7 +301,11 @@ describe('Actions component - Filing Functionality', () => {
       effectiveDate: formattedEffectiveDate,
       filingId: 1234,
       folioNumber: '123456',
-      isFutureEffective: true
+      isFutureEffective: true,
+      documentIdState: {
+        consumerDocumentId: '12345678',
+        valid: true
+      }
     },
     business: {
       identifier: 'T1234567',
