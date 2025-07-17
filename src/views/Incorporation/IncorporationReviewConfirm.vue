@@ -222,7 +222,7 @@
 
     <!-- Document ID Component for Staff only -->
     <section
-      v-if="IsAuthorized(AuthorizedActions.STAFF_PAYMENT) && !isEntityCoop"
+      v-if="IsAuthorized(AuthorizedActions.DOCUMENT_RECORDS) && !isEntityCoop"
       id="document-id-section"
       class="mt-10"
     >

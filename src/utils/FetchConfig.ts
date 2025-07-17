@@ -84,9 +84,6 @@ export async function FetchConfig (): Promise<any> {
   (<any>window).keycloakClientId = keycloakClientId
 
   // Document Record Service Configration
-
-  const docApiKey: string = import.meta.env.VUE_APP_DOC_API_KEY
-  sessionStorage.setItem('DOC_API_KEY', docApiKey)
   const docApiUrl: string = (import.meta.env.VUE_APP_DOC_API_URL + import.meta.env.VUE_APP_DOC_API_VERSION)
   sessionStorage.setItem('DOC_API_URL', docApiUrl)
 
