@@ -1,10 +1,9 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import { ColinBusinessIF } from '@/interfaces'
-import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
+import { AxiosInstance as axios } from '@/utils'
+import { AxiosRequestConfig } from 'axios'
 
 /**
  * Class that provides integration with the COLIN API.
- * NOTE: uses default Axios instance (not the one from AxiosInstance.ts)
  */
 export default class ColinServices {
   /** The COLIN API URL. */
