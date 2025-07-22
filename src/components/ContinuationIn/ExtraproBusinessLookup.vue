@@ -61,7 +61,7 @@ import Vue from 'vue'
 import { Component, Emit, Watch } from 'vue-property-decorator'
 import { debounce } from 'lodash'
 import { BusinessLookupResultIF } from '@/interfaces'
-import { BusinessLookupServices } from '@/services'
+import { RegistriesSearchServices } from '@/services'
 
 /* eslint-disable no-unused-vars */
 enum States {
@@ -99,7 +99,7 @@ export default class ExtraproBusinessLookup extends Vue {
     // don't search until we have at least 3 characters
     if (searchInput?.length > 2) {
       that.state = States.SEARCHING
-      that.searchResults = await BusinessLookupServices.search(searchInput, 'ACTIVE', 'A').catch(() => [])
+      that.searchResults = await RegistriesSearchServices.search(searchInput, 'ACTIVE', 'A').catch(() => [])
       // display appropriate section
       that.state = (that.searchResults.length > 0) ? States.SHOW_RESULTS : States.NO_RESULTS
     } else {

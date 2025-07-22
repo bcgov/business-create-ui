@@ -6,7 +6,6 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
-import { AxiosInstance as axios } from '@/utils'
 import App from '@/App.vue'
 import SbcHeader from 'sbc-common-components/src/components/SbcHeader.vue'
 import SbcFooter from 'sbc-common-components/src/components/SbcFooter.vue'
@@ -23,6 +22,7 @@ import { AuthorizationRoles } from '@/enums'
 import * as utils from '@/utils'
 import { PublicUserActions, BusinessRegistryStaffActions } from './test-data/AuthorizedActionsLists'
 import { setAuthRole } from '../set-auth-role'
+import { AuthServices, LegalServices, PayServices } from '@/services'
 
 // mock fetch() as it is not defined in Vitest
 // NB: it should be `global.fetch` but that doesn't work and this does
@@ -57,9 +57,9 @@ document.body.setAttribute('data-app', 'true')
 // Populate session variables
 sessionStorage.setItem('AUTH_WEB_URL', 'https://auth-web.url/')
 sessionStorage.setItem('BUSINESS_DASH_URL', 'https://business-dash.url/')
-sessionStorage.setItem('AUTH_API_URL', 'https://auth.api.url/')
+sessionStorage.setItem('AUTH_API_URL', 'https://auth-api.url/')
 sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
-sessionStorage.setItem('PAY_API_URL', 'https://pay.api.url/')
+sessionStorage.setItem('PAY_API_URL', 'https://pay-api.url/')
 
 // sample filing data
 const filingData = {
@@ -283,82 +283,66 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
 
-    const get = sinon.stub(axios, 'get')
-
-    // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [
-            {
-              email: 'completing-party@example.com',
-              phone: '123-456-7890'
-            }
-          ],
-          firstname: 'Completing',
-          lastname: 'Party'
-        }
-      })))
-
-    // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          mailingAddress:
+    // mock user info
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
+      {
+        contacts: [
           {
-            city: 'City',
-            country: 'CA',
-            region: 'BC',
-            postalCode: 'V8V 8V8',
-            street: '1234 Some Street',
-            streetAdditional: 'Suite ABC'
+            email: 'completing-party@example.com',
+            phone: '123-456-7890'
+          }
+        ],
+        firstname: 'Completing',
+        lastname: 'Party'
+      }
+    ))
+
+    // mock org info
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+      {
+        mailingAddress:
+        {
+          city: 'City',
+          country: 'CA',
+          region: 'BC',
+          postalCode: 'V8V 8V8',
+          street: '1234 Some Street',
+          streetAdditional: 'Suite ABC'
+        }
+      }
+    ))
+
+    // mock incorporation application
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => (
+      {
+        header: {
+          name: 'incorporationApplication',
+          filingId: 54321,
+          status: 'DRAFT'
+        },
+        business: {
+          identifier: 'T7654321',
+          legalType: 'BEN'
+        },
+        incorporationApplication: {
+          nameRequest: {
+            legalType: 'BEN'
           }
         }
-      })))
+      }
+    ))
 
-    // GET IA filing
-    get.withArgs('businesses/T7654321/filings')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          filing: {
-            header: {
-              name: 'incorporationApplication',
-              filingId: 54321,
-              status: 'DRAFT'
-            },
-            business: {
-              identifier: 'T7654321',
-              legalType: 'BEN'
-            },
-            incorporationApplication: {
-              nameRequest: {
-                legalType: 'BEN'
-              }
-            }
-          }
-        }
-      })))
+    // mock filing fees
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
+      {
+        futureEffectiveFees: 100
+      }
+    ))
 
-    // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          filingFees: { futureEffectiveFees: 100 }
-        }
-      })))
-
-    // GET permissions
-    get.withArgs('permissions')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          authorizedPermissions: [ ...PublicUserActions ]
-        }
-      })))
+    // mock authorized actions
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
+      [...PublicUserActions]
+    ))
 
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
@@ -384,6 +368,7 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
   afterEach(() => {
     window.location.assign = assign
     sinon.restore()
+    vi.resetAllMocks()
     wrapper.destroy()
   })
 
@@ -432,78 +417,60 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     store.stateModel.tempId = ''
     store.stateModel.business.businessId = ''
 
-    const get = sinon.stub(axios, 'get')
-
-    // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [
-            {
-              email: 'completing-party@example.com',
-              phone: '123-456-7890'
-            }
-          ],
-          firstname: 'Completing',
-          lastname: 'Party'
-        }
-      })))
-
-    // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          mailingAddress:
+    // mock user info
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
+      {
+        contacts: [
           {
-            city: 'City',
-            country: 'CA',
-            region: 'BC',
-            postalCode: 'V8V 8V8',
-            street: '1234 Some Street',
-            streetAdditional: 'Suite ABC'
+            email: 'completing-party@example.com',
+            phone: '123-456-7890'
           }
-        }
-      })))
+        ],
+        firstname: 'Completing',
+        lastname: 'Party'
+      }
+    ))
 
-    // GET NR data
-    get.withArgs('nameRequests/NR 1234567/validate?phone=&email=')
-      .returns(new Promise(resolve => resolve({
-        data:
+    // mock org info
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+      {
+        mailingAddress:
         {
-          ...nrData
+          city: 'City',
+          country: 'CA',
+          region: 'BC',
+          postalCode: 'V8V 8V8',
+          street: '1234 Some Street',
+          streetAdditional: 'Suite ABC'
         }
-      })))
+      }
+    ))
 
-    // GET IA filing
-    get.withArgs('businesses/T1234567/filings')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          filing: {
-            ...filingData
-          }
-        }
-      })))
+    // mock name request
+    vi.spyOn((LegalServices as any), 'fetchNameRequest').mockImplementation(() => (
+      {
+        ...nrData
+      }
+    ))
 
-    // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/BCINC?futureEffective=true')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          filingFees: { futureEffectiveFees: 100 }
-        }
-      })))
+    // mock incorporation application
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => (
+      {
+        ...filingData
+      }
+    ))
 
-    // GET permissions
-    get.withArgs('permissions')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          authorizedPermissions: [ ...PublicUserActions ]
-        }
-      })))
+    // mock filing fees
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
+      {
+        futureEffectiveFees: 100
+      }
+    ))
+
+    // mock authorized actions
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
+      [...PublicUserActions]
+    ))
 
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
@@ -529,6 +496,7 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
   afterEach(() => {
     window.location.assign = assign
     sinon.restore()
+    vi.resetAllMocks()
     wrapper.destroy()
   })
 
@@ -661,209 +629,137 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     store.stateModel.effectiveDateTime.isFutureEffective = false
     store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
-    const get = sinon.stub(axios, 'get')
-
-    // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [
-            {
-              email: 'completing-party@example.com',
-              phone: '123-456-7890'
-            }
-          ],
-          firstname: 'Completing',
-          lastname: 'Party'
-        }
-      })))
-
-    // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          mailingAddress:
+    // mock user info
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
+      {
+        contacts: [
           {
-            city: 'City',
-            country: 'CA',
-            region: 'BC',
-            postalCode: 'V8V 8V8',
-            street: '1234 Some Street',
-            streetAdditional: 'Suite ABC'
+            email: 'completing-party@example.com',
+            phone: '123-456-7890'
           }
-        }
-      })))
+        ],
+        firstname: 'Completing',
+        lastname: 'Party'
+      }
+    ))
 
-    // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL')
-      .returns(new Promise(resolve => resolve({
-        data:
+    // mock org info
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+      {
+        mailingAddress:
         {
-          filingFees: 20.0,
-          filingType: 'Voluntary dissolution',
-          filingTypeCode: 'DIS_VOL',
-          futureEffectiveFees: 0,
-          priorityFees: 0,
-          processingFees: 0,
-          serviceFees: 1.50,
-          tax: {
-            gst: 0,
-            pst: 0
-          },
-          total: 21.5
+          city: 'City',
+          country: 'CA',
+          region: 'BC',
+          postalCode: 'V8V 8V8',
+          street: '1234 Some Street',
+          streetAdditional: 'Suite ABC'
         }
-      })))
+      }
+    ))
 
-    // GET filing fees with future effective flag
-    get.withArgs('https://pay.api.url/fees/BEN/DIS_VOL?futureEffective=true')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          filingFees: 20.0,
-          filingType: 'Voluntary dissolution',
-          filingTypeCode: 'DIS_VOL',
-          futureEffectiveFees: 100.0,
-          priorityFees: 0,
-          processingFees: 0,
-          serviceFees: 1.5,
-          tax: {
-            gst: 0,
-            pst: 0
-          },
-          total: 121.5
+    // mock filing fees
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 1.50,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 21.5
+      }
+    ))
+
+    // mock auth info (business info)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => (
+      {
+        contacts: [],
+        folioNumber: null
+      }
+    ))
+
+    // mock business info
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => (
+      {
+        business: {
+          legalName: '0870803 B.C. LTD.',
+          goodStanding: true,
+          taxId: '123456789',
+          identifier: 'BC0870803',
+          foundingDate: '2021-10-07T20:37:41+00:00',
+          legalType: 'BEN'
         }
-      })))
+      }
+    ))
 
-    // GET auth info
-    get.withArgs('https://auth.api.url/entities/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [],
-          folioNumber: null
-        }
-      })))
-
-    // GET business data
-    get.withArgs('entities/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          affiliations: [5925],
-          businessIdentifier: 'BC0870803',
-          contacts: [{
-            email: 'andre.pestana@aot-technologies.com',
-            phone: '(123) 456-7890',
-            phoneExtension: ''
-          }],
-          corpType: {
-            code: 'BEN',
-            default: false,
-            desc: 'Benefit Company'
-          },
-          created: '2021-10-07T20:37:41+00:00',
-          createdBy: 'None None',
-          modified: '2021-10-07T20:37:41+00:00',
-          modifiedBy: 'None None',
-          name: '0870803 B.C. LTD.',
-          passCodeClaimed: true
-        }
-      })))
-
-    // GET business info from Legal API
-    get.withArgs('businesses/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-        // Legal API Business data
-          business: {
-            legalName: '0870803 B.C. LTD.',
-            goodStanding: true,
-            taxId: '123456789',
-            identifier: 'BC0870803',
-            foundingDate: '2021-10-07T20:37:41+00:00',
-            legalType: 'BEN'
-          }
-        }
-      })))
-
-    // GET business tasks
-    get.withArgs('businesses/BC0870803/tasks')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          tasks: [{
-            enabled: true,
-            order: 1,
-            task: {
-              filing: {
-                business: {
-                  identifier: 'BC0870803',
-                  legalName: '0870803 B.C. LTD.',
-                  legalType: 'BEN',
-                  foundingDate: '2021-10-07T20:37:41+00:00'
-                },
-                dissolution: {
-                  custodialOffice: {
-                    deliveryAddress: {
-                      addressCity: 'North Saanich',
-                      addressCountry: 'CA',
-                      addressRegion: 'BC',
-                      deliveryInstructions: '',
-                      postalCode: 'V8L 5V4',
-                      streetAddress: '132-1640 Electra Blvd',
-                      streetAddressAdditional: ''
-                    },
-                    mailingAddress: {
-                      addressCity: 'North Saanich',
-                      addressCountry: 'CA',
-                      addressRegion: 'BC',
-                      deliveryInstructions: '',
-                      postalCode: 'V8L 5V4',
-                      streetAddress: '132-1640 Electra Blvd',
-                      streetAddressAdditional: ''
-                    }
-                  },
-                  dissolutionType: 'voluntary'
-                },
-                header: {
-                  affectedFilings: [],
-                  availableOnPaperOnly: false,
-                  colinIds: [],
-                  comments: [],
-                  date: '2021-11-01T22:57:50.017255+00:00',
-                  deletionLocked: false,
-                  effectiveDate: '2021-11-01T22:57:50.017306+00:00',
-                  filingId: 113152,
-                  inColinOnly: false,
-                  isCorrected: false,
-                  isCorrectionPending: false,
-                  name: 'dissolution',
-                  status: 'DRAFT',
-                  submitter: 'apestana@idir'
-                }
-              }
+    // mock first task
+    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockImplementation(() => (
+      {
+        business: {
+          identifier: 'BC0870803',
+          legalName: '0870803 B.C. LTD.',
+          legalType: 'BEN',
+          foundingDate: '2021-10-07T20:37:41+00:00'
+        },
+        dissolution: {
+          custodialOffice: {
+            deliveryAddress: {
+              addressCity: 'North Saanich',
+              addressCountry: 'CA',
+              addressRegion: 'BC',
+              deliveryInstructions: '',
+              postalCode: 'V8L 5V4',
+              streetAddress: '132-1640 Electra Blvd',
+              streetAddressAdditional: ''
+            },
+            mailingAddress: {
+              addressCity: 'North Saanich',
+              addressCountry: 'CA',
+              addressRegion: 'BC',
+              deliveryInstructions: '',
+              postalCode: 'V8L 5V4',
+              streetAddress: '132-1640 Electra Blvd',
+              streetAddressAdditional: ''
             }
-          }]
+          },
+          dissolutionType: 'voluntary'
+        },
+        header: {
+          affectedFilings: [],
+          availableOnPaperOnly: false,
+          colinIds: [],
+          comments: [],
+          date: '2021-11-01T22:57:50.017255+00:00',
+          deletionLocked: false,
+          effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+          filingId: 113152,
+          inColinOnly: false,
+          isCorrected: false,
+          isCorrectionPending: false,
+          name: 'dissolution',
+          status: 'DRAFT',
+          submitter: 'apestana@idir'
         }
-      })))
+      }
+    ))
 
     // GET staff comments
-    get.withArgs('businesses/BC0870803/comments')
+    // from shared component
+    sinon.stub(utils.AxiosInstance, 'get').withArgs('businesses/BC0870803/comments')
       .returns(new Promise(resolve => resolve({
         data: []
       })))
 
-    // GET permissions
-    get.withArgs('permissions')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          authorizedPermissions: [ ...PublicUserActions ]
-        }
-      })))
+    // mock authorized actions
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
+      [...PublicUserActions]
+    ))
 
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
@@ -889,6 +785,7 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
   afterEach(() => {
     window.location.assign = assign
     sinon.restore()
+    vi.resetAllMocks()
     wrapper.destroy()
   })
 
@@ -915,193 +812,149 @@ describe('Restoration - App page', () => {
     store.stateModel.business.businessId = ''
     store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
-    const get = sinon.stub(axios, 'get')
-
-    // GET current user's info
-    get.withArgs('https://auth.api.url/users/@me')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [
-            {
-              email: 'completing-party@example.com',
-              phone: '123-456-7890'
-            }
-          ],
-          firstname: 'Completing',
-          lastname: 'Party'
-        }
-      })))
-
-    // GET specified org's info
-    get.withArgs('https://auth.api.url/orgs/668')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          mailingAddress:
+    // mock user info
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
+      {
+        contacts: [
           {
-            city: 'City',
-            country: 'CA',
-            region: 'BC',
-            postalCode: 'V8V 8V8',
-            street: '1234 Some Street',
-            streetAdditional: 'Suite ABC'
+            email: 'completing-party@example.com',
+            phone: '123-456-7890'
           }
-        }
-      })))
+        ],
+        firstname: 'Completing',
+        lastname: 'Party'
+      }
+    ))
 
-    // GET filing fees
-    get.withArgs('https://pay.api.url/fees/BEN/RESTF?futureEffective=true')
-      .returns(new Promise(resolve => resolve({
-        data:
+    // mock org info
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+      {
+        mailingAddress:
         {
-          filingFees: {}
+          city: 'City',
+          country: 'CA',
+          region: 'BC',
+          postalCode: 'V8V 8V8',
+          street: '1234 Some Street',
+          streetAdditional: 'Suite ABC'
         }
-      })))
+      }
+    ))
 
-    // GET auth info
-    get.withArgs('https://auth.api.url/entities/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          contacts: [],
-          folioNumber: null
+    // mock filing fees
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
+      {
+        filingFees: 20.0,
+        filingType: 'Voluntary dissolution',
+        filingTypeCode: 'DIS_VOL',
+        futureEffectiveFees: 0,
+        priorityFees: 0,
+        processingFees: 0,
+        serviceFees: 1.50,
+        tax: {
+          gst: 0,
+          pst: 0
+        },
+        total: 21.5
+      }
+    ))
+
+    // mock auth info (business info)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => (
+      {
+        contacts: [],
+        folioNumber: null
+      }
+    ))
+
+    // mock business info
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => (
+      {
+        business: {
+          legalName: '0870803 B.C. LTD.',
+          goodStanding: true,
+          taxId: '123456789',
+          identifier: 'BC0870803',
+          foundingDate: '2021-10-07T20:37:41+00:00',
+          legalType: 'BEN',
+          state: 'HISTORICAL'
         }
-      })))
+      }
+    ))
 
-    // GET business data
-    get.withArgs('entities/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          affiliations: [5925],
-          businessIdentifier: 'BC0870803',
-          contacts: [{
-            email: 'andre.pestana@aot-technologies.com',
-            phone: '(123) 456-7890',
-            phoneExtension: ''
-          }],
-          corpType: {
-            code: 'BEN',
-            default: false,
-            desc: 'Benefit Company'
+    // mock first task
+    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockImplementation(() => (
+      {
+        business: {
+          identifier: 'BC0870803',
+          legalName: '0870803 B.C. LTD.',
+          legalType: 'BEN',
+          foundingDate: '2021-10-07T20:37:41+00:00'
+        },
+        restoration: {
+          type: '' // initially set to null, to test the fee summary
+        },
+        header: {
+          affectedFilings: [],
+          availableOnPaperOnly: false,
+          colinIds: [],
+          comments: [],
+          date: '2021-11-01T22:57:50.017255+00:00',
+          deletionLocked: false,
+          effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+          filingId: 113152,
+          inColinOnly: false,
+          isCorrected: false,
+          isCorrectionPending: false,
+          name: 'restoration',
+          status: 'DRAFT',
+          submitter: 'apestana@idir'
+        }
+      }
+    ))
+
+    // fetch addresses
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => (
+      {
+        registeredOffice: {
+          deliveryAddress: {
+            streetAddress: 'delivery_address - address line one',
+            addressCity: 'delivery_address city',
+            addressCountry: 'delivery_address country',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
           },
-          created: '2021-10-07T20:37:41+00:00',
-          createdBy: 'None None',
-          modified: '2021-10-07T20:37:41+00:00',
-          modifiedBy: 'None None',
-          name: '0870803 B.C. LTD.',
-          passCodeClaimed: true
-        }
-      })))
-
-    // GET business info from Legal API
-    get.withArgs('businesses/BC0870803')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-        // Legal API Business data
-          business: {
-            legalName: '0870803 B.C. LTD.',
-            goodStanding: true,
-            taxId: '123456789',
-            identifier: 'BC0870803',
-            foundingDate: '2021-10-07T20:37:41+00:00',
-            legalType: 'BEN',
-            state: 'HISTORICAL'
+          mailingAddress: {
+            streetAddress: 'mailing_address - address line one',
+            addressCity: 'mailing_address city',
+            addressCountry: 'mailing_address country',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
           }
-        }
-      })))
-
-    // GET business tasks
-    get.withArgs('businesses/BC0870803/tasks')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          tasks: [{
-            enabled: true,
-            order: 1,
-            task: {
-              filing: {
-                business: {
-                  identifier: 'BC0870803',
-                  legalName: '0870803 B.C. LTD.',
-                  legalType: 'BEN',
-                  foundingDate: '2021-10-07T20:37:41+00:00'
-                },
-                restoration: {
-                  type: '' // initially set to null, to test the fee summary
-                },
-                header: {
-                  affectedFilings: [],
-                  availableOnPaperOnly: false,
-                  colinIds: [],
-                  comments: [],
-                  date: '2021-11-01T22:57:50.017255+00:00',
-                  deletionLocked: false,
-                  effectiveDate: '2021-11-01T22:57:50.017306+00:00',
-                  filingId: 113152,
-                  inColinOnly: false,
-                  isCorrected: false,
-                  isCorrectionPending: false,
-                  name: 'restoration',
-                  status: 'DRAFT',
-                  submitter: 'apestana@idir'
-                }
-              }
-            }
-          }]
-        }
-      })))
-
-    // GET addresses
-    get.withArgs('businesses/BC0870803/addresses')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          registeredOffice: {
-            deliveryAddress: {
-              streetAddress: 'delivery_address - address line one',
-              addressCity: 'delivery_address city',
-              addressCountry: 'delivery_address country',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            },
-            mailingAddress: {
-              streetAddress: 'mailing_address - address line one',
-              addressCity: 'mailing_address city',
-              addressCountry: 'mailing_address country',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            }
+        },
+        recordsOffice: {
+          deliveryAddress: {
+            streetAddress: 'delivery_address - address line one',
+            addressCity: 'delivery_address city',
+            addressCountry: 'delivery_address country',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
           },
-          recordsOffice: {
-            deliveryAddress: {
-              streetAddress: 'delivery_address - address line one',
-              addressCity: 'delivery_address city',
-              addressCountry: 'delivery_address country',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            },
-            mailingAddress: {
-              streetAddress: 'mailing_address - address line one',
-              addressCity: 'mailing_address city',
-              addressCountry: 'mailing_address country',
-              postalCode: 'H0H0H0',
-              addressRegion: 'BC'
-            }
+          mailingAddress: {
+            streetAddress: 'mailing_address - address line one',
+            addressCity: 'mailing_address city',
+            addressCountry: 'mailing_address country',
+            postalCode: 'H0H0H0',
+            addressRegion: 'BC'
           }
         }
-      })))
+      }
+    ))
 
-    // GET permissions
-    get.withArgs('permissions')
-      .returns(new Promise(resolve => resolve({
-        data:
-        {
-          authorizedPermissions: [ ...BusinessRegistryStaffActions ]
-        }
-      })))
+    // mock authorized actions
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
+      [...BusinessRegistryStaffActions]
+    ))
 
     // mock GetKeycloakRoles so we don't need a KC token
     vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.STAFF])
@@ -1127,6 +980,7 @@ describe('Restoration - App page', () => {
   afterEach(() => {
     window.location.assign = assign
     sinon.restore()
+    vi.resetAllMocks()
     wrapper.destroy()
   })
 
@@ -1152,6 +1006,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1165,6 +1020,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
         }
       }
     )
+
     setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
 
     const breadcrumbs = (wrapper.vm as any).breadcrumbs
@@ -1181,6 +1037,7 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
       if (flag === 'enable-legal-name-fix') return false
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1212,6 +1069,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       App,
       null,
@@ -1241,6 +1099,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
       if (flag === 'enable-legal-name-fix') return true
       return null
     })
+
     const wrapper = shallowWrapperFactory(
       App,
       null,

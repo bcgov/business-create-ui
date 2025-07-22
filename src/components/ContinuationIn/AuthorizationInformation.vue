@@ -212,6 +212,7 @@ import { AuthorizationProofIF, ExistingBusinessInfoIF } from '@/interfaces'
 import { DateMixin, DocumentMixin } from '@/mixins'
 import { CanJurisdictions, IntlJurisdictions, UsaJurisdiction } from '@bcrs-shared-components/jurisdiction/list-data'
 import { JurisdictionLocation } from '@bcrs-shared-components/enums'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -285,7 +286,7 @@ export default class AuthorizationInformation extends Mixins(DateMixin, Document
     if (!documentKey || !documentName) return // safety check
 
     this.isDownloading = true
-    await this.downloadDocument(documentKey, documentName).catch(error => {
+    await LegalServices.downloadDocument(documentKey, documentName).catch(error => {
       // eslint-disable-next-line no-console
       console.log('fetchDocument() error =', error)
       this.errorDialogTitle = 'Unable to download document'

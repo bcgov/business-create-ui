@@ -1,28 +1,41 @@
-import { AxiosInstance as axios } from '@/utils'
+import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { StatusCodes } from 'http-status-codes'
-import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF, ResolutionIF }
-  from '@/interfaces'
+import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF, PresignedUrlIF,
+  ResolutionIF } from '@/interfaces'
 import { AuthorizedActions, FilingTypes, RoleTypes } from '@/enums'
 import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
-import { createPinia, setActivePinia } from 'pinia'
-import { useStore } from '@/store/store'
-
-setActivePinia(createPinia())
-const store = useStore()
+import { merge } from 'lodash'
 
 /**
- * Class that provides integration with the Legal API.
+ * Class that provides integration with the Legal (aka Business) API.
  */
 export default class LegalServices {
+  /** The Legal API URL or Business API Gateway URL, depending on the FF. */
+  static get legalBusinessUrl (): string {
+    return GetFeatureFlag('use-business-api-gw-url')
+      ? sessionStorage.getItem('BUSINESS_API_GW_URL')
+      : sessionStorage.getItem('LEGAL_API_URL')
+  }
+
+  /**
+   * Additional or overridden Axios request headers.
+   * See default Axios headers in AxiosInstance.ts.
+   */
+  static get config (): AxiosRequestConfig {
+    // this service doesn't need to add to or override the default config
+    return {}
+  }
+
   /**
    * Fetches the filings list.
    * @param businessId the business identifier (aka entity inc no)
    * @returns a promise to return the filings list
    */
   static async fetchFilings (businessId: string): Promise<any[]> {
-    const url = `businesses/${businessId}/filings`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/filings`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const filings = response?.data?.filings
         if (!filings) {
@@ -41,9 +54,9 @@ export default class LegalServices {
    * @returns a promise to return the draft filing
    */
   static async fetchFirstOrOnlyFiling (tempId: string): Promise<any> {
-    const url = `businesses/${tempId}/filings`
+    const url = `${this.legalBusinessUrl}businesses/${tempId}/filings`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         let filing, filingName, filingId
 
@@ -76,9 +89,9 @@ export default class LegalServices {
    * @returns a promise to return the draft filing
    */
   static async fetchFirstTask (businessId: string): Promise<any> {
-    const url = `businesses/${businessId}/tasks`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/tasks`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const filing = response?.data?.tasks?.[0]?.task.filing
         const filingName = filing?.header?.name as FilingTypes
@@ -93,12 +106,12 @@ export default class LegalServices {
   }
 
   /**
-   * Fetches a filing.
+   * Fetches a filing from its url.
    * @param url the full URL to fetch the filing
    * @returns a promise to return the filing object
    */
   static async fetchFiling (url: string): Promise<any> {
-    return axios.get(url)
+    return axios.get(`${this.legalBusinessUrl}${url}`, this.config)
       .then(response => {
         const filing = response?.data?.filing
         if (!filing) {
@@ -123,26 +136,28 @@ export default class LegalServices {
     isDraft: boolean
   ): Promise<any> {
     if (!filing) throw new Error('updateFiling(), invalid filing')
+
     const filingId = +filing.header?.filingId || 0
     if (!filingId) throw new Error('updateFiling(), invalid filing id')
 
     // put updated filing to filings endpoint
-    let url = `businesses/${id}/filings/${filingId}`
+    let url = `${this.legalBusinessUrl}businesses/${id}/filings/${filingId}`
     if (isDraft) {
       url += '?draft=true'
     }
-    const config = { headers: { 'Account-Id': store.getAccountId } }
 
-    return axios.put(url, { filing }, config).then(response => {
-      const filing = response?.data?.filing
-      const filingId = +filing?.header?.filingId || 0
+    return axios.put(url, { filing }, this.config)
+      .then(response => {
+        const filing = response?.data?.filing
+        const filingId = +filing?.header?.filingId || 0
 
-      if (!filing || !filingId) {
-        throw new Error('Invalid API response')
-      }
+        if (!filing || !filingId) {
+          throw new Error('Invalid API response')
+        }
 
-      return filing
-    })
+        return filing
+      })
+
     // NB: for error handling, see "save-error-event"
   }
 
@@ -156,9 +171,9 @@ export default class LegalServices {
   static async fetchNameRequest (nrNumber: string, phone = '', email = ''): Promise<NameRequestIF> {
     if (!nrNumber) throw new Error('Invalid parameter \'nrNumber\'')
 
-    const url = `nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
+    const url = `${this.legalBusinessUrl}nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -172,13 +187,14 @@ export default class LegalServices {
    * @returns a promise to return the parties from the response
    */
   static async fetchParties (businessId: string): Promise<any> {
-    const url = `businesses/${businessId}/parties`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/parties`
 
-    return axios.get(url).then(response => {
-      const data = response?.data
-      if (!data) throw new Error('Invalid API response')
-      return data
-    })
+    return axios.get(url, this.config)
+      .then(response => {
+        const data = response?.data
+        if (!data) throw new Error('Invalid API response')
+        return data
+      })
   }
 
   /**
@@ -187,9 +203,9 @@ export default class LegalServices {
    * @returns a promise to return the directors from the response
    */
   static async fetchDirectors (businessId: string): Promise<OrgPersonIF[]> {
-    const url = `businesses/${businessId}/directors`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/directors`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const directors = response?.data?.directors as Array<any>
 
@@ -229,9 +245,9 @@ export default class LegalServices {
    * @returns a promise to return the share structure from the response
    */
   static async fetchShareStructure (businessId: string): Promise<ShareStructureIF> {
-    const url = `businesses/${businessId}/share-classes`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/share-classes`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const shareStructure = response.data as ShareStructureIF
 
@@ -253,9 +269,9 @@ export default class LegalServices {
    * @returns a promise to return the resolutions
    */
   static async fetchResolutions (businessId: string): Promise<ResolutionIF[]> {
-    const url = `businesses/${businessId}/resolutions`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/resolutions`
 
-    return axios.get(url)
+    return axios.get(url, this.config)
       .then(response => {
         const resolutions = response?.data.resolutions
 
@@ -271,18 +287,19 @@ export default class LegalServices {
    * @returns a promise to return the addresses from the response
    */
   static async fetchAddresses (businessId: string): Promise<any> {
-    const url = `businesses/${businessId}/addresses`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}/addresses`
 
-    return axios.get(url).then(response => {
-      const data = response?.data
-      if (!data) throw new Error('Invalid API response')
-      return data
-    }).catch(error => {
-      if (error?.response?.status === StatusCodes.NOT_FOUND) {
-        return null // Business or Address not found (not an error)
-      }
-      throw error
-    })
+    return axios.get(url, this.config)
+      .then(response => {
+        const data = response?.data
+        if (!data) throw new Error('Invalid API response')
+        return data
+      }).catch(error => {
+        if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          return null // Business or Address not found (not an error)
+        }
+        throw error
+      })
   }
 
   /**
@@ -291,13 +308,14 @@ export default class LegalServices {
    * @returns a promise to return the business info
    */
   static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
-    const url = `businesses/${businessId}`
+    const url = `${this.legalBusinessUrl}businesses/${businessId}`
 
-    return axios.get(url).then(response => {
-      const data = response?.data
-      if (!data) throw new Error('Invalid API response')
-      return data.business
-    })
+    return axios.get(url, this.config)
+      .then(response => {
+        const data = response?.data
+        if (!data) throw new Error('Invalid API response')
+        return data.business
+      })
   }
 
   /**
@@ -305,10 +323,120 @@ export default class LegalServices {
    * @returns a promise to return the list of authorized actions
    */
   static async fetchAuthorizedActions (): Promise<AuthorizedActions[]> {
-    return axios.get('permissions').then(response => {
-      const data = response?.data
-      if (!data) throw new Error('Invalid API response')
-      return data.authorizedPermissions
-    })
+    const url = `${this.legalBusinessUrl}permissions`
+
+    return axios.get(url, this.config)
+      .then(response => {
+        const data = response?.data
+        if (!data) throw new Error('Invalid API response')
+        return data.authorizedPermissions
+      })
+  }
+
+  /**
+   * Gets a pre-signed URL for the specified filename.
+   * @param filename the file name
+   * @returns the presigned url object
+   */
+  static async getPresignedUrl (fileName: string): Promise<PresignedUrlIF> {
+    const url = `${this.legalBusinessUrl}documents/${fileName}/signatures`
+
+    return axios.get(url, this.config)
+      .then(response => {
+        const data = response?.data
+        if (!data) {
+          throw new Error('Invalid API response')
+        }
+        return data
+      })
+  }
+
+  /**
+   * Uploads the specified file to the specified (Minio) URL.
+   * @param url the URL to upload to
+   * @param file the file to upload
+   * @param key the file key
+   * @param userId the file user id
+   * @returns a promise to return the axios response or the error response
+   */
+  static async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
+    // add/override headers
+    const extraConfig = {
+      headers: {
+        'Content-Disposition': `attachment; filename=${file.name}`,
+        'Content-Type': file.type,
+        'x-amz-meta-userid': `${userId}`,
+        'x-amz-meta-key': `${key}`
+      }
+    }
+
+    return axios.put(url, file, merge(this.config, extraConfig))
+      .then(response => {
+        return response
+      }).catch(error => {
+        return error.response
+      })
+  }
+
+  /**
+   * Deletes a Minio document.
+   * @param documentKey the document key
+   * @returns a promise to return the axios response or the error response
+   */
+  static async deleteDocument (documentKey: string): Promise<AxiosResponse> {
+    if (!documentKey) throw new Error('Invalid parameters')
+
+    const url = `${this.legalBusinessUrl}documents/${documentKey}`
+
+    return axios.delete(url, this.config)
+  }
+
+  /**
+   * Downloads a Minio document and prompts browser to open/save it.
+   * @param documentKey the document key
+   * @param documentName the document filename
+   * @returns a promise to return the axios response or the error response
+   */
+  static async downloadDocument (documentKey: string, documentName: string): Promise<AxiosResponse> {
+    if (!documentKey || !documentName) throw new Error('Invalid parameters')
+
+    const url = `${this.legalBusinessUrl}documents/${documentKey}`
+
+    // add/override headers
+    const extraConfig = {
+      headers: { 'Accept': 'application/pdf' },
+      responseType: 'blob' as 'json'
+    }
+
+    return axios.get(url, merge(this.config, extraConfig))
+      .then(response => {
+        if (!response) throw new Error('Null response')
+
+        /* solution below is from https://github.com/axios/axios/issues/1392 */
+
+        // it is necessary to create a new blob object with mime-type explicitly set
+        // otherwise only Chrome works like it should
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+
+        // use Navigator.msSaveOrOpenBlob if available (possibly IE)
+        // warning: this is now deprecated
+        // ref: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/msSaveOrOpenBlob
+        if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
+          window.navigator['msSaveOrOpenBlob'](blob, documentName)
+        } else {
+          // for other browsers, create a link pointing to the ObjectURL containing the blob
+          const url = window.URL.createObjectURL(blob)
+          const a = window.document.createElement('a')
+          window.document.body.appendChild(a)
+          a.setAttribute('style', 'display: none')
+          a.href = url
+          a.download = documentName
+          a.click()
+          window.URL.revokeObjectURL(url)
+          a.remove()
+        }
+
+        return response
+      })
   }
 }

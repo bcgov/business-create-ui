@@ -1,7 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { AxiosResponse } from 'axios'
-import { AxiosInstance as axios } from '@/utils'
-import { PresignedUrlIF, PdfInfoIF } from '@/interfaces'
+import { PdfInfoIF } from '@/interfaces'
 import { PdfPageSize } from '@/enums'
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf'
 
@@ -26,113 +24,6 @@ export default class DocumentMixin extends Vue {
     // NB: must use legacy build for unit tests not running in Node 18+
     this.pdfjsLib = pdfjs
     this.pdfjsLib.GlobalWorkerOptions.workerSrc = await import('pdfjs-dist/legacy/build/pdf.worker.entry')
-  }
-
-  /**
-   * Gets a pre-signed URL for the specified filename.
-   * @param filename the file name
-   * @returns the presigned url object
-   */
-  async getPresignedUrl (fileName: string): Promise<PresignedUrlIF> {
-    const url = `documents/${fileName}/signatures`
-    return axios.get(url)
-      .then(response => {
-        const data = response?.data
-        if (!data) {
-          throw new Error('Invalid API response')
-        }
-        return data
-      })
-  }
-
-  /**
-   * Uploads the specified file to the specified (Minio) URL.
-   * @param url the URL to upload to
-   * @param file the file to upload
-   * @param key the file key
-   * @param userId the file user id
-   * @returns a promise to return the axios response or the error response
-   */
-  async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
-    const options = {
-      headers: {
-        'Content-Type': file.type,
-        'x-amz-meta-userid': `${userId}`,
-        'x-amz-meta-key': `${key}`,
-        'Content-Disposition': `attachment; filename=${file.name}`
-      }
-    }
-    return axios.put(url, file, options)
-      .then(response => {
-        return response
-      }).catch(error => {
-        return error.response
-      })
-  }
-
-  /**
-   * Deletes a Minio document from Legal API.
-   * @param documentKey the document key
-   * @returns a promise to return the axios response or the error response
-   */
-  async deleteDocument (documentKey: string): Promise<AxiosResponse> {
-    // safety checks
-    if (!documentKey) {
-      throw new Error('Invalid parameters')
-    }
-
-    const url = `documents/${documentKey}`
-
-    return axios.delete(url)
-  }
-
-  /**
-   * Downloads a Minio document from Legal API and prompts browser to open/save it.
-   * @param documentKey the document key
-   * @param documentName the document filename
-   * @returns a promise to return the axios response or the error response
-   */
-  async downloadDocument (documentKey: string, documentName: string): Promise<AxiosResponse> {
-    // safety checks
-    if (!documentKey || !documentName) {
-      throw new Error('Invalid parameters')
-    }
-
-    const url = `documents/${documentKey}`
-    const config = {
-      headers: { 'Accept': 'application/pdf' },
-      responseType: 'blob' as 'json'
-    }
-
-    return axios.get(url, config).then(response => {
-      if (!response) throw new Error('Null response')
-
-      /* solution below is from https://github.com/axios/axios/issues/1392 */
-
-      // it is necessary to create a new blob object with mime-type explicitly set
-      // otherwise only Chrome works like it should
-      const blob = new Blob([response.data], { type: 'application/pdf' })
-
-      // use Navigator.msSaveOrOpenBlob if available (possibly IE)
-      // warning: this is now deprecated
-      // ref: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/msSaveOrOpenBlob
-      if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
-        window.navigator['msSaveOrOpenBlob'](blob, documentName)
-      } else {
-        // for other browsers, create a link pointing to the ObjectURL containing the blob
-        const url = window.URL.createObjectURL(blob)
-        const a = window.document.createElement('a')
-        window.document.body.appendChild(a)
-        a.setAttribute('style', 'display: none')
-        a.href = url
-        a.download = documentName
-        a.click()
-        window.URL.revokeObjectURL(url)
-        a.remove()
-      }
-
-      return response
-    })
   }
 
   /**

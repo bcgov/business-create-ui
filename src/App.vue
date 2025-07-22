@@ -256,8 +256,8 @@ import * as Views from '@/views'
 
 // Mixins, interfaces, etc
 import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
-import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessWarningIF, CompletingPartyIF,
-  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, OrgInformationIF, PartyIF, ResourceIF,
+import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
+  ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
 import { AmalgamationRegResources, AmalgamationShortResources, ContinuationInResources,
   DissolutionResources, IncorporationResources, RegistrationResources, RestorationResources,
@@ -678,17 +678,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // reset errors in case this method is called more than once (ie, retry)
     this.resetFlags()
 
-    // only check FF when not in Vitest tests
-    if (import.meta.env.VITEST === undefined) {
-      // check that current route matches a supported filing type
-      const supportedFilings = await GetFeatureFlag('supported-filings')
-      if (!supportedFilings?.includes(this.$route.meta.filingType)) {
-        window.alert('This filing type is not available at the moment. Please check again later.')
-        this.goToDashboard(true)
-        return
-      }
-    }
-
     try {
       // set current date from "real time" date from server
       this.setCurrentDate(this.dateToYyyyMmDd(this.getCurrentJsDate))
@@ -738,7 +727,40 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       }
 
-      // Now that we know what type of filing this is, and what the user's roles are, check if authorized.
+      // get user info
+      // must be called after we know filing type
+      const userInfo = await this.loadUserInfo().catch(error => {
+        console.log('User info error =', error) // eslint-disable-line no-console
+        if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
+          this.accountContactMissingDialog = true
+        } else {
+          this.accountAuthorizationDialog = true
+        }
+        throw error // go to catch()
+      })
+
+      // update Launch Darkly with user info
+      // this allows targeted feature flags
+      await this.updateLaunchDarkly(userInfo).catch(error => {
+        // just log the error -- no need to halt app
+        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
+      })
+
+      // check that current route matches a supported filing type
+      // only check FF when not in Vitest tests
+      // must be called after LD is updated
+      if (import.meta.env.VITEST === undefined) {
+        const supportedFilings = await GetFeatureFlag('supported-filings')
+        if (!supportedFilings?.includes(this.$route.meta.filingType)) {
+          window.alert('This filing type is not available at the moment. Please check again later.')
+          this.goToDashboard(true)
+          return
+        }
+      }
+
+      // check if authorized
+      // must be called after we know what type of filing this is
+      // must be called after we know what the user's permissions are
       if (this.isAmalgamationFiling && !IsAuthorized(AuthorizedActions.AMALGAMATION_FILING)) {
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Amalgamation filings.')
@@ -767,25 +789,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         this.accountAuthorizationDialog = true
         throw new Error('You are not authorized to access Voluntary Dissolution filings.')
       }
-
-      // get user info
-      // must be called after we know filing type
-      const userInfo = await this.loadUserInfo().catch(error => {
-        console.log('User info error =', error) // eslint-disable-line no-console
-        if ([ErrorTypes.INVALID_USER_EMAIL, ErrorTypes.INVALID_USER_PHONE].includes(error.message)) {
-          this.accountContactMissingDialog = true
-        } else {
-          this.accountAuthorizationDialog = true
-        }
-        throw error // go to catch()
-      })
-
-      // update Launch Darkly with user info
-      // this allows targeted feature flags
-      await this.updateLaunchDarkly(userInfo).catch(error => {
-        // just log the error -- no need to halt app
-        console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
-      })
 
       // set completing party
       this.setCompletingParty(this.getCompletingParties())
@@ -858,13 +861,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // (currently used for dissolution filings only)
       const filingFees = []
       for (const filingData of this.getFilingData) {
-        await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
-          .then(res => filingFees.push(res))
-          .catch(error => {
-            console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
-            // return a valid fees structure
-            filingFees.push(cloneDeep(EmptyFees))
-          })
+        try {
+          const ff = await PayServices.fetchFilingFees(filingData.filingTypeCode, filingData.entityType, true)
+          filingFees.push(ff)
+        } catch (error) {
+          console.log('Failed to fetch filing fees, error =', error) // eslint-disable-line no-console
+          // return a valid fees structure
+          filingFees.push(cloneDeep(EmptyFees))
+        }
       }
       this.setFeePrices(filingFees)
 
@@ -1055,12 +1059,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       const nrNumber = filing[filing.header.name].nameRequest.nrNumber
       const applicantPhone = filing[filing.header.name].nameRequest.applicantPhone // may be undefined
       const applicantEmail = filing[filing.header.name].nameRequest.applicantEmail // may be undefined
-      const nrResponse = await LegalServices.fetchNameRequest(nrNumber, applicantPhone, applicantEmail)
-        .catch(error => {
-          console.log('NR fetch error =', error) // eslint-disable-line no-console
-          // this will trigger NR not found error, below
-          return null
-        })
+      let nrResponse: NameRequestIF
+      try {
+        nrResponse = await LegalServices.fetchNameRequest(nrNumber, applicantPhone, applicantEmail)
+      } catch (error) {
+        console.log('Failed to fetch NR, error =', error) // eslint-disable-line no-console
+        nrResponse = null
+      }
 
       //
       // The NR checks below are sort-of a duplicate of code in NameRequestMixin::validateNameRequest()
@@ -1279,7 +1284,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches and stores business info. */
   private async loadBusinessInfo (businessId: string): Promise<void> {
-    const business = await LegalServices.fetchBusinessInfo(businessId).catch(() => {})
+    let business: BusinessIF
+    try {
+      business = await LegalServices.fetchBusinessInfo(businessId)
+    } catch (error) {
+      console.log('Failed to fetch business info, error =', error) // eslint-disable-line no-console
+      business = null
+    }
 
     if (!business) {
       throw new Error('Invalid business info')

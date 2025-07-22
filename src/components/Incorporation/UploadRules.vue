@@ -294,6 +294,7 @@ import {
 import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -355,7 +356,7 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
       }
     } else {
       // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadRulesDocKey).catch(() => null)
+      await LegalServices.deleteDocument(this.uploadRulesDocKey).catch(() => null)
       // clear local variables
       this.uploadRulesDoc = null
       this.uploadRulesDocKey = null
@@ -371,17 +372,18 @@ export default class UploadRules extends Mixins(CommonMixin, DocumentMixin) {
     const isPendingUpload = !this.uploadRulesDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadRulesDoc.name)
+      const doc: PresignedUrlIF = await LegalServices.getPresignedUrl(this.uploadRulesDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
+      const res =
+        await LegalServices.uploadToUrl(doc.preSignedUrl, this.uploadRulesDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const rulesFile = {
           name: this.uploadRulesDoc.name,
           lastModified: this.uploadRulesDoc.lastModified,
           size: this.uploadRulesDoc.size
-        }
+        } as File
         this.setRules({
           ...this.getCreateRulesStep,
           rulesFile,

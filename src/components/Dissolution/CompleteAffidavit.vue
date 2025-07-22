@@ -267,6 +267,7 @@ import { RouteNames, ItemTypes, PdfPageSize } from '@/enums'
 import { CommonMixin, DocumentMixin } from '@/mixins'
 import FileUploadPreview from '@/components/common/FileUploadPreview.vue'
 import { CorpTypeCd, GetCorpNumberedDescription } from '@bcrs-shared-components/corp-type-module'
+import { LegalServices } from '@/services'
 
 @Component({
   components: {
@@ -348,7 +349,7 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
       }
     } else {
       // delete file from Minio; ignore errors
-      await this.deleteDocument(this.uploadAffidavitDocKey).catch(() => null)
+      await LegalServices.deleteDocument(this.uploadAffidavitDocKey).catch(() => null)
       // clear local variables
       this.uploadAffidavitDoc = null
       this.uploadAffidavitDocKey = null
@@ -364,10 +365,11 @@ export default class CompleteAffidavit extends Mixins(CommonMixin, DocumentMixin
     const isPendingUpload = !this.uploadAffidavitDocKey
     if (isPendingUpload && this.hasValidUploadFile) {
       // NB: will throw if API error
-      const doc: PresignedUrlIF = await this.getPresignedUrl(this.uploadAffidavitDoc.name)
+      const doc: PresignedUrlIF = await LegalServices.getPresignedUrl(this.uploadAffidavitDoc.name)
 
       // NB: will return error response if API error
-      const res = await this.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)
+      const res =
+        await LegalServices.uploadToUrl(doc.preSignedUrl, this.uploadAffidavitDoc, doc.key, this.getKeycloakGuid)
 
       if (res && res.status === 200) {
         const affidavitFile = {
