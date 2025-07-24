@@ -24,7 +24,7 @@ setActivePinia(createPinia())
 const store = useStore()
 
 // mock services function
-const mockUpdateFiling = vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation(() => {})
+const mockUpdateFiling = vi.spyOn((LegalServices as any), 'updateFiling').mockResolvedValue({})
 
 // Populate session variables
 sessionStorage.setItem('AUTH_WEB_URL', 'https://auth-web.url/')
@@ -218,9 +218,7 @@ describe('Actions component - NR Validation', () => {
     // GET NR data
     sinon.stub(axios, 'get')
       .withArgs('https://legal-api.url/nameRequests/NR 1234567/validate?phone=&email=')
-      .returns(new Promise(resolve => resolve({
-        data: expiredNR
-      })))
+      .resolves({ data: expiredNR })
 
     // init store
     store.stateModel.currentDate = '2020/01/29'
@@ -477,9 +475,7 @@ describe('Actions component - Filing Functionality', () => {
     // GET NR data
     sinon.stub(axios, 'get')
       .withArgs('https://legal-api.url/nameRequests/NR 1234567/validate?phone=&email=')
-      .returns(new Promise(resolve => resolve({
-        data: { ...nrData }
-      })))
+      .resolves({ data: { ...nrData } })
 
     // init store
     store.stateModel.currentDate = '2020/01/29'
@@ -609,9 +605,7 @@ describe('Actions component - Filing Functionality', () => {
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
     mockUpdateFiling
       .mockReset()
-      .mockImplementation(() => {
-        return Promise.reject(padErrorFiling)
-      })
+      .mockRejectedValue(padErrorFiling)
 
     await wrapper.vm.onClickFilePay()
     await Vue.nextTick()
@@ -638,12 +632,12 @@ describe('Actions component - Filing Functionality', () => {
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
     mockUpdateFiling
       .mockReset()
-      .mockImplementation(() => Promise.resolve({
+      .mockResolvedValue({
         header: {
           paymentToken: 789,
           isPaymentActionRequired: true
         }
-      }))
+      })
 
     await wrapper.vm.onClickFilePay()
 
@@ -662,7 +656,7 @@ describe('Actions component - Filing Functionality', () => {
     const mockBuildFiling = vi.spyOn(wrapper.vm, 'buildIncorporationFiling')
     mockUpdateFiling
       .mockReset()
-      .mockImplementation(() => {})
+      .mockResolvedValue({})
 
     await wrapper.vm.onClickCancel()
 

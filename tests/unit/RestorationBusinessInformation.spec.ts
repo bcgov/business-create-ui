@@ -104,7 +104,6 @@ for (const test of restorationBusinessInfo) {
       expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
 
       // verify addresses are not editable
-      console.log('>>> section =', section.html())
       expect(section.find('#summary-registered-address').exists()).toBe(true)
       expect(section.find('#summary-records-address').exists()).toBe(true)
       expect(section.find('.address-edit-header').exists()).toBe(false)

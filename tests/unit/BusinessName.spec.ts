@@ -19,7 +19,7 @@ setActivePinia(createPinia())
 const store = useStore()
 
 // mock services function
-vi.spyOn((LegalServices as any), 'updateFiling').mockImplementation(() => {})
+vi.spyOn((LegalServices as any), 'updateFiling').mockResolvedValue({})
 
 describe('Business Name component', () => {
   let wrapper: any
