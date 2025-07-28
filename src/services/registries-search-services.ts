@@ -1,6 +1,5 @@
 import { AxiosInstance as axios } from '@/utils'
 import { BusinessLookupResultIF } from '@/interfaces'
-import { AxiosRequestConfig } from 'axios'
 
 /**
  * Class that provides integration with the Registries Search API.
@@ -9,18 +8,6 @@ export default class RegistriesSearchServices {
   /** The Registries Search API URL. */
   static get searchApiUrl (): string {
     return sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
-  }
-
-  /**
-   * Additional or overridden Axios request headers.
-   * See default Axios headers in AxiosInstance.ts.
-   */
-  static get config (): AxiosRequestConfig {
-    return {
-      headers: {
-        'X-Apikey': import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
-      }
-    }
   }
 
   /**
@@ -35,7 +22,7 @@ export default class RegistriesSearchServices {
     url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
     url += `&query=value:${encodeURIComponent(query)}`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
         if (!results) {

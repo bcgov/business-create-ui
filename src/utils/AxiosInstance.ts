@@ -18,28 +18,48 @@ function getAccountId (): string {
   return accountId
 }
 
+const authApiGwUrl = sessionStorage.getItem('AUTH_API_GW_URL')
+const registriesSearchApiUrl = sessionStorage.getItem('REGISTRIES_SEARCH_API_URL')
+const payApiGwUrl = sessionStorage.getItem('PAY_API_GW_URL')
+
 // create a new, independent instance of Axios
 const instance = axios.create()
 
 // add request interceptor
 instance.interceptors.request.use(
   request => {
-    // don't add headers (esp bearer token) for Minio requests
+    // don't add headers for Minio requests
     if (request.url?.startsWith('https://minio')) {
       return request
     }
 
-    // add these headers only if Vitest isn't running as it breaks some tests
+    // add headers only if Vitest isn't running as it breaks some tests
     if (import.meta.env.VITEST === undefined) {
+      // add headers common to all APIs
       const kcToken = sessionStorage.getItem(SessionStorageKeys.KeyCloakToken)
-
-      request.headers.common['Account-Id'] = getAccountId()
-      request.headers.common['App-Name'] = import.meta.env.APP_NAME
       request.headers.common['Authorization'] = `Bearer ${kcToken}`
+      request.headers.common['App-Name'] = import.meta.env.APP_NAME
+      request.headers.common['Account-Id'] = getAccountId()
 
-      // this default API key is used for Staff Comments, COLIN API and NAICS API
-      // some services (eg, Auth, Pay, Search) override this
-      request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
+      // add headers specific to various APIs
+      switch (true) {
+        case request.url?.startsWith(authApiGwUrl):
+          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_AUTH_API_KEY
+          break
+
+        case request.url?.startsWith(registriesSearchApiUrl):
+          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_KEY
+          break
+
+        case request.url?.startsWith(payApiGwUrl):
+          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_PAY_API_KEY
+          break
+
+        default:
+          // used by Business API GW, COLIN API, NAICS API and StaffComments
+          request.headers.common['X-Apikey'] = import.meta.env.VUE_APP_BUSINESS_API_KEY
+          break
+      }
     }
 
     return request

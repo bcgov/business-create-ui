@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import flushPromises from 'flush-promises'
@@ -60,6 +61,7 @@ sessionStorage.setItem('BUSINESS_DASH_URL', 'https://business-dash.url/')
 sessionStorage.setItem('AUTH_API_URL', 'https://auth-api.url/')
 sessionStorage.setItem('CURRENT_ACCOUNT', '{ "id": 668 }')
 sessionStorage.setItem('PAY_API_URL', 'https://pay-api.url/')
+sessionStorage.setItem('LEGAL_API_URL', 'https://legal-api.url/')
 
 // sample filing data
 const filingData = {
@@ -284,68 +286,57 @@ describe('Incorporation - Define Company page for a BEN (numbered)', () => {
     store.stateModel.business.businessId = ''
 
     // mock user info
-    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
-      {
-        contacts: [
-          {
-            email: 'completing-party@example.com',
-            phone: '123-456-7890'
-          }
-        ],
-        firstname: 'Completing',
-        lastname: 'Party'
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
+      contacts: [
+        {
+          email: 'completing-party@example.com',
+          phone: '123-456-7890'
+        }
+      ],
+      firstname: 'Completing',
+      lastname: 'Party'
+    })
 
     // mock org info
-    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
+      mailingAddress:
       {
-        mailingAddress:
-        {
-          city: 'City',
-          country: 'CA',
-          region: 'BC',
-          postalCode: 'V8V 8V8',
-          street: '1234 Some Street',
-          streetAdditional: 'Suite ABC'
-        }
+        city: 'City',
+        country: 'CA',
+        region: 'BC',
+        postalCode: 'V8V 8V8',
+        street: '1234 Some Street',
+        streetAdditional: 'Suite ABC'
       }
-    ))
+    })
 
     // mock incorporation application
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => (
-      {
-        header: {
-          name: 'incorporationApplication',
-          filingId: 54321,
-          status: 'DRAFT'
-        },
-        business: {
-          identifier: 'T7654321',
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({
+      header: {
+        name: 'incorporationApplication',
+        filingId: 54321,
+        status: 'DRAFT'
+      },
+      business: {
+        identifier: 'T7654321',
+        legalType: 'BEN'
+      },
+      incorporationApplication: {
+        nameRequest: {
           legalType: 'BEN'
-        },
-        incorporationApplication: {
-          nameRequest: {
-            legalType: 'BEN'
-          }
         }
       }
-    ))
+    })
 
     // mock filing fees
-    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
-      {
-        futureEffectiveFees: 100
-      }
-    ))
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockResolvedValue({ futureEffectiveFees: 100 })
 
     // mock authorized actions
-    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
-      [...PublicUserActions]
-    ))
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockResolvedValue([...PublicUserActions])
+    await Vue.nextTick() // needed for this mock to work
 
     // mock GetKeycloakRoles so we don't need a KC token
-    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+    vi.spyOn(utils, 'GetKeycloakRoles').mockReturnValue([AuthorizationRoles.PUBLIC_USER])
 
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
@@ -418,62 +409,45 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     store.stateModel.business.businessId = ''
 
     // mock user info
-    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
-      {
-        contacts: [
-          {
-            email: 'completing-party@example.com',
-            phone: '123-456-7890'
-          }
-        ],
-        firstname: 'Completing',
-        lastname: 'Party'
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
+      contacts: [
+        {
+          email: 'completing-party@example.com',
+          phone: '123-456-7890'
+        }
+      ],
+      firstname: 'Completing',
+      lastname: 'Party'
+    })
 
     // mock org info
-    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
+      mailingAddress:
       {
-        mailingAddress:
-        {
-          city: 'City',
-          country: 'CA',
-          region: 'BC',
-          postalCode: 'V8V 8V8',
-          street: '1234 Some Street',
-          streetAdditional: 'Suite ABC'
-        }
+        city: 'City',
+        country: 'CA',
+        region: 'BC',
+        postalCode: 'V8V 8V8',
+        street: '1234 Some Street',
+        streetAdditional: 'Suite ABC'
       }
-    ))
+    })
 
     // mock name request
-    vi.spyOn((LegalServices as any), 'fetchNameRequest').mockImplementation(() => (
-      {
-        ...nrData
-      }
-    ))
+    vi.spyOn((LegalServices as any), 'fetchNameRequest').mockResolvedValue({ ...nrData })
 
     // mock incorporation application
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => (
-      {
-        ...filingData
-      }
-    ))
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({ ...filingData })
 
     // mock filing fees
-    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
-      {
-        futureEffectiveFees: 100
-      }
-    ))
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockResolvedValue({ futureEffectiveFees: 100 })
 
     // mock authorized actions
-    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
-      [...PublicUserActions]
-    ))
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockResolvedValue([...PublicUserActions])
+    await Vue.nextTick() // needed for this mock to work
 
     // mock GetKeycloakRoles so we don't need a KC token
-    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+    vi.spyOn(utils, 'GetKeycloakRoles').mockReturnValue([AuthorizationRoles.PUBLIC_USER])
 
     // create a Local Vue and install router on it
     const localVue = createLocalVue()
@@ -630,139 +604,124 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
     // mock user info
-    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
-      {
-        contacts: [
-          {
-            email: 'completing-party@example.com',
-            phone: '123-456-7890'
-          }
-        ],
-        firstname: 'Completing',
-        lastname: 'Party'
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
+      contacts: [
+        {
+          email: 'completing-party@example.com',
+          phone: '123-456-7890'
+        }
+      ],
+      firstname: 'Completing',
+      lastname: 'Party'
+    })
 
     // mock org info
-    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
+      mailingAddress:
       {
-        mailingAddress:
-        {
-          city: 'City',
-          country: 'CA',
-          region: 'BC',
-          postalCode: 'V8V 8V8',
-          street: '1234 Some Street',
-          streetAdditional: 'Suite ABC'
-        }
+        city: 'City',
+        country: 'CA',
+        region: 'BC',
+        postalCode: 'V8V 8V8',
+        street: '1234 Some Street',
+        streetAdditional: 'Suite ABC'
       }
-    ))
+    })
 
     // mock filing fees
-    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
-      {
-        filingFees: 20.0,
-        filingType: 'Voluntary dissolution',
-        filingTypeCode: 'DIS_VOL',
-        futureEffectiveFees: 0,
-        priorityFees: 0,
-        processingFees: 0,
-        serviceFees: 1.50,
-        tax: {
-          gst: 0,
-          pst: 0
-        },
-        total: 21.5
-      }
-    ))
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockResolvedValue({
+      filingFees: 20.0,
+      filingType: 'Voluntary dissolution',
+      filingTypeCode: 'DIS_VOL',
+      futureEffectiveFees: 0,
+      priorityFees: 0,
+      processingFees: 0,
+      serviceFees: 1.50,
+      tax: {
+        gst: 0,
+        pst: 0
+      },
+      total: 21.5
+    })
 
     // mock auth info (business info)
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => (
-      {
-        contacts: [],
-        folioNumber: null
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({
+      contacts: [],
+      folioNumber: null
+    })
 
     // mock business info
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => (
-      {
-        business: {
-          legalName: '0870803 B.C. LTD.',
-          goodStanding: true,
-          taxId: '123456789',
-          identifier: 'BC0870803',
-          foundingDate: '2021-10-07T20:37:41+00:00',
-          legalType: 'BEN'
-        }
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({
+      business: {
+        legalName: '0870803 B.C. LTD.',
+        goodStanding: true,
+        taxId: '123456789',
+        identifier: 'BC0870803',
+        foundingDate: '2021-10-07T20:37:41+00:00',
+        legalType: 'BEN'
       }
-    ))
+    })
 
     // mock first task
-    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockImplementation(() => (
-      {
-        business: {
-          identifier: 'BC0870803',
-          legalName: '0870803 B.C. LTD.',
-          legalType: 'BEN',
-          foundingDate: '2021-10-07T20:37:41+00:00'
-        },
-        dissolution: {
-          custodialOffice: {
-            deliveryAddress: {
-              addressCity: 'North Saanich',
-              addressCountry: 'CA',
-              addressRegion: 'BC',
-              deliveryInstructions: '',
-              postalCode: 'V8L 5V4',
-              streetAddress: '132-1640 Electra Blvd',
-              streetAddressAdditional: ''
-            },
-            mailingAddress: {
-              addressCity: 'North Saanich',
-              addressCountry: 'CA',
-              addressRegion: 'BC',
-              deliveryInstructions: '',
-              postalCode: 'V8L 5V4',
-              streetAddress: '132-1640 Electra Blvd',
-              streetAddressAdditional: ''
-            }
+    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockResolvedValue({
+      business: {
+        identifier: 'BC0870803',
+        legalName: '0870803 B.C. LTD.',
+        legalType: 'BEN',
+        foundingDate: '2021-10-07T20:37:41+00:00'
+      },
+      dissolution: {
+        custodialOffice: {
+          deliveryAddress: {
+            addressCity: 'North Saanich',
+            addressCountry: 'CA',
+            addressRegion: 'BC',
+            deliveryInstructions: '',
+            postalCode: 'V8L 5V4',
+            streetAddress: '132-1640 Electra Blvd',
+            streetAddressAdditional: ''
           },
-          dissolutionType: 'voluntary'
+          mailingAddress: {
+            addressCity: 'North Saanich',
+            addressCountry: 'CA',
+            addressRegion: 'BC',
+            deliveryInstructions: '',
+            postalCode: 'V8L 5V4',
+            streetAddress: '132-1640 Electra Blvd',
+            streetAddressAdditional: ''
+          }
         },
-        header: {
-          affectedFilings: [],
-          availableOnPaperOnly: false,
-          colinIds: [],
-          comments: [],
-          date: '2021-11-01T22:57:50.017255+00:00',
-          deletionLocked: false,
-          effectiveDate: '2021-11-01T22:57:50.017306+00:00',
-          filingId: 113152,
-          inColinOnly: false,
-          isCorrected: false,
-          isCorrectionPending: false,
-          name: 'dissolution',
-          status: 'DRAFT',
-          submitter: 'apestana@idir'
-        }
+        dissolutionType: 'voluntary'
+      },
+      header: {
+        affectedFilings: [],
+        availableOnPaperOnly: false,
+        colinIds: [],
+        comments: [],
+        date: '2021-11-01T22:57:50.017255+00:00',
+        deletionLocked: false,
+        effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+        filingId: 113152,
+        inColinOnly: false,
+        isCorrected: false,
+        isCorrectionPending: false,
+        name: 'dissolution',
+        status: 'DRAFT',
+        submitter: 'apestana@idir'
       }
-    ))
+    })
 
     // GET staff comments
     // from shared component
-    sinon.stub(utils.AxiosInstance, 'get').withArgs('businesses/BC0870803/comments')
-      .returns(new Promise(resolve => resolve({
-        data: []
-      })))
+    sinon.stub(utils.AxiosInstance, 'get').withArgs('https://legal-api.url/businesses/BC0870803/comments')
+      .resolves({ data: [] })
 
     // mock authorized actions
-    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
-      [...PublicUserActions]
-    ))
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockResolvedValue([...PublicUserActions])
+    await Vue.nextTick() // needed for this mock to work
 
     // mock GetKeycloakRoles so we don't need a KC token
-    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.PUBLIC_USER])
+    vi.spyOn(utils, 'GetKeycloakRoles').mockReturnValue([AuthorizationRoles.PUBLIC_USER])
 
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
@@ -813,151 +772,136 @@ describe('Restoration - App page', () => {
     store.stateModel.staffPaymentStep.staffPayment.isPriority = false
 
     // mock user info
-    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockImplementation(() => (
-      {
-        contacts: [
-          {
-            email: 'completing-party@example.com',
-            phone: '123-456-7890'
-          }
-        ],
-        firstname: 'Completing',
-        lastname: 'Party'
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
+      contacts: [
+        {
+          email: 'completing-party@example.com',
+          phone: '123-456-7890'
+        }
+      ],
+      firstname: 'Completing',
+      lastname: 'Party'
+    })
 
     // mock org info
-    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockImplementation(() => (
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
+      mailingAddress:
       {
-        mailingAddress:
-        {
-          city: 'City',
-          country: 'CA',
-          region: 'BC',
-          postalCode: 'V8V 8V8',
-          street: '1234 Some Street',
-          streetAdditional: 'Suite ABC'
-        }
+        city: 'City',
+        country: 'CA',
+        region: 'BC',
+        postalCode: 'V8V 8V8',
+        street: '1234 Some Street',
+        streetAdditional: 'Suite ABC'
       }
-    ))
+    })
 
     // mock filing fees
-    vi.spyOn((PayServices as any), 'fetchFilingFees').mockImplementation(() => (
-      {
-        filingFees: 20.0,
-        filingType: 'Voluntary dissolution',
-        filingTypeCode: 'DIS_VOL',
-        futureEffectiveFees: 0,
-        priorityFees: 0,
-        processingFees: 0,
-        serviceFees: 1.50,
-        tax: {
-          gst: 0,
-          pst: 0
-        },
-        total: 21.5
-      }
-    ))
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockResolvedValue({
+      filingFees: 20.0,
+      filingType: 'Voluntary dissolution',
+      filingTypeCode: 'DIS_VOL',
+      futureEffectiveFees: 0,
+      priorityFees: 0,
+      processingFees: 0,
+      serviceFees: 1.50,
+      tax: {
+        gst: 0,
+        pst: 0
+      },
+      total: 21.5
+    })
 
     // mock auth info (business info)
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => (
-      {
-        contacts: [],
-        folioNumber: null
-      }
-    ))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({
+      contacts: [],
+      folioNumber: null
+    })
 
     // mock business info
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => (
-      {
-        business: {
-          legalName: '0870803 B.C. LTD.',
-          goodStanding: true,
-          taxId: '123456789',
-          identifier: 'BC0870803',
-          foundingDate: '2021-10-07T20:37:41+00:00',
-          legalType: 'BEN',
-          state: 'HISTORICAL'
-        }
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({
+      business: {
+        legalName: '0870803 B.C. LTD.',
+        goodStanding: true,
+        taxId: '123456789',
+        identifier: 'BC0870803',
+        foundingDate: '2021-10-07T20:37:41+00:00',
+        legalType: 'BEN',
+        state: 'HISTORICAL'
       }
-    ))
+    })
 
     // mock first task
-    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockImplementation(() => (
-      {
-        business: {
-          identifier: 'BC0870803',
-          legalName: '0870803 B.C. LTD.',
-          legalType: 'BEN',
-          foundingDate: '2021-10-07T20:37:41+00:00'
-        },
-        restoration: {
-          type: '' // initially set to null, to test the fee summary
-        },
-        header: {
-          affectedFilings: [],
-          availableOnPaperOnly: false,
-          colinIds: [],
-          comments: [],
-          date: '2021-11-01T22:57:50.017255+00:00',
-          deletionLocked: false,
-          effectiveDate: '2021-11-01T22:57:50.017306+00:00',
-          filingId: 113152,
-          inColinOnly: false,
-          isCorrected: false,
-          isCorrectionPending: false,
-          name: 'restoration',
-          status: 'DRAFT',
-          submitter: 'apestana@idir'
-        }
+    vi.spyOn((LegalServices as any), 'fetchFirstTask').mockResolvedValue({
+      business: {
+        identifier: 'BC0870803',
+        legalName: '0870803 B.C. LTD.',
+        legalType: 'BEN',
+        foundingDate: '2021-10-07T20:37:41+00:00'
+      },
+      restoration: {
+        type: '' // initially set to null, to test the fee summary
+      },
+      header: {
+        affectedFilings: [],
+        availableOnPaperOnly: false,
+        colinIds: [],
+        comments: [],
+        date: '2021-11-01T22:57:50.017255+00:00',
+        deletionLocked: false,
+        effectiveDate: '2021-11-01T22:57:50.017306+00:00',
+        filingId: 113152,
+        inColinOnly: false,
+        isCorrected: false,
+        isCorrectionPending: false,
+        name: 'restoration',
+        status: 'DRAFT',
+        submitter: 'apestana@idir'
       }
-    ))
+    })
 
     // fetch addresses
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => (
-      {
-        registeredOffice: {
-          deliveryAddress: {
-            streetAddress: 'delivery_address - address line one',
-            addressCity: 'delivery_address city',
-            addressCountry: 'delivery_address country',
-            postalCode: 'H0H0H0',
-            addressRegion: 'BC'
-          },
-          mailingAddress: {
-            streetAddress: 'mailing_address - address line one',
-            addressCity: 'mailing_address city',
-            addressCountry: 'mailing_address country',
-            postalCode: 'H0H0H0',
-            addressRegion: 'BC'
-          }
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({
+      registeredOffice: {
+        deliveryAddress: {
+          streetAddress: 'delivery_address - address line one',
+          addressCity: 'delivery_address city',
+          addressCountry: 'delivery_address country',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
         },
-        recordsOffice: {
-          deliveryAddress: {
-            streetAddress: 'delivery_address - address line one',
-            addressCity: 'delivery_address city',
-            addressCountry: 'delivery_address country',
-            postalCode: 'H0H0H0',
-            addressRegion: 'BC'
-          },
-          mailingAddress: {
-            streetAddress: 'mailing_address - address line one',
-            addressCity: 'mailing_address city',
-            addressCountry: 'mailing_address country',
-            postalCode: 'H0H0H0',
-            addressRegion: 'BC'
-          }
+        mailingAddress: {
+          streetAddress: 'mailing_address - address line one',
+          addressCity: 'mailing_address city',
+          addressCountry: 'mailing_address country',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
+        }
+      },
+      recordsOffice: {
+        deliveryAddress: {
+          streetAddress: 'delivery_address - address line one',
+          addressCity: 'delivery_address city',
+          addressCountry: 'delivery_address country',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
+        },
+        mailingAddress: {
+          streetAddress: 'mailing_address - address line one',
+          addressCity: 'mailing_address city',
+          addressCountry: 'mailing_address country',
+          postalCode: 'H0H0H0',
+          addressRegion: 'BC'
         }
       }
-    ))
+    })
 
     // mock authorized actions
-    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockImplementation(() => (
-      [...BusinessRegistryStaffActions]
-    ))
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockResolvedValue([...BusinessRegistryStaffActions])
+    await Vue.nextTick() // needed for this mock to work
 
     // mock GetKeycloakRoles so we don't need a KC token
-    vi.spyOn(utils, 'GetKeycloakRoles').mockImplementation(() => [AuthorizationRoles.STAFF])
+    vi.spyOn(utils, 'GetKeycloakRoles').mockReturnValue([AuthorizationRoles.STAFF])
 
     // create a Local Vue and install a few things on it
     const localVue = createLocalVue()
@@ -980,7 +924,7 @@ describe('Restoration - App page', () => {
   afterEach(() => {
     window.location.assign = assign
     sinon.restore()
-    vi.resetAllMocks()
+    // vi.resetAllMocks() // leave mocks for next 2 test suites
     wrapper.destroy()
   })
 
@@ -1001,6 +945,15 @@ describe('Restoration - App page', () => {
 })
 
 describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
+  beforeAll(() => {
+    // mock parties
+    vi.spyOn((LegalServices as any), 'fetchParties').mockResolvedValue({
+      parties: [...filingData.incorporationApplication.parties]
+    })
+
+    // other mocks came from previous test suite
+  })
+
   it('computes breadcrumbs correctly for a SP registration', () => {
     vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return false
@@ -1011,7 +964,10 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
       App,
       null,
       {
-        business: { legalName: 'My Legal Name' },
+        business: {
+          businessId: 'FM1234567',
+          legalName: 'My Legal Name'
+        },
         entityType: CorpTypeCd.SOLE_PROP,
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
@@ -1042,7 +998,10 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
       App,
       null,
       {
-        business: { legalName: 'My Legal Name' },
+        business: {
+          businessId: 'FM1234567',
+          legalName: 'My Legal Name'
+        },
         entityType: CorpTypeCd.SOLE_PROP,
         alternateName: 'My Alternate Name',
         tombstone: {
@@ -1064,6 +1023,15 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
 })
 
 describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
+  beforeAll(() => {
+    // mock parties
+    vi.spyOn((LegalServices as any), 'fetchParties').mockResolvedValue({
+      parties: [...filingData.incorporationApplication.parties]
+    })
+
+    // other mocks came from previous test suite
+  })
+
   it('computes breadcrumbs correctly for a SP registration', () => {
     vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
       if (flag === 'enable-legal-name-fix') return true
@@ -1074,7 +1042,10 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
       App,
       null,
       {
-        business: { legalName: 'My Legal Name' },
+        business: {
+          businessId: 'FM1234567',
+          legalName: 'My Legal Name'
+        },
         entityType: CorpTypeCd.SOLE_PROP,
         nameRequestApprovedName: 'My NR Approved Name',
         tombstone: {
@@ -1104,7 +1075,10 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
       App,
       null,
       {
-        business: { legalName: 'My Legal Name' },
+        business: {
+          businessId: 'FM1234567',
+          legalName: 'My Legal Name'
+        },
         entityType: CorpTypeCd.SOLE_PROP,
         alternateName: 'My Alternate Name',
         tombstone: {

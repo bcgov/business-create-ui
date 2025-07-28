@@ -64,7 +64,7 @@ describe('Business Table - display', () => {
       label: 'BC Limited primary business - vert amalgamation',
       amalgamationType: AmalgamationTypes.VERTICAL,
       type: AmlTypes.LEAR,
-      identifier: 'BC1111111',
+      identifier: 'BC2222222',
       name: 'My BC Limited Company',
       authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
       addresses: {
@@ -85,7 +85,7 @@ describe('Business Table - display', () => {
       label: 'Benefit Company amalgamating business with no address',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.LEAR,
-      identifier: 'BC2222222',
+      identifier: 'BC3333333',
       name: 'My Benefit Company',
       authInfo: { contacts: [ { email: 'bc2222222@example.com' } ] },
       address: undefined,
@@ -233,6 +233,7 @@ describe('Business Table - validity', () => {
           amalgamatingBusinesses: [
             {
               address: {},
+              identifier: 'BC1234567',
               legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR,
               isHistorical: true // status will be "ERROR_HISTORICAL"
@@ -255,11 +256,13 @@ describe('Business Table - validity', () => {
             // both of these will be status "OK"
             {
               addresses: {},
+              identifier: 'BC1111111',
               legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             },
             {
               addresses: {},
+              identifier: 'BC2222222',
               legalType: CorpTypeCd.BC_COMPANY,
               type: AmlTypes.LEAR
             }

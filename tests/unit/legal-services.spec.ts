@@ -20,7 +20,7 @@ describe('Legal Services', () => {
   it('fetches the only filing', async () => {
     // mock single item response
     sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/filings')
-      .returns(new Promise(resolve => resolve({
+      .resolves({
         data: {
           filing: {
             header: {
@@ -34,7 +34,7 @@ describe('Legal Services', () => {
             }
           }
         }
-      })))
+      })
 
     // fetch draft and check it
     const draft: any = await LegalServices.fetchFirstOrOnlyFiling('123')
@@ -53,7 +53,7 @@ describe('Legal Services', () => {
   it('fetches the first filing', async () => {
     // mock list response
     sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/filings')
-      .returns(new Promise(resolve => resolve({
+      .resolves({
         data: {
           filings: [
             {
@@ -62,7 +62,7 @@ describe('Legal Services', () => {
             }
           ]
         }
-      })))
+      })
 
     // fetch draft and check it
     const draft: any = await LegalServices.fetchFirstOrOnlyFiling('123')
@@ -104,7 +104,7 @@ describe('Legal Services', () => {
   it('fetches resolutions', async () => {
     // mock list response
     sinon.stub(axios, 'get').withArgs('https://business-api-gw.url/businesses/123/resolutions')
-      .returns(new Promise(resolve => resolve({
+      .resolves({
         data: {
           resolutions: [
             {
@@ -119,7 +119,7 @@ describe('Legal Services', () => {
             }
           ]
         }
-      })))
+      })
 
     // fetch resolutions and check it
     const response: any = await LegalServices.fetchResolutions('123')

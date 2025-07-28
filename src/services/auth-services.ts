@@ -1,7 +1,6 @@
 import { AxiosInstance as axios } from '@/utils'
 import { StatusCodes } from 'http-status-codes'
 import { AuthInformationIF, ContactPointIF } from '@/interfaces'
-import { AxiosRequestConfig } from 'axios'
 
 /**
  * Class that provides integration with the Auth API.
@@ -10,18 +9,6 @@ export default class AuthServices {
   /** The Auth API Gateway URL. */
   static get authApiGwUrl (): string {
     return sessionStorage.getItem('AUTH_API_GW_URL')
-  }
-
-  /**
-   * Additional or overridden Axios request headers.
-   * See default Axios headers in AxiosInstance.ts.
-   */
-  static get config (): AxiosRequestConfig {
-    return {
-      headers: {
-        'X-Apikey': import.meta.env.VUE_APP_AUTH_API_KEY
-      }
-    }
   }
 
   /**
@@ -34,7 +21,7 @@ export default class AuthServices {
 
     const url = `${this.authApiGwUrl}entities/${businessId}`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         if (response?.data) {
           return {
@@ -66,7 +53,7 @@ export default class AuthServices {
   static async fetchUserInfo (): Promise<any> {
     const url = `${this.authApiGwUrl}users/@me`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
@@ -83,7 +70,7 @@ export default class AuthServices {
 
     const url = `${this.authApiGwUrl}orgs/${orgId}`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         if (response?.data) return response.data
         throw new Error('Invalid response data')
@@ -109,7 +96,7 @@ export default class AuthServices {
 
     const url = `${this.authApiGwUrl}entities/${businessId}/contacts`
 
-    return axios.put(url, data, this.config)
+    return axios.put(url, data)
       .then(response => {
         const contacts = response?.data?.contacts[0]
         if (!contacts) throw new Error('Invalid response data')

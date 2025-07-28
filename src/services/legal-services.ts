@@ -1,11 +1,10 @@
 import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { BusinessIF, DissolutionFilingIF, IncorporationFilingIF, NameRequestIF, OrgPersonIF, PresignedUrlIF,
   ResolutionIF } from '@/interfaces'
 import { AuthorizedActions, FilingTypes, RoleTypes } from '@/enums'
 import { ShareStructureIF } from '@bcrs-shared-components/interfaces'
-import { merge } from 'lodash'
 
 /**
  * Class that provides integration with the Legal (aka Business) API.
@@ -19,15 +18,6 @@ export default class LegalServices {
   }
 
   /**
-   * Additional or overridden Axios request headers.
-   * See default Axios headers in AxiosInstance.ts.
-   */
-  static get config (): AxiosRequestConfig {
-    // this service doesn't need to add to or override the default config
-    return {}
-  }
-
-  /**
    * Fetches the filings list.
    * @param businessId the business identifier (aka entity inc no)
    * @returns a promise to return the filings list
@@ -35,7 +25,7 @@ export default class LegalServices {
   static async fetchFilings (businessId: string): Promise<any[]> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/filings`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const filings = response?.data?.filings
         if (!filings) {
@@ -56,7 +46,7 @@ export default class LegalServices {
   static async fetchFirstOrOnlyFiling (tempId: string): Promise<any> {
     const url = `${this.legalBusinessUrl}businesses/${tempId}/filings`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         let filing, filingName, filingId
 
@@ -91,7 +81,7 @@ export default class LegalServices {
   static async fetchFirstTask (businessId: string): Promise<any> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/tasks`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const filing = response?.data?.tasks?.[0]?.task.filing
         const filingName = filing?.header?.name as FilingTypes
@@ -111,7 +101,7 @@ export default class LegalServices {
    * @returns a promise to return the filing object
    */
   static async fetchFiling (url: string): Promise<any> {
-    return axios.get(`${this.legalBusinessUrl}${url}`, this.config)
+    return axios.get(`${this.legalBusinessUrl}${url}`)
       .then(response => {
         const filing = response?.data?.filing
         if (!filing) {
@@ -146,7 +136,7 @@ export default class LegalServices {
       url += '?draft=true'
     }
 
-    return axios.put(url, { filing }, this.config)
+    return axios.put(url, { filing })
       .then(response => {
         const filing = response?.data?.filing
         const filingId = +filing?.header?.filingId || 0
@@ -173,7 +163,7 @@ export default class LegalServices {
 
     const url = `${this.legalBusinessUrl}nameRequests/${nrNumber}/validate?phone=${phone}&email=${email}`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -189,7 +179,7 @@ export default class LegalServices {
   static async fetchParties (businessId: string): Promise<any> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/parties`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -205,7 +195,7 @@ export default class LegalServices {
   static async fetchDirectors (businessId: string): Promise<OrgPersonIF[]> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/directors`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const directors = response?.data?.directors as Array<any>
 
@@ -247,7 +237,7 @@ export default class LegalServices {
   static async fetchShareStructure (businessId: string): Promise<ShareStructureIF> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/share-classes`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const shareStructure = response.data as ShareStructureIF
 
@@ -271,7 +261,7 @@ export default class LegalServices {
   static async fetchResolutions (businessId: string): Promise<ResolutionIF[]> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/resolutions`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const resolutions = response?.data.resolutions
 
@@ -289,7 +279,7 @@ export default class LegalServices {
   static async fetchAddresses (businessId: string): Promise<any> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}/addresses`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -310,7 +300,7 @@ export default class LegalServices {
   static async fetchBusinessInfo (businessId: string): Promise<BusinessIF> {
     const url = `${this.legalBusinessUrl}businesses/${businessId}`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -325,7 +315,7 @@ export default class LegalServices {
   static async fetchAuthorizedActions (): Promise<AuthorizedActions[]> {
     const url = `${this.legalBusinessUrl}permissions`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) throw new Error('Invalid API response')
@@ -341,7 +331,7 @@ export default class LegalServices {
   static async getPresignedUrl (fileName: string): Promise<PresignedUrlIF> {
     const url = `${this.legalBusinessUrl}documents/${fileName}/signatures`
 
-    return axios.get(url, this.config)
+    return axios.get(url)
       .then(response => {
         const data = response?.data
         if (!data) {
@@ -361,7 +351,7 @@ export default class LegalServices {
    */
   static async uploadToUrl (url: string, file: File, key: string, userId: string): Promise<AxiosResponse> {
     // add/override headers
-    const extraConfig = {
+    const config = {
       headers: {
         'Content-Disposition': `attachment; filename=${file.name}`,
         'Content-Type': file.type,
@@ -370,7 +360,7 @@ export default class LegalServices {
       }
     }
 
-    return axios.put(url, file, merge(this.config, extraConfig))
+    return axios.put(url, file, config)
       .then(response => {
         return response
       }).catch(error => {
@@ -388,7 +378,7 @@ export default class LegalServices {
 
     const url = `${this.legalBusinessUrl}documents/${documentKey}`
 
-    return axios.delete(url, this.config)
+    return axios.delete(url)
   }
 
   /**
@@ -403,12 +393,12 @@ export default class LegalServices {
     const url = `${this.legalBusinessUrl}documents/${documentKey}`
 
     // add/override headers
-    const extraConfig = {
+    const config = {
       headers: { 'Accept': 'application/pdf' },
       responseType: 'blob' as 'json'
     }
 
-    return axios.get(url, merge(this.config, extraConfig))
+    return axios.get(url, config)
       .then(response => {
         if (!response) throw new Error('Null response')
 

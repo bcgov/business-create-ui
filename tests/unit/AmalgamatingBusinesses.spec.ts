@@ -273,10 +273,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'FORBIDDEN' }))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({ status: 'FORBIDDEN' })
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue(null)
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -304,10 +304,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({ status: 'NOT_FOUND' }))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({ status: 'NOT_FOUND' })
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({})
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -332,10 +332,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({})
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -360,10 +360,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({})
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -388,10 +388,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => null)
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({}))
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({})
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -416,10 +416,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({}))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => null)
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({})
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue(null)
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -485,10 +485,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     await wrapper.setData({ isAddingAmalgamatingBusiness: true })
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({
       contacts: [{ email: 'email@example.com' }]
-    }))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({
       identifier: 'BC1234567',
       legalName: 'My BC Business',
       legalType: CorpTypeCd.BC_COMPANY,
@@ -497,20 +497,18 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
       state: EntityStates.ACTIVE,
       stateFiling: 'mock_url',
       restorationExpiryDate: '2023-01-18'
-    }))
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({
       registeredOffice: { mailingAddress: { streetAddress: '123 Main St' } }
-    }))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({
       isFutureEffective: false,
       status: FilingStatus.COMPLETED
-    }))
+    })
     // in this case, return a promise so that ".catch()" is defined on the implementation
-    vi.spyOn((LegalServices as any), 'fetchFiling').mockImplementation(() =>
-      Promise.resolve({
-        restoration: { type: RestorationTypes.FULL }
-      })
-    )
+    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue({
+      restoration: { type: RestorationTypes.FULL }
+    })
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -561,10 +559,10 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     expect(wrapper.vm.snackbar).toBe(false)
 
     // mock services functions
-    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockImplementation(() => ({
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue({
       contacts: [{ email: 'email@example.com' }]
-    }))
-    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchBusinessInfo').mockResolvedValue({
       identifier: 'BC1234567',
       legalName: 'My BC Business',
       legalType: CorpTypeCd.BC_COMPANY,
@@ -573,20 +571,18 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
       state: EntityStates.ACTIVE,
       stateFiling: 'mock_url',
       restorationExpiryDate: '2023-01-18'
-    }))
-    vi.spyOn((LegalServices as any), 'fetchAddresses').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchAddresses').mockResolvedValue({
       registeredOffice: { mailingAddress: { streetAddress: '123 Main St' } }
-    }))
-    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockImplementation(() => ({
+    })
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({
       isFutureEffective: false,
       status: FilingStatus.COMPLETED
-    }))
+    })
     // in this case, return a promise so that ".catch()" is defined on the implementation
-    vi.spyOn((LegalServices as any), 'fetchFiling').mockImplementation(() =>
-      Promise.resolve({
-        restoration: { type: RestorationTypes.FULL }
-      })
-    )
+    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue({
+      restoration: { type: RestorationTypes.FULL }
+    })
 
     // try to save a duplicate BC business
     await wrapper.vm.saveAmalgamatingBusiness({
