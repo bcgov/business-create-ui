@@ -506,11 +506,9 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
       status: FilingStatus.COMPLETED
     })
     // in this case, return a promise so that ".catch()" is defined on the implementation
-    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue(
-      Promise.resolve({
-        restoration: { type: RestorationTypes.FULL }
-      })
-    )
+    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue({
+      restoration: { type: RestorationTypes.FULL }
+    })
 
     // simulate saving a BC business
     await wrapper.vm.saveAmalgamatingBusiness({
@@ -582,11 +580,9 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
       status: FilingStatus.COMPLETED
     })
     // in this case, return a promise so that ".catch()" is defined on the implementation
-    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue(
-      Promise.resolve({
-        restoration: { type: RestorationTypes.FULL }
-      })
-    )
+    vi.spyOn((LegalServices as any), 'fetchFiling').mockResolvedValue({
+      restoration: { type: RestorationTypes.FULL }
+    })
 
     // try to save a duplicate BC business
     await wrapper.vm.saveAmalgamatingBusiness({
