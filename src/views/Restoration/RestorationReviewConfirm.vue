@@ -49,7 +49,7 @@
       >
         <CardHeader
           icon="mdi-domain"
-          label="Business Information"
+          :label="isFullRestorationFiling ? 'Address and Contact Information' : 'Business Information'"
         />
         <SummaryDefineCompany />
       </v-card>
