@@ -65,7 +65,7 @@
         :class="{ 'invalid-section': getShowErrors && !businessContactFormValid }"
       >
         <BusinessContactInfo
-          :initialValue="getBusinessContact"
+          :initialValue="contactInitialValue"
           :isEditing="true"
           :showErrors="getShowErrors"
           @update="setBusinessContact($event)"
@@ -80,7 +80,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
-import { AddressIF, ContactPointIF, DefineCompanyIF, EmptyAddress, RegisteredRecordsAddressesIF,
+import { AddressIF, ContactPointIF, DefineCompanyIF, EmptyAddress, EmptyContactPoint, RegisteredRecordsAddressesIF,
   RestorationStateIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RestorationTypes, RouteNames } from '@/enums'
@@ -111,6 +111,7 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   businessContactFormValid = false
   addressFormValid = true
   allowEditingOfficeAddresses = false
+  contactInitialValue: ContactPointIF = { ...EmptyContactPoint }
 
   // Enum for template
   readonly CorpTypeCd = CorpTypeCd
@@ -194,15 +195,20 @@ export default class RestorationBusinessInformation extends Mixins(CommonMixin) 
   }
 
   /** Updates flags when restoration type is set or changes. */
-  @Watch('getRestoration.type', { immediate: true })
+  @Watch('getRestoration.type')
   private onRestorationTypeChanged (val: RestorationTypes) {
     if (val === RestorationTypes.FULL) {
       this.allowEditingOfficeAddresses = true
       this.addressFormValid = false
+      // pre-populate contact info for full restoration
+      this.contactInitialValue = { ...this.getBusinessContact }
     }
     if (val === RestorationTypes.LIMITED) {
       this.allowEditingOfficeAddresses = false
       this.addressFormValid = true
+
+      // do not pre-populate contact info for limited restoration
+      this.contactInitialValue = { ...EmptyContactPoint }
     }
     // else -- should never happen
   }

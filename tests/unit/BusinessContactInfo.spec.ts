@@ -68,6 +68,7 @@ describe('Business Contact Info component', () => {
 
   it('form is valid for correct input', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(email, email)
+    wrapper.vm.contact = { email, confirmEmail: email, phone: '' }
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(true)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({
@@ -80,6 +81,7 @@ describe('Business Contact Info component', () => {
 
   it('form is invalid for wrong email', async () => {
     const wrapper: Wrapper<BusinessContactInfo> = createComponent(invalidEmail, invalidEmail)
+    wrapper.vm.contact = { email: invalidEmail, confirmEmail: invalidEmail, phone: '' }
     await Vue.nextTick()
     expect(getLastEvent(wrapper, formValidEvent)).toBe(false)
     expect(getLastEvent(wrapper, formDataChangeEvent)).toStrictEqual({

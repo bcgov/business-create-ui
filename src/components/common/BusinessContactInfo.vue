@@ -202,10 +202,15 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
 
   @Watch('initialValue', { deep: true, immediate: true })
   private onContactPropValueChanged (): void {
-    this.contact = this.initialValue
+    this.contact = { ...this.initialValue }
+
+    // If email exists, set confirmEmail to match
+    if (this.contact.email) {
+      this.contact.confirmEmail = this.contact.email
+    }
   }
 
-  @Watch('contact', { deep: true, immediate: true })
+  @Watch('contact', { deep: true })
   private onContactChanged (contact: ContactPointIF): void {
     this.emitContactInfo(contact)
   }
