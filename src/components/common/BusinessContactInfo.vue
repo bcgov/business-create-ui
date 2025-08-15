@@ -201,12 +201,14 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   }
 
   @Watch('initialValue', { deep: true, immediate: true })
-  private onContactPropValueChanged (): void {
-    this.contact = { ...this.initialValue }
+  private onContactPropValueChanged (val: ContactPointIF): void {
+    // Prevent loop: only update if different
+    if (!this.isSame(val, this.contact)) {
+      this.contact = { ...val }
 
-    // If email exists, set confirmEmail to match
-    if (this.contact.email) {
-      this.contact.confirmEmail = this.contact.email
+      if (this.contact.email) {
+        this.contact.confirmEmail = this.contact.email
+      }
     }
   }
 
