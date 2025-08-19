@@ -16,8 +16,7 @@
         </template>
         <template v-else>
           <p>
-            The Registered and Records Office are shown with the addresses at the time of dissolution. If these are
-            no longer correct, you will need to file an Address Change once the Restoration has been completed.
+            The Registered and Records Office are shown with the addresses at the time of dissolution.
           </p>
         </template>
       </header>
