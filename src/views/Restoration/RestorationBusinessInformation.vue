@@ -16,7 +16,7 @@
         </template>
         <template v-else>
           <p>
-            The Registered and Records Office are shown with the addresses at the time of dissolution.
+            These are the addresses that were on file when the company was dissolved.
           </p>
         </template>
       </header>
