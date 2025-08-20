@@ -545,15 +545,8 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
 
   @Getter(useStore) getFilingType!: FilingTypes
 
-  get docType (): string {
-    switch (this.getFilingType) {
-      case FilingTypes.REGISTRATION:
-        return 'registration'
-      case FilingTypes.RESTORATION:
-        return 'restoration'
-      default:
-        return 'filing'
-    }
+  get docType(): string {
+    return this.getFilingType === FilingTypes.RESTORATION ? 'restoration' : 'registration'
   }
 }
 </script>
