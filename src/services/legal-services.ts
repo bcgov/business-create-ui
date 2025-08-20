@@ -1,5 +1,3 @@
-// https://dev.create.business.bcregistry.gov.bc.ca/amalg-short-information?accountid=3040&id=TrVk8LgDHP
-// https://dev.business-dashboard.bcregistry.gov.bc.ca/BC0887819?accountid=3040
 import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
 import { AxiosResponse } from 'axios'
 import { StatusCodes } from 'http-status-codes'
