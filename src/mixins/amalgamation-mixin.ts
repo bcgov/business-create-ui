@@ -396,7 +396,6 @@ export default class AmalgamationMixin extends Vue {
   async updatePrepopulatedData (business: AmalgamatingBusinessIF, isNew = false): Promise<void> {
     // safety checks
     if (!business || business.type !== AmlTypes.LEAR) throw new Error('Invalid business')
-    if (!business.addresses) throw new Error('Missing business addresses')
     if (!business.authInfo) throw new Error('Missing share classes')
 
     // first, fetch directors and share structure

@@ -1,3 +1,5 @@
+// https://dev.create.business.bcregistry.gov.bc.ca/amalg-short-information?accountid=3040&id=TrVk8LgDHP
+// https://dev.business-dashboard.bcregistry.gov.bc.ca/BC0887819?accountid=3040
 import { AxiosInstance as axios, GetFeatureFlag } from '@/utils'
 import { AxiosResponse } from 'axios'
 import { StatusCodes } from 'http-status-codes'
@@ -286,7 +288,7 @@ export default class LegalServices {
         return data
       }).catch(error => {
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
-          return null // Business or Address not found (not an error)
+          return {} // Business or Address not found (not an error)
         }
         throw error
       })

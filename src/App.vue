@@ -1350,8 +1350,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     if (addresses) {
       this.setOfficeAddresses(addresses)
-    } else {
-      throw new Error('Invalid office addresses')
     }
   }
 
