@@ -67,8 +67,7 @@ export const DissolutionResourceCp: DissolutionResourceIF = {
         Association's unpaid liabilities and has obtained the written consent to that provision for payment from each
         creditor.`
       ],
-      note: `The affidavit is to be sworn before a Commissioner for Taking Oaths for British Columbia with a seal
-        affixed.`
+      note: `The affidavit is to be sworn before a Commissioner for Taking Oaths.`
     },
     sampleSection: {
       fileName: 'coop-sample-affidavit.pdf'
