@@ -1344,6 +1344,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     }
   }
 
+  /** This method is only called for restorations. */
   private async loadOfficeAddresses (businessId: string): Promise<void> {
     // NB: will throw if API error
     const addresses = await LegalServices.fetchAddresses(businessId)
