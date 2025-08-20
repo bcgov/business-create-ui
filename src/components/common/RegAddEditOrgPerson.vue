@@ -398,7 +398,7 @@
             <article class="mt-8">
               <label>Email Address</label>
               <p class="mt-4 mb-0">
-                Copies of the registration documents will be sent to this email address.
+                Copies of the {{ docType }} documents will be sent to this email address.
               </p>
               <!-- NB: need authorization to change email address -->
               <v-text-field
@@ -504,10 +504,13 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
+import { Getter } from 'pinia-class'
+import { useStore } from '@/store/store'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
+import { FilingTypes } from '@/enums'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { RegistriesSearchServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
@@ -539,6 +542,19 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   ]
 
   readonly RegistriesSearchServices = RegistriesSearchServices
+
+  @Getter(useStore) getFilingType!: FilingTypes
+
+  get docType (): string {
+    switch (this.getFilingType) {
+      case FilingTypes.REGISTRATION:
+        return 'registration'
+      case FilingTypes.RESTORATION:
+        return 'restoration'
+      default:
+        return 'filing'
+    }
+  }
 }
 </script>
 
