@@ -502,15 +502,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
-import { Getter } from 'pinia-class'
-import { useStore } from '@/store/store'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import HelpContactUs from '@/components/Registration/HelpContactUs.vue'
-import { FilingTypes } from '@/enums'
 import { AddEditOrgPersonMixin } from '@/mixins'
 import { RegistriesSearchServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
@@ -535,6 +532,9 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   // NB: see mixin for common properties, methods, etc.
   //
 
+  /** The document type that will be sent to the entered email adress. */
+  @Prop({ default: '' }) readonly docType!: string
+
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<VuetifyRuleFunction> = [
     v => !!v?.trim() || 'Business or corporation name is required',
@@ -542,12 +542,6 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   ]
 
   readonly RegistriesSearchServices = RegistriesSearchServices
-
-  @Getter(useStore) getFilingType!: FilingTypes
-
-  get docType (): string {
-    return this.getFilingType === FilingTypes.RESTORATION ? 'restoration' : 'registration'
-  }
 }
 </script>
 
