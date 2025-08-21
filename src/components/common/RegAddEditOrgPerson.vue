@@ -398,7 +398,7 @@
             <article class="mt-8">
               <label>Email Address</label>
               <p class="mt-4 mb-0">
-                Copies of the registration documents will be sent to this email address.
+                Copies of the {{ docType }} documents will be sent to this email address.
               </p>
               <!-- NB: need authorization to change email address -->
               <v-text-field
@@ -502,7 +502,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { mask } from 'vue-the-mask'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
@@ -531,6 +531,9 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //
+
+  /** The document type that will be sent to the entered email adress. */
+  @Prop({ default: '' }) readonly docType!: string
 
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<VuetifyRuleFunction> = [
