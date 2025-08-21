@@ -39,8 +39,7 @@ export const DissolutionResourceUlc: DissolutionResourceIF = {
         `The Company has no liabilities or has made provision for the payment of each of the Company's unpaid
           liabilities and has obtained the written consent to that provision for payment from each creditor.`
       ],
-      note: `The affidavit is to be sworn before a Commissioner for Taking Oaths for British Columbia with a seal
-        affixed.`
+      note: `The affidavit is to be sworn before a Commissioner for Taking Oaths.`
     },
     sampleSection: {
       fileName: 'corp-sample-affidavit.pdf'

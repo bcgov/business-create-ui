@@ -210,6 +210,7 @@
         <RegAddEditOrgPerson
           :initialValue="currentOrgPerson"
           :activeIndex="activeIndex"
+          :docType="docType"
           :existingCompletingParty="completingParty"
           @addEditPerson="onAddEditPerson($event)"
           @removePerson="onRemovePerson($event)"
@@ -240,7 +241,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import { Action } from 'pinia-class'
+import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { cloneDeep } from 'lodash'
 import { EmptyOrgPerson } from '@/interfaces'
@@ -272,6 +273,11 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
   //
 
   @Action(useStore) setRegistrationBusinessType!: (x: BusinessTypes) => void
+  @Getter(useStore) isRestorationFiling!: boolean
+
+  get docType (): string {
+    return this.isRestorationFiling ? 'restoration' : 'registration'
+  }
 
   get subheader (): string {
     return (
