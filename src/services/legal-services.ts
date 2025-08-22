@@ -286,7 +286,7 @@ export default class LegalServices {
         return data
       }).catch(error => {
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
-          return null // Business or Address not found (not an error)
+          return { businessOffice: null } // Business or Address not found (not an error)
         }
         throw error
       })
