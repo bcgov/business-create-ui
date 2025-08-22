@@ -125,6 +125,6 @@ start().catch(async (error) => {
   alert('There was an error starting this page. (See console for details.)\n' +
     'Please try again later.')
 
-  // try to navigate to Business Registry home page
-  Navigate(sessionStorage.getItem('BUSINESSES_URL'))
+  // try to navigate to Business Registry Dashboard
+  Navigate(sessionStorage.getItem('BUSINESS_REGISTRY_URL'))
 })
