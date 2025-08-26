@@ -401,13 +401,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // set base crumbs based on authorizations
     if (IsAuthorized(AuthorizedActions.SBC_BREADCRUMBS)) {
-      // set SbcStaffDashboard as Home crumb
+      // set SbcStaffDashboard as home crumb
       crumbs.unshift(getSbcStaffDashboardBreadcrumb())
     } else if (IsAuthorized(AuthorizedActions.STAFF_BREADCRUMBS)) {
-      // set StaffDashboard as Home crumb
+      // set StaffDashboard as home crumb
       crumbs.unshift(getStaffDashboardBreadcrumb())
     } else {
-      // set Home and Dashboard crumbs
+      // set BCROS and BRD crumbs
       crumbs.unshift(getBcRegistriesDashboardBreadcrumb(), getMyBusinessRegistryBreadcrumb())
     }
 
