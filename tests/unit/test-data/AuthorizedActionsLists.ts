@@ -2,6 +2,7 @@ import { AuthorizedActions } from '@/enums'
 
 /** The authorized actions if the user is Business Registry Staff. */
 export const BusinessRegistryStaffActions = [
+  AuthorizedActions.ADD_ENTITY_NO_AUTHENTICATION,
   AuthorizedActions.AMALGAMATION_FILING,
   AuthorizedActions.AML_OVERRIDES,
   AuthorizedActions.BLANK_CERTIFY_STATE,

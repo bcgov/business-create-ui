@@ -1,5 +1,6 @@
 /** List of authorized actions (permissions). See IsAuthorized(). */
 export enum AuthorizedActions {
+  ADD_ENTITY_NO_AUTHENTICATION= 'ADD_ENTITY_NO_AUTHENTICATION',
   AMALGAMATION_FILING = 'AMALGAMATION_FILING',
   AML_OVERRIDES = 'AML_OVERRIDES',
   BLANK_CERTIFY_STATE = 'BLANK_CERTIFY_STATE',

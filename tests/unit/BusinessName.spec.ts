@@ -7,9 +7,10 @@ import LegalServices from '@/services/legal-services'
 import BusinessName from '@/components/Restoration/BusinessName.vue'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
-import { FilingTypes } from '@/enums'
+import { AuthorizationRoles, FilingTypes } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { setAuthRole } from '../set-auth-role'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
 console.warn = vi.fn()
@@ -136,7 +137,9 @@ describe('Business Name component', () => {
     { showErrors: false, correctNameOption: null, expected: false },
     { showErrors: false, correctNameOption: CorrectNameOptions.CORRECT_NEW_NR, expected: false },
     { showErrors: true, correctNameOption: null, expected: true },
-    { showErrors: 'correct-new-nr', correctNameOption: CorrectNameOptions.CORRECT_NEW_NR, expected: false }
+    { showErrors: 'correct-new-nr', correctNameOption: CorrectNameOptions.CORRECT_NEW_NR, expected: false },
+    { showErrors: 'correct-new-nr-staff', correctNameOption: CorrectNameOptions.CORRECT_NEW_NR_STAFF, expected: false }
+
   ]
 
   for (const test of tests) {
@@ -155,13 +158,19 @@ describe('Business Name component', () => {
     })
   }
 
-  it('computes correctionNameChoices correctly', async () => {
-    const correctionNameChoices = wrapper.vm.correctionNameChoices
-    // verify initial values
-    expect(correctionNameChoices.length).toBe(2)
-    expect(correctionNameChoices[0]).toBe('correct-name-to-number')
-    expect(correctionNameChoices[1]).toBe('correct-new-nr')
-  })
+  const correctNameTests = [
+    { isStaff: true, correctNameOptions: ['correct-name-to-number', 'correct-new-nr-staff'] },
+    { isStaff: false, correctNameOptions: ['correct-name-to-number', 'correct-new-nr'] }
+  ]
+
+  for (const test of correctNameTests) {
+    it(`computes correctionNameChoices correctly`, async () => {
+      setAuthRole(store, test.isStaff ? AuthorizationRoles.STAFF : AuthorizationRoles.PUBLIC_USER)
+      await Vue.nextTick()
+
+      expect(wrapper.vm.correctionNameChoices).toEqual(expect.arrayContaining(test.correctNameOptions))
+    })
+  }
 
   it('computes isNewName correctly', async () => {
     expect(wrapper.vm.isNewName).toBe(false) // initial value
