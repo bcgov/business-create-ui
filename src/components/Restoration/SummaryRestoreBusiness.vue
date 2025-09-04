@@ -188,6 +188,8 @@ export default class SummaryRestoreBusiness extends Mixins(DateMixin) {
         return this.getNameRequestApprovedName
       case CorrectNameOptions.CORRECT_NEW_NR:
         return this.getNameRequestApprovedName
+      case CorrectNameOptions.CORRECT_NEW_NR_STAFF:
+        return this.getNameRequestApprovedName
     }
     return '[Unknown]'
   }
