@@ -80,6 +80,8 @@ import { LegalServices } from '@/services/'
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import { NameRequestErrorDialog } from '@/dialogs/'
+import { AuthorizedActions } from '@/enums'
+import { IsAuthorized } from '@/utils'
 
 @Component({
   components: {
@@ -89,6 +91,10 @@ import { NameRequestErrorDialog } from '@/dialogs/'
   }
 })
 export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameRequestMixin) {
+  // for template
+  readonly AuthorizedActions = AuthorizedActions
+  readonly IsAuthorized = IsAuthorized
+
   // Global getters
   @Getter(useStore) getBusinessId!: string
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
@@ -122,10 +128,17 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
   /** The current options for name changes. */
   get correctionNameChoices (): Array<CorrectNameOptions> {
     if (this.isRestorationFiling) {
-      return [
-        CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
-        CorrectNameOptions.CORRECT_NEW_NR
-      ]
+      if (IsAuthorized(AuthorizedActions.ADD_ENTITY_NO_AUTHENTICATION)) {
+        return [
+          CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+          CorrectNameOptions.CORRECT_NEW_NR_STAFF
+        ]
+      } else {
+        return [
+          CorrectNameOptions.CORRECT_NAME_TO_NUMBER,
+          CorrectNameOptions.CORRECT_NEW_NR
+        ]
+      }
     }
 
     // fallback case - not used for now

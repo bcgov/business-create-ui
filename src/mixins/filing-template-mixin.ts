@@ -960,6 +960,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filing.restoration.nameRequest.applicantPhone = this.getNameRequestApplicant.phoneNumber
         filing.restoration.nameRequest.applicantEmail = this.getNameRequestApplicant.emailAddress
         break
+      case CorrectNameOptions.CORRECT_NEW_NR_STAFF:
+        filing.restoration.nameRequest.correctNameOption = CorrectNameOptions.CORRECT_NEW_NR_STAFF
+        filing.restoration.nameRequest.legalName = this.getNameRequestApprovedName
+        filing.restoration.nameRequest.nrNumber = this.getNameRequestNumber
+        break
     }
 
     // NB: Staff Payment is mutually exclusive with Folio Number
@@ -1112,6 +1117,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         break
       case CorrectNameOptions.CORRECT_NEW_NR:
         this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR)
+        // NB: do not restore Name Request data - it will be reloaded from NR endpoint in App.vue
+        break
+      case CorrectNameOptions.CORRECT_NEW_NR_STAFF:
+        this.setCorrectNameOption(CorrectNameOptions.CORRECT_NEW_NR_STAFF)
         // NB: do not restore Name Request data - it will be reloaded from NR endpoint in App.vue
         break
     }
