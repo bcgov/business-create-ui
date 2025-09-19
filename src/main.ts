@@ -10,7 +10,6 @@ import { getVueRouter } from '@/router'
 import { getPiniaStore, getVuexStore } from '@/store'
 import Affix from 'vue-affix'
 import Vue2Filters from 'vue2-filters' // needed by SbcFeeSummary
-import * as Sentry from '@sentry/vue'
 import VueObserveVisibility from 'vue-observe-visibility' // added to help with rendering of text area heights properly
 import Hotjar from 'vue-hotjar'
 
@@ -50,15 +49,6 @@ async function start () {
 
   // fetch config and set it locally
   FetchConfig()
-
-  if (GetFeatureFlag('sentry-enable')) {
-    // initialize Sentry
-    console.info('Initializing Sentry...') // eslint-disable-line no-console
-    Sentry.init({
-      Vue,
-      dsn: (window as any).sentryDsn
-    })
-  }
 
   // initialize Hotjar
   const hotjarId: string = (window as any).hotjarId
@@ -114,11 +104,6 @@ async function start () {
 
 // execution and error handling
 start().catch(async (error) => {
-  // Log any error after configuring sentry.
-  // It helps to identify configuration issues specific to the environment.
-  // Note that it won't log anything related to `FetchConfig()` since sentry is depending on a config value.
-  Sentry.captureException(error)
-
   console.error(error) // eslint-disable-line no-console
   await Sleep(100) // wait for console error to be shown before alert
 
