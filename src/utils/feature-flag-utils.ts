@@ -12,7 +12,6 @@ const defaultFlagSet: LDFlagSet = {
   'enable-legal-name-fix': false, // by default, the easy legal name changes are disabled
   'enable-web-chat': false, // by default, old webchat is disabled
   'enable-genesys-web-message': false, // by default, genesys web message is disabled
-  'sentry-enable': false, // by default, no sentry logs
   'banner-text': '', // by default, there is no banner text
   'use-business-api-gw-url': false // by default, use Legal API URL instead of Business API GW URL
 }

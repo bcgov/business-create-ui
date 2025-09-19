@@ -238,7 +238,6 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
-import * as Sentry from '@sentry/browser'
 import { GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate, Sleep } from '@/utils'
 
 // Components, dialogs and views
@@ -717,10 +716,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
           await this.handleDraftWithTempId(this.getTempId)
         }
       } catch (error) {
-        // Log exception to Sentry due to incomplete business data.
-        // At this point the system doesn't know why it's incomplete.
-        // Since it's not an expected behaviour, it is better to report it.
-        Sentry.captureException(error)
         console.log('Fetch error =', error) // eslint-disable-line no-console
         // show fetch error dialog if there isn't another dialog showing
         this.fetchErrorDialog = !this.isErrorDialog
