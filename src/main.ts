@@ -26,7 +26,7 @@ import '@/assets/styles/layout.scss'
 import '@/assets/styles/overrides.scss'
 
 // Helpers
-import { FetchConfig, GetFeatureFlag, InitLdClient, Navigate, Sleep } from '@/utils'
+import { FetchConfig, InitLdClient, Navigate, Sleep } from '@/utils'
 import KeycloakService from 'sbc-common-components/src/services/keycloak.services'
 
 // get rid of "You are running Vue in development mode" console message
