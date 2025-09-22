@@ -6,6 +6,7 @@ export { default as DateMixin } from './date-mixin'
 export { default as DocumentMixin } from './document-mixin'
 export { default as FilingTemplateMixin } from './filing-template-mixin'
 export { default as PeopleRolesMixin } from './people-roles-mixin'
+export { default as ValidationMixin } from './validation-mixin'
 
 // external mixin
 export { CountriesProvincesMixin, NameRequestMixin } from '@bcrs-shared-components/mixins'

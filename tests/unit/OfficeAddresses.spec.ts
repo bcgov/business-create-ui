@@ -467,7 +467,7 @@ describe('should properly emit valid - BCOMP', () => {
     addressCity: 'someCity1',
     addressCountry: 'CA',
     addressRegion: 'BC',
-    postalCode: 'somePostalCode',
+    postalCode: 'A1A 1A1',
     streetAddress: 'someStreet'
   }
 
@@ -475,7 +475,7 @@ describe('should properly emit valid - BCOMP', () => {
     addressCity: 'someCity2',
     addressCountry: 'CA',
     addressRegion: 'BC',
-    postalCode: 'somePostalCode',
+    postalCode: 'A1A 1A1',
     streetAddress: 'someStreet'
   }
 
