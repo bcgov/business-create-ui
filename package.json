@@ -1,6 +1,6 @@
 {
   "name": "business-create-ui",
-  "version": "5.16.13",
+  "version": "5.16.14",
   "private": true,
   "appName": "Business Create UI",
   "sbcName": "SBC Common Components",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/compat-data": "^7.21.5",
     "@bcrs-shared-components/approval-type": "1.1.20",
-    "@bcrs-shared-components/base-address": "2.0.53",
+    "@bcrs-shared-components/base-address": "2.0.56",
     "@bcrs-shared-components/breadcrumb": "2.1.15",
     "@bcrs-shared-components/business-lookup": "1.3.15",
     "@bcrs-shared-components/certify": "2.1.55",
@@ -39,7 +39,7 @@
     "@bcrs-shared-components/interfaces": "1.1.27",
     "@bcrs-shared-components/jurisdiction": "1.1.4",
     "@bcrs-shared-components/limited-restoration-panel": "2.1.0",
-    "@bcrs-shared-components/mixins": "1.1.46",
+    "@bcrs-shared-components/mixins": "1.1.68",
     "@bcrs-shared-components/nature-of-business": "1.2.14",
     "@bcrs-shared-components/relationships-panel": "1.0.40",
     "@bcrs-shared-components/staff-comments": "1.3.15",
