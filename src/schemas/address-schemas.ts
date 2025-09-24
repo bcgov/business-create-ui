@@ -2,12 +2,12 @@ import { required, maxLength } from 'vuelidate/lib/validators'
 import { AddressSchemaIF } from '@/interfaces'
 
 /** Custom validator for postal codes. */
-function validatePostalCode (value: string, vm: any): boolean {
+function validatePostalCode (value: string, parentVm: any): boolean {
   // if Canada, validate postal code format
-  if (vm.addressCountry === 'CA') {
+  if (parentVm.addressCountry === 'CA') {
     // Canadian postal code regex: A1A 1A1 or A1A1A1
-    const re =
-      /^(?:[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d|[ABCEGHJ-NPRSTVXY]\d{2}[ -]?\d{2})$/i
+    // Ref: https://en.wikipedia.org/wiki/Postal_codes_in_Canada
+    const re = /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z][ ]?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/i
     return re.test(value)
   }
 
