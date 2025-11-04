@@ -186,8 +186,7 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
 
     // try to validate the name request
     // (may throw an error that can be displayed to the user)
-    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, phone, email,
-      this.getEntityType)
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, this.getEntityType)
   }
 
   /** Displays fetch/validation error from CorrectName shared component. */
