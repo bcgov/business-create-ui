@@ -184,8 +184,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
 
     // try to validate the name request
     // (may throw an error that can be displayed to the user)
-    return this.validateNameRequest(nameRequest, NrRequestActionCodes.RESTORE, this.getBusinessId, phone,
-      email, this.getEntityType)
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.RESTORE, this.getBusinessId, this.getEntityType)
   }
 
   /** Displays fetch/validation error from CorrectName shared component. */
