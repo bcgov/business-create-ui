@@ -169,6 +169,7 @@ export default class BusinessName extends Mixins(CommonMixin, DateMixin, NameReq
       .catch(error => {
         // throw an error that can be displayed to the user
         if (error?.response?.status === StatusCodes.NOT_FOUND) {
+          // invalid NR number
           throw new Error('The Name Request could not be found.')
         }
         if (error?.response?.status === StatusCodes.BAD_REQUEST) {
