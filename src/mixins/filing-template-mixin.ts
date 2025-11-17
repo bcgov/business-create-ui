@@ -1399,6 +1399,12 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     this.setCourtOrderFileNumber(draftFiling.dissolution.courtOrder?.fileNumber || '')
     this.setHasPlanOfArrangement(draftFiling.dissolution.courtOrder?.hasPlanOfArrangement || false)
 
+    // restore Certify state
+    this.setCertifyState({
+      valid: false, // never restore checkbox
+      certifiedBy: draftFiling.header.certifiedBy
+    })
+
     // NB: do not restore/overwrite Folio Number - just use the FN from auth info (see App.vue)
 
     // NB: Staff Payment is mutually exclusive with Folio Number

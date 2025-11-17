@@ -867,10 +867,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
       this.setFeePrices(filingFees)
 
-      // set current profile name to store for field pre population
-      // do this except if we are authorized to skip it
-      if (userInfo && !IsAuthorized(AuthorizedActions.BLANK_CERTIFY_STATE)) {
-        // pre-populate Certified By name
+      // pre-populate Certified By field
+      // except if we are authorized to skip it
+      // except if the field is already populated
+      if (
+        userInfo && // safety check
+        !IsAuthorized(AuthorizedActions.BLANK_CERTIFY_STATE) &&
+        !this.getCertifyState.certifiedBy
+      ) {
         this.setCertifyState(
           {
             valid: this.getCertifyState.valid,
