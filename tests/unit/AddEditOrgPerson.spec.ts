@@ -201,19 +201,19 @@ describe('Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('Remove button is enabled in edit mode', async () => {
+  it('Disables Remove button in edit mode', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, 0, null)
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.destroy()
   })
 
-  it('Remove button is disabled in create mode', async () => {
+  it('Disables Remove button in create mode', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, NaN, null)
     expect(wrapper.find(removeButtonSelector).attributes('disabled')).toBeDefined()
     wrapper.destroy()
   })
 
-  it('Clicking remove button emits event', async () => {
+  it('Emits event when clicking Remove button', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, 0, null)
     wrapper.find(removeButtonSelector).trigger('click')
     await Vue.nextTick()
@@ -221,7 +221,7 @@ describe('Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
-  it('Clicking Done button emits event for add edit person/org', async () => {
+  it('Emits event when clicking Done for add edit person/org', async () => {
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validOrgData, NaN, null)
     expect((<HTMLInputElement>wrapper.find(orgNameSelector).element).value)
       .toEqual(validOrgData.officer.organizationName)
@@ -242,7 +242,7 @@ describe('Add/Edit Org/Person component', () => {
     inputElement.trigger('change')
     await flushPromises()
 
-    expect(wrapper.find(formSelector).text()).not.toContain('Invalid spaces')
+    expect(wrapper.findAll('.v-messages__message').length).toBe(0)
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
 
     wrapper.destroy()

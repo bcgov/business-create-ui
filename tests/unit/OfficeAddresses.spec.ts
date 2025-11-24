@@ -488,7 +488,7 @@ describe('should properly emit valid - BCOMP', () => {
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
-  it('should emit valid form', async () => {
+  it('should emit valid form with valid addresses', async () => {
     wrapper = mount(OfficeAddresses, {
       propsData: {
         inputAddresses: {
@@ -500,6 +500,9 @@ describe('should properly emit valid - BCOMP', () => {
       localVue,
       vuetify
     })
+
+    // enable Show Errors to trigger validation
+    wrapper.setProps({ showErrors: true })
     await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()).toEqual([true])
@@ -517,6 +520,9 @@ describe('should properly emit valid - BCOMP', () => {
       localVue,
       vuetify
     })
+
+    // enable Show Errors to trigger validation
+    wrapper.setProps({ showErrors: true })
     await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
@@ -534,6 +540,9 @@ describe('should properly emit valid - BCOMP', () => {
       localVue,
       vuetify
     })
+
+    // enable Show Errors to trigger validation
+    wrapper.setProps({ showErrors: true })
     await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
@@ -551,6 +560,9 @@ describe('should properly emit valid - BCOMP', () => {
       localVue,
       vuetify
     })
+
+    // enable Show Errors to trigger validation
+    wrapper.setProps({ showErrors: true })
     await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
@@ -568,6 +580,9 @@ describe('should properly emit valid - BCOMP', () => {
       localVue,
       vuetify
     })
+
+    // enable Show Errors to trigger validation
+    wrapper.setProps({ showErrors: true })
     await Vue.nextTick()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])

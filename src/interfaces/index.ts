@@ -64,7 +64,6 @@ export * from './store-interfaces/state-interface'
 export * from './utils-interfaces/address-schema-interface'
 export * from './utils-interfaces/confirm-dialog-type'
 export * from './utils-interfaces/form-field-type'
-export * from './utils-interfaces/form-type'
 export * from './utils-interfaces/key-value-interface'
 export * from './utils-interfaces/pdf-info-interface'
 export * from './utils-interfaces/presigned-url-interface'
@@ -81,6 +80,7 @@ export type {
   CommentIF,
   ContactPointIF,
   EffectiveDateTimeIF,
+  FormIF,
   NaicsIF,
   NaicsResultIF,
   NrApplicantIF,

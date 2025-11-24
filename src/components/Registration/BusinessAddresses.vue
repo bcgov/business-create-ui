@@ -167,8 +167,8 @@ const DefaultAddress: AddressIF = {
 export default class BusinessAddresses extends Mixins(CommonMixin) {
   // Refs for BaseAddress components so we can access form validation
   $refs!: {
-    mailingAddress: any
-    deliveryAddress: any
+    mailingAddress: BaseAddress
+    deliveryAddress: BaseAddress
   }
 
   /**
@@ -326,10 +326,10 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
     // only show errors in editing mode
     if (this.showErrors && this.isEditing) {
       // validate mailing address
-      this.$refs.mailingAddress.$refs.addressForm.validate()
+      this.$refs.mailingAddress.validate()
       if (!this.inheritMailingAddress) {
         // validate delivery address
-        this.$refs.deliveryAddress.$refs.addressForm.validate()
+        this.$refs.deliveryAddress.validate()
       }
     }
   }

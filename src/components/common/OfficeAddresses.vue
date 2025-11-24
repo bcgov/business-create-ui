@@ -337,10 +337,10 @@ import { CommonMixin } from '@/mixins'
 export default class OfficeAddresses extends Mixins(CommonMixin) {
   // Refs for sbc common base address components so we can access form validation
   $refs!: {
-    regMailingAddress: any
-    regDeliveryAddress: any
-    recMailingAddress: any
-    recDeliveryAddress: any
+    regMailingAddress: BaseAddress
+    regDeliveryAddress: BaseAddress
+    recMailingAddress: BaseAddress
+    recDeliveryAddress: BaseAddress
   }
 
   /**
@@ -395,7 +395,7 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
    */
   inheritRegisteredAddress = true
 
-  // Imports for template
+  // Schema for template
   readonly OfficeAddressSchema = OfficeAddressSchema
 
   /** Called when component is created. */
@@ -460,7 +460,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
     }
   }
 
-  // Getters (Computed Values)
   /** Whether the address form is valid. */
   get formValid (): boolean {
     const registeredOfficeValid = this.mailingAddressValid &&
@@ -477,10 +476,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
     // only coops and corps
     return (this.isEntityCoop || this.isBaseCompany)
   }
-
-  //
-  // Event Handlers
-  //
 
   /** Sets the Registered Delivery Address to the Registered Mailing Address. */
   setDeliveryAddressToMailingAddress (): void {
@@ -588,7 +583,6 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
     this.emitValid()
   }
 
-  // Watchers
   @Watch('formValid')
   private onFormValidityChange (): void {
     this.emitValid()
@@ -601,30 +595,28 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
     this.emitValid()
   }
 
-  // Watchers
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     // Check if addresses are valid
     if (this.showErrors && this.isEditing) {
       // Registered Mailing Address
-      this.$refs.regMailingAddress.$refs.addressForm.validate()
+      this.$refs.regMailingAddress.validate()
       if (!this.inheritMailingAddress) {
         // Registered Delivery Address
-        this.$refs.regDeliveryAddress.$refs.addressForm.validate()
+        this.$refs.regDeliveryAddress.validate()
       }
 
       if (!this.isEntityCoop && !this.inheritRegisteredAddress) {
         // Records Mailing Address
-        this.$refs.recMailingAddress.$refs.addressForm.validate()
+        this.$refs.recMailingAddress.validate()
         if (!this.inheritRecMailingAddress) {
           // Records Delivery Address
-          this.$refs.recDeliveryAddress.$refs.addressForm.validate()
+          this.$refs.recDeliveryAddress.validate()
         }
       }
     }
   }
 
-  // Event Emitters
   /** Emits the valid state of this address form. */
   @Emit('valid')
   private emitValid (): boolean {

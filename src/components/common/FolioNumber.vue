@@ -64,9 +64,14 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import { VuetifyRuleFunction } from '@/types'
+import { FormIF } from '@/interfaces'
 
 @Component({})
 export default class FolioNumber extends Vue {
+  $refs!: {
+    form: FormIF
+  }
+
   @Prop({ default: null }) readonly initialValue!: string
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
@@ -109,7 +114,7 @@ export default class FolioNumber extends Vue {
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     if (this.showErrors) {
-      (this.$refs.form as any).validate()
+      this.$refs.form.validate()
     }
   }
 

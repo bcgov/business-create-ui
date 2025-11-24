@@ -152,11 +152,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { mask } from 'vue-the-mask'
-import { ContactPointIF, EmptyContactPoint } from '@/interfaces'
+import { ContactPointIF, EmptyContactPoint, FormIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { Rules } from '@/rules'
 
@@ -166,6 +166,10 @@ import { Rules } from '@/rules'
   }
 })
 export default class BusinessContactInfo extends Mixins(CommonMixin) {
+  $refs!: {
+    form: FormIF
+  }
+
   @Prop({ default: () => {} }) readonly initialValue!: ContactPointIF
   @Prop({ default: false }) readonly isEditing!: boolean
   @Prop({ default: false }) readonly showErrors!: boolean
@@ -194,9 +198,9 @@ export default class BusinessContactInfo extends Mixins(CommonMixin) {
   @Watch('showErrors')
   private onShowErrorsChanged (): void {
     if (this.showErrors) {
-      (this.$refs.form as Vue & { validate: () => boolean }).validate()
+      this.$refs.form.validate()
     } else if (this.$refs.form && !this.isSame(this.initialValue, EmptyContactPoint)) {
-      (this.$refs.form as any).validate()
+      this.$refs.form.validate()
     }
   }
 
