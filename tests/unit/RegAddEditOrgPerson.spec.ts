@@ -202,6 +202,7 @@ function createComponent (
   existingCompletingParty: any
 ): Wrapper<RegAddEditOrgPerson> {
   return mount(RegAddEditOrgPerson, {
+    // enable rules by default
     data () { return { enableRules: true } },
     propsData: {
       initialValue,
@@ -572,6 +573,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   it('does not display error message when user enters valid org name - registries staff only', async () => {
     setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper = createComponent(validProprietorOrg, NaN, null)
+    wrapper.setData({ enableRules: false })
 
     await wrapper.find('.lookup-toggle').trigger('click')
 
@@ -580,7 +582,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     inputElement.trigger('change')
     await flushPromises()
 
-    const messages = wrapper.findAll('.v-messages.error--text')
+    const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(0)
 
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
@@ -599,7 +601,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     inputElement.trigger('change')
     await flushPromises()
 
-    const messages = wrapper.findAll('.v-messages.error--text')
+    const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Business or corporation name is required')
 
@@ -611,6 +613,7 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('does not display error message when user enters valid person names', async () => {
     const wrapper = createComponent(validCompletingParty, NaN, null)
+    wrapper.setData({ enableRules: false })
 
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
     const middleNameInput = wrapper.find(`${middleNameSelector} input`)
@@ -624,7 +627,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     lastNameInput.trigger('change')
     await flushPromises()
 
-    const messages = wrapper.findAll('.v-messages.error--text')
+    const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(0)
 
     expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
@@ -647,7 +650,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     lastNameInput.trigger('change')
     await flushPromises()
 
-    const messages = wrapper.findAll('.v-messages.error--text')
+    const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(1)
     expect(messages.at(0).text()).toBe('Last name is required')
 
@@ -673,7 +676,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     await flushPromises()
     await Vue.nextTick()
 
-    const messages = wrapper.findAll('.v-messages.error--text')
+    const messages = wrapper.findAll('.v-messages__message')
     expect(messages.length).toBe(3)
     expect(messages.at(0).text()).toBe('Cannot exceed 30 characters')
     expect(messages.at(1).text()).toBe('Cannot exceed 30 characters')
@@ -693,14 +696,13 @@ describe('Registration Add/Edit Org/Person component', () => {
     await flushPromises()
 
     // verify error messages
-    const messages = wrapper.findAll('.v-messages.error--text')
-    expect(messages.length).toBe(6)
+    const messages = wrapper.findAll('.v-messages__message')
+    expect(messages.length).toBe(5)
     expect(messages.at(0).text()).toBe('Email address is required') // email address
     expect(messages.at(1).text()).toBe('This field is required') // mailing - street address
     expect(messages.at(2).text()).toBe('This field is required') // mailing - city
     expect(messages.at(3).text()).toBe('This field is required') // mailing - province
     expect(messages.at(4).text()).toBe('This field is required') // mailing - postal code
-    expect(messages.at(5).text()).toBe('')
 
     // verify that no events were emitted
     expect(wrapper.emitted(removeCompletingPartyRoleEvent)).toBeUndefined()

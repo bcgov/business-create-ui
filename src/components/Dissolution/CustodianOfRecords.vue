@@ -307,8 +307,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   // Refs for root form and base address components to access form validation
   $refs!: {
     addCustodianForm: FormIF
-    mailingAddress: FormIF
-    deliveryAddress: FormIF
+    mailingAddress: BaseAddress
+    deliveryAddress: BaseAddress
   }
 
   @Prop({ default: false }) readonly isSummary!: boolean
@@ -463,8 +463,8 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
   @Watch('$route')
   private validateAddressForms (): void {
-    this.$refs.mailingAddress && this.$refs.mailingAddress.$refs.addressForm.validate()
-    this.$refs.deliveryAddress && this.$refs.deliveryAddress.$refs.addressForm.validate()
+    this.$refs.mailingAddress && this.$refs.mailingAddress.validate()
+    this.$refs.deliveryAddress && this.$refs.deliveryAddress.validate()
   }
 
   /** Emits the valid state of the add custodian form. */

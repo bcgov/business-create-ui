@@ -13,6 +13,7 @@ import { PersonAddressSchema } from '@/schemas'
 import { LegalServices } from '@/services'
 import { VuetifyRuleFunction } from '@/types'
 import { IsAuthorized } from '@/utils'
+import { BaseAddress } from '@bcrs-shared-components/base-address'
 
 /**
  * Mixin that provides common add/edit org/person methods.
@@ -22,8 +23,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   // Refs
   $refs!: {
     addPersonOrgForm: FormIF
-    mailingAddressNew: any
-    deliveryAddressNew: any
+    mailingAddressNew: BaseAddress
+    deliveryAddressNew: BaseAddress
     confirmDialog: ConfirmDialogType
   }
 
@@ -318,9 +319,9 @@ export default class AddEditOrgPersonMixin extends Vue {
     this.inProgressDeliveryAddress = {} as AddressIF
     this.orgPerson.officer.email = ''
     if (!this.enableRules) {
-      this.$refs.mailingAddressNew.$refs.addressForm.reset()
+      this.$refs.mailingAddressNew.reset()
       if (this.$refs.deliveryAddressNew) {
-        this.$refs.deliveryAddressNew.$refs.addressForm.reset()
+        this.$refs.deliveryAddressNew.reset()
       }
     }
   }
@@ -389,9 +390,8 @@ export default class AddEditOrgPersonMixin extends Vue {
 
     // validate all the forms
     // NB: main form depends on address forms
-    this.mailingAddressValid = this.$refs.mailingAddressNew.$refs.addressForm.validate()
-    this.deliveryAddressValid = !this.$refs.deliveryAddressNew ||
-      this.$refs.deliveryAddressNew.$refs.addressForm.validate()
+    this.mailingAddressValid = this.$refs.mailingAddressNew.validate()
+    this.deliveryAddressValid = !this.$refs.deliveryAddressNew || this.$refs.deliveryAddressNew.validate()
     this.addPersonOrgFormValid = this.$refs.addPersonOrgForm.validate()
 
     // only proceed if main form is valid
@@ -492,9 +492,9 @@ export default class AddEditOrgPersonMixin extends Vue {
 
   resetAddPersonData (emitEvent: boolean): void {
     // first reset the address form(s)
-    this.$refs.mailingAddressNew.$refs.addressForm.reset()
+    this.$refs.mailingAddressNew.reset()
     if (this.$refs.deliveryAddressNew) {
-      this.$refs.deliveryAddressNew.$refs.addressForm.reset()
+      this.$refs.deliveryAddressNew.reset()
     }
 
     // then reset the main form (which depends on the above)
