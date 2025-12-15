@@ -262,7 +262,7 @@ export default class Actions extends Mixins(
     if (this.isBusySaving) return
 
     // Set Save and Resume Later button loading state and disable other buttons.
-    // NOTE: Only reset isSavingResuming to False on errors. This prevent buttons from being re-enabled if
+    // NOTE: Only reset isSavingResuming to False on errors. This prevents buttons from being re-enabled if
     // everything succeeded but the page is slow to redirect.
     this.setIsSavingResuming(true)
 
@@ -293,7 +293,7 @@ export default class Actions extends Mixins(
     if (this.isBusySaving) return
 
     // Set File and Pay button loading state and disable other buttons.
-    // NOTE: Only reset isFilingPaying to False on errors. This prevent buttons from being re-enabled if
+    // NOTE: Only reset isFilingPaying to False on errors. This prevents buttons from being re-enabled if
     // everything succeeded but the page is slow to redirect.
     this.setIsFilingPaying(true)
 

@@ -684,6 +684,9 @@ describe('Actions component - Conditionally disabled File and Pay button', () =>
     store.stateModel.createShareStructureStep = { valid: true } as ShareStructureIF
     store.stateModel.incorporationAgreementStep = { valid: true } as IncorporationAgreementIF
     store.stateModel.effectiveDateTime = { valid: true } as EffectiveDateTimeIF
+    store.stateModel.isSaving = false
+    store.stateModel.isSavingResuming = false
+    store.stateModel.isFilingPaying = false
   })
 
   beforeEach(() => {
