@@ -84,7 +84,7 @@
           large
           color="primary"
           :loading="isFilingPaying"
-          :disabled="!IsAuthorized(AuthorizedActions.FILE_AND_PAY)"
+          :disabled="isBusySaving || !IsAuthorized(AuthorizedActions.FILE_AND_PAY)"
           @click="onClickFilePay()"
         >
           <span>{{ filePayButtonLabel }}</span>
