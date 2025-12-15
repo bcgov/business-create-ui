@@ -84,7 +84,7 @@
           large
           color="primary"
           :loading="isFilingPaying"
-          :disabled="!IsAuthorized(AuthorizedActions.FILE_AND_PAY)"
+          :disabled="isBusySaving || !IsAuthorized(AuthorizedActions.FILE_AND_PAY)"
           @click="onClickFilePay()"
         >
           <span>{{ filePayButtonLabel }}</span>
@@ -231,6 +231,8 @@ export default class Actions extends Mixins(
   async onClickSave (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
+
+    // Set Save button loading state and disable other buttons.
     this.setIsSaving(true)
 
     try {
@@ -258,8 +260,10 @@ export default class Actions extends Mixins(
   async onClickSaveResume (): Promise<void> {
     // prevent double saving
     if (this.isBusySaving) return
-    // If Save and Resume is successful setIsFilingPaying should't be reset to false,
-    // this prevent buttons from being re-enabled if the page is slow to redirect.
+
+    // Set Save and Resume Later button loading state and disable other buttons.
+    // NOTE: Only reset isSavingResuming to False on errors. This prevents buttons from being re-enabled if
+    // everything succeeded but the page is slow to redirect.
     this.setIsSavingResuming(true)
 
     try {
@@ -285,11 +289,19 @@ export default class Actions extends Mixins(
    * @returns a promise (ie, this is an async method)
    */
   async onClickFilePay (): Promise<void> {
+    // prevent double saving
+    if (this.isBusySaving) return
+
+    // Set File and Pay button loading state and disable other buttons.
+    // NOTE: Only reset isFilingPaying to False on errors. This prevents buttons from being re-enabled if
+    // everything succeeded but the page is slow to redirect.
+    this.setIsFilingPaying(true)
+
     // prompt step validations
     this.setValidateSteps(true)
 
-    // wait extra long for Continuation In Authorization to validate
-    // (whereas regular filings validate when getShowErrors becomes True)
+    // Wait extra long for Continuation In Authorization to validate
+    // (whereas regular filings validate when getShowErrors becomes True).
     if (this.isContinuationInAuthorization) await flushPromises()
 
     if (this.getFilingType === FilingTypes.AMALGAMATION_APPLICATION) {
@@ -308,82 +320,81 @@ export default class Actions extends Mixins(
       }
     }
 
-    if (this.isFilingValid) {
-      // prevent double saving
-      if (this.isBusySaving) return
-      // If File and Pay is successful, setIsFilingPaying shouldn't be reset to false.
-      // This prevent buttons from being re-enabled if the page is slow to redirect.
-      this.setIsFilingPaying(true)
-
-      if (
-        this.getEffectiveDateTime.effectiveDate &&
-        !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
-      ) {
-        this.setEffectiveDateTimeValid(false)
-
-        window.scrollTo({ top: 1250, behavior: 'smooth' })
-        this.setIsFilingPaying(false)
-        return
+    if (!this.isFilingValid) {
+      if (!this.isContinuationInAuthorization) {
+        // if this is a Continuation In Authorization then let that page scroll as needed
+        // otherwise, smooth-scroll to the top of the page
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
+      this.setIsFilingPaying(false)
+      return
+    }
 
-      // If a NR was used, validate it before filing submission.
-      if (this.getNameRequestNumber) {
-        try {
-          await this._validateNameRequest(
-            this.getNameRequestNumber,
-            this.getNameRequestApplicant.phoneNumber,
-            this.getNameRequestApplicant.emailAddress
-          )
-        } catch (error) {
-          console.log('Error validating NR in onClickFilePay():', error) // eslint-disable-line no-console
-          this.setIsFilingPaying(false)
-          return
-        }
-      }
+    // Check for invalid effective date.
+    if (
+      this.getEffectiveDateTime.effectiveDate &&
+      !this.isValidDateTime(this.getEffectiveDateTime.effectiveDate)
+    ) {
+      this.setEffectiveDateTimeValid(false)
 
-      let filingComplete: any
+      window.scrollTo({ top: 1250, behavior: 'smooth' })
+      this.setIsFilingPaying(false)
+      return
+    }
+
+    // If a NR was used, validate it before filing submission.
+    if (this.getNameRequestNumber) {
       try {
-        const filing = await this.prepareFiling()
-
-        // Save filing
-        filingComplete = await LegalServices.updateFiling(this.getEntityIdentifier, filing, false)
-
-        // clear flag
-        this.setHaveChanges(false)
+        await this._validateNameRequest(
+          this.getNameRequestNumber,
+          this.getNameRequestApplicant.phoneNumber,
+          this.getNameRequestApplicant.emailAddress
+        )
       } catch (error) {
-        console.log('Error updating filing in onClickFilePay(): ', error) // eslint-disable-line no-console
-        this.$root.$emit('save-error-event', error)
+        console.log('Error validating NR in onClickFilePay():', error) // eslint-disable-line no-console
         this.setIsFilingPaying(false)
         return
       }
+    }
 
-      const paymentToken = filingComplete?.header?.paymentToken
-      // special case for continuation in authorization -- no payment at this time
-      if (paymentToken || this.isContinuationInAuthorization) {
-        const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
-        const returnUrl = sessionStorage.getItem('BUSINESS_DASH_URL') + this.getEntityIdentifier +
-          `?filing_id=${this.getFilingId}`
+    let filingComplete: any
+    try {
+      const filing = await this.prepareFiling()
 
-        // if payment action is required, navigate to Pay URL
-        if (isPaymentActionRequired) {
-          const authUrl = sessionStorage.getItem('AUTH_WEB_URL')
-          const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + encodeURIComponent(returnUrl)
-          // assume Pay URL is always reachable
-          // otherwise user will have to retry payment later
-          Navigate(payUrl)
-        } else {
-          // navigate to Dashboard URL
-          Navigate(returnUrl)
-        }
+      // Save filing
+      filingComplete = await LegalServices.updateFiling(this.getEntityIdentifier, filing, false)
+
+      // clear flag
+      this.setHaveChanges(false)
+    } catch (error) {
+      console.log('Error updating filing in onClickFilePay(): ', error) // eslint-disable-line no-console
+      this.$root.$emit('save-error-event', error)
+      this.setIsFilingPaying(false)
+      return
+    }
+
+    const paymentToken = filingComplete?.header?.paymentToken
+    // special case for continuation in authorization -- no payment at this time
+    if (paymentToken || this.isContinuationInAuthorization) {
+      const isPaymentActionRequired: boolean = filingComplete.header?.isPaymentActionRequired
+      const returnUrl = sessionStorage.getItem('BUSINESS_DASH_URL') + this.getEntityIdentifier +
+        `?filing_id=${this.getFilingId}`
+
+      // if payment action is required, navigate to Pay URL
+      if (isPaymentActionRequired) {
+        const authUrl = sessionStorage.getItem('AUTH_WEB_URL')
+        const payUrl = authUrl + 'makepayment/' + paymentToken + '/' + encodeURIComponent(returnUrl)
+        // assume Pay URL is always reachable
+        // otherwise user will have to retry payment later
+        Navigate(payUrl)
       } else {
-        const error = new Error('Missing Payment Token')
-        this.$root.$emit('save-error-event', error)
-        this.setIsFilingPaying(false)
+        // navigate to Dashboard URL
+        Navigate(returnUrl)
       }
-    } else if (!this.isContinuationInAuthorization) {
-      // if this is a Continuation In Authorization then let that page scroll if needed
-      // otherwise, smooth-scroll to the top of the page
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      const error = new Error('Missing Payment Token')
+      this.$root.$emit('save-error-event', error)
+      this.setIsFilingPaying(false)
     }
   }
 
