@@ -862,18 +862,23 @@ export const useStore = defineStore('store', {
     },
 
     /** The user's first name. */
-    getUserFirstName (): string {
+    getUserFirstname (): string {
       return this.stateModel.tombstone.userFirstname
     },
 
     /** The user's last name. */
-    getUserLastName (): string {
+    getUserLastname (): string {
       return this.stateModel.tombstone.userLastname
     },
 
     /** The user's Keycloak GUID. */
     getKeycloakGuid (): string {
       return this.stateModel.tombstone.keycloakGuid
+    },
+
+    /** The user's Login Source. */
+    getLoginSource (): string {
+      return this.stateModel.tombstone.loginSource
     },
 
     /** The user's authorized actions (aka permissions). */
@@ -1178,9 +1183,9 @@ export const useStore = defineStore('store', {
     },
     setUserInfo (userInfo: any) {
       this.stateModel.tombstone.keycloakGuid = userInfo.keycloakGuid
+      this.stateModel.tombstone.loginSource = userInfo.loginSource
       this.stateModel.tombstone.userFirstname = userInfo.firstname
       this.stateModel.tombstone.userLastname = userInfo.lastname
-      this.stateModel.tombstone.userLoginSource = userInfo.loginSource
     },
     setUserEmail (userEmail: string) {
       this.stateModel.tombstone.userEmail = userEmail

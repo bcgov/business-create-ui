@@ -35,8 +35,8 @@ export default class PeopleRolesMixin extends Vue {
   @Getter(useStore) getShowErrors!: boolean
   @Getter(useStore) getUserAddress!: AddressIF
   @Getter(useStore) getUserEmail!: string
-  @Getter(useStore) getUserFirstName!: string
-  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) getUserFirstname!: string
+  @Getter(useStore) getUserLastname!: string
   @Getter(useStore) isEntityPartnership!: boolean
   @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean

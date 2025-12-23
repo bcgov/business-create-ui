@@ -300,12 +300,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getFilingStatus!: FilingStatus
   @Getter(useStore) getFilingType!: FilingTypes
   @Getter(useStore) getHaveChanges!: boolean
+  @Getter(useStore) getKeycloakGuid!: string
+  @Getter(useStore) getLoginSource!: string
   @Getter(useStore) getOrgInformation!: OrgInformationIF
   @Getter(useStore) getPageBlurb!: string
   @Getter(useStore) getSteps!: Array<StepIF>
-  @Getter(useStore) getUserInfo!: any
-  @Getter(useStore) getUserFirstName!: string
-  @Getter(useStore) getUserLastName!: string
+  @Getter(useStore) getUserFirstname!: string
+  @Getter(useStore) getUserLastname!: string
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
   @Getter(useStore) isAmalgamationFiling: boolean
@@ -647,9 +648,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // do this except if we are authorized to skip it
     if (!IsAuthorized(AuthorizedActions.BLANK_COMPLETING_PARTY)) {
       completingParty = {
-        firstName: this.getUserFirstName,
+        firstName: this.getUserFirstname,
         middleName: '',
-        lastName: this.getUserLastName,
+        lastName: this.getUserLastname,
         mailingAddress: {
           addressCity: (this.getOrgInformation?.mailingAddress?.city ?? ''),
           addressCountry: (this.getOrgInformation?.mailingAddress?.country ?? ''),
@@ -1273,29 +1274,25 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // don't run when Vitest is running the code
     if (import.meta.env.VITEST) return
 
-    const userInfo = this.getUserInfo
-    const userContext = userInfo && {
+    const userContext = this.getKeycloakGuid && {
       kind: 'user',
-      key: userInfo.keycloakGuid,
+      key: this.getKeycloakGuid,
       roles: this.authRoles,
       appSource: import.meta.env.APP_NAME,
-      loginSource: userInfo.userLoginSource,
-      lastName: userInfo.userLastname,
-      firstName: userInfo.userFirstname,
-      // get email from contacts[0] if it exists (ie, for BCSC users)
-      // else get email from root object
-      email: userInfo.contacts[0]?.email || userInfo.email
+      loginSource: this.getLoginSource,
+      lastName: this.getUserLastname,
+      firstName: this.getUserFirstname,
+      email: this.getUserEmail
     }
 
-    const accountInfo = this.getCurrentAccount
-    const orgContext = accountInfo && {
+    const orgContext = this.getCurrentAccount.id && {
       kind: 'org',
-      key: accountInfo.id?.toString(),
-      type: accountInfo.type,
-      accountStatus: accountInfo.accountStatus,
-      accountType: accountInfo.accountType,
+      key: this.getCurrentAccount.id.toString(),
+      type: this.getCurrentAccount.type,
+      accountStatus: this.getCurrentAccount.accountStatus,
+      accountType: this.getCurrentAccount.accountType,
       appSource: import.meta.env.APP_NAME,
-      label: accountInfo.label
+      label: this.getCurrentAccount.label
     }
 
     await UpdateLdUser(userContext, orgContext)
