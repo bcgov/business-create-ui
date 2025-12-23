@@ -1245,7 +1245,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setAuthorizedActions(authorizedActions)
   }
 
-  /** Fetches and stores org, and stores user's address. */
+  /** Fetches and stores org info, and stores user's address. */
   private async loadOrgInfo (): Promise<void> {
     const orgId = this.getCurrentAccount.id
 
