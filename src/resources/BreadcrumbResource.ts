@@ -9,17 +9,13 @@ const store = useStore()
 
 /** Returns legal name. */
 function getLegalName (): string {
-  const getFilingType = store.getFilingType
-  const getBusinessLegalName = store.getBusinessLegalName
-  const getNameRequestApprovedName = store.getNameRequestApprovedName
-
-  switch (getFilingType) {
-    case FilingTypes.AMALGAMATION_APPLICATION: return getNameRequestApprovedName
-    case FilingTypes.CONTINUATION_IN: return getNameRequestApprovedName
-    case FilingTypes.DISSOLUTION: return getBusinessLegalName
-    case FilingTypes.INCORPORATION_APPLICATION: return getNameRequestApprovedName
-    case FilingTypes.REGISTRATION: return getNameRequestApprovedName
-    case FilingTypes.RESTORATION: return getNameRequestApprovedName
+  switch (store.getFilingType) {
+    case FilingTypes.AMALGAMATION_APPLICATION: return store.getNameRequestApprovedName
+    case FilingTypes.CONTINUATION_IN: return store.getNameRequestApprovedName
+    case FilingTypes.DISSOLUTION: return store.getBusinessLegalName
+    case FilingTypes.INCORPORATION_APPLICATION: return store.getNameRequestApprovedName
+    case FilingTypes.REGISTRATION: return store.getNameRequestApprovedName
+    case FilingTypes.RESTORATION: return store.getNameRequestApprovedName
   }
 }
 
@@ -31,7 +27,7 @@ function getNumberedEntityName (): string {
 
 /** Returns URL param string with Account ID if present, else empty string. */
 function getParams (): string {
-  const accountId = store.getAccountId
+  const accountId = store.getCurrentAccount?.id
   return accountId ? `?accountid=${accountId}` : ''
 }
 
@@ -56,7 +52,7 @@ export function getBcRegistriesDashboardBreadcrumb (): BreadcrumbIF {
 export function getMyBusinessRegistryBreadcrumb (): BreadcrumbIF {
   return {
     text: 'My Business Registry',
-    href: `${sessionStorage.getItem('BUSINESS_REGISTRY_URL')}account/${store.getAccountId}`
+    href: `${sessionStorage.getItem('BUSINESS_REGISTRY_URL')}account/${store.getCurrentAccount?.id}`
   }
 }
 

@@ -5,13 +5,14 @@ import { AuthorizedActions, FilingStatus, FilingTypes } from '@/enums'
 export interface TombstoneIF {
   filingStatus?: FilingStatus
   filingType: FilingTypes
-  keycloakGuid: string // from KC token
   authorizedActions: Array<AuthorizedActions>
   legalName: string
+  keycloakGuid: string // from auth user info
   userEmail: string // from auth user info
   userPhone: string // from auth user info
-  userFirstName: string // from auth user info
-  userLastName: string // from auth user info
+  userFirstname: string // from auth user info
+  userLastname: string // from auth user info
+  userLoginSource: string // from auth user info
   userAddress: AddressIF // from auth org info
   folioNumber: string // from auth user info or from user
   folioNumberValid: boolean

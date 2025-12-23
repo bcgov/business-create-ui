@@ -315,14 +315,9 @@ export const useStore = defineStore('store', {
       return (this.isEntitySoleProp || this.isEntityPartnership)
     },
 
-    /** The Account Information object. */
-    getAccountInformation (): AccountInformationIF {
+    /** The Current Account object. */
+    getCurrentAccount (): AccountInformationIF {
       return this.stateModel.accountInformation
-    },
-
-    /** The current account id. */
-    getAccountId (): number {
-      return this.getAccountInformation?.id
     },
 
     /** Whether the entity is a base company (BC/BEN/CC/ULC or C/CBEN/CCC/CUL). */
@@ -868,15 +863,15 @@ export const useStore = defineStore('store', {
 
     /** The user's first name. */
     getUserFirstName (): string {
-      return this.stateModel.tombstone.userFirstName
+      return this.stateModel.tombstone.userFirstname
     },
 
     /** The user's last name. */
     getUserLastName (): string {
-      return this.stateModel.tombstone.userLastName
+      return this.stateModel.tombstone.userLastname
     },
 
-    /** The user's GUID from the Keycloak token (JWT). */
+    /** The user's Keycloak GUID. */
     getKeycloakGuid (): string {
       return this.stateModel.tombstone.keycloakGuid
     },
@@ -1181,20 +1176,17 @@ export const useStore = defineStore('store', {
     setIsFilingPaying (isFilingPaying: boolean) {
       this.stateModel.isFilingPaying = isFilingPaying
     },
+    setUserInfo (userInfo: any) {
+      this.stateModel.tombstone.keycloakGuid = userInfo.keycloakGuid
+      this.stateModel.tombstone.userFirstname = userInfo.firstname
+      this.stateModel.tombstone.userLastname = userInfo.lastname
+      this.stateModel.tombstone.userLoginSource = userInfo.loginSource
+    },
     setUserEmail (userEmail: string) {
       this.stateModel.tombstone.userEmail = userEmail
     },
     setUserPhone (userPhone: string) {
       this.stateModel.tombstone.userPhone = userPhone
-    },
-    setUserFirstName (userFirstName: string) {
-      this.stateModel.tombstone.userFirstName = userFirstName
-    },
-    setUserLastName (userLastName: string) {
-      this.stateModel.tombstone.userLastName = userLastName
-    },
-    setKeycloakGuid (keycloakGuid: string) {
-      this.stateModel.tombstone.keycloakGuid = keycloakGuid
     },
     setAuthorizedActions (actions: Array<AuthorizedActions>) {
       this.stateModel.tombstone.authorizedActions = actions
@@ -1263,8 +1255,8 @@ export const useStore = defineStore('store', {
     setTransactionalFolioNumberValidity (valid: boolean) {
       this.stateModel.tombstone.transactionalFolioNumberValid = valid
     },
-    setAccountInformation (accountInfo: AccountInformationIF) {
-      this.stateModel.accountInformation = accountInfo
+    setCurrentAccount (accountInformation: AccountInformationIF) {
+      this.stateModel.accountInformation = accountInformation
     },
     setOrgInformation (orgInfo: OrgInformationIF) {
       this.stateModel.orgInformation = orgInfo
