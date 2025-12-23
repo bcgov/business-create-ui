@@ -17,7 +17,7 @@ export default class AuthServices {
    * @returns a promise to return the data
    */
   static async fetchAuthInfo (businessId: string): Promise<AuthInformationIF> {
-    if (!businessId) throw new Error('Invalid business id')
+    if (!businessId) throw new Error('Invalid business id =' + businessId)
 
     const url = `${this.authApiGwUrl}entities/${businessId}`
 
@@ -66,7 +66,7 @@ export default class AuthServices {
    * @returns a promise to return the org info object
    */
   static async fetchOrgInfo (orgId: number): Promise<any> {
-    if (!orgId) throw new Error('Invalid org id')
+    if (!orgId) throw new Error('Invalid org id = ' + orgId)
 
     const url = `${this.authApiGwUrl}orgs/${orgId}`
 
@@ -84,8 +84,8 @@ export default class AuthServices {
    * @returns a promise to return the updated contact point object
    */
   static async updateContactInfo (businessId: string, contactInfo: ContactPointIF): Promise<ContactPointIF> {
-    if (!businessId) throw new Error('Invalid business id')
-    if (!contactInfo) throw new Error('Invalid contact info')
+    if (!businessId) throw new Error('Invalid business id = ' + businessId)
+    if (!contactInfo) throw new Error('Invalid contact info = ' + JSON.stringify(contactInfo))
 
     // map extension -> phoneExtension
     const data = {

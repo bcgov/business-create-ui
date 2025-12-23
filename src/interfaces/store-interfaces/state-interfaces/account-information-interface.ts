@@ -1,16 +1,14 @@
-// Account information interface
+import { Account } from 'sbc-common-components/src/util/constants'
+
+/** Interface for account information object (current account) in store. */
 export interface AccountInformationIF {
-  accountType: string
+  accountStatus: string
+  accountType: Account | null
+  additionalLabel?: string
   id: number
   label: string
+  productSettings?: string
   type: string
-  // NB: there are other fields but we don't need them
-  [x: string | number | symbol]: unknown
-}
-
-export const EmptyAccountInformation: AccountInformationIF = {
-  accountType: '',
-  id: null,
-  label: '',
-  type: ''
+  urlorigin?: string
+  urlpath?: string
 }

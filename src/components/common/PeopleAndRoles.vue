@@ -295,8 +295,8 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
     // pre-populate Completing Party's name, email address and and mailing address
     // NB: email address is from user profile
     if (roleType === RoleTypes.COMPLETING_PARTY && partyType === PartyTypes.PERSON) {
-      this.currentOrgPerson.officer.firstName = this.getUserFirstName || ''
-      this.currentOrgPerson.officer.lastName = this.getUserLastName || ''
+      this.currentOrgPerson.officer.firstName = this.getUserFirstname || ''
+      this.currentOrgPerson.officer.lastName = this.getUserLastname || ''
       this.currentOrgPerson.officer.email = this.getUserEmail
       this.currentOrgPerson.mailingAddress = this.getUserAddress || { ...EmptyAddress }
     }

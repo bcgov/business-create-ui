@@ -8,14 +8,8 @@ import { SessionStorageKeys } from 'sbc-common-components/src/util/constants'
 
 // this is a function because a getter doesn't work reliably on app start
 function getAccountId (): string {
-  // if we can't get account id from ACCOUNT_ID
-  // then try to get it from CURRENT_ACCOUNT
-  let accountId = sessionStorage.getItem('ACCOUNT_ID')
-  if (!accountId) {
-    const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
-    accountId = JSON.parse(currentAccount)?.id
-  }
-  return accountId
+  const currentAccount = sessionStorage.getItem('CURRENT_ACCOUNT')
+  return JSON.parse(currentAccount)?.id || null
 }
 
 const authApiGwUrl = sessionStorage.getItem('AUTH_API_GW_URL')
