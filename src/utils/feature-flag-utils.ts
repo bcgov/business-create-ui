@@ -5,7 +5,7 @@ declare const window: any
 
 /**
  * Default flag values when LD is not available.
- * Uses "business-create" project (per LD client id in config).
+ * Uses "entity-ui" project (per LD client id in config).
  */
 const defaultFlagSet: LDFlagSet = {
   'supported-filings': [],
