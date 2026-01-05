@@ -1,5 +1,4 @@
 import {
-  EmptyAccountInformation,
   EmptyContactPoint,
   EmptyFees,
   EmptyNameRequest,
@@ -16,13 +15,14 @@ export const stateModel: StateModelIF = {
   tombstone: {
     filingStatus: null,
     filingType: null,
-    keycloakGuid: null,
     authorizedActions: [],
     legalName: '',
+    keycloakGuid: null,
+    loginSource: '',
     userEmail: '',
     userPhone: '',
-    userFirstName: '',
-    userLastName: '',
+    userFirstname: '',
+    userLastname: '',
     userAddress: null,
     folioNumber: '',
     folioNumberValid: false,
@@ -86,7 +86,13 @@ export const stateModel: StateModelIF = {
       }
     }
   },
-  accountInformation: { ...EmptyAccountInformation },
+  accountInformation: {
+    accountStatus: '',
+    accountType: null,
+    id: null,
+    label: '',
+    type: ''
+  },
   orgInformation: null,
   nameRequest: cloneDeep(EmptyNameRequest),
   nameRequestApprovedName: null,

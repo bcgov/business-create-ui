@@ -8,7 +8,7 @@ export function Navigate (url: string): boolean {
   try {
     // get account id and set in params
     const store = useStore()
-    const accountId = store.getAccountId
+    const accountId = store.getCurrentAccount?.id
     if (accountId) {
       if (url.includes('?')) {
         url += `&accountid=${accountId}`
