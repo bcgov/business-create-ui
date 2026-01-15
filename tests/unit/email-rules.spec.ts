@@ -50,5 +50,18 @@ describe('Email Rules', () => {
     ])('returns error message for invalid email: %s', (email) => {
       expect(validEmailRule(email)).toBe('Valid email is required')
     })
+
+    // Edge cases - testing rule in isolation
+    it('returns error message when email is null', () => {
+      expect(validEmailRule(null)).toBe('Valid email is required')
+    })
+
+    it('returns error message when email is undefined', () => {
+      expect(validEmailRule(undefined)).toBe('Valid email is required')
+    })
+
+    it('returns error message when email is empty string', () => {
+      expect(validEmailRule('')).toBe('Valid email is required')
+    })
   })
 })
