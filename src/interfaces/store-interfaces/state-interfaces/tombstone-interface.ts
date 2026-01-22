@@ -1,8 +1,9 @@
 import { AddressIF } from '@/interfaces'
-import { AuthorizedActions, FilingStatus, FilingTypes } from '@/enums'
+import { AuthorizationRoles, AuthorizedActions, FilingStatus, FilingTypes } from '@/enums'
 
 // Tombstone State model
 export interface TombstoneIF {
+  authRoles: Array<AuthorizationRoles>
   filingStatus?: FilingStatus
   filingType: FilingTypes
   authorizedActions: Array<AuthorizedActions>

@@ -293,6 +293,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     confirm: ConfirmDialogType
   }
 
+  @Getter(useStore) getAuthRoles!: Array<AuthorizationRoles>
   @Getter(useStore) getCurrentAccount!: AccountInformationIF
   @Getter(useStore) getEntityIdentifier!: string
   @Getter(useStore) getFilingData!: Array<FilingDataIF>
@@ -324,13 +325,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) isRestorationFiling!: boolean
   @Getter(useStore) isMobile!: boolean
 
-  @Action(useStore) setCurrentAccount!: (x: AccountInformationIF) => void
+  @Action(useStore) setAuthRoles!: (x: Array<AuthorizationRoles>) => void
   @Action(useStore) setAdminFreeze!: (x: boolean) => void
   @Action(useStore) setAlternateName!: (x: string) => void
   @Action(useStore) setAuthorizedActions!: (x: Array<AuthorizedActions>) => void
   @Action(useStore) setBusinessId!: (x: string) => void
   @Action(useStore) setBusinessNumber!: (x: string) => void
   @Action(useStore) setCompletingParty!: (x: CompletingPartyIF) => void
+  @Action(useStore) setCurrentAccount!: (x: AccountInformationIF) => void
   @Action(useStore) setCurrentDate!: (x: string) => void
   @Action(useStore) setCurrentJsDate!: (x: Date) => void
   @Action(useStore) setCurrentStep!: (x: number) => void
@@ -375,7 +377,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   saveErrors = []
   saveWarnings = []
   fileAndPayInvalidNameRequestDialog = false
-  authRoles = [] as Array<AuthorizationRoles>
 
   // Local constants
   readonly STAFF_ROLE = 'STAFF'
@@ -587,11 +588,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Called to navigate to Business Dashboard. */
   goToDashboard (force = false): void {
+    const businessId = this.getEntityIdentifier
+    const dashboardUrl = sessionStorage.getItem('BUSINESS_DASH_URL') + businessId
+
     // check if there are no data changes
     if (!this.getHaveChanges || force) {
       // navigate to dashboard
-      const businessDashUrl = sessionStorage.getItem('BUSINESS_DASH_URL')
-      Navigate(businessDashUrl + this.getEntityIdentifier)
+      Navigate(dashboardUrl)
       return
     }
 
@@ -613,9 +616,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       // if we get here, Cancel was clicked
       // ignore changes
       this.setHaveChanges(false)
-      // navigate to Business Dashboard
-      const businessDashUrl = sessionStorage.getItem('BUSINESS_DASH_URL')
-      Navigate(businessDashUrl + this.getEntityIdentifier)
+      // navigate to dashboard
+      Navigate(dashboardUrl)
     })
   }
 
@@ -705,12 +707,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // load auth roles locally
-      this.authRoles = await this.fetchAuthRoles().catch(error => {
+      // load auth roles
+      try {
+        this.loadAuthRoles()
+      } catch (error) {
         console.log('Auth roles error =', error) // eslint-disable-line no-console
         this.accountAuthorizationDialog = true
-        throw error
-      })
+        throw error // go to catch()
+      }
 
       // handle the filing according to whether we have a business id or temp id
       try {
@@ -743,8 +747,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw error // go to catch()
       })
 
-      // update Launch Darkly
-      // this allows targeted feature flags
+      // update Launch Darkly with user info, account info and auth roles
+      // NOTE: this allows targeted feature flags
       await this.updateLaunchDarkly().catch(error => {
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
@@ -1208,6 +1212,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
   /** Fetches and stores account info. */
   private async loadAccountInfo (): Promise<void> {
+    const routeAccountId = +this.$route.query.accountid || 0
     const currentAccount = await loadCurrentAccount()
 
     if (!currentAccount) {
@@ -1223,9 +1228,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     async function loadCurrentAccount (): Promise<AccountInformationIF> {
       let account = null
       for (let i = 0; i < 50; i++) {
-        const currentAccount = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
-        account = JSON.parse(currentAccount)
-        if (account) break
+        const currentAccountJson = sessionStorage.getItem(SessionStorageKeys.CurrentAccount)
+        account = JSON.parse(currentAccountJson)
+        // if there's no route account id, check for account to be set
+        if (!routeAccountId && account) break
+        // check for current account id to match route account id
+        if (account?.id === routeAccountId) break
         await Sleep(100)
       }
       return account
@@ -1277,7 +1285,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     const userContext = this.getKeycloakGuid && {
       kind: 'user',
       key: this.getKeycloakGuid,
-      roles: this.authRoles,
+      roles: this.getAuthRoles,
       appSource: import.meta.env.APP_NAME,
       loginSource: this.getLoginSource,
       lastName: this.getUserLastname,
@@ -1335,8 +1343,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.setBusinessStartDate(business.startDate)
   }
 
-  /** Fetches auth roles. */
-  private async fetchAuthRoles (): Promise<AuthorizationRoles[]> {
+  /** Loads auth roles. */
+  private loadAuthRoles (): void {
     // get roles from KC token
     const authRoles = GetKeycloakRoles()
 
@@ -1345,7 +1353,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       throw new Error('Invalid roles')
     }
 
-    return authRoles
+    this.setAuthRoles(authRoles)
   }
 
   /** Fetches and stores parties info . */
