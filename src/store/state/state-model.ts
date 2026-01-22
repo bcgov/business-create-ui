@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash'
 export const stateModel: StateModelIF = {
   currentJsDate: null,
   tombstone: {
+    authRoles: [],
     filingStatus: null,
     filingType: null,
     authorizedActions: [],

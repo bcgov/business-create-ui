@@ -5,6 +5,7 @@ import { resourceModel, stateModel } from './state'
 import {
   AmalgamationTypes,
   ApprovalTypes,
+  AuthorizationRoles,
   AuthorizedActions,
   BusinessTypes,
   CoopTypes,
@@ -85,6 +86,11 @@ import { IsAuthorized } from '@/utils'
 export const useStore = defineStore('store', {
   state: (): StateIF => ({ resourceModel, stateModel }),
   getters: {
+    /** The current auth roles (from Keycloak token). */
+    getAuthRoles (): Array<AuthorizationRoles> {
+      return this.stateModel.tombstone.authRoles
+    },
+
     /** True if current screen width is mobile. */
     isMobile (): boolean {
       // fall back to base window width if no window size changes have occurred
@@ -1133,6 +1139,9 @@ export const useStore = defineStore('store', {
     }
   },
   actions: {
+    setAuthRoles (authRoles: Array<AuthorizationRoles>) {
+      this.stateModel.tombstone.authRoles = authRoles
+    },
     setBusinessId (businessId: string) {
       this.stateModel.business.businessId = businessId
     },
