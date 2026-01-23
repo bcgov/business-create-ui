@@ -13,7 +13,8 @@ const defaultFlagSet: LDFlagSet = {
   'enable-web-chat': false, // by default, old webchat is disabled
   'enable-genesys-web-message': false, // by default, genesys web message is disabled
   'banner-text': '', // by default, there is no banner text
-  'use-business-api-gw-url': false // by default, use Legal API URL instead of Business API GW URL
+  'use-business-api-gw-url': false, // by default, use Legal API URL instead of Business API GW URL
+  'allow-empty-account-mailing-address': false // by default, do not allow empty account mailing address
 }
 
 /**

@@ -654,12 +654,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         middleName: '',
         lastName: this.getUserLastname,
         mailingAddress: {
-          addressCity: this.getOrgInformation?.mailingAddress.city,
-          addressCountry: this.getOrgInformation?.mailingAddress.country,
-          addressRegion: this.getOrgInformation?.mailingAddress.region,
-          postalCode: this.getOrgInformation?.mailingAddress.postalCode,
-          streetAddress: this.getOrgInformation?.mailingAddress.street,
-          streetAddressAdditional: this.getOrgInformation?.mailingAddress.streetAdditional
+          addressCity: (this.getOrgInformation?.mailingAddress?.city ?? ''),
+          addressCountry: (this.getOrgInformation?.mailingAddress?.country ?? ''),
+          addressRegion: (this.getOrgInformation?.mailingAddress?.region ?? ''),
+          postalCode: (this.getOrgInformation?.mailingAddress?.postalCode ?? ''),
+          streetAddress: (this.getOrgInformation?.mailingAddress?.street ?? ''),
+          streetAddressAdditional: (this.getOrgInformation?.mailingAddress?.streetAdditional ?? '')
         },
         email: this.getUserEmail,
         phone: this.getUserPhone
@@ -753,6 +753,15 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         // just log the error -- no need to halt app
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
+
+      // load user address
+      // must be called after we have LD info since it checks a FF
+      try {
+        this.loadUserAddress()
+      } catch (error) {
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      }
 
       // check that current route matches a supported filing type
       // only check FF when not in Vitest tests
@@ -1262,17 +1271,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (!orgInfo) throw new Error('Invalid org info')
 
     this.setOrgInformation(orgInfo)
+  }
 
-    const mailingAddress = orgInfo.mailingAddress
-    if (!mailingAddress) throw new Error('Invalid mailing address')
+  private loadUserAddress (): void {
+    const mailingAddress = this.getOrgInformation.mailingAddress // may be undefined
+    if (!mailingAddress && !GetFeatureFlag('allow-empty-account-mailing-address')) {
+      throw new Error('Invalid mailing address')
+    }
 
     const userAddress: AddressIF = {
-      addressCity: mailingAddress.city,
-      addressCountry: mailingAddress.country,
-      addressRegion: mailingAddress.region,
-      postalCode: mailingAddress.postalCode,
-      streetAddress: mailingAddress.street,
-      streetAddressAdditional: mailingAddress.streetAdditional
+      addressCity: (mailingAddress?.city ?? ''),
+      addressCountry: (mailingAddress?.country ?? ''),
+      addressRegion: (mailingAddress?.region ?? ''),
+      postalCode: (mailingAddress?.postalCode ?? ''),
+      streetAddress: (mailingAddress?.street ?? ''),
+      streetAddressAdditional: (mailingAddress?.streetAdditional ?? '')
     }
     this.setUserAddress(userAddress)
   }
