@@ -754,6 +754,15 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         console.log('Launch Darkly update error =', error) // eslint-disable-line no-console
       })
 
+      // load user address
+      // must be called after we have LD info since it checks a FF
+      try {
+        this.loadUserAddress()
+      } catch (error) {
+        this.accountAuthorizationDialog = true
+        throw error // go to catch()
+      }
+
       // check that current route matches a supported filing type
       // only check FF when not in Vitest tests
       // must be called after LD is updated
@@ -1262,14 +1271,21 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     if (!orgInfo) throw new Error('Invalid org info')
 
     this.setOrgInformation(orgInfo)
+  }
+
+  private loadUserAddress (): void {
+    const mailingAddress = this.getOrgInformation.mailingAddress // may be undefined
+    if (!mailingAddress && !GetFeatureFlag('allow-empty-account-mailing-address')) {
+      throw new Error('Invalid mailing address')
+    }
 
     const userAddress: AddressIF = {
-      addressCity: (orgInfo.mailingAddress?.city ?? ''),
-      addressCountry: (orgInfo.mailingAddress?.country ?? ''),
-      addressRegion: (orgInfo.mailingAddress?.region ?? ''),
-      postalCode: (orgInfo.mailingAddress?.postalCode ?? ''),
-      streetAddress: (orgInfo.mailingAddress?.street ?? ''),
-      streetAddressAdditional: (orgInfo.mailingAddress?.streetAdditional ?? '')
+      addressCity: (mailingAddress?.city ?? ''),
+      addressCountry: (mailingAddress?.country ?? ''),
+      addressRegion: (mailingAddress?.region ?? ''),
+      postalCode: (mailingAddress?.postalCode ?? ''),
+      streetAddress: (mailingAddress?.street ?? ''),
+      streetAddressAdditional: (mailingAddress?.streetAdditional ?? '')
     }
     this.setUserAddress(userAddress)
   }
