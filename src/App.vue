@@ -654,12 +654,12 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         middleName: '',
         lastName: this.getUserLastname,
         mailingAddress: {
-          addressCity: this.getOrgInformation?.mailingAddress.city,
-          addressCountry: this.getOrgInformation?.mailingAddress.country,
-          addressRegion: this.getOrgInformation?.mailingAddress.region,
-          postalCode: this.getOrgInformation?.mailingAddress.postalCode,
-          streetAddress: this.getOrgInformation?.mailingAddress.street,
-          streetAddressAdditional: this.getOrgInformation?.mailingAddress.streetAdditional
+          addressCity: (this.getOrgInformation?.mailingAddress?.city ?? ''),
+          addressCountry: (this.getOrgInformation?.mailingAddress?.country ?? ''),
+          addressRegion: (this.getOrgInformation?.mailingAddress?.region ?? ''),
+          postalCode: (this.getOrgInformation?.mailingAddress?.postalCode ?? ''),
+          streetAddress: (this.getOrgInformation?.mailingAddress?.street ?? ''),
+          streetAddressAdditional: (this.getOrgInformation?.mailingAddress?.streetAdditional ?? '')
         },
         email: this.getUserEmail,
         phone: this.getUserPhone
@@ -1263,16 +1263,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     this.setOrgInformation(orgInfo)
 
-    const mailingAddress = orgInfo.mailingAddress
-    if (!mailingAddress) throw new Error('Invalid mailing address')
-
     const userAddress: AddressIF = {
-      addressCity: mailingAddress.city,
-      addressCountry: mailingAddress.country,
-      addressRegion: mailingAddress.region,
-      postalCode: mailingAddress.postalCode,
-      streetAddress: mailingAddress.street,
-      streetAddressAdditional: mailingAddress.streetAdditional
+      addressCity: (orgInfo.mailingAddress?.city ?? ''),
+      addressCountry: (orgInfo.mailingAddress?.country ?? ''),
+      addressRegion: (orgInfo.mailingAddress?.region ?? ''),
+      postalCode: (orgInfo.mailingAddress?.postalCode ?? ''),
+      streetAddress: (orgInfo.mailingAddress?.street ?? ''),
+      streetAddressAdditional: (orgInfo.mailingAddress?.streetAdditional ?? '')
     }
     this.setUserAddress(userAddress)
   }
