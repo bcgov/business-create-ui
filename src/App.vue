@@ -132,14 +132,23 @@
     <!-- Alert banner -->
     <v-alert
       v-if="bannerText"
+      id="alert-banner"
+      class="pa-0 ma-0"
       tile
-      dense
-      type="warning"
     >
-      <div
-        class="mb-0 text-center colour-dk-text"
-        v-html="bannerText"
-      />
+      <div class="container d-flex align-center py-3">
+        <v-icon
+          class="color-dk-text"
+          size="28px"
+        >
+          mdi-information
+        </v-icon>
+
+        <div
+          class="color-dk-text dark-gray-links font-14 pl-2"
+          v-html="bannerText"
+        />
+      </div>
     </v-alert>
 
     <div class="app-body">
@@ -1470,6 +1479,14 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 // display drop-down menu on top of stepper and fee summary
 :deep(.app-header) {
   z-index: 3;
+}
+
+#alert-banner {
+  background-color: $BCgovGold5;
+  border-color: $BCgovGold5;
+  :deep(.dark-gray-links a) {
+    color: $gray9 !important;
+  }
 }
 
 #entity-info-wrapper,
