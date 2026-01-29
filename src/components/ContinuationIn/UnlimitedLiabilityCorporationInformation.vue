@@ -16,7 +16,7 @@
           sm="3"
           class="pr-4"
         >
-          <label class="font-weight-bold colour-dk-text">Upload File</label>
+          <label class="font-weight-bold color-dk-text">Upload File</label>
         </v-col>
 
         <v-col
