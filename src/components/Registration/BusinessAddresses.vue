@@ -216,14 +216,17 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
     )
   }
 
-  /** Called when component is created. */
-  created (): void {
+  /** Called when component is mounted. */
+  async mounted (): Promise<void> {
     // don't allow "same as" if mailing address is not in BC/Canada
     this.checkboxDisabled = (this.mailingAddress.addressRegion !== REGION_BC ||
       this.mailingAddress.addressCountry !== COUNTRY_CA)
 
     // on first load, init checkbox
     this.inheritMailingAddress = this.isSame(this.mailingAddress, this.deliveryAddress)
+
+    // now that address component(s) are mounted, validate them
+    await this.onShowErrorsChanged()
   }
 
   /** Called when the "same as" checkbox value has changed. */
@@ -322,14 +325,14 @@ export default class BusinessAddresses extends Mixins(CommonMixin) {
   }
 
   @Watch('showErrors')
-  private onShowErrorsChanged (): void {
+  private async onShowErrorsChanged (): Promise<void> {
     // only show errors in editing mode
     if (this.showErrors && this.isEditing) {
       // validate mailing address
-      this.$refs.mailingAddress.validate()
+      await this.$refs.mailingAddress.validate()
       if (!this.inheritMailingAddress) {
         // validate delivery address
-        this.$refs.deliveryAddress.validate()
+        await this.$refs.deliveryAddress.validate()
       }
     }
   }
