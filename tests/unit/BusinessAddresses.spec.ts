@@ -5,6 +5,7 @@ import { useStore } from '@/store/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import BusinessAddresses from '@/components/Registration/BusinessAddresses.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import flushPromises from 'flush-promises'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -43,7 +44,7 @@ describe.skip('Business Address delivery address <same as> is unchecked by defau
     wrapper.destroy()
   })
 
-  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
+  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %s', async (corptype) => {
     const localVue = createLocalVue()
     // pre-set entity type when mounting
     store.stateModel.entityType = corptype
@@ -284,7 +285,7 @@ describe.skip('same as checkbox resets addresses to default when unchecked - BCO
   })
 })
 
-describe.skip('should properly emit valid', () => {
+describe('should properly emit valid', () => {
   let wrapper: any
   const localVue = createLocalVue()
 
@@ -308,7 +309,7 @@ describe.skip('should properly emit valid', () => {
     addressCity: 'someCity1',
     addressCountry: 'CA',
     addressRegion: 'BC',
-    postalCode: 'somePostalCode',
+    postalCode: 'V8V 8V8',
     streetAddress: 'someStreet'
   }
 
@@ -316,101 +317,81 @@ describe.skip('should properly emit valid', () => {
     addressCity: 'someCity2',
     addressCountry: 'CA',
     addressRegion: 'BC',
-    postalCode: 'somePostalCode',
+    postalCode: 'V8V 8V8',
     streetAddress: 'someStreet'
   }
-
-  afterEach(() => {
-    wrapper.destroy()
-  })
 
   beforeAll(() => {
     // init store
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
   })
 
-  it('should emit valid form', async () => {
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('should emit valid when all addresses are valid', async () => {
+    // init store
+    store.stateModel.registration.businessAddress = {
+      deliveryAddress: validDeliveryAddress,
+      mailingAddress: validMailingAddress
+    }
     wrapper = mount(BusinessAddresses, {
       propsData: {
-        inputAddresses: {
-          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
-        },
-        isEditing: true
+        isEditing: true,
+        showErrors: true
       },
       localVue,
       vuetify
     })
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([true])
   })
 
-  it('should emit invalid with invalid registered delivery address', async () => {
+  it('should emit invalid when registered delivery address is invalid', async () => {
+    // init store
+    store.stateModel.registration.businessAddress = {
+      deliveryAddress: invalidDeliveryAddress,
+      mailingAddress: validMailingAddress
+    }
     wrapper = mount(BusinessAddresses, {
       propsData: {
-        inputAddresses: {
-          registeredOffice: { deliveryAddress: invalidDeliveryAddress, mailingAddress: validMailingAddress }
-        },
-        isEditing: true
+        isEditing: true,
+        showErrors: true
       },
       localVue,
       vuetify
     })
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })
 
-  it('should emit invalid with invalid registered mailing address', async () => {
+  it('should emit invalid when registered mailing address is invalid', async () => {
+    // init store
+    store.stateModel.registration.businessAddress = {
+      deliveryAddress: validDeliveryAddress,
+      mailingAddress: invalidMailingAddress
+    }
     wrapper = mount(BusinessAddresses, {
       propsData: {
-        inputAddresses: {
-          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: invalidMailingAddress }
-        },
-        isEditing: true
+        isEditing: true,
+        showErrors: true
       },
       localVue,
       vuetify
     })
-    await Vue.nextTick()
-
-    expect(wrapper.emitted('valid').pop()).toEqual([false])
-  })
-
-  it('should emit invalid with invalid records delivery address', async () => {
-    wrapper = mount(BusinessAddresses, {
-      propsData: {
-        inputAddresses: {
-          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
-        },
-        isEditing: true
-      },
-      localVue,
-      vuetify
-    })
-    await Vue.nextTick()
-
-    expect(wrapper.emitted('valid').pop()).toEqual([false])
-  })
-
-  it('should emit invalid with invalid records mailing address', async () => {
-    wrapper = mount(BusinessAddresses, {
-      propsData: {
-        inputAddresses: {
-          registeredOffice: { deliveryAddress: validDeliveryAddress, mailingAddress: validMailingAddress }
-        },
-        isEditing: true
-      },
-      localVue,
-      vuetify
-    })
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })
 })
 
-describe.skip('Business Addresses - Summary', () => {
+describe('Business Addresses - Summary', () => {
   let wrapper: any
 
   const registeredOffice = {
@@ -430,12 +411,19 @@ describe.skip('Business Addresses - Summary', () => {
     }
   }
 
+  beforeAll(() => {
+    // init store
+    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
+  })
+
   beforeEach(() => {
     const localVue = createLocalVue()
-    wrapper = shallowMount(BusinessAddresses, {
+    // init store
+    store.stateModel.registration.businessAddress = registeredOffice
+    wrapper = mount(BusinessAddresses, {
       propsData: {
-        inputAddresses: { registeredOffice },
-        isEditing: false
+        isEditing: false,
+        showErrors: true
       },
       localVue,
       vuetify
@@ -444,11 +432,6 @@ describe.skip('Business Addresses - Summary', () => {
 
   afterEach(() => {
     wrapper.destroy()
-  })
-
-  beforeAll(() => {
-    // init store
-    store.stateModel.nameRequest.legalType = CorpTypeCd.BENEFIT_COMPANY
   })
 
   it('displays the summary ui when in summary mode', () => {

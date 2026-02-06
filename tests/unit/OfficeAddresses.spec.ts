@@ -5,6 +5,7 @@ import { useStore } from '@/store/store'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import flushPromises from 'flush-promises'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -59,17 +60,17 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
   // the commented corp types are not available to test currently
   const CORP_TYPES = [
     CorpTypeCd.COOP,
-    CorpTypeCd.BENEFIT_COMPANY
-    // CorpTypeCd.BC_CCC,
-    // CorpTypeCd.BC_COMPANY,
-    // CorpTypeCd.BC_ULC_COMPANY
+    CorpTypeCd.BENEFIT_COMPANY,
+    CorpTypeCd.BC_CCC,
+    CorpTypeCd.BC_COMPANY,
+    CorpTypeCd.BC_ULC_COMPANY
   ]
 
   afterEach(() => {
     wrapper.destroy()
   })
 
-  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %p', async (corptype) => {
+  test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %s', async (corptype) => {
     const localVue = createLocalVue()
     // pre-set entity type when mounting.
     store.stateModel.entityType = corptype
@@ -522,8 +523,9 @@ describe('should properly emit valid - BCOMP', () => {
     })
 
     // enable Show Errors to trigger validation
+    // then wait for all components to update
     wrapper.setProps({ showErrors: true })
-    await Vue.nextTick()
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })
@@ -542,8 +544,9 @@ describe('should properly emit valid - BCOMP', () => {
     })
 
     // enable Show Errors to trigger validation
+    // then wait for all components to update
     wrapper.setProps({ showErrors: true })
-    await Vue.nextTick()
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })
@@ -562,8 +565,9 @@ describe('should properly emit valid - BCOMP', () => {
     })
 
     // enable Show Errors to trigger validation
+    // then wait for all components to update
     wrapper.setProps({ showErrors: true })
-    await Vue.nextTick()
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })
@@ -582,8 +586,9 @@ describe('should properly emit valid - BCOMP', () => {
     })
 
     // enable Show Errors to trigger validation
+    // then wait for all components to update
     wrapper.setProps({ showErrors: true })
-    await Vue.nextTick()
+    await flushPromises()
 
     expect(wrapper.emitted('valid').pop()).toEqual([false])
   })

@@ -228,7 +228,8 @@ describe('Add/Edit Org/Person component', () => {
     await Vue.nextTick()
     expect(wrapper.find(doneButtonSelector).attributes('disabled')).toBeUndefined()
     wrapper.find(doneButtonSelector).trigger('click')
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
     expect(getLastEvent(wrapper, addEditPersonEvent).officer.organizationName)
       .toEqual(validOrgData.officer.organizationName)
     wrapper.destroy()
@@ -372,7 +373,8 @@ describe('Add/Edit Org/Person component', () => {
 
     expect(wrapper.vm.$data.reassignCompletingParty).toBe(true)
     wrapper.find(doneButtonSelector).trigger('click')
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
 
     expect(wrapper.emitted().removeCompletingPartyRole).toBeTruthy()
     expect(wrapper.emitted(reassignCompletingPartyEvent).length).toBe(1)
