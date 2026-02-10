@@ -596,22 +596,22 @@ export default class OfficeAddresses extends Mixins(CommonMixin) {
   }
 
   @Watch('showErrors')
-  private onShowErrorsChanged (): void {
+  private async onShowErrorsChanged (): Promise<void> {
     // Check if addresses are valid
     if (this.showErrors && this.isEditing) {
       // Registered Mailing Address
-      this.$refs.regMailingAddress.validate()
+      await this.$refs.regMailingAddress.validate()
       if (!this.inheritMailingAddress) {
         // Registered Delivery Address
-        this.$refs.regDeliveryAddress.validate()
+        await this.$refs.regDeliveryAddress.validate()
       }
 
       if (!this.isEntityCoop && !this.inheritRegisteredAddress) {
         // Records Mailing Address
-        this.$refs.recMailingAddress.validate()
+        await this.$refs.recMailingAddress.validate()
         if (!this.inheritRecMailingAddress) {
           // Records Delivery Address
-          this.$refs.recDeliveryAddress.validate()
+          await this.$refs.recDeliveryAddress.validate()
         }
       }
     }

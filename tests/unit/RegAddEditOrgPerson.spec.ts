@@ -550,7 +550,8 @@ describe('Registration Add/Edit Org/Person component', () => {
     const wrapper = createComponent(validCompletingParty, NaN, null)
 
     wrapper.find(buttonDoneSelector).trigger('click')
-    await Vue.nextTick()
+    // wait for all components to update
+    await flushPromises()
     const event = getLastEvent(wrapper, addEditPersonEvent)
     expect(event.officer.firstName).toEqual(validCompletingParty.officer.firstName)
     expect(event.officer.middleName).toEqual(validCompletingParty.officer.middleName)

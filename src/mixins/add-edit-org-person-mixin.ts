@@ -289,20 +289,20 @@ export default class AddEditOrgPersonMixin extends Vue {
    * Address component event handler - called when it is rendered and when
    * the user has changed a mailing address field.
    */
-  updateMailingAddressValidity (valid: boolean): void {
+  async updateMailingAddressValidity (valid: boolean): Promise<void> {
     this.mailingAddressValid = valid
     // validate the main form to update dummy component rules
-    this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
+    this.$refs.addPersonOrgForm && await this.$refs.addPersonOrgForm.validate()
   }
 
   /**
    * Address component event handler - called when it is rendered and when
    * the user has changed a delivery address field.
    */
-  updateDeliveryAddressValidity (valid: boolean): void {
+  async updateDeliveryAddressValidity (valid: boolean): Promise<void> {
     this.deliveryAddressValid = valid
     // validate the main form to update dummy component rules
-    this.$refs.addPersonOrgForm && this.$refs.addPersonOrgForm.validate()
+    this.$refs.addPersonOrgForm && await this.$refs.addPersonOrgForm.validate()
   }
 
   swapIsLookupBusiness (): void {
@@ -390,8 +390,8 @@ export default class AddEditOrgPersonMixin extends Vue {
 
     // validate all the forms
     // NB: main form depends on address forms
-    this.mailingAddressValid = this.$refs.mailingAddressNew.validate()
-    this.deliveryAddressValid = !this.$refs.deliveryAddressNew || this.$refs.deliveryAddressNew.validate()
+    this.mailingAddressValid = await this.$refs.mailingAddressNew.validate()
+    this.deliveryAddressValid = !this.$refs.deliveryAddressNew || await this.$refs.deliveryAddressNew.validate()
     this.addPersonOrgFormValid = this.$refs.addPersonOrgForm.validate()
 
     // only proceed if main form is valid

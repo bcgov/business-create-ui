@@ -462,9 +462,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
   }
 
   @Watch('$route')
-  private validateAddressForms (): void {
-    this.$refs.mailingAddress && this.$refs.mailingAddress.validate()
-    this.$refs.deliveryAddress && this.$refs.deliveryAddress.validate()
+  private async validateAddressForms (): Promise<void> {
+    this.$refs.mailingAddress && await this.$refs.mailingAddress.validate()
+    this.$refs.deliveryAddress && await this.$refs.deliveryAddress.validate()
   }
 
   /** Emits the valid state of the add custodian form. */
@@ -494,9 +494,9 @@ export default class CustodianOfRecords extends Mixins(CommonMixin) {
 
   /** Handle validation event from parent. */
   @Watch('showErrors')
-  private onShowErrorsChanged (): void {
+  private async onShowErrorsChanged (): Promise<void> {
     this.$refs.addCustodianForm.validate()
-    this.validateAddressForms()
+    await this.validateAddressForms()
   }
 }
 </script>

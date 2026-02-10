@@ -4,6 +4,7 @@ import CareAndCustodySelect from '@/components/Dissolution/CareAndCustodySelect.
 import { DissolutionResources } from '@/resources'
 import { RoleTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import flushPromises from 'flush-promises'
 
 // Test Case Data
 const custodianTestCases = [
@@ -76,7 +77,8 @@ for (const mock of custodianTestCases) {
 
       const custodianRadioBtn = wrapper.find('#custodian-radio-btn')
       custodianRadioBtn.trigger('click')
-      await Vue.nextTick()
+      // wait for all components to update
+      await flushPromises()
 
       // Verify new model state
       expect(wrapper.vm.liquidatorOrCustodian).toBe(RoleTypes.CUSTODIAN)
