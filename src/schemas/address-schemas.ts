@@ -1,19 +1,6 @@
 import { required, maxLength } from 'vuelidate/lib/validators'
 import { AddressSchemaIF } from '@/interfaces'
-
-/**
- * Canadian postal code regex (eg, accepts A1A 1A1 or A1A1A1).
- * Ref: https://en.wikipedia.org/wiki/Postal_codes_in_Canada
- */
-const CanadaPostalCodeRegex = /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z][ ]?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/i
-
-/** Custom validator for postal codes. */
-function validatePostalCode (value: string, parentVm: any): boolean {
-  // if Canada, validate postal code format
-  if (parentVm.addressCountry === 'CA') return CanadaPostalCodeRegex.test(value)
-  // otherwise, no validation
-  return true
-}
+import { isRequiredPostalCode, isValidPostalCode } from '@bcrs-shared-components/validators'
 
 // The Address schema containing Vuelidate rules.
 // NB: This should match the subject JSON schema.
@@ -41,8 +28,8 @@ export const OfficeAddressSchema: AddressSchemaIF = {
   },
   postalCode: {
     required,
-    maxLength: maxLength(7), // max for Canada (as per line 35)
-    validatePostalCode
+    maxLength: maxLength(7), // max for Canada (as per isCanada validator above)
+    isValidPostalCode
   },
   deliveryInstructions: {
     maxLength: maxLength(80)
@@ -71,8 +58,8 @@ export const CoopOfficeAddressSchema: AddressSchemaIF = {
   },
   postalCode: {
     required,
-    maxLength: maxLength(7), // max for Canada (as per line 67)
-    validatePostalCode
+    maxLength: maxLength(7), // max for Canada (as per isCanada validator above)
+    isValidPostalCode
   },
   deliveryInstructions: {
     maxLength: maxLength(80)
@@ -98,9 +85,9 @@ export const PersonAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(2)
   },
   postalCode: {
-    required,
+    isRequiredPostalCode,
     maxLength: maxLength(15),
-    validatePostalCode
+    isValidPostalCode
   },
   deliveryInstructions: {
     maxLength: maxLength(80)
