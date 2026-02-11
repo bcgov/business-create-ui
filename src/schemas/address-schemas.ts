@@ -27,7 +27,7 @@ export const OfficeAddressSchema: AddressSchemaIF = {
     isBC: (val: string) => Boolean(val === 'BC')
   },
   postalCode: {
-    required,
+    isRequiredPostalCode,
     maxLength: maxLength(7), // max for Canada (as per isCanada validator above)
     isValidPostalCode
   },
@@ -57,7 +57,7 @@ export const CoopOfficeAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(2)
   },
   postalCode: {
-    required,
+    isRequiredPostalCode,
     maxLength: maxLength(7), // max for Canada (as per isCanada validator above)
     isValidPostalCode
   },
