@@ -132,6 +132,13 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.find('header h2').text()).toBe('Resulting Business Name and Type')
       expect(section.findComponent(ResultingBusinessName).exists()).toBe(true)
     })
+
+    it('displays the correct section reference to the Act', () => {
+      const section = wrapper.findAll('section').at(1)
+      const paragraphText = section.find('p').text()
+
+      expect(paragraphText).toContain('section 274')
+    })
   })
 }
 
@@ -176,6 +183,13 @@ for (const test of amalgamationBusinessInfo) {
       const section = wrapper.findAll('section').at(1)
       expect(section.find('header h2').text()).toBe('Resulting Business Name and Type')
       expect(section.findComponent(ResultingBusinessName).exists()).toBe(true)
+    })
+
+    it('displays the correct section reference to the Act', () => {
+      const section = wrapper.findAll('section').at(1)
+      const paragraphText = section.find('p').text()
+
+      expect(paragraphText).toContain('section 273')
     })
   })
 }

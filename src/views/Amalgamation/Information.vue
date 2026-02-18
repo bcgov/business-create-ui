@@ -77,7 +77,7 @@
         class="mt-3"
       >
         This is a {{ isAmalgamationFilingVertical ? 'vertical' : 'horizontal' }} short form amalgamation
-        under section 273 of Business Corporations Act.
+        under section {{ isAmalgamationFilingVertical ? '273' : '274' }} of Business Corporations Act.
         The amalgamated business will adopt as its notice of articles, the notice of articles of the
         {{ isAmalgamationFilingVertical ? 'holding' : 'primary' }} business.
       </p>
