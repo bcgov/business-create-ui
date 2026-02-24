@@ -119,7 +119,7 @@
               <span
                 class="time-zone-label"
                 :class="{ 'disabled': !isFutureEffective }"
-              >Pacific Time</span>
+              >Pacific time</span>
             </v-col>
           </v-row>
 
