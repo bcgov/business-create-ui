@@ -270,16 +270,6 @@ export default class ListShareClass extends Vue {
 
   /** Returns a formatted par value. */
   formatParValue (item: any): string {
-    if (!item.parValue) return 'No Par Value'
-
-    // display some currencies with 2 decimal places
-    if (['AUD', 'CAD', 'USD'].includes(item.currency)) {
-      return '$' + formatWithMinTwoDecimals(item.parValue)
-    }
-
-    // just use string representation
-    return item.parValue.toString()
-
     /** Returns a number formatted with a minimum of two decimal places. */
     function formatWithMinTwoDecimals (value: number): string {
       // for whole numbers, if >= 1 million then show no decimals, otherwise show 2 decimals
@@ -296,6 +286,16 @@ export default class ListShareClass extends Vue {
       // eg, 0.006125
       return value.toString()
     }
+
+    if (!item.parValue) return 'No Par Value'
+
+    // display some currencies with 2 decimal places
+    if (['AUD', 'CAD', 'USD'].includes(item.currency)) {
+      return '$' + formatWithMinTwoDecimals(item.parValue)
+    }
+
+    // just use string representation
+    return item.parValue.toString()
   }
 
   /**

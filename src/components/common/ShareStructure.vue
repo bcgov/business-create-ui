@@ -296,6 +296,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
     return [
       v => (v !== '' && v !== null && v !== undefined) || 'Par value is required',
+      v => Number.isFinite(Number(v)) || 'Par value must be a valid number',
       v => v > 0 || 'Amount must be greater than 0',
       v => SignificantDigits(v) <= 16 || 'Amount has too many significant digits'
     ]

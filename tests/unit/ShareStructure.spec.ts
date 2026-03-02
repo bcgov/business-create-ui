@@ -261,7 +261,7 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Shows error message if par value < 1 has incorrect precision', async () => {
+  it('Shows error message if par value < 1 has too many significant digits', async () => {
     const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [existingShareClass])
@@ -275,7 +275,7 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Shows error message if par value > 1 has incorrect precision', async () => {
+  it('Shows error message if par value > 1 has too many significant digits', async () => {
     const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [existingShareClass])
