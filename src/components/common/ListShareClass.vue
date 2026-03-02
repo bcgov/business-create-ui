@@ -39,23 +39,7 @@
         disable-pagination
         disable-sort
         hide-default-footer
-        hide-default-header
       >
-        <template
-          #header="{ props: { headers } }"
-        >
-          <thead>
-            <tr>
-              <th
-                v-for="(h, index) in headers"
-                :key="index"
-                :class="h.class"
-              >
-                <span>{{ h.text }}</span>
-              </th>
-            </tr>
-          </thead>
-        </template>
         <template #item="row">
           <!-- Share Class Rows-->
           <tr
@@ -66,11 +50,11 @@
             <td class="list-item__title">
               {{ row.item.name }}
             </td>
-            <td class="share-series-value">
+            <td class="share-series-value text-right">
               {{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
             </td>
-            <td class="share-series-value">
-              {{ row.item.parValue ? row.item.parValue : 'No Par Value' }}
+            <td class="share-series-value text-right">
+              {{ formatParValue(row.item) }}
             </td>
             <td class="share-series-value">
               {{ row.item.currency }}
@@ -167,13 +151,16 @@
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
           >
             <td class="series-name">
-              <span>{{ seriesItem.name }}</span>
+              <li>
+                <span class="ml-n1">{{ seriesItem.name }}</span>
+              </li>
             </td>
-            <td>
-              {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString()
-                : 'No Maximum' }}
+            <td class="text-right">
+              {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
             </td>
-            <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
+            <td class="share-series-value text-right">
+              {{ formatParValue(row.item) }}
+            </td>
             <td>{{ row.item.currency }}</td>
             <td>{{ seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No' }}</td>
 
@@ -281,6 +268,36 @@ export default class ListShareClass extends Vue {
     { text: '', value: 'actions' }
   ]
 
+  /** Returns a formatted par value. */
+  formatParValue (item: any): string {
+    if (!item.parValue) return 'No Par Value'
+
+    // display some currencies with 2 decimal places
+    if (['AUD', 'CAD', 'USD'].includes(item.currency)) {
+      return '$' + formatWithMinTwoDecimals(item.parValue)
+    }
+
+    // just use string representation
+    return item.parValue.toString()
+
+    /** Returns a number formatted with a minimum of two decimal places. */
+    function formatWithMinTwoDecimals (value: number): string {
+      // for whole numbers, if >= 1 million then show no decimals, otherwise show 2 decimals
+      if (Number.isInteger(value)) {
+        return (value >= 1e6) ? value.toFixed(0) : value.toFixed(2)
+      }
+
+      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+      const [int, dec] = value.toString().split('.')
+
+      // eg, 1.25, 12.5
+      if (dec && dec.length <= 2) return value.toFixed(2)
+
+      // eg, 0.006125
+      return value.toString()
+    }
+  }
+
   /**
    * Adjust the priority of the list share class
    * @param indexFrom The index of the class
@@ -381,28 +398,24 @@ tbody {
   }
 }
 
-.class-row td:not(:first-child) {
-  color: $gray6;
-}
-
+// no bottom border for class with series
 .class-row-has-series td {
   border-bottom: none !important;
 }
 
 .series-row {
   .series-name {
-    padding-left: 2rem;
+    padding-left: 2.5rem;
+    font-weight: 700;
   }
 
   td {
     border-bottom: none !important;
-  }
-
-  td:not(:first-child){
-    color: $gray6;
+    color: $gray7;
   }
 }
 
+// thin border at bottom of series
 .series-row-last td {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }
@@ -449,13 +462,33 @@ tbody {
   margin-top: -2px;
 }
 
-.share-structure-header {
-  font-size: $px-14 !important;
-  color: $gray9 !important;
-  font-weight: bold !important;
+:deep() {
+  .share-structure-header {
+    font-size: $px-14 !important;
+    color: $gray9 !important;
+    font-weight: bold !important;
+  }
 }
 
 .share-series-value {
   color: $gray7 !important;
+}
+
+:deep() {
+  // borders around header elements
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+    box-shadow: 1px 2px 0 0 rgba(0,0,0,0.1);
+    border: none !important;
+  }
+
+  // limit width of "Maximum Number of Shares"
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th:nth-child(2) {
+    max-width: 140px;
+  }
+
+  // limit width of "Special Rights or Restrictions"
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th:nth-child(5) {
+    max-width: 140px;
+  }
 }
 </style>

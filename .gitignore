@@ -151,3 +151,7 @@ yarn-error.log*
 .firebase
 *.firebaserc
 firebase-debug.log
+
+# Copilot custom instructions
+/**/.github/copilot-instructions.md
+/**/.github/agents/
