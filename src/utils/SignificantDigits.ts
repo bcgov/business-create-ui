@@ -16,7 +16,7 @@ export function SignificantDigits (val: any): number {
   str = str.replace(/^[+-]/, '')
 
   // look at the mantissa
-  // works for regular numbers (eg, 1.23) and scientific notation (e.g. 1.23e+45)
+  // works for both regular numbers (eg, 1.23) and scientific notation (e.g. 1.23e+45)
   const [mantissa] = str.toLowerCase().split('e')
 
   // safety check

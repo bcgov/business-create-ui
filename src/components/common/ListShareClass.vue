@@ -151,9 +151,11 @@
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
           >
             <td class="series-name">
-              <li>
-                <span class="ml-n1">{{ seriesItem.name }}</span>
-              </li>
+              <ul>
+                <li>
+                  <span class="ml-n1">{{ seriesItem.name }}</span>
+                </li>
+              </ul>
             </td>
             <td class="text-right">
               {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
@@ -239,6 +241,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { RouteNames } from '@/enums'
 import { arrayMoveMutable } from 'array-move'
+import { FormatCurrency } from '@/utils'
 
 @Component({})
 export default class ListShareClass extends Vue {
@@ -270,31 +273,14 @@ export default class ListShareClass extends Vue {
 
   /** Returns a formatted par value. */
   formatParValue (item: any): string {
-    /** Returns a number formatted with a minimum of two decimal places. */
-    function formatWithMinTwoDecimals (value: number): string {
-      // for whole numbers, if >= 1 million then show no decimals, otherwise show 2 decimals
-      if (Number.isInteger(value)) {
-        return (value >= 1e6) ? value.toFixed(0) : value.toFixed(2)
-      }
-
-      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-      const [int, dec] = value.toString().split('.')
-
-      // eg, 1.25, 12.5
-      if (dec && dec.length <= 2) return value.toFixed(2)
-
-      // eg, 0.006125
-      return value.toString()
-    }
-
     if (!item.parValue) return 'No Par Value'
 
-    // display some currencies with 2 decimal places
+    // format some currencies
     if (['AUD', 'CAD', 'USD'].includes(item.currency)) {
-      return '$' + formatWithMinTwoDecimals(item.parValue)
+      return '$' + FormatCurrency(item.parValue)
     }
 
-    // just use string representation
+    // no formatting for other currencies
     return item.parValue.toString()
   }
 
