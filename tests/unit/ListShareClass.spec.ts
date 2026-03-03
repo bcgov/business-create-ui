@@ -2,6 +2,7 @@ import Vuetify from 'vuetify'
 import { createPinia, setActivePinia } from 'pinia'
 import { createLocalVue, mount } from '@vue/test-utils'
 import ListShareClass from '@/components/common/ListShareClass.vue'
+import flushPromises from 'flush-promises'
 
 const vuetify = new Vuetify({})
 const localVue = createLocalVue()
@@ -81,16 +82,17 @@ describe('List Shares and Series component', () => {
       series: []
     }]
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = mount(ListShareClass, {
       localVue,
       vuetify,
       propsData: { shareClasses }
     })
+    await flushPromises()
   })
 
-  afterEach(async () => {
-    await wrapper.destroy()
+  afterEach(() => {
+    wrapper.destroy()
   })
 
   it('displays the correct amount of share classes / series when data is present', () => {
