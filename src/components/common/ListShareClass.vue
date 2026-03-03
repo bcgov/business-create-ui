@@ -39,23 +39,7 @@
         disable-pagination
         disable-sort
         hide-default-footer
-        hide-default-header
       >
-        <template
-          #header="{ props: { headers } }"
-        >
-          <thead>
-            <tr>
-              <th
-                v-for="(h, index) in headers"
-                :key="index"
-                :class="h.class"
-              >
-                <span>{{ h.text }}</span>
-              </th>
-            </tr>
-          </thead>
-        </template>
         <template #item="row">
           <!-- Share Class Rows-->
           <tr
@@ -66,11 +50,11 @@
             <td class="list-item__title">
               {{ row.item.name }}
             </td>
-            <td class="share-series-value">
+            <td class="share-series-value text-right">
               {{ row.item.maxNumberOfShares ? (+row.item.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
             </td>
-            <td class="share-series-value">
-              {{ row.item.parValue ? row.item.parValue : 'No Par Value' }}
+            <td class="share-series-value text-right">
+              {{ formatParValue(row.item) }}
             </td>
             <td class="share-series-value">
               {{ row.item.currency }}
@@ -167,13 +151,18 @@
             :class="{ 'series-row-last': index === row.item.series.length - 1}"
           >
             <td class="series-name">
-              <span>{{ seriesItem.name }}</span>
+              <ul>
+                <li>
+                  <span class="ml-n1">{{ seriesItem.name }}</span>
+                </li>
+              </ul>
             </td>
-            <td>
-              {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString()
-                : 'No Maximum' }}
+            <td class="text-right">
+              {{ seriesItem.maxNumberOfShares ? (+seriesItem.maxNumberOfShares).toLocaleString() : 'No Maximum' }}
             </td>
-            <td>{{ row.item.parValue ? row.item.parValue : 'No Par Value' }}</td>
+            <td class="share-series-value text-right">
+              {{ formatParValue(row.item) }}
+            </td>
             <td>{{ row.item.currency }}</td>
             <td>{{ seriesItem.hasRightsOrRestrictions ? 'Yes' : 'No' }}</td>
 
@@ -252,6 +241,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import { RouteNames } from '@/enums'
 import { arrayMoveMutable } from 'array-move'
+import { FormatCurrency } from '@/utils'
 
 @Component({})
 export default class ListShareClass extends Vue {
@@ -280,6 +270,19 @@ export default class ListShareClass extends Vue {
     { text: 'Special Rights or Restrictions', value: 'hasRightsOrRestrictions', class: 'share-structure-header' },
     { text: '', value: 'actions' }
   ]
+
+  /** Returns a formatted par value. */
+  formatParValue (item: any): string {
+    if (!item.parValue) return 'No Par Value'
+
+    // format some currencies
+    if (['AUD', 'CAD', 'USD'].includes(item.currency)) {
+      return '$' + FormatCurrency(item.parValue)
+    }
+
+    // no formatting for other currencies
+    return item.parValue.toString()
+  }
 
   /**
    * Adjust the priority of the list share class
@@ -381,28 +384,24 @@ tbody {
   }
 }
 
-.class-row td:not(:first-child) {
-  color: $gray6;
-}
-
+// no bottom border for class with series
 .class-row-has-series td {
   border-bottom: none !important;
 }
 
 .series-row {
   .series-name {
-    padding-left: 2rem;
+    padding-left: 2.5rem;
+    font-weight: 700;
   }
 
   td {
     border-bottom: none !important;
-  }
-
-  td:not(:first-child){
-    color: $gray6;
+    color: $gray7;
   }
 }
 
+// thin border at bottom of series
 .series-row-last td {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }
@@ -449,13 +448,33 @@ tbody {
   margin-top: -2px;
 }
 
-.share-structure-header {
-  font-size: $px-14 !important;
-  color: $gray9 !important;
-  font-weight: bold !important;
+:deep() {
+  .share-structure-header {
+    font-size: $px-14 !important;
+    color: $gray9 !important;
+    font-weight: bold !important;
+  }
 }
 
 .share-series-value {
   color: $gray7 !important;
+}
+
+:deep() {
+  // borders around header elements
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+    box-shadow: 1px 2px 0 0 rgba(0,0,0,0.1);
+    border: none !important;
+  }
+
+  // limit width of "Maximum Number of Shares"
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th:nth-child(2) {
+    max-width: 140px;
+  }
+
+  // limit width of "Special Rights or Restrictions"
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th:nth-child(5) {
+    max-width: 140px;
+  }
 }
 </style>

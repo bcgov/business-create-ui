@@ -261,30 +261,30 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Shows error message if par value < 1 has incorrect precision', async () => {
+  it('Shows error message if par value < 1 has too many significant digits', async () => {
     const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [existingShareClass])
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
-    inputElement.setValue(0.1234567) // invalid
+    inputElement.setValue('0.12345678901234567') // invalid
     inputElement.trigger('change')
     await waitForUpdate()
     expect(wrapper.find(formSelector).text())
-      .toContain('Amounts less than 1 can be entered with up to 6 decimal places')
+      .toContain('Amount has too many significant digits')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
 
-  it('Shows error message if par value > 1 has incorrect precision', async () => {
+  it('Shows error message if par value > 1 has too many significant digits', async () => {
     const existingShareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const shareClass = createShareStructure(null, 1, 'Class', 'Class B', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [existingShareClass])
     const inputElement: Wrapper<Vue> = wrapper.find(classParValue)
-    inputElement.setValue(1.234) // invalid
+    inputElement.setValue('12345678901234567') // invalid
     inputElement.trigger('change')
     await waitForUpdate()
     expect(wrapper.find(formSelector).text())
-      .toContain('Amounts greater than 1 can be entered with up to 2 decimal places')
+      .toContain('Amount has too many significant digits')
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
