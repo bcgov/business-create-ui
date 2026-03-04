@@ -263,7 +263,7 @@ import * as Dialogs from '@/dialogs'
 import * as Views from '@/views'
 
 // Mixins, interfaces, etc
-import { CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
+import { CommonMixin, DateMixin, ErrorMessageMixin, FilingTemplateMixin, NameRequestMixin } from '@/mixins'
 import { AccountInformationIF, AddressIF, BreadcrumbIF, BusinessIF, BusinessWarningIF, CompletingPartyIF,
   ConfirmDialogType, EmptyFees, FeesIF, FilingDataIF, NameRequestIF, OrgInformationIF, PartyIF, ResourceIF,
   StepIF } from '@/interfaces'
@@ -296,7 +296,9 @@ import { ContinuationInStepsAuthorization } from './resources/ContinuationIn/ste
     ...Views
   }
 })
-export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin) {
+export default class App extends Mixins(
+  CommonMixin, DateMixin, ErrorMessageMixin, FilingTemplateMixin, NameRequestMixin
+) {
   // Refs
   $refs!: {
     confirm: ConfirmDialogType
@@ -550,15 +552,22 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     // listen for save error event
     this.$root.$on('save-error-event', async error => {
       // save errors/warnings
-      this.saveErrors = error?.response?.data?.errors || []
-      this.saveWarnings = error?.response?.data?.warnings || []
+      this.saveErrors = error?.response?.data?.rootCause?.errors || []
+      this.saveWarnings = error?.response?.data?.rootCause?.warnings || []
+      const filing = error?.response?.data?.rootCause?.filing || {}
+
+      // on HTTP 400 or 422, decode error messages for display in dialog
+      if ([StatusCodes.BAD_REQUEST, StatusCodes.UNPROCESSABLE_ENTITY].includes(error?.response?.status)) {
+        this.saveErrors.forEach(err => {
+          err.error = this.decodeErrorMessage(err, filing)
+        })
+      }
 
       if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
         // changes were saved if a 402 is received, so clear flag
         this.setHaveChanges(false)
         this.paymentErrorDialog = true
       } else {
-        console.log('Save error =', error) // eslint-disable-line no-console
         this.saveErrorDialog = true
       }
     })
