@@ -108,5 +108,8 @@
   "peerDependencies": {
     "@vue/composition-api": "^1.7.2",
     "vue": "^2.6.11"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
