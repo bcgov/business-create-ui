@@ -39,7 +39,7 @@
                     v-model.trim="custodian.officer.firstName"
                     filled
                     label="First Name"
-                    :rules="Rules.FirstNameRules"
+                    :rules="Rules.FirstNameRulesCustodian"
                   />
                 </v-col>
                 <v-col>
@@ -49,7 +49,7 @@
                     filled
                     class="px-5"
                     label="Middle Name (Optional)"
-                    :rules="Rules.MiddleNameRules"
+                    :rules="Rules.MiddleNameRulesCustodian"
                   />
                 </v-col>
                 <v-col>
@@ -93,7 +93,7 @@
                       v-model.trim="custodian.officer.firstName"
                       filled
                       label="First Name"
-                      :rules="isPerson ? Rules.FirstNameRules : []"
+                      :rules="isPerson ? Rules.FirstNameRulesCustodian : []"
                       @input="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
@@ -104,7 +104,7 @@
                       filled
                       class="px-5"
                       label="Middle Name (Optional)"
-                      :rules="isPerson ? Rules.MiddleNameRules : []"
+                      :rules="isPerson ? Rules.MiddleNameRulesCustodian : []"
                       @input="syncCustodianPartyType(PartyTypes.PERSON)"
                     />
                   </v-col>
