@@ -374,9 +374,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         filingId: this.getFilingId,
         folioNumber: this.getFolioNumber || undefined,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective,
-        ...(this.isBaseCompany
-          ? { authorizationReceived: this.getCertifyState.valid }
-          : { certifiedBy: this.getCertifyState.certifiedBy })
+        ...(this.isContinuationInAuthorization
+          ? { authorizationReceived: true }
+          : this.isBaseCompany
+            ? { authorizationReceived: this.getCertifyState.valid }
+            : { certifiedBy: this.getCertifyState.certifiedBy })
       },
       business: {
         identifier: this.getTempId,
