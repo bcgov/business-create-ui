@@ -110,7 +110,7 @@
       >
         <Certify
           class="py-8 px-6"
-          :class="{ 'invalid-section': isCertifyInvalid }"
+          :class="{ 'invalid-section': isCertifyInvalid, 'prevent-red-title': isBaseCompany }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
           :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
