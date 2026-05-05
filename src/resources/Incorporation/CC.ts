@@ -88,7 +88,7 @@ export const IncorporationResourceCc: IncorporationResourceIF = {
     completingPartyStatement: {
       certifyStatements: [],
       certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
-      entityDisplay: GetCorpFullDescription(CorpTypeCd.BENEFIT_COMPANY)
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.BC_CCC)
     }
   }
 }
