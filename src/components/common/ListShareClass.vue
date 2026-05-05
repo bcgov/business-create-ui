@@ -426,7 +426,7 @@ tbody {
   display: flex;
 
   .edit-action {
-    border-right: 1px solid $gray1;
+    border-right: 1px solid #D4D8DC;
   }
 
   .v-btn {
