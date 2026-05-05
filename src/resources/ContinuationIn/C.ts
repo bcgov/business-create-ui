@@ -34,7 +34,8 @@ export const ContinuationInResourceC: ContinuationInResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: ResourcePhrases.OFFENCE_SECTION_427
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.CONTINUE_IN)
     }
   }
 }

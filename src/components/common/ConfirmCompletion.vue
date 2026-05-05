@@ -43,11 +43,10 @@
             </v-row>
             <v-row class="no-gutters pa-5 gray-background">
               <v-checkbox
-                :value="getConfirmCompletionState.confirmed"
+                v-model="getConfirmCompletionState.confirmed"
                 hide-details
                 class="mt-0 pt-0"
                 :class="{ 'error-text': invalidSection }"
-                @change="emitConfirmed($event)"
               >
                 <template #label>
                   <p class="ma-0 stmt-text">
@@ -64,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { ConfirmCompletionIF } from '@/interfaces'
@@ -74,10 +73,6 @@ export default class ConfirmCompletion extends Vue {
   @Getter(useStore) getConfirmCompletionState!: ConfirmCompletionIF
 
   @Prop({ default: false }) readonly invalidSection!: boolean
-
-  @Emit('emitConfirmed')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  emitConfirmed (confirmed: boolean): void {}
 }
 </script>
 
@@ -86,7 +81,6 @@ export default class ConfirmCompletion extends Vue {
 
 .stmt-text {
   display: inline;
-  font-size: 0.875rem;
   color: $gray7;
   font-weight: normal;
   line-height: 1.2rem;

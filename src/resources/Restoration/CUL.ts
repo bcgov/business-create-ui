@@ -40,7 +40,8 @@ export const RestorationResourceCul: RestorationResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: ResourcePhrases.OFFENCE_SECTION_427
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.ULC_CONTINUE_IN)
     }
   }
 }

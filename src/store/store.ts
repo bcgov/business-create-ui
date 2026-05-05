@@ -791,7 +791,13 @@ export const useStore = defineStore('store', {
       // Validate different steps for Base Companies vs Coops
       const isDocumentValid = this.isBaseCompany ? isBaseStepsValid : isCoopStepsValid
 
-      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
+      const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
+        ?.includes('incorporationApplication-completingParty')
+      const isCompletingPartyStmtValid = (this.isBaseCompany && isCompletingPartyReleased)
+        ? this.getConfirmCompletionState.confirmed && !!this.getConfirmCompletionState.completedBy
+        : true
+
+      const isCertifyValid = (this.getCertifyState.valid && !!this.getCertifiedBy)
 
       const isCourtOrderValid = (this.isBaseCompany && IsAuthorized(AuthorizedActions.COURT_ORDER_POA))
         ? this.getCourtOrderStep.valid
@@ -805,6 +811,7 @@ export const useStore = defineStore('store', {
         this.isDefineCompanyValid &&
         this.isAddPeopleAndRolesValid &&
         isDocumentValid &&
+        isCompletingPartyStmtValid &&
         isCertifyValid &&
         isCourtOrderValid &&
         isStaffPaymentValid
