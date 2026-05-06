@@ -166,7 +166,6 @@
       v-if="isBaseCompany && showCompPartyChanges"
       class="mt-10"
       :invalid-section="isCompPartyInvalid"
-      @emitConfirmed="setConfirmed($event)"
     >
       <template #header>
         <h2>Completing Party Statement</h2>
@@ -183,7 +182,7 @@
         >
           <v-text-field
             id="completing-party-textfield"
-            v-model="enteredCompletingParty"
+            v-model="getConfirmCompletionState.completedBy"
             filled
             persistent-hint
             label="Legal name of completing party"
@@ -223,6 +222,7 @@
           class="py-8 px-6"
           :class="{ 'invalid-section': isCertifyInvalid, 'prevent-red-title': isBaseCompany }"
           :disableEdit="isEntityCoop && !IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)"
+          :entityDisplay="getEntityDescription"
           :invalidSection="isCertifyInvalid"
           :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
           :showLegalName="!isBaseCompany"
@@ -233,9 +233,8 @@
           >
             <p
               class="ma-0 certify-stmt"
-              :style="{ 'font-size': '0.875rem' }"
             >
-              {{ completingParty || '[Completing Party]' }}
+              {{ getConfirmCompletionState.completedBy || '[Completing Party]' }}
               certifies that the information provided is correct and that
               they are authorized to submit this filing on behalf of the
               {{ getEntityDescription }}.
@@ -272,10 +271,7 @@
             v-if="!isEntityCoop"
             #checkbox-label
           >
-            <p
-              class="ma-0"
-              style="font-size: 0.875rem;"
-            >
+            <p class="ma-0">
               I, <strong>{{ getCertifyState.certifiedBy || "[Legal Name]" }}</strong>, certify that I have relevant
               knowledge of the {{ getCompletingPartyStatement.entityDisplay || 'business' }}
               and I am authorized to make this filing.
@@ -407,13 +403,6 @@ export default class IncorporationReviewConfirm extends Vue {
   readonly AuthorizedActions = AuthorizedActions
   readonly IsAuthorized = IsAuthorized
 
-  setConfirmed (confirmed: boolean) {
-    this.setConfirmCompletionState({
-      confirmed,
-      completedBy: confirmed ? this.userFullName : undefined
-    })
-  }
-
   @Getter(useStore) getBusinessContact!: ContactPointIF
   @Getter(useStore) getCertifyState!: CertifyIF
   @Getter(useStore) getConfirmCompletionState!: ConfirmCompletionIF
@@ -448,7 +437,6 @@ export default class IncorporationReviewConfirm extends Vue {
     this.$refs.completingPartyForm?.validate()
   }
 
-  enteredCompletingParty = ''
   $refs: { completingPartyForm: FormIF }
 
   /**
@@ -456,6 +444,10 @@ export default class IncorporationReviewConfirm extends Vue {
    * This is since the checkbox has to be ticked again after the save dialog has been closed.
    */
   mounted (): void {
+    this.setConfirmCompletionState({
+      completedBy: this.completingParty,
+      confirmed: false
+    })
     this.setCertifyState({
       certifiedBy: this.getCertifyState.certifiedBy,
       valid: false
@@ -514,10 +506,9 @@ export default class IncorporationReviewConfirm extends Vue {
       : 'Confirm the legal name of the person authorized to complete and submit this application.'
   }
 
-  // FUTURE: #32780 map this to somewhere in the store and add it into the filing submission
   get completingParty (): string {
     return IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)
-      ? this.enteredCompletingParty
+      ? this.getConfirmCompletionState.completedBy
       : this.userFullName
   }
 

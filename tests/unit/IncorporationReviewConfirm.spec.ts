@@ -73,6 +73,11 @@ for (const test of reviewConfirmTestCases) {
       return null
     })
 
+    beforeEach(() => {
+      // reset completedBy
+      store.stateModel.confirmCompletionState.completedBy = ''
+    })
+
     it('renders the component properly', () => {
       wrapper = shallowWrapperFactory(IncorporationReviewConfirm, null, { entityType: test.entityType })
 
