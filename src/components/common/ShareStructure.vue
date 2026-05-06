@@ -340,11 +340,6 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
         const name = this.shareStructure.name
         this.shareStructure.name = name.substr(0, name.indexOf(' Shares'))
       }
-
-      // THIS IS THE PROBLEM (triggers validation on open): validate initial data 
-      // FIX: do NOT validate on initial render anymore
-      // validation only happens on "Done" click
-      // this.$nextTick(() => this.$refs.shareStructureForm.validate())
     }
   }
 
