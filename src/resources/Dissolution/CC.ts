@@ -45,10 +45,10 @@ export const DissolutionResourceCc: DissolutionResourceIF = {
       fileName: 'corp-sample-affidavit.pdf'
     },
     confirmSection: {
-      checkboxLabel: `I confirm the following items are included as required in the Business Corporations Act and have
-      been deposited in the Company's records book:`,
+      checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the <em>Business Corporations ' +
+        'Act</em> has been obtained and deposited in the company\'s records office.',
       confirmText: [
-        'The affidavit references the Business Corporations Act, section 316.',
+        'The affidavit references the <em>Business Corporations Act</em>, section 316(1)(a).',
         `The director identified in the affidavit is a current director of the Company and is the director whose
         signature is on the affidavit.`,
         'The affidavit is sealed by a Commissioner for Taking Affidavits/Oaths.'
@@ -58,7 +58,8 @@ export const DissolutionResourceCc: DissolutionResourceIF = {
   reviewAndConfirm: {
     completingPartyStatement: {
       certifyStatements: [],
-      certifyClause: ResourcePhrases.OFFENCE_SECTION_427
+      certifyClause: ResourcePhrases.OFFENCE_SECTION_427,
+      entityDisplay: GetCorpFullDescription(CorpTypeCd.BC_CCC)
     }
   },
   createResolution: {

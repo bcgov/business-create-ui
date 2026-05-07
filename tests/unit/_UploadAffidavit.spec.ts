@@ -14,42 +14,50 @@ const uploadAffidavitTestCases = [
   {
     entityType: CorpTypeCd.BENEFIT_COMPANY,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.BC_CCC,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.BC_COMPANY,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.BC_ULC_COMPANY,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.BEN_CONTINUE_IN,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.CCC_CONTINUE_IN,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.CONTINUE_IN,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   },
   {
     entityType: CorpTypeCd.ULC_CONTINUE_IN,
     helpText: 'The Company has no assets; and',
-    checkboxLabel: 'I confirm the following items are included as required in the Business Corporations Act'
+    checkboxLabel: 'I confirm that the affidavit required by section 316(1)(a) of the Business Corporations ' +
+      'Act has been obtained and deposited in the company\'s records office.'
   }
 ]
 

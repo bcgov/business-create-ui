@@ -280,7 +280,17 @@
     >
       <header>
         <h2>Certify</h2>
-        <p class="mt-4">
+        <p
+          v-if="isBaseCompany"
+          class="mt-4"
+        >
+          Certify your authorization to complete and submit this application. The name of the person submitting this
+          filing will be displayed in the history of filings for this {{ getEntityDescription }}.
+        </p>
+        <p
+          v-else
+          class="mt-4"
+        >
           Confirm the legal name of the person authorized to complete and submit this dissolution.
         </p>
       </header>
@@ -291,10 +301,12 @@
       >
         <Certify
           class="py-8 px-6"
-          :class="{ 'invalid-section': isCertifyInvalid }"
+          :class="{ 'invalid-section': isCertifyInvalid, 'prevent-red-title': isBaseCompany }"
           :disableEdit="false"
           :invalidSection="isCertifyInvalid"
           :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
+          :showLegalName="!isBaseCompany"
+          :authorizationMode="certify"
         />
       </v-card>
     </section>
@@ -365,6 +377,7 @@ import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
 import CustodianOfRecords from '@/components/Dissolution/CustodianOfRecords.vue'
 import DestroyCertificate from '@/components/Dissolution/DestroyCertificate.vue'
 import DissolutionStatement from '@/components/Dissolution/DissolutionStatement.vue'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { DocumentDelivery } from '@bcrs-shared-components/document-delivery'
 import { EffectiveDateTime } from '@bcrs-shared-components/effective-date-time'
 import StaffPayment from '@/components/common/StaffPayment.vue'
@@ -406,6 +419,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) getDissolutionHasCertificateDestroyed!: boolean
   @Getter(useStore) getDocumentDelivery!: DocumentDeliveryIF
   @Getter(useStore) getEffectiveDateTime!: EffectiveDateTimeIF
+  @Getter(useStore) getEntityType!: CorpTypeCd
   @Getter(useStore) getFeePrices!: Array<FeesIF>
   @Getter(useStore) getFolioNumber!: string
   @Getter(useStore) getShowErrors!: boolean
@@ -413,6 +427,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getValidateSteps!: boolean
   @Getter(useStore) isAffidavitValid!: boolean
+  @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isDissolutionDefineDissolutionValid!: boolean
   @Getter(useStore) isEntityCoop!: boolean
 
@@ -431,6 +446,11 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 
   // Local variable
   isDissolutionCustodianValid = false
+
+  /** The entity description,  */
+  get getEntityDescription (): string {
+    return GetCorpFullDescription(this.getEntityType)
+  }
 
   /** Is true when the Dissolution Date and Time section is invalid. */
   get isDissolutionDateTimeInvalid (): boolean {
@@ -470,6 +490,9 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
 
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
+    if (this.isBaseCompany) {
+      return this.getValidateSteps && !this.getCertifyState.valid
+    }
     return this.getValidateSteps && !(this.getCertifyState.certifiedBy && this.getCertifyState.valid)
   }
 

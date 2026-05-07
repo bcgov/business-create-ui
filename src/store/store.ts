@@ -643,7 +643,9 @@ export const useStore = defineStore('store', {
     /** Whether all the dissolution steps are valid. */
     isDissolutionValid (): boolean {
       const isDocumentDeliveryValid = this.getDocumentDelivery.valid
-      const isCertifyValid = this.getCertifyState.valid && !!this.getCertifyState.certifiedBy
+      const isCertifyValid = this.isBaseCompany
+        ? this.getCertifyState.valid
+        : (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
       const isCourtOrderValid = IsAuthorized(AuthorizedActions.COURT_ORDER_POA)
         ? this.getCourtOrderStep.valid
         : true

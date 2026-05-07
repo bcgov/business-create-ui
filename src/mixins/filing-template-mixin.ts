@@ -1212,12 +1212,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     const filing: DissolutionFilingIF = {
       header: {
         name: FilingTypes.DISSOLUTION,
-        certifiedBy: this.getCertifyState.certifiedBy,
         date: this.getCurrentDate,
         filingId: this.getFilingId,
         folioNumber: this.getFolioNumber || undefined, // default FN;
         // may be overwritten by Transactional FN or staff BCOL FN
-        isFutureEffective: false
+        isFutureEffective: false,
+        ...(this.isBaseCompany
+          ? { authorizationReceived: this.getCertifyState.valid }
+          : { certifiedBy: this.getCertifyState.certifiedBy })
       },
       business: {
         legalType: this.getEntityType,
