@@ -219,7 +219,10 @@
               </v-icon>
             </v-col>
             <v-col cols="11">
-              <span class="break-spaces">{{ affidavitSummary }}</span>
+              <span
+                class="break-spaces"
+                v-html="affidavitSummary"
+              />
             </v-col>
           </v-row>
         </section>
@@ -471,7 +474,7 @@ export default class DissolutionReviewConfirm extends Mixins(DateMixin) {
   get affidavitSummary (): string {
     return this.isEntityCoop
       ? this.getAffidavitStep.affidavitFile?.name
-      : 'The affidavit required by section 316(1)(a) of the Business Corporations Act has ' +
+      : 'The affidavit required by section 316(1)(a) of the <em>Business Corporations Act</em> has ' +
         'been completed and deposited in the company\'s records book.'
   }
 
