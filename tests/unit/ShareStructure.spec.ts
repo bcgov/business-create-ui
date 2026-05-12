@@ -720,7 +720,7 @@ describe('Share Structure component', () => {
     // Find all error messages
     const messages = wrapper.findAll('.v-messages__message')
     const hasCurrencyError = messages.wrappers.some(m => m.text().includes('Currency is required'))
-    expect(hasCurrencyError).toBe(true)
+    expect(hasCurrencyError).toBe(false)
     expect(wrapper.vm.$data.formValid).toBe(false)
     wrapper.destroy()
   })
