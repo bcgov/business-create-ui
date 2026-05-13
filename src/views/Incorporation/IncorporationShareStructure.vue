@@ -210,10 +210,6 @@ export default class IncorporationShareStructure extends Mixins(CommonMixin) {
   /** Called when component is mounted. */
   mounted (): void {
     this.setCreateShareStructureStepValidity(this.shareClasses.length > 0)
-
-    this.setCreateShareStructureStepValidity(
-      this.shareClasses.length > 0
-    )
   }
 
   //
