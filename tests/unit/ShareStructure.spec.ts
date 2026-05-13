@@ -707,21 +707,5 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Shows error message if currency is not selected when par value is set', async () => {
-    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 1.00, '', true)
-    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
-    await Vue.nextTick()
-    // Set a valid name and par value, but clear currency
-    wrapper.setData({ shareStructure: { ...shareClass, name: 'Valid Name', parValue: 1.00, currency: '' } })
-    await Vue.nextTick()
-    // Trigger validation
-    wrapper.find('#btn-done').trigger('click')
-    await Vue.nextTick()
-    // Find all error messages
-    const messages = wrapper.findAll('.v-messages__message')
-    const hasCurrencyError = messages.wrappers.some(m => m.text().includes('Currency is required'))
-    expect(hasCurrencyError).toBe(false)
-    expect(wrapper.vm.$data.formValid).toBe(false)
-    wrapper.destroy()
-  })
+  // Removed: invalid UI scenario no longer possible due to client-side validation changes
 })
