@@ -4,7 +4,7 @@ import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ShareStructure from '@/components/common/ShareStructure.vue'
-import { ShareClassIF } from '@/interfaces'
+import { NewShareClass, ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -707,5 +707,17 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  // Removed: invalid UI scenario no longer possible due to client-side validation changes
+  it('Does not show error message validation on initialization of a new class', async () => {
+    const wrapper: Wrapper<ShareStructure> = createComponent(NewShareClass, -1, '1', null, [])
+    await Vue.nextTick()
+    // Find all error messages
+    const messages = wrapper.findAll('.v-messages__message')
+    // Expect no initial validation triggered
+    expect(messages.length).toBe(3)
+    // Verify all 3 messages are help text not error validations
+    expect(messages.at(0).text()).toBe('Enter the name of the class - the words "Shares" is automatically added')
+    expect(messages.at(1).text()).toBe('Enter the maximum number of shares in the Class')
+    expect(messages.at(2).text()).toBe('Enter the initial value of each share')
+    wrapper.destroy()
+  })
 })
