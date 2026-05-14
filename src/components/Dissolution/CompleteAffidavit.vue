@@ -144,9 +144,12 @@
               class="chk-affidavit mt-0 pt-0"
               hide-details
               :rules="confirmCompletionAffidavit"
-              :label="getAffidavitResources.confirmSection.checkboxLabel"
               @change="onAffidavitConfirmedChange($event)"
-            />
+            >
+              <template #label>
+                <span v-html="getAffidavitResources.confirmSection.checkboxLabel" />
+              </template>
+            </v-checkbox>
             <ul>
               <li class="mt-4">
                 <v-row no-gutters>
@@ -171,7 +174,7 @@
                     <v-icon>mdi-circle-small</v-icon>
                   </v-col>
                   <v-col cols="11">
-                    {{ item }}
+                    <span v-html="item" />
                   </v-col>
                 </v-row>
               </li>

@@ -235,7 +235,8 @@ export interface RegistrationFilingIF {
 export interface DissolutionFilingIF {
   header: {
     name: FilingTypes
-    certifiedBy: string
+    authorizationReceived?: boolean // corps filings only
+    certifiedBy?: string // non corps filings only
     date: string
     effectiveDate?: string // Optional and should be set only for future effective filings
     filingId?: number // Optional as this is not required when building a filing - causes an error for new filings
