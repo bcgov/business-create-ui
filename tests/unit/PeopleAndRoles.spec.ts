@@ -11,6 +11,7 @@ import { ResourceIF } from '@/interfaces'
 import { AmalgamationShortResourceBc } from '@/resources/AmalgamationShort'
 import { AuthorizationRoles } from '@/enums'
 import { setAuthRole } from '../set-auth-role'
+import { verifyAddressValidation } from 'tests/unit/utils'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
@@ -167,6 +168,15 @@ describe('People And Roles component', () => {
     expect(wrapper.find(checkIncorporator).exists()).toBeTruthy()
     expect(wrapper.find(checkDirector).exists()).toBeTruthy()
     expect(wrapper.find(checkCompletingParty).exists()).toBeFalsy()
+    wrapper.destroy()
+    resetStore()
+  })
+
+  it('Validates person address as expected', async () => {
+    const wrapper = wrapperFactory()
+    await wrapper.find(btnStartAddCompletingParty).trigger('click')
+    const address = wrapper.find('div.base-address')
+    await verifyAddressValidation(address)
     wrapper.destroy()
     resetStore()
   })
