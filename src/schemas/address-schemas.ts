@@ -10,7 +10,7 @@ export const OfficeAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(50)
   },
   streetAddressAdditional: {
-    maxLength: maxLength(50)
+    maxLength: maxLength(105)
   },
   addressCity: {
     required,
@@ -42,7 +42,7 @@ export const CoopOfficeAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(50)
   },
   streetAddressAdditional: {
-    maxLength: maxLength(50)
+    maxLength: maxLength(105)
   },
   addressCity: {
     required,
@@ -72,7 +72,7 @@ export const PersonAddressSchema: AddressSchemaIF = {
     maxLength: maxLength(50)
   },
   streetAddressAdditional: {
-    maxLength: maxLength(50)
+    maxLength: maxLength(105)
   },
   addressCity: {
     required,

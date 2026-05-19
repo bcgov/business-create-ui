@@ -6,56 +6,82 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import flushPromises from 'flush-promises'
+import { verifyAddressValidation } from 'tests/unit/utils'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
 
+const REGISTERED_OFFICE = {
+  deliveryAddress: {
+    streetAddress: '',
+    streetAddressAdditional: '',
+    addressCity: '',
+    addressRegion: '',
+    postalCode: '',
+    addressCountry: '',
+    deliveryInstructions: ''
+  },
+  mailingAddress: {
+    streetAddress: '',
+    streetAddressAdditional: '',
+    addressCity: '',
+    addressRegion: '',
+    postalCode: '',
+    addressCountry: '',
+    deliveryInstructions: ''
+  }
+}
+
+const RECORDS_OFFICE = {
+  deliveryAddress: {
+    streetAddress: '',
+    streetAddressAdditional: '',
+    addressCity: '',
+    addressRegion: '',
+    postalCode: '',
+    addressCountry: '',
+    deliveryInstructions: ''
+  },
+  mailingAddress: {
+    streetAddress: '',
+    streetAddressAdditional: '',
+    addressCity: '',
+    addressRegion: '',
+    postalCode: '',
+    addressCountry: '',
+    deliveryInstructions: ''
+  }
+}
+
+const mountOfficeComponent = (corptype: CorpTypeCd) => {
+  const localVue = createLocalVue()
+  // pre-set entity type when mounting.
+  store.stateModel.entityType = corptype
+
+  let addresses: any
+  if (corptype === 'CP') {
+    // coop does not have recordsOffice
+    addresses = { registeredOffice: REGISTERED_OFFICE }
+  } else {
+    addresses = {
+      registeredOffice: REGISTERED_OFFICE,
+      recordsOffice: RECORDS_OFFICE
+    }
+  }
+
+  return mount(OfficeAddresses, {
+    propsData: {
+      inputAddresses: addresses,
+      isEditing: true
+    },
+    localVue,
+    vuetify
+  })
+}
+
 describe('Office Address delivery address <same as> is unchecked by default', () => {
   let wrapper: any
-
-  // The test is on registered office address.
-  const REGISTERED_OFFICE = {
-    deliveryAddress: {
-      streetAddress: '',
-      streetAddressAdditional: '',
-      addressCity: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: '',
-      deliveryInstructions: ''
-    },
-    mailingAddress: {
-      streetAddress: '',
-      streetAddressAdditional: '',
-      addressCity: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: '',
-      deliveryInstructions: ''
-    }
-  }
-
-  const RECORDS_OFFICE = {
-    deliveryAddress: {
-      streetAddress: '',
-      streetAddressAdditional: '',
-      addressCity: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: '',
-      deliveryInstructions: ''
-    },
-    mailingAddress: {
-      streetAddress: '',
-      streetAddressAdditional: '',
-      addressCity: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: '',
-      deliveryInstructions: ''
-    }
-  }
 
   // the commented corp types are not available to test currently
   const CORP_TYPES = [
@@ -71,29 +97,7 @@ describe('Office Address delivery address <same as> is unchecked by default', ()
   })
 
   test.each(CORP_TYPES)('display both mailing and delivery addresses when creating for %s', async (corptype) => {
-    const localVue = createLocalVue()
-    // pre-set entity type when mounting.
-    store.stateModel.entityType = corptype
-
-    let addresses: any
-    if (corptype === 'CP') {
-      // coop does not have recordsOffice
-      addresses = { registeredOffice: REGISTERED_OFFICE }
-    } else {
-      addresses = {
-        registeredOffice: REGISTERED_OFFICE,
-        recordsOffice: RECORDS_OFFICE
-      }
-    }
-
-    wrapper = mount(OfficeAddresses, {
-      propsData: {
-        inputAddresses: addresses,
-        isEditing: true
-      },
-      localVue,
-      vuetify
-    })
+    wrapper = mountOfficeComponent(corptype)
 
     expect(wrapper.vm.inheritMailingAddress).toBeFalsy()
     expect(wrapper.find('#address-registered-mailing').exists()).toBeTruthy()
@@ -655,5 +659,28 @@ describe('Office Addresses component - Summary UI', () => {
   it('displays the summary ui when in summary mode', () => {
     expect(wrapper.vm.$el.querySelector('#summary-registered-address')).toBeDefined()
     expect(wrapper.vm.$el.querySelector('#summary-records-address')).toBeDefined()
+  })
+})
+
+describe('Office Address schema validation', () => {
+  let wrapper: any
+
+  // the commented corp types are not available to test currently
+  const CORP_TYPES = [
+    CorpTypeCd.COOP,
+    CorpTypeCd.BENEFIT_COMPANY,
+    CorpTypeCd.BC_CCC,
+    CorpTypeCd.BC_COMPANY,
+    CorpTypeCd.BC_ULC_COMPANY
+  ]
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  test.each(CORP_TYPES)('Correct address max len validation for %s', async (corptype) => {
+    wrapper = mountOfficeComponent(corptype)
+    const address = wrapper.find('#address-registered-mailing')
+    await verifyAddressValidation(address)
   })
 })
