@@ -97,7 +97,7 @@
               persistent-hint
               label="Identifying Number"
               hint="This number identifies your business in its previous jurisdiction."
-              :rules="getShowErrors ? identifyingNumberRules : []"
+              :rules="identifyingNumberRules"
             />
 
             <!-- Business Name in Previous Jurisdiction -->
@@ -107,7 +107,7 @@
               filled
               hide-details="auto"
               label="Business Name in Previous Jurisdiction"
-              :rules="getShowErrors ? businessNameRules : []"
+              :rules="businessNameRules"
             />
 
             <!-- Business Number-->
