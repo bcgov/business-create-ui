@@ -39,4 +39,30 @@ describe('Manual Business Info component', () => {
 
     wrapper.destroy()
   })
+
+  it('displays identifying number length error immediately', async () => {
+    const wrapper = wrapperFactory(ManualBusinessInfo)
+    await Vue.nextTick()
+
+    await wrapper.find('.incorporation-number input').setValue('A'.repeat(51))
+    await Vue.nextTick()
+
+    expect(wrapper.find('.incorporation-number .v-messages__message').text())
+      .toContain('Cannot exceed 50 characters')
+
+    wrapper.destroy()
+  })
+
+  it('displays business name length error immediately', async () => {
+    const wrapper = wrapperFactory(ManualBusinessInfo)
+    await Vue.nextTick()
+
+    await wrapper.find('.business-name input').setValue('A'.repeat(1001))
+    await Vue.nextTick()
+
+    expect(wrapper.find('.business-name .v-messages__message').text())
+      .toContain('Cannot exceed 1000 characters')
+
+    wrapper.destroy()
+  })
 })
