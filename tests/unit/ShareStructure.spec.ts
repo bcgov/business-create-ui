@@ -714,7 +714,7 @@ describe('Share Structure component', () => {
     expect(messages.length).toBe(3)
     expect(messages.at(0).text()).toBe('Enter the name of the class - the words "Shares" is automatically added')
     expect(messages.at(1).text()).toBe('Enter the maximum number of shares in the Class')
-    expect(messages.at(2).text()).toBe('Enter the initial value of each share')   
+    expect(messages.at(2).text()).toBe('Enter the initial value of each share')
     wrapper.destroy()
   })
 })
