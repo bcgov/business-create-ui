@@ -4,7 +4,7 @@ import { mount, Wrapper, createLocalVue } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ShareStructure from '@/components/common/ShareStructure.vue'
-import { ShareClassIF } from '@/interfaces'
+import { NewShareClass, ShareClassIF } from '@/interfaces'
 import { waitForUpdate } from '../wait-for-update'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
@@ -707,21 +707,14 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
-  it('Shows error message if currency is not selected when par value is set', async () => {
-    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 1.00, '', true)
-    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
+  it('Does not show error message on initialization of a new class', async () => {
+    const wrapper: Wrapper<ShareStructure> = createComponent(NewShareClass, -1, '1', null, [])
     await Vue.nextTick()
-    // Set a valid name and par value, but clear currency
-    wrapper.setData({ shareStructure: { ...shareClass, name: 'Valid Name', parValue: 1.00, currency: '' } })
-    await Vue.nextTick()
-    // Trigger validation
-    wrapper.find('#btn-done').trigger('click')
-    await Vue.nextTick()
-    // Find all error messages
     const messages = wrapper.findAll('.v-messages__message')
-    const hasCurrencyError = messages.wrappers.some(m => m.text().includes('Currency is required'))
-    expect(hasCurrencyError).toBe(true)
-    expect(wrapper.vm.$data.formValid).toBe(false)
+    expect(messages.length).toBe(3)
+    expect(messages.at(0).text()).toBe('Enter the name of the class - the words "Shares" is automatically added')
+    expect(messages.at(1).text()).toBe('Enter the maximum number of shares in the Class')
+    expect(messages.at(2).text()).toBe('Enter the initial value of each share')
     wrapper.destroy()
   })
 })

@@ -340,9 +340,6 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
         const name = this.shareStructure.name
         this.shareStructure.name = name.substr(0, name.indexOf(' Shares'))
       }
-
-      // validate initial data
-      this.$nextTick(() => this.$refs.shareStructureForm.validate())
     }
   }
 
