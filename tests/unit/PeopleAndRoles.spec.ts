@@ -87,20 +87,19 @@ describe('People And Roles component', () => {
     }
   })
 
-  it('shows Start by Adding Completing Party Button when people list is empty', () => {
+  it('does not show any Completing Party button when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
-    expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
+    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
-  it('Does not show other add buttons when people list is empty', () => {
+  it('shows Add Person and Add Corporation buttons when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
-    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
-    expect(wrapper.find(btnAddOrganization).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -121,12 +120,12 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
+  it('does not show Add Completing Party Button when people list is not empty and has no Completing Party', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Director', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddCompletingParty).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
     resetStore()
   })
@@ -173,8 +172,9 @@ describe('People And Roles component', () => {
   })
 
   it('Validates person address as expected', async () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    await wrapper.find(btnStartAddCompletingParty).trigger('click')
+    await wrapper.find(btnAddPerson).trigger('click')
     const address = wrapper.find('div.base-address')
     await verifyAddressValidation(address)
     wrapper.destroy()
