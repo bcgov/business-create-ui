@@ -21,11 +21,6 @@ export const IncorporationResourceUlc: IncorporationResourceIF = {
     addOrganization: true,
     rules: [
       {
-        id: RuleIds.NUM_COMPLETING_PARTY,
-        text: 'The Completing Party',
-        test: (num) => { return (num === 1) }
-      },
-      {
         id: RuleIds.NUM_INCORPORATORS,
         text: 'At least one Incorporator',
         test: (num) => { return (num >= 1) }
