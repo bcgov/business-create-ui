@@ -524,6 +524,21 @@ for (const entityType of ['BEN', 'BC', 'CC', 'ULC']) {
       expect(filing.incorporationApplication).not.toHaveProperty('courtNumber')
     })
 
+    it('strips the Completing Party from parties on load and submission', () => {
+      wrapper.vm.parseIncorporationDraft(ia.filing)
+
+      // the Completing Party role is gone from the store, but the person who was
+      // also a Director is kept (so no parties are dropped here)
+      const orgPeople = store.stateModel.addPeopleAndRoleStep.orgPeople
+      expect(orgPeople.length).toBe(3)
+      expect(orgPeople.some(p => p.roles.some(r => r.roleType === 'Completing Party'))).toBe(false)
+
+      // and it stays out of the built filing
+      const filing = wrapper.vm.buildIncorporationFiling()
+      expect(filing.incorporationApplication.parties
+        .some(p => p.roles.some(r => r.roleType === 'Completing Party'))).toBe(false)
+    })
+
     it('can include courtOrder attribute', () => {
       ia.filing.incorporationApplication.courtOrder = {
         'fileNumber': '12034567',

@@ -9,7 +9,9 @@ import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
 import { ResourceIF } from '@/interfaces'
 import { AmalgamationShortResourceBc } from '@/resources/AmalgamationShort'
-import { AuthorizationRoles } from '@/enums'
+import { AuthorizationRoles, FilingTypes } from '@/enums'
+import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import * as FeatureFlags from '@/utils/feature-flag-utils'
 import { setAuthRole } from '../set-auth-role'
 import { verifyAddressValidation } from 'tests/unit/utils'
 
@@ -78,6 +80,12 @@ describe('People And Roles component', () => {
     store.resourceModel = IncorporationResourceBen as ResourceIF
     setAuthRole(store, AuthorizationRoles.STAFF)
 
+    // base company incorporation with the Completing Party feature flag off
+    // (so the Completing Party is removed)
+    store.stateModel.tombstone.filingType = FilingTypes.INCORPORATION_APPLICATION
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(() => '')
+
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {
         localVue,
@@ -87,20 +95,26 @@ describe('People And Roles component', () => {
     }
   })
 
-  it('shows Start by Adding Completing Party Button when people list is empty', () => {
+  afterEach(() => {
+    // clean up so state doesn't leak into other describe blocks
+    vi.restoreAllMocks()
+    store.stateModel.tombstone.filingType = null
+    store.stateModel.entityType = null
+  })
+
+  it('does not show any Completing Party button when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
-    expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
+    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
     wrapper.destroy()
   })
 
-  it('Does not show other add buttons when people list is empty', () => {
+  it('shows Add Person and Add Corporation buttons when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
-    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
-    expect(wrapper.find(btnAddOrganization).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
     wrapper.destroy()
   })
 
@@ -121,7 +135,21 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  it('shows Add Completing Party Button when people list is not empty and has no Completing Party', () => {
+  it('does not show Add Completing Party Button when people list is not empty and has no Completing Party', () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
+      { roleType: 'Director', appointmentDate: '2020-03-30' }
+    ])
+    const wrapper = wrapperFactory()
+    expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
+    wrapper.destroy()
+    resetStore()
+  })
+
+  it('shows Add Completing Party Button when the feature flag is on', () => {
+    // feature flag on => Completing Party is retained
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag =>
+      flag === 'enable-new-feature' ? 'incorporationApplication-completingParty' : null
+    )
     store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Director', appointmentDate: '2020-03-30' }
     ])
@@ -173,8 +201,9 @@ describe('People And Roles component', () => {
   })
 
   it('Validates person address as expected', async () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    await wrapper.find(btnStartAddCompletingParty).trigger('click')
+    await wrapper.find(btnAddPerson).trigger('click')
     const address = wrapper.find('div.base-address')
     await verifyAddressValidation(address)
     wrapper.destroy()

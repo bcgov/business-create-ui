@@ -15,7 +15,8 @@ import {
   FilingStatus,
   FilingTypes,
   RelationshipTypes,
-  RestorationTypes
+  RestorationTypes,
+  RuleIds
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums/'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
@@ -1069,7 +1070,22 @@ export const useStore = defineStore('store', {
 
     /** The People and Roles object. */
     getPeopleAndRolesResource (): PeopleAndRolesResourceIF {
-      return this.resourceModel.peopleAndRoles
+      const resource = this.resourceModel.peopleAndRoles
+
+      // For base company incorporations, the Completing Party is gated behind the
+      // 'incorporationApplication-completingParty' feature flag. When the flag is off,
+      // strip the Completing Party rule so its checklist item, both "Add Completing Party"
+      // buttons, the role checkbox and the step validation are all removed.
+      const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
+        ?.includes('incorporationApplication-completingParty')
+      if (this.isBaseCompany && this.isIncorporationFiling && !isCompletingPartyReleased) {
+        return {
+          ...resource,
+          rules: resource.rules.filter(rule => rule.id !== RuleIds.NUM_COMPLETING_PARTY)
+        }
+      }
+
+      return resource
     },
 
     /** The Incorporation Articles. */
