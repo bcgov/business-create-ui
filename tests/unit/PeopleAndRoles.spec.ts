@@ -80,11 +80,13 @@ describe('People And Roles component', () => {
     store.resourceModel = IncorporationResourceBen as ResourceIF
     setAuthRole(store, AuthorizationRoles.STAFF)
 
-    // base company incorporation with the Completing Party feature flag off
+    // base company incorporation with the Completing Party feature flag on
     // (so the Completing Party is removed)
     store.stateModel.tombstone.filingType = FilingTypes.INCORPORATION_APPLICATION
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(() => '')
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag =>
+      flag === 'enable-new-feature' ? 'incorporationApplication-completingParty' : null
+    )
 
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {
@@ -145,11 +147,9 @@ describe('People And Roles component', () => {
     resetStore()
   })
 
-  it('shows Add Completing Party Button when the feature flag is on', () => {
-    // feature flag on => Completing Party is retained
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag =>
-      flag === 'enable-new-feature' ? 'incorporationApplication-completingParty' : null
-    )
+  it('shows Add Completing Party Button when the feature flag is off', () => {
+    // feature flag off => Completing Party is retained
+    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(() => '')
     store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Director', appointmentDate: '2020-03-30' }
     ])

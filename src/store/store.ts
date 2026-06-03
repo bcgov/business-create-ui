@@ -1073,12 +1073,12 @@ export const useStore = defineStore('store', {
       const resource = this.resourceModel.peopleAndRoles
 
       // For base company incorporations, the Completing Party is gated behind the
-      // 'incorporationApplication-completingParty' feature flag. When the flag is off,
+      // 'incorporationApplication-completingParty' feature flag. When the flag is on,
       // strip the Completing Party rule so its checklist item, both "Add Completing Party"
       // buttons, the role checkbox and the step validation are all removed.
       const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
         ?.includes('incorporationApplication-completingParty')
-      if (this.isBaseCompany && this.isIncorporationFiling && !isCompletingPartyReleased) {
+      if (this.isBaseCompany && this.isIncorporationFiling && isCompletingPartyReleased) {
         return {
           ...resource,
           rules: resource.rules.filter(rule => rule.id !== RuleIds.NUM_COMPLETING_PARTY)

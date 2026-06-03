@@ -732,14 +732,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     })
 
     // restore Persons and Organizations
-    // NB: when the Completing Party is turned off for base company incorporations (via the
+    // NB: when the Completing Party is turned on for base company incorporations (via the
     // 'incorporationApplication-completingParty' feature flag), strip it from any older draft
     // data (this also keeps it out of the People table and filing submission)
     const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
       ?.includes('incorporationApplication-completingParty')
     if (draftFiling.incorporationApplication.parties) {
       this.setOrgPersonList(
-        (this.isBaseCompany && !isCompletingPartyReleased)
+        (this.isBaseCompany && isCompletingPartyReleased)
           ? this.removeCompletingParty(draftFiling.incorporationApplication.parties)
           : draftFiling.incorporationApplication.parties
       )
