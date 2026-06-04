@@ -20,7 +20,7 @@ import {
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
-import { IsAuthorized } from '@/utils'
+import { GetFeatureFlag, IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -732,8 +732,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     })
 
     // restore Persons and Organizations
+    // NB: when the Completing Party is turned on for base company incorporations (via the
+    // 'incorporationApplication-completingParty' feature flag), strip it from any older draft
+    // data (this also keeps it out of the People table and filing submission)
+    const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
+      ?.includes('incorporationApplication-completingParty')
     if (draftFiling.incorporationApplication.parties) {
-      this.setOrgPersonList(draftFiling.incorporationApplication.parties)
+      this.setOrgPersonList(
+        (this.isBaseCompany && isCompletingPartyReleased)
+          ? this.removeCompletingParty(draftFiling.incorporationApplication.parties)
+          : draftFiling.incorporationApplication.parties
+      )
     }
 
     // conditionally restore the entity-specific sections
@@ -1620,5 +1629,21 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       if (p.officer?.email === null || p.officer?.email === '') delete p.officer.email
       return p
     })
+  }
+
+  /**
+   * Removes the Completing Party role from the given parties, and drops any party
+   * left with no roles. Used to strip the Completing Party from base company
+   * incorporations, which no longer use one.
+   * @param parties the parties to strip
+   * @returns the parties without any Completing Party
+   */
+  removeCompletingParty (parties: OrgPersonIF[]): OrgPersonIF[] {
+    return parties
+      .map(party => ({
+        ...party,
+        roles: party.roles.filter(role => role.roleType !== RoleTypes.COMPLETING_PARTY)
+      }))
+      .filter(party => party.roles.length > 0)
   }
 }
