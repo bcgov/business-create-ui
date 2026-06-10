@@ -659,6 +659,32 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // simulate form data
     await wrapper.setData({
       isCan: true,
+      jurisdiction: { text: 'United States', value: 'US' },
+      legalName: 'Foreign Business',
+      identifier: ''
+    })
+
+    // simulate Save button action
+    await wrapper.vm.saveAmalgamatingForeignBusiness()
+
+    // verify validation - should require identifier
+    expect(wrapper.vm.isForeignBusinessValid).toBe(false)
+
+    await wrapper.setData({
+      isCan: true,
+      jurisdiction: { text: 'Alberta', value: 'AB' },
+      legalName: '',
+      identifier: 'ABC-123'
+    })
+
+    // simulate Save button action
+    wrapper.vm.saveAmalgamatingForeignBusiness()
+
+    // verify validation - should require legal name
+    expect(wrapper.vm.isForeignBusinessValid).toBe(false)
+
+    await wrapper.setData({
+      isCan: true,
       jurisdiction: { text: 'Alberta', value: 'AB' },
       legalName: 'Foreign Business',
       identifier: 'ABC-123'
@@ -751,41 +777,41 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     expect(wrapper.find('.v-messages__message').exists()).toBe(false)
   })
 
-  it('applies foreign business business corp number rules', async () => {
+  it('applies foreign business corp number rules', async () => {
     // open panel
     await wrapper.find('#add-foreign-business-button').trigger('click')
 
     const identifier = wrapper.find('#foreign-business-corp-number')
 
-    // verify empty legal name - MRAS jurisdiction
+    // verify empty corp number - MRAS
     await wrapper.setData({ isMrasJurisdiction: true })
     await identifier.setValue('')
     await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
-    // verify empty legal name - non-MRAS jurisdiction
+    // verify empty corp number - non-MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: false })
     await identifier.setValue('')
     await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
 
-    // verify invalid legal name - MRAS jurisdiction
+    // verify invalid corp number - MRAS jurisdiction
     await wrapper.setData({ isMrasJurisdiction: true })
     await identifier.setValue('+++')
     await identifier.trigger('change')
-    expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number is required')
+    expect(wrapper.find('.v-messages__message').text()).toBe('Corporate number may only contain letters, numbers, and hyphens')
 
-    // verify legal name too short
+    // verify corp number too short
     await identifier.setValue('xx')
     await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Must be at least 3 characters')
 
-    // verify legal name too long
+    // verify corp number too long
     await identifier.setValue('x'.repeat(41))
     await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').text()).toBe('Cannot exceed 40 characters')
 
-    // verify valid legal name (max length)
+    // verify valid corp number (max length)
     await identifier.setValue('x'.repeat(40))
     await identifier.trigger('change')
     expect(wrapper.find('.v-messages__message').exists()).toBe(false)

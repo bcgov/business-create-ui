@@ -347,10 +347,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   get foreignBusinessIdentifierRules (): Array<(v: string) => boolean | string> {
     return [
-      v => (!this.isMrasJurisdiction || (!!v && /^[0-9a-zA-Z-]+$/.test(v))) ||
-        'Corporate number is required',
+      v => !!v || 'Corporate number is required',
       v => (!v || v.length >= 3) || 'Must be at least 3 characters',
-      v => (!v || v.length <= 40) || 'Cannot exceed 40 characters'
+      v => (!v || v.length <= 40) || 'Cannot exceed 40 characters',
+      v => (v && /^[0-9a-zA-Z-]+$/.test(v)) || 'Corporate number may only contain letters, numbers, and hyphens'
     ]
   }
 
@@ -641,13 +641,8 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
   /** Validate Add Amalgamating Foreign Business. */
   private validateAddAmalgamatingForeignBusiness (): void {
-    this.isForeignBusinessValid = (
-      !!this.jurisdiction &&
-      !!this.legalName &&
-      (!this.isMrasJurisdiction || !!this.identifier)
-    )
     this.jurisdictionErrorMessage = this.jurisdiction ? '' : 'Home jurisdiction is required'
-    this.$refs.foreignBusinessForm.validate()
+    this.isForeignBusinessValid = this.$refs.foreignBusinessForm.validate()
   }
 
   /** Sets validity according to various flags. */
