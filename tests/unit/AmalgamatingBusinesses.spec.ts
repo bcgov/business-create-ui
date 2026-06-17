@@ -735,7 +735,7 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
 
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
-  })  
+  })
 
   it('doesn\'t save a duplicate foreign business', async () => {
     // pre-populate a foreign business
