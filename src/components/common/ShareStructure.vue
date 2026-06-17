@@ -18,7 +18,7 @@
               >
                 <v-text-field
                   id="txt-name"
-                  ref="txtName"
+                  ref="shareNameInput"
                   v-model="shareStructure.name"
                   filled
                   :label="shareStructure.type + ' Name [Shares]'"
@@ -218,7 +218,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormIF
-    txtName: any
+    shareNameInput: any
   }
 
   @Prop({ default: null }) readonly initialValue!: ShareClassIF
@@ -408,7 +408,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   onNameBlur (): void {
     this.nameTouched = true
-    this.$nextTick(() => this.$refs.txtName.validate())
+    this.$nextTick(() => this.$refs.shareNameInput.validate())
   }
 
   // Getters
