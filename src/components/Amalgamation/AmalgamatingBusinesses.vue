@@ -563,7 +563,9 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       type: AmlTypes.FOREIGN,
       role: AmlRoles.AMALGAMATING,
       foreignJurisdiction: {
-        region: this.isCan ? this.jurisdiction.value : '', // no region outside Canada
+        region: this.isCan
+          ? ((this.jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : this.jurisdiction.value)
+          : '', // no region outside Canada
         country: this.isCan ? JurisdictionLocation.CA : this.jurisdiction.value
       },
       legalName: this.legalName,

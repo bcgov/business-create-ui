@@ -8,7 +8,8 @@ import AmalgamatingBusinesses from '@/components/Amalgamation/AmalgamatingBusine
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { AmlRoles, AmlTypes, AuthorizationRoles, FilingStatus } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-import { AmalgamationTypes, EntityStates, FilingTypes, RestorationTypes } from '@bcrs-shared-components/enums'
+import { AmalgamationTypes, EntityStates, FilingTypes, JurisdictionLocation,
+  RestorationTypes } from '@bcrs-shared-components/enums'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamatingBusinessIF } from '@/interfaces'
 import { setAuthRole } from '../set-auth-role'
@@ -708,6 +709,33 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     // verify panel is now closed
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
   })
+
+  it('saves a foreign business - federal jurisdiction', async () => {
+    // open panel
+    await wrapper.setData({ isAddingAmalgamatingForeignBusiness: true })
+
+    // simulate form data with a federal jurisdiction selection
+    await wrapper.setData({
+      isCan: true,
+      jurisdiction: { text: 'Federal', value: JurisdictionLocation.FD },
+      legalName: 'Federal Foreign Business',
+      identifier: 'FED-123'
+    })
+
+    // simulate Save button action
+    wrapper.vm.saveAmalgamatingForeignBusiness()
+
+    // verify validation
+    expect(wrapper.vm.isForeignBusinessValid).toBe(true)
+
+    // verify 'FD' was converted to 'FEDERAL'
+    expect(store.getAmalgamatingBusinesses.length).toBe(1)
+    const business = store.getAmalgamatingBusinesses[0] as any
+    expect(business.foreignJurisdiction).toEqual({ country: 'CA', region: 'FEDERAL' })
+
+    // verify panel is now closed
+    expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
+  })  
 
   it('doesn\'t save a duplicate foreign business', async () => {
     // pre-populate a foreign business
