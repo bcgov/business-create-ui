@@ -18,6 +18,7 @@
               >
                 <v-text-field
                   id="txt-name"
+                  ref="shareNameInput"
                   v-model="shareStructure.name"
                   filled
                   :label="shareStructure.type + ' Name [Shares]'"
@@ -26,6 +27,7 @@
                   :rules="getNameRule()"
                   suffix="Shares"
                   persistent-hint
+                  @blur="onNameBlur()"
                 />
 
                 <v-divider class="mt-2 mb-4" />
@@ -216,6 +218,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   // Refs
   $refs!: {
     shareStructureForm: FormIF
+    shareNameInput: any
   }
 
   @Prop({ default: null }) readonly initialValue!: ShareClassIF
@@ -231,6 +234,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   hasNoParValue = false
   maxNumberOfShares = '' // v-model, which is converted to number before saving
   parValue = '' // v-model, which is converted to number before saving
+  nameTouched = false // tracks whether the name field has lost focus at least once
 
   readonly excludedWordsListForClass: string [] = ['share', 'shares', 'value']
   readonly excludedWordsListForSeries: string [] = ['share', 'shares']
@@ -245,8 +249,8 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
   getNameRule (): Array<VuetifyRuleFunction> {
     const rules: Array<VuetifyRuleFunction> = [
       v => !!v || 'A name is required',
-      v => !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
-      v => !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
+      v => !this.nameTouched || !/^\s/g.test(v) || 'Invalid spaces', // leading spaces
+      v => !this.nameTouched || !/\s$/g.test(v) || 'Invalid spaces' // trailing spaces
     ]
     if (this.isClass) {
       rules.push(
@@ -383,6 +387,7 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
 
   resetFormAndData (emitEvent: boolean): void {
     this.$refs.shareStructureForm.reset()
+    this.nameTouched = false
     if (emitEvent) {
       this.emitResetEvent()
     }
@@ -399,6 +404,11 @@ export default class ShareStructure extends Mixins(CurrencyLookupMixin) {
       this.shareStructure.currency = null
       this.parValue = ''
     }
+  }
+
+  onNameBlur (): void {
+    this.nameTouched = true
+    this.$nextTick(() => this.$refs.shareNameInput.validate())
   }
 
   // Getters
