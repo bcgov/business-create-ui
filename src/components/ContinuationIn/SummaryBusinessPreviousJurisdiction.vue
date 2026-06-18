@@ -54,7 +54,7 @@
           </v-row>
         </article>
 
-        <!-- Registered Name -->
+        <!-- Name -->
         <article class="section-container">
           <v-row no-gutters>
             <v-col
@@ -62,7 +62,7 @@
               sm="3"
               class="pr-4"
             >
-              <label>Registered Name</label>
+              <label>Name</label>
             </v-col>
             <v-col
               cols="12"
