@@ -134,13 +134,13 @@
               :rules="getShowErrors ? incorporationNumberRules : []"
             />
 
-            <!-- Business Name in Previous Jurisdiction -->
+            <!-- Name in Previous Jurisdiction -->
             <v-text-field
               v-model.trim="business.prevBusinessName"
               class="business-name mt-4"
               filled
               hide-details="auto"
-              label="Business Name in Previous Jurisdiction"
+              label="Name in Previous Jurisdiction"
               :rules="getShowErrors ? businessNameRules : []"
             />
 
