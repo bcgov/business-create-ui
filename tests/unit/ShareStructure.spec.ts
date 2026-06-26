@@ -654,6 +654,35 @@ describe('Share Structure component', () => {
     wrapper.destroy()
   })
 
+  it('Does not show the spaces error while the name field still has focus', async () => {
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
+    const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
+    // typing a trailing space while still editing (before any blur) must not flag "Invalid spaces"
+    inputElement.setValue('Class B ')
+    inputElement.trigger('change')
+    await waitForUpdate()
+    expect(wrapper.find(formSelector).text()).not.toContain('Invalid spaces')
+    wrapper.destroy()
+  })
+
+  it('Hides the spaces error again when the name field is re-focused for editing', async () => {
+    const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
+    const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
+    const inputElement: Wrapper<Vue> = wrapper.find(nameSelector)
+    // first blur surfaces the trailing-space error
+    inputElement.setValue('Class B ')
+    inputElement.trigger('blur')
+    await waitForUpdate()
+    expect(wrapper.find(formSelector).text()).toContain('Invalid spaces')
+    // re-focusing to edit clears it (the focus event does not propagate through Vuetify in jsdom,
+    // so invoke the handler directly to exercise the re-focus reset logic)
+    ;(wrapper.vm as any).onNameFocus()
+    await waitForUpdate()
+    expect(wrapper.find(formSelector).text()).not.toContain('Invalid spaces')
+    wrapper.destroy()
+  })
+
   it('Shows error message if class name contains the word "share"', async () => {
     const shareClass = createShareStructure(null, 1, 'Class', 'Class A', true, 100, true, 0.50, 'CAD', true)
     const wrapper: Wrapper<ShareStructure> = createComponent(shareClass, -1, '1', null, [])
