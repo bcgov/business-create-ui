@@ -118,9 +118,11 @@ export interface ContinuationInFilingIF {
     contactPoint: ContactPointIF
     nameRequest: NameRequestFilingIF
     nameTranslations: NameTranslationIF[]
-    offices: RegisteredRecordsAddressesIF
-    parties: OrgPersonIF[]
-    shareStructure: { shareClasses: ShareClassIF[] }
+    // NB: offices, parties and share structure are not collected during the continuation in
+    // authorization stage, so they are omitted from that payload (see #33966).
+    offices?: RegisteredRecordsAddressesIF
+    parties?: OrgPersonIF[]
+    shareStructure?: { shareClasses: ShareClassIF[] }
     courtOrder?: CourtOrderIF
     mode?: 'EXPRO' | 'MANUAL' // used only by UI
     status?: EntityStates // only used by UI

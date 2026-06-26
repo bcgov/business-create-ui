@@ -410,11 +410,17 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
           nrNumber: this.getNameRequestNumber || undefined
         },
         nameTranslations: this.getNameTranslations,
-        offices: this.getOfficeAddresses,
-        parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
-        shareStructure: {
-          shareClasses: this.getCreateShareStructureStep.shareClasses
-        },
+        // Office addresses, parties and share structure are not collected during the
+        // continuation in authorization stage. Don't include their empty placeholders -
+        // the empty office addresses fail backend schema validation (422). They're
+        // collected and sent in the full continuation application. See #33966.
+        ...(this.isContinuationInAuthorization ? {} : {
+          offices: this.getOfficeAddresses,
+          parties: this.fixOrgPeopleProperties(this.getAddPeopleAndRoleStep.orgPeople),
+          shareStructure: {
+            shareClasses: this.getCreateShareStructureStep.shareClasses
+          }
+        }),
         // save properties used only for UI:
         mode: this.getExistingBusinessInfo?.mode,
         status: this.getExistingBusinessInfo?.status,
