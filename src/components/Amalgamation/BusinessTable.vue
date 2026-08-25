@@ -3,12 +3,12 @@
     <template #default>
       <thead>
         <tr>
-          <th>Business Name</th>
+          <th />
+          <th>Business Name and Number</th>
           <th>Business Type</th>
-          <th>Mailing Address</th>
+          <th>Mailing Address or Jurisdiction</th>
           <th>Role</th>
-          <th>Status</th>
-          <th>Action</th>
+          <th />
         </tr>
       </thead>
 
@@ -25,8 +25,12 @@
           v-for="(item, index) in businesses"
           :key="key(item)"
         >
+          <td class="business-status">
+            <BusinessStatus :status="item.status" />
+          </td>
+
           <td class="business-name">
-            <strong>{{ name(item) }}</strong><br>{{ email(item) }}
+            <strong>{{ name(item) }}</strong><br>{{ identifier(item) }}
           </td>
 
           <td class="business-type">
@@ -49,10 +53,6 @@
 
           <td class="business-role">
             {{ role(item) }}
-          </td>
-
-          <td class="business-status">
-            <BusinessStatus :status="item.status" />
           </td>
 
           <td class="business-actions">
@@ -200,20 +200,21 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     return `${item.identifier}-${x}`
   }
 
+  identifier (item: AmalgamatingBusinessIF): string {
+    return item.identifier || '(Unknown)' // should never happen
+  }
+
   name (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return item.name
     if (item?.type === AmlTypes.FOREIGN) return item.legalName
     return '(Unknown)' // should never happen
   }
 
-  email (item: AmalgamatingBusinessIF): string {
-    if (item?.type === AmlTypes.LEAR) return item.authInfo?.contacts?.[0]?.email || 'Email not available'
-    return null // should never happen
-  }
-
   type (item: AmalgamatingBusinessIF): string {
     if (item?.type === AmlTypes.LEAR) return GetCorpFullDescription(item.legalType)
-    if (item?.type === AmlTypes.FOREIGN) return 'Foreign'
+    if (item?.type === AmlTypes.FOREIGN) {
+      return item.identifier?.startsWith('A') ? 'Extra Provincial' : 'Foreign'
+    }
     return '(Unknown)' // should never happen
   }
 
@@ -278,9 +279,11 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     }
     & th:first-of-type {
       padding-left: 2rem;
+      width: 45px;
     }
     & th:last-of-type {
       padding-right: 2rem;
+      width: 120px;
     }
   }
 
@@ -299,10 +302,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     }
     & td.business-name {
       max-width: 200px;
-      // show ellipsis when email overflows
-      // (doesn't affect name because name breaks on spaces)
-      overflow-x: hidden;
-      text-overflow: ellipsis;
+      padding-left: 0.5rem;
     }
     & td.business-type {
       max-width: 150px;
@@ -314,10 +314,14 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
       max-width: 130px;
     }
     & td.business-status {
-      max-width: 120px;
+      width: 45px;
+      max-width: 45px;
     }
     & td.business-actions {
-      min-width: 180px;
+      width: 120px;
+      max-width: 120px;
+      text-align: right;
+      padding-right: 0.4rem;
 
       // nudge icon down a bit to line up with text
       .remove-btn .v-icon {

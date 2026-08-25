@@ -22,12 +22,12 @@ describe('Business Table - display', () => {
     // verify table headers
     const th = table.findAll('thead tr > th')
     expect(th.length).toBe(6)
-    expect(th.at(0).text()).toBe('Business Name')
-    expect(th.at(1).text()).toBe('Business Type')
-    expect(th.at(2).text()).toBe('Mailing Address')
-    expect(th.at(3).text()).toBe('Role')
-    expect(th.at(4).text()).toBe('Status')
-    expect(th.at(5).text()).toBe('Action')
+    expect(th.at(0).text()).toBe('')
+    expect(th.at(1).text()).toBe('Business Name and Number')
+    expect(th.at(2).text()).toBe('Business Type')
+    expect(th.at(3).text()).toBe('Mailing Address or Jurisdiction')
+    expect(th.at(4).text()).toBe('Role')
+    expect(th.at(5).text()).toBe('')
 
     // verify table data
     const td = table.findAll('tbody tr > td')
@@ -119,6 +119,20 @@ describe('Business Table - display', () => {
       },
       expectedJurisdiction: 'United States of America',
       role: AmlRoles.AMALGAMATING
+    },
+    {
+      label: 'extraprovincial business',
+      amalgamationType: AmalgamationTypes.REGULAR,
+      type: AmlTypes.FOREIGN,
+      identifier: 'A1234567',
+      legalName: 'My Extrapro Business',
+      expectedBusinessType: 'Extra Provincial',
+      foreignJurisdiction: {
+        country: 'CA',
+        region: 'BC'
+      },
+      expectedJurisdiction: 'BC, Canada',
+      role: AmlRoles.AMALGAMATING
     }
   ]
 
@@ -145,49 +159,49 @@ describe('Business Table - display', () => {
       // verify table headers
       const th = table.findAll('thead tr > th')
       expect(th.length).toBe(6)
-      expect(th.at(0).text()).toBe('Business Name')
-      expect(th.at(1).text()).toBe('Business Type')
-      expect(th.at(2).text()).toBe('Mailing Address')
-      expect(th.at(3).text()).toBe('Role')
-      expect(th.at(4).text()).toBe('Status')
-      expect(th.at(5).text()).toBe('Action')
+      expect(th.at(0).text()).toBe('')
+      expect(th.at(1).text()).toBe('Business Name and Number')
+      expect(th.at(2).text()).toBe('Business Type')
+      expect(th.at(3).text()).toBe('Mailing Address or Jurisdiction')
+      expect(th.at(4).text()).toBe('Role')
+      expect(th.at(5).text()).toBe('')
 
       // verify table data
       const td = table.findAll('tbody tr > td')
       expect(td.length).toBe(6)
-      expect(td.at(0).classes('business-name')).toBe(true)
-      expect(td.at(1).classes('business-type')).toBe(true)
-      expect(td.at(2).classes('business-address')).toBe(true)
-      expect(td.at(3).classes('business-role')).toBe(true)
-      expect(td.at(4).classes('business-status')).toBe(true)
+      expect(td.at(0).classes('business-status')).toBe(true)
+      expect(td.at(1).classes('business-name')).toBe(true)
+      expect(td.at(2).classes('business-type')).toBe(true)
+      expect(td.at(3).classes('business-address')).toBe(true)
+      expect(td.at(4).classes('business-role')).toBe(true)
       expect(td.at(5).classes('business-actions')).toBe(true)
 
       if ((business.type === AmlTypes.LEAR)) {
-        expect(td.at(0).text()).toContain(business.name)
-        expect(td.at(0).text()).toContain(business.authInfo.contacts[0].email)
+        expect(td.at(1).text()).toContain(business.name)
+        expect(td.at(1).text()).toContain(business.identifier)
 
-        expect(td.at(1).text()).toContain(business.expectedBusinessType)
+        expect(td.at(2).text()).toContain(business.expectedBusinessType)
 
         if (business.addresses) {
-          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.streetAddress)
-          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.addressCity)
-          expect(td.at(2).text()).toContain('Canada')
-          expect(td.at(2).text()).toContain(business.addresses.registeredOffice.mailingAddress.postalCode)
+          expect(td.at(3).text()).toContain(business.addresses.registeredOffice.mailingAddress.streetAddress)
+          expect(td.at(3).text()).toContain(business.addresses.registeredOffice.mailingAddress.addressCity)
+          expect(td.at(3).text()).toContain('Canada')
+          expect(td.at(3).text()).toContain(business.addresses.registeredOffice.mailingAddress.postalCode)
         } else {
-          expect(td.at(2).text()).toBe('Affiliate to view')
+          expect(td.at(3).text()).toBe('Affiliate to view')
         }
 
         if (business.role === AmlRoles.AMALGAMATING) {
-          expect(td.at(3).text()).toBe('Amalgamating Business')
+          expect(td.at(4).text()).toBe('Amalgamating Business')
         }
         if (business.role === AmlRoles.HOLDING) {
-          expect(td.at(3).text()).toBe('Holding Business')
+          expect(td.at(4).text()).toBe('Holding Business')
         }
         if (business.role === AmlRoles.PRIMARY) {
-          expect(td.at(3).text()).toBe('Primary Business')
+          expect(td.at(4).text()).toBe('Primary Business')
         }
 
-        expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
+        expect(td.at(0).exists()).toBe(true) // see separate BusinessTableStatus tests
 
         if (business.role === AmlRoles.AMALGAMATING) {
           // button only exists on amalgamating businesses (not holding or primary)
@@ -196,11 +210,12 @@ describe('Business Table - display', () => {
       }
 
       if ((business.type === AmlTypes.FOREIGN)) {
-        expect(td.at(0).text()).toBe(business.legalName)
-        expect(td.at(1).text()).toBe(business.expectedBusinessType)
-        expect(td.at(2).text()).toBe(business.expectedJurisdiction)
-        expect(td.at(3).text()).toBe('Amalgamating Business')
-        expect(td.at(4).exists()).toBe(true) // see separate BusinessTableStatus tests
+        expect(td.at(1).text()).toContain(business.legalName)
+        expect(td.at(1).text()).toContain(business.identifier)
+        expect(td.at(2).text()).toBe(business.expectedBusinessType)
+        expect(td.at(3).text()).toBe(business.expectedJurisdiction)
+        expect(td.at(4).text()).toBe('Amalgamating Business')
+        expect(td.at(0).exists()).toBe(true) // status
         expect(td.at(5).find('.v-btn').exists()).toBe(true)
       }
 

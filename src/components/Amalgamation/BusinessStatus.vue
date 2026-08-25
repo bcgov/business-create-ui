@@ -11,15 +11,10 @@
         <v-icon
           small
           :color="status === AmlStatuses.OK ? 'success' : 'warning'"
+          v-on="on"
         >
           {{ status === AmlStatuses.OK ? 'mdi-check' : 'mdi-alert' }}
         </v-icon>
-        <span
-          class="ml-2 text-decoration-dotted-underline"
-          v-on="on"
-        >
-          {{ status === AmlStatuses.OK ? 'Ready' : 'Attention Required' }}
-        </span>
       </template>
       <span>{{ tooltip }}</span>
     </v-tooltip>

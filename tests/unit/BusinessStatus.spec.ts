@@ -109,13 +109,6 @@ describe('Business Status', () => {
         expect(div.find('.v-icon.mdi-alert').exists()).toBe(true)
       }
 
-      // verify text
-      if (test.status === AmlStatuses.OK) {
-        expect(div.text()).toContain('Ready')
-      } else {
-        expect(div.text()).toContain('Attention Required')
-      }
-
       // verify tooltip
       // (can't verify v-tooltip text directly because it's attached outside this component)
       expect((wrapper.vm as any).tooltip).toContain(test.tooltip)
