@@ -60,34 +60,34 @@ function isValidOptionalName (name: string, maxLength: number): boolean {
 export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
   const issues: string[] = []
   const officer: any = orgPerson?.officer
-  if (!officer) return ['officer information is missing']
+  if (!officer) return ['Officer information is missing']
 
   // check names
   if (officer.partyType === PartyTypes.ORGANIZATION) {
-    if (!officer.organizationName?.trim()) issues.push('organization name is missing')
+    if (!officer.organizationName?.trim()) issues.push('Organization name is missing')
     // person name fields must not be set on an organization
     if (
       officer.firstName?.trim() || officer.middleName?.trim() ||
       officer.middleInitial?.trim() || officer.lastName?.trim()
-    ) issues.push('unexpected person name')
+    ) issues.push('Unexpected person name')
   } else {
     // NB - the API does not require a first name; when present it must fit the COLIN sync limit
     if (!isValidOptionalName(officer.firstName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`first name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`First name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     if (!officer.lastName?.trim()) {
-      issues.push('last name is missing')
+      issues.push('Last name is missing')
     } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
-      issues.push(`last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
+      issues.push(`Last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
     }
     if (!isValidOptionalName(officer.middleName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`Middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     if (!isValidOptionalName(officer.middleInitial, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`Middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     // organization name must not be set on a person
-    if (officer.organizationName?.trim()) issues.push('unexpected organization name')
+    if (officer.organizationName?.trim()) issues.push('Unexpected organization name')
   }
 
   // check mailing address

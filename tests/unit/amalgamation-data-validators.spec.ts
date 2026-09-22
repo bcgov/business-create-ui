@@ -165,16 +165,16 @@ describe('IsOrgPersonComplete / AreOrgPersonsComplete', () => {
       ...VALID_DIRECTOR,
       officer: { partyType: 'person', firstName: 'JANE', lastName: '' },
       deliveryAddress: null
-    })).toEqual(['last name is missing', 'Delivery Address is incorrect or incomplete'])
+    })).toEqual(['Last name is missing', 'Delivery Address is incorrect or incomplete'])
     expect(GetOrgPersonIssues({
       ...VALID_DIRECTOR,
       officer: { partyType: 'person', firstName: 'A'.repeat(21), lastName: 'DOE' }
-    })).toEqual(['first name exceeds 20 characters'])
+    })).toEqual(['First name exceeds 20 characters'])
     expect(GetOrgPersonIssues({
       ...VALID_DIRECTOR,
       officer: { partyType: 'organization', organizationName: '' },
       roles: [{ roleType: 'Incorporator' }]
-    })).toEqual(['organization name is missing'])
+    })).toEqual(['Organization name is missing'])
   })
 
   it('rejects cross-type name contamination', () => {
