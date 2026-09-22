@@ -165,7 +165,7 @@ describe('IsOrgPersonComplete / AreOrgPersonsComplete', () => {
       ...VALID_DIRECTOR,
       officer: { partyType: 'person', firstName: 'JANE', lastName: '' },
       deliveryAddress: null
-    })).toEqual(['missing last name', 'incomplete delivery address'])
+    })).toEqual(['last name is missing', 'Delivery Address is incorrect or incomplete'])
     expect(GetOrgPersonIssues({
       ...VALID_DIRECTOR,
       officer: { partyType: 'person', firstName: 'A'.repeat(21), lastName: 'DOE' }
@@ -174,7 +174,7 @@ describe('IsOrgPersonComplete / AreOrgPersonsComplete', () => {
       ...VALID_DIRECTOR,
       officer: { partyType: 'organization', organizationName: '' },
       roles: [{ roleType: 'Incorporator' }]
-    })).toEqual(['missing organization name'])
+    })).toEqual(['organization name is missing'])
   })
 
   it('rejects cross-type name contamination', () => {
@@ -224,8 +224,11 @@ describe('AreOfficesComplete', () => {
     expect(GetOfficeIssues({
       mailingAddress: { ...VALID_BC_ADDRESS, streetAddress: '' },
       deliveryAddress: { ...VALID_BC_ADDRESS }
-    })).toEqual(['incomplete mailing address'])
-    expect(GetOfficeIssues(null)).toEqual(['incomplete mailing address', 'incomplete delivery address'])
+    })).toEqual(['Mailing Address is incorrect or incomplete'])
+    expect(GetOfficeIssues(null)).toEqual([
+      'Mailing Address is incorrect or incomplete',
+      'Delivery Address is incorrect or incomplete'
+    ])
   })
 })
 

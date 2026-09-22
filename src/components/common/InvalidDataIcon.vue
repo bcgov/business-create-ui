@@ -18,15 +18,12 @@
         </v-icon>
       </template>
       <div>
-        <span>{{ title }}</span>
-        <ul class="issues-list">
-          <li
-            v-for="(issue, index) in issues"
-            :key="index"
-          >
-            {{ issue }}
-          </li>
-        </ul>
+        <div
+          v-for="(issue, index) in issues"
+          :key="index"
+        >
+          {{ issue }}
+        </div>
       </div>
     </v-tooltip>
   </span>
@@ -38,9 +35,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 /** A red warning icon whose tooltip lists the subject's data issues. Renders nothing when there are none. */
 @Component({})
 export default class InvalidDataIcon extends Vue {
-  /** The tooltip's intro line, shown above the list of issues. */
-  @Prop({ required: true }) readonly title!: string
-
   /** The data issues to list. */
   @Prop({ default: () => [] }) readonly issues!: string[]
 }

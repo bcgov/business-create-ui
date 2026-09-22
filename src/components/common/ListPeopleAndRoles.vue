@@ -174,7 +174,6 @@
                 class="text-center"
               >
                 <InvalidDataIcon
-                  title="This director's information has the following issues:"
                   :issues="directorIssues(orgPerson)"
                 />
               </div>

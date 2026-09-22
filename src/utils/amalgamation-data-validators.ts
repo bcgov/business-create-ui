@@ -60,11 +60,11 @@ function isValidOptionalName (name: string, maxLength: number): boolean {
 export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
   const issues: string[] = []
   const officer: any = orgPerson?.officer
-  if (!officer) return ['missing officer information']
+  if (!officer) return ['officer information is missing']
 
   // check names
   if (officer.partyType === PartyTypes.ORGANIZATION) {
-    if (!officer.organizationName?.trim()) issues.push('missing organization name')
+    if (!officer.organizationName?.trim()) issues.push('organization name is missing')
     // person name fields must not be set on an organization
     if (
       officer.firstName?.trim() || officer.middleName?.trim() ||
@@ -76,7 +76,7 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
       issues.push(`first name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     if (!officer.lastName?.trim()) {
-      issues.push('missing last name')
+      issues.push('last name is missing')
     } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
       issues.push(`last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
     }
@@ -92,7 +92,7 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
 
   // check mailing address
   if (!IsAddressValid(orgPerson.mailingAddress, PersonAddressSchema)) {
-    issues.push('incomplete mailing address')
+    issues.push('Mailing Address is incorrect or incomplete')
   }
 
   // directors, proprietors and partners also require a complete delivery address
@@ -100,7 +100,7 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
     [RoleTypes.DIRECTOR, RoleTypes.PROPRIETOR, RoleTypes.PARTNER].includes(role.roleType)
   )
   if (requiresDeliveryAddress && !IsAddressValid(orgPerson.deliveryAddress, PersonAddressSchema)) {
-    issues.push('incomplete delivery address')
+    issues.push('Delivery Address is incorrect or incomplete')
   }
 
   return issues
@@ -129,10 +129,10 @@ export function AreOrgPersonsComplete (orgPeople: OrgPersonIF[]): boolean {
 export function GetOfficeIssues (office: { mailingAddress?: AddressIF, deliveryAddress?: AddressIF }): string[] {
   const issues: string[] = []
   if (!IsAddressValid(office?.mailingAddress, OfficeAddressSchema)) {
-    issues.push('incomplete mailing address')
+    issues.push('Mailing Address is incorrect or incomplete')
   }
   if (!IsAddressValid(office?.deliveryAddress, OfficeAddressSchema)) {
-    issues.push('incomplete delivery address')
+    issues.push('Delivery Address is incorrect or incomplete')
   }
   return issues
 }

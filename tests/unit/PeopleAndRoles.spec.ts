@@ -6,9 +6,11 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { createLocalVue, mount } from '@vue/test-utils'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 import { IncorporationResourceBen } from '@/resources/Incorporation/BEN'
 import { ResourceIF } from '@/interfaces'
 import { AmalgamationShortResourceBc } from '@/resources/AmalgamationShort'
+import { AmalgamationTypes } from '@bcrs-shared-components/enums'
 import { AuthorizationRoles, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
@@ -306,6 +308,50 @@ describe('People And Roles component - Amalgamation Short form', () => {
     expect(wrapper.find('.dir-info-invalid').exists()).toBe(true)
     wrapper.destroy()
     store.stateModel.showErrors = false
+    resetStore()
+  })
+
+  function setShortFormFiling (): void {
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+    store.stateModel.amalgamation.type = AmalgamationTypes.HORIZONTAL
+  }
+
+  function resetShortFormFiling (): void {
+    store.stateModel.tombstone.filingType = null
+    store.stateModel.amalgamation.type = null
+    resetStore()
+  }
+
+  it('shows the invalid-directors warning box when an adopted director is incomplete', () => {
+    setShortFormFiling()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [
+      { ...completeDirector, officer: { ...completeDirector.officer, lastName: '' } }
+    ]
+    const wrapper = wrapperFactory()
+    const messageBox = wrapper.findComponent(MessageBoxWarning)
+    expect(messageBox.exists()).toBe(true)
+    expect(messageBox.text()).toContain('Incomplete or incorrect director information:')
+    expect(messageBox.text()).toContain('open the primary company')
+    wrapper.destroy()
+    resetShortFormFiling()
+  })
+
+  it('does not show the invalid-directors warning box when directors are complete', () => {
+    setShortFormFiling()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [completeDirector]
+    const wrapper = wrapperFactory()
+    expect(wrapper.findComponent(MessageBoxWarning).exists()).toBe(false)
+    wrapper.destroy()
+    resetShortFormFiling()
+  })
+
+  it('does not show the invalid-directors warning box outside a short-form amalgamation', () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [
+      { ...completeDirector, officer: { ...completeDirector.officer, lastName: '' } }
+    ]
+    const wrapper = wrapperFactory()
+    expect(wrapper.findComponent(MessageBoxWarning).exists()).toBe(false)
+    wrapper.destroy()
     resetStore()
   })
 })

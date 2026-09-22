@@ -1,32 +1,21 @@
 <template>
   <div id="list-share-class">
-    <section :class="{ 'invalid-section': showErrorSummary }">
+    <section :class="{ 'invalid-section': showErrorSummary && !isShortFormAmalgamation }">
       <!-- Summary Warning -->
       <div
         v-if="isSummary && showErrorSummary"
-        class="share-summary-invalid-message pa-5"
+        class="pa-5 share-summary-invalid-message"
       >
         <!--
           Short-form amalgamations can't edit shares in the filing,
           so there is messaging instead of a return link
         -->
-        <div
+        <MessageBoxWarning
           v-if="isShortFormAmalgamation"
-          class="d-flex align-start"
-        >
-          <v-icon
-            color="error"
-            :style="{ 'margin-top': '1px' }"
-          >
-            mdi-information-outline
-          </v-icon>
-          <div class="mx-1">
-            <span class="error-text d-block">The adopted share structure is missing required information.</span>
-            <span class="error-text d-block">Save this draft application and correct the share structure on the
-              {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }} business' dashboard,
-              then return to this application.</span>
-          </div>
-        </div>
+          iconName="mdi-alert"
+          iconColour="error"
+          :messages="shareWarningMessages"
+        />
 
         <span v-else>
           <v-icon color="error">mdi-information-outline</v-icon>
@@ -53,6 +42,7 @@
       <v-data-table
         :headers="headers"
         :items="shareClasses"
+        :class="{ 'invalid-section': showErrorSummary && isShortFormAmalgamation }"
         disable-pagination
         disable-sort
         hide-default-footer
@@ -262,8 +252,11 @@ import { RouteNames } from '@/enums'
 import { arrayMoveMutable } from 'array-move'
 import { OTHER_CURRENCY } from '@/constants'
 import { FormatDecimal } from '@/utils'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 
-@Component({})
+@Component({
+  components: { MessageBoxWarning }
+})
 export default class ListShareClass extends Vue {
   @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
   @Getter(useStore) isAmalgamationFilingVertical!: boolean
@@ -282,6 +275,21 @@ export default class ListShareClass extends Vue {
   /** Whether this is a short-form (horizontal or vertical) amalgamation filing. */
   get isShortFormAmalgamation (): boolean {
     return (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical)
+  }
+
+  /** The invalid adopted share structure warning messages. */
+  get shareWarningMessages (): Array<{ prefix?: string, message: string }> {
+    const business = this.isAmalgamationFilingHorizontal ? 'primary' : 'holding'
+    return [
+      {
+        prefix: 'Incomplete or incorrect shares or share structure:',
+        message: 'The shares or share structure of the amalgamated company are incomplete or incorrect.'
+      },
+      {
+        message: 'To update the shares or share structure for this company, save this application, open ' +
+          `the ${business} company, change the shares or share structure, then return to this application.`
+      }
+    ]
   }
 
   get headers (): Array<any> {
