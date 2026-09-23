@@ -60,39 +60,39 @@ function isValidOptionalName (name: string, maxLength: number): boolean {
 export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
   const issues: string[] = []
   const officer: any = orgPerson?.officer
-  if (!officer) return ['missing officer information']
+  if (!officer) return ['Officer information is missing']
 
   // check names
   if (officer.partyType === PartyTypes.ORGANIZATION) {
-    if (!officer.organizationName?.trim()) issues.push('missing organization name')
+    if (!officer.organizationName?.trim()) issues.push('Organization name is missing')
     // person name fields must not be set on an organization
     if (
       officer.firstName?.trim() || officer.middleName?.trim() ||
       officer.middleInitial?.trim() || officer.lastName?.trim()
-    ) issues.push('unexpected person name')
+    ) issues.push('Unexpected person name')
   } else {
     // NB - the API does not require a first name; when present it must fit the COLIN sync limit
     if (!isValidOptionalName(officer.firstName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`first name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`First name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     if (!officer.lastName?.trim()) {
-      issues.push('missing last name')
+      issues.push('Last name is missing')
     } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
-      issues.push(`last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
+      issues.push(`Last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
     }
     if (!isValidOptionalName(officer.middleName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`Middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     if (!isValidOptionalName(officer.middleInitial, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      issues.push(`Middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
     }
     // organization name must not be set on a person
-    if (officer.organizationName?.trim()) issues.push('unexpected organization name')
+    if (officer.organizationName?.trim()) issues.push('Unexpected organization name')
   }
 
   // check mailing address
   if (!IsAddressValid(orgPerson.mailingAddress, PersonAddressSchema)) {
-    issues.push('incomplete mailing address')
+    issues.push('Mailing Address is incorrect or incomplete')
   }
 
   // directors, proprietors and partners also require a complete delivery address
@@ -100,7 +100,7 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
     [RoleTypes.DIRECTOR, RoleTypes.PROPRIETOR, RoleTypes.PARTNER].includes(role.roleType)
   )
   if (requiresDeliveryAddress && !IsAddressValid(orgPerson.deliveryAddress, PersonAddressSchema)) {
-    issues.push('incomplete delivery address')
+    issues.push('Delivery Address is incorrect or incomplete')
   }
 
   return issues
@@ -129,10 +129,10 @@ export function AreOrgPersonsComplete (orgPeople: OrgPersonIF[]): boolean {
 export function GetOfficeIssues (office: { mailingAddress?: AddressIF, deliveryAddress?: AddressIF }): string[] {
   const issues: string[] = []
   if (!IsAddressValid(office?.mailingAddress, OfficeAddressSchema)) {
-    issues.push('incomplete mailing address')
+    issues.push('Mailing Address is incorrect or incomplete')
   }
   if (!IsAddressValid(office?.deliveryAddress, OfficeAddressSchema)) {
-    issues.push('incomplete delivery address')
+    issues.push('Delivery Address is incorrect or incomplete')
   }
   return issues
 }

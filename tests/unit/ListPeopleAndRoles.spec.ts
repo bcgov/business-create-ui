@@ -622,7 +622,7 @@ describe('List People And Roles component - Short form amalgamation', () => {
     expect(rows.at(0).find('.edit-action').exists()).toBe(true)
     // the tooltip lists the specific issues
     expect(wrapper.vm.directorIssues({ ...mockPersonList[1], deliveryAddress: null }))
-      .toEqual(['incomplete delivery address'])
+      .toEqual(['Delivery Address is incorrect or incomplete'])
   })
 
   it('does not show the warning icon when the adopted director is complete', () => {

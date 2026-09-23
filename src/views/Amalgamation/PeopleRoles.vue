@@ -5,19 +5,6 @@
         <h2>{{ getPeopleAndRolesResource.header }}</h2>
       </header>
 
-      <!-- short-form directors are adopted from the holding/primary business -->
-      <MessageBox
-        v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical"
-        color="gold"
-        class="mt-6"
-      >
-        <p>
-          <strong>Important:</strong> To update the directors, save this draft application and
-          visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }} business'
-          dashboard. Make the director changes there and come back to this application.
-        </p>
-      </MessageBox>
-
       <PeopleAndRoles />
     </section>
   </div>
@@ -30,12 +17,10 @@ import { useStore } from '@/store/store'
 import { PeopleAndRoleIF, PeopleAndRolesResourceIF } from '@/interfaces'
 import { CommonMixin } from '@/mixins'
 import { RouteNames } from '@/enums'
-import MessageBox from '@/components/common/MessageBox.vue'
 import PeopleAndRoles from '@/components/common/PeopleAndRoles.vue'
 
 @Component({
   components: {
-    MessageBox,
     PeopleAndRoles
   }
 })
@@ -43,8 +28,6 @@ export default class AmalgamationPeopleRoles extends Mixins(CommonMixin) {
   @Getter(useStore) getAddPeopleAndRoleStep!: PeopleAndRoleIF
   @Getter(useStore) getPeopleAndRolesResource!: PeopleAndRolesResourceIF
   @Getter(useStore) getShowErrors!: boolean
-  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
-  @Getter(useStore) isAmalgamationFilingVertical!: boolean
 
   @Watch('$route')
   private async scrollToInvalidComponent (): Promise<void> {

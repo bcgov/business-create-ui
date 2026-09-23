@@ -30,7 +30,19 @@
       </template>
 
       <template v-if="isAmalgamationFilingHorizontal || isAmalgamationFilingVertical">
-        <MessageBox color="gold">
+        <!-- invalid adopted addresses warning -->
+        <MessageBoxWarning
+          v-if="!officesComplete"
+          iconName="mdi-alert"
+          iconColour="error"
+          :messages="addressWarningMessages"
+        />
+
+        <!-- adopted addresses info -->
+        <MessageBox
+          v-else
+          color="gold"
+        >
           <p>
             <strong>Important: </strong>To update the registered office and records office addresses, save
             this draft application and visit the {{ isAmalgamationFilingHorizontal ? 'primary' : 'holding' }}
@@ -109,6 +121,7 @@ import FolioNumber from '@/components/common/FolioNumber.vue'
 import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import CardHeader from '@/components/common/CardHeader.vue'
 import MessageBox from '@/components/common/MessageBox.vue'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 
 @Component({
   components: {
@@ -116,7 +129,8 @@ import MessageBox from '@/components/common/MessageBox.vue'
     CardHeader,
     FolioNumber,
     OfficeAddresses,
-    MessageBox
+    MessageBox,
+    MessageBoxWarning
   }
 })
 export default class AmalgamationBusinessInfo extends Mixins(CommonMixin) {
@@ -153,6 +167,27 @@ export default class AmalgamationBusinessInfo extends Mixins(CommonMixin) {
   /** Whether the office addresses are complete and valid. */
   get officesComplete (): boolean {
     return AreOfficesComplete(this.getOfficeAddresses)
+  }
+
+  /** The invalid adopted addresses warning messages. */
+  get addressWarningMessages (): Array<{ prefix?: string, message: string }> {
+    const business = this.isAmalgamationFilingHorizontal ? 'primary' : 'holding'
+    return [
+      {
+        prefix: 'Incomplete or incorrect Address:',
+        message: 'At least one address for the amalgamated company is incomplete or incorrect.'
+      },
+      {
+        message: `To update the addresses for this company, save this application, open the ${business} ` +
+          'company, change the address of the company, then return to this application after the address ' +
+          'change becomes effective.'
+      },
+      {
+        prefix: 'Note:',
+        message: 'Address changes take effect at 12:01 am Pacific time. No other filings can be performed ' +
+          'until an Address Change has taken effect.'
+      }
+    ]
   }
 
   /** Called when component is created. */

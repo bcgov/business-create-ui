@@ -5,6 +5,7 @@ import OfficeAddresses from '@/components/common/OfficeAddresses.vue'
 import BusinessContactInfo from '@/components/common/BusinessContactInfo.vue'
 import { AmalgamationTypes, CorpTypeCd, FilingTypes } from '@bcrs-shared-components/enums'
 import MessageBox from '@/components/common/MessageBox.vue'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 
 describe('Amalgamation Business Information - regular amalgamation', () => {
   let wrapper: any
@@ -36,7 +37,7 @@ describe('Amalgamation Business Information - regular amalgamation', () => {
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Enter the Registered Office and Records Office Mailing and Delivery Addresses of the resulting')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
-    expect(section.findComponent(MessageBox).exists()).toBe(false)
+    expect(section.findComponent(MessageBoxWarning).exists()).toBe(false)
   })
 
   it('renders contact information section', () => {
@@ -76,8 +77,15 @@ describe('Amalgamation Business Information - horizontal amalgamation', () => {
     const section = wrapper.findAll('section').at(0)
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Delivery Addresses of the primary business')
-    expect(section.findComponent(MessageBox).exists()).toBe(true)
-    expect(section.findComponent(MessageBox).find('p').text()).toContain('this draft application and visit the primary')
+    // default store state has no adopted offices, so the invalid-addresses warning shows
+    const messageBox = section.findComponent(MessageBoxWarning)
+    expect(messageBox.exists()).toBe(true)
+    const messages = messageBox.props('messages')
+    expect(messages.length).toBe(3)
+    expect(messages[0].prefix).toBe('Incomplete or incorrect Address:')
+    expect(messages[1].message).toContain('open the primary company')
+    expect(messages[2].prefix).toBe('Note:')
+    expect(messages[2].message).toContain('Address changes take effect at 12:01 am Pacific time')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
   })
 
@@ -145,6 +153,27 @@ describe('Amalgamation Business Information - short-form office addresses error 
     expect(wrapper.findAll('section').at(0).find('.invalid-section').exists()).toBe(false)
     wrapper.destroy()
   })
+
+  it('shows the warning box (not the gold box) when adopted offices are incomplete', () => {
+    const wrapper = factory(INCOMPLETE_OFFICES, false)
+    const section = wrapper.findAll('section').at(0)
+    const messageBox = section.findComponent(MessageBoxWarning)
+    expect(messageBox.exists()).toBe(true)
+    expect(messageBox.props('messages')[0].prefix).toBe('Incomplete or incorrect Address:')
+    expect(section.findComponent(MessageBox).exists()).toBe(false)
+    wrapper.destroy()
+  })
+
+  it('shows the gold box (not the warning box) when adopted offices are complete', () => {
+    const wrapper = factory(COMPLETE_OFFICES, true)
+    const section = wrapper.findAll('section').at(0)
+    expect(section.findComponent(MessageBoxWarning).exists()).toBe(false)
+    const goldBox = section.findComponent(MessageBox)
+    expect(goldBox.exists()).toBe(true)
+    expect(goldBox.attributes('color')).toBe('gold')
+    expect(goldBox.text()).toContain('visit the primary')
+    wrapper.destroy()
+  })
 })
 
 describe('Amalgamation Business Information - vertical amalgamation', () => {
@@ -156,6 +185,8 @@ describe('Amalgamation Business Information - vertical amalgamation', () => {
       null,
       {
         amalgamation: { type: AmalgamationTypes.VERTICAL },
+        // reset the offices set by the error-bar describe above (the store is shared)
+        defineCompanyStep: { officeAddresses: {} },
         entityType: CorpTypeCd.BC_COMPANY,
         tombstone: { filingType: FilingTypes.AMALGAMATION_APPLICATION }
       },
@@ -176,8 +207,12 @@ describe('Amalgamation Business Information - vertical amalgamation', () => {
     const section = wrapper.findAll('section').at(0)
     expect(section.find('header h2').text()).toBe('Registered and Records Office Addresses')
     expect(section.find('header p').text()).toContain('Delivery Addresses of the holding business')
-    expect(section.findComponent(MessageBox).exists()).toBe(true)
-    expect(section.findComponent(MessageBox).find('p').text()).toContain('this draft application and visit the holding')
+    // default store state has no adopted offices, so the invalid-addresses warning shows
+    const messageBox = section.findComponent(MessageBoxWarning)
+    expect(messageBox.exists()).toBe(true)
+    const messages = messageBox.props('messages')
+    expect(messages[0].prefix).toBe('Incomplete or incorrect Address:')
+    expect(messages[1].message).toContain('open the holding company')
     expect(section.findComponent(OfficeAddresses).exists()).toBe(true)
   })
 

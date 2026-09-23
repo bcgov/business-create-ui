@@ -266,7 +266,6 @@
         <!-- invalid adopted data warning -->
         <v-col v-if="showAddressIssues">
           <InvalidDataIcon
-            title="This office's addresses have the following issues:"
             :issues="registeredOfficeIssues"
           />
         </v-col>
@@ -330,7 +329,6 @@
         <!-- invalid adopted data warning -->
         <v-col v-if="showAddressIssues">
           <InvalidDataIcon
-            title="This office's addresses have the following issues:"
             :issues="recordsOfficeIssues"
           />
         </v-col>
