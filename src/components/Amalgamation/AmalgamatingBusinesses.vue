@@ -451,23 +451,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
 
       // Check for unaffiliated business.
       if (business.authInfo?.status === 'FORBIDDEN') {
-        // Check for duplicate
-        if (this.checkForDuplicateInTable(business.businessInfo)) {
-          this.snackbarText = 'Business is already in table.'
-          this.snackbar = true
-          return
-        }
-
-        this.pushAmalgamatingBusiness({
-          type: AmlTypes.LEAR,
-          role: AmlRoles.AMALGAMATING,
-          identifier: businessLookup.identifier,
-          name: businessLookup.name,
-          legalType: businessLookup.legalType as unknown as CorpTypeCd
-        })
-
-        // Close the "Add an Amalgamating Business" panel.
-        this.isAddingAmalgamatingBusiness = false
+        this.showNotAffiliatedDialog()
         return
       }
 
@@ -694,7 +678,7 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
     } catch (error) {
       // Report error.
       console.log('Error setting new holding/primary business =', error)
-      if (!business.addresses) {
+      if (business.authInfo?.status === 'FORBIDDEN') {
         this.showNotAffiliatedDialog()
       } else {
         this.showSomethingWentWrongDialog()
