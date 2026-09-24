@@ -176,7 +176,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         shareStructure: {
           shareClasses: this.getCreateShareStructureStep.shareClasses,
           ...(this.getResolutions?.length
-            ? { resolutionDates: this.getResolutions.map(r => r.date) }
+            ? { resolutionDates: this.getResolutions.map(r => ({ date: r.date })) }
             : {})
         },
         resolutions: this.getResolutions

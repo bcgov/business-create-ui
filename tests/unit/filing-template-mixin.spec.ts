@@ -688,7 +688,8 @@ describe('Amalgamation Filing', () => {
 
     const filing = wrapper.vm.buildAmalgamationFiling()
 
-    expect(filing.amalgamationApplication.shareStructure.resolutionDates).toEqual(['2020-05-13', '2021-06-14'])
+    expect(filing.amalgamationApplication.shareStructure.resolutionDates)
+      .toEqual([{ date: '2020-05-13' }, { date: '2021-06-14' }])
     // the resolution objects are still carried for draft restore
     expect(filing.amalgamationApplication.resolutions).toEqual([{ date: '2020-05-13' }, { date: '2021-06-14' }])
   })
