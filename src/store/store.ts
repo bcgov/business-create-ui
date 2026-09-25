@@ -624,9 +624,14 @@ export const useStore = defineStore('store', {
     isAddPeopleAndRolesValid (): boolean {
       // also verify each org-person's completeness, since prepopulated and draft-restored
       // people never pass through the add/edit form that normally enforces it
+      // NB: a locked Completing Party name is skipped — it is pre-populated from the
+      // user's login and they cannot fix it (mirrors the add/edit form's rules gating)
       return (
         this.getAddPeopleAndRoleStep.valid &&
-        AreOrgPersonsComplete(this.getAddPeopleAndRoleStep.orgPeople)
+        AreOrgPersonsComplete(
+          this.getAddPeopleAndRoleStep.orgPeople,
+          !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)
+        )
       )
     },
 
