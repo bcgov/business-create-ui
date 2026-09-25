@@ -332,6 +332,53 @@ describe('Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
+  it('does not validate coop completing party names when they are not editable by the user', async () => {
+    store.stateModel.entityType = CorpTypeCd.COOP
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, NaN, null)
+    const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
+    const inputElement2: Wrapper<Vue> = wrapper.find(middleNameSelector)
+    const inputElement3: Wrapper<Vue> = wrapper.find(lastNameSelector)
+
+    inputElement1.setValue('1234567890123456789012345678901')
+    inputElement1.trigger('change')
+    inputElement2.setValue('1234567890123456789012345678901')
+    inputElement2.trigger('change')
+    inputElement3.setValue('1234567890123456789012345678901')
+    inputElement3.trigger('change')
+    await Vue.nextTick()
+    await flushPromises()
+    await Vue.nextTick()
+
+    const messages = wrapper.findAll('.v-messages__message')
+    expect(messages.length).toBe(0)
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(true)
+
+    wrapper.destroy()
+    store.stateModel.entityType = null
+  })
+
+  it('validates coop completing party names for staff, who can edit them', async () => {
+    store.stateModel.entityType = CorpTypeCd.COOP
+    setAuthRole(store, AuthorizationRoles.STAFF)
+    const wrapper: Wrapper<AddEditOrgPerson> = createComponent(validPersonData, NaN, null)
+    const inputElement1: Wrapper<Vue> = wrapper.find(firstNameSelector)
+
+    inputElement1.setValue('1234567890123456789012345678901')
+    inputElement1.trigger('change')
+    await Vue.nextTick()
+    await flushPromises()
+    await Vue.nextTick()
+
+    const messages = wrapper.findAll('.v-messages__message')
+    expect(messages.length).toBe(1)
+    expect(messages.at(0).text()).toBe('Cannot exceed 20 characters')
+    expect(wrapper.vm.$data.addPersonOrgFormValid).toBe(false)
+
+    wrapper.destroy()
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    store.stateModel.entityType = null
+  })
+
   it('Shows popup if there is already a completing party', async () => {
     setAuthRole(store, AuthorizationRoles.STAFF)
     const wrapper: Wrapper<AddEditOrgPerson> = createComponent(
