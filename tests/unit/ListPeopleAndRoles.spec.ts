@@ -2,7 +2,7 @@ import { wrapperFactory, shallowWrapperFactory } from '../vitest-wrapper-factory
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import { AmalgamationTypes, FilingTypes } from '@/enums'
+import { AmalgamationTypes, AuthorizedActions, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
@@ -385,6 +385,52 @@ describe('List People And Roles component - SP registration', () => {
     expect(peoplesListItem2.querySelectorAll('.roles-column p')[0].textContent)
       .toContain('Completing Party')
   })
+
+  it('does not show the error box for a locked completing party with an over-length name', () => {
+    // the name is pre-populated from the user's login; a public user cannot edit it
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[1],
+            officer: { ...mockPersonList[1].officer, firstName: 'A'.repeat(31) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
+  })
+
+  it('shows the error box for an over-length completing party name when the user can edit it', () => {
+    store.stateModel.tombstone.authorizedActions = [AuthorizedActions.EDITABLE_COMPLETING_PARTY]
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[1],
+            officer: { ...mockPersonList[1].officer, firstName: 'A'.repeat(31) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    const message = wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent
+    expect(message).toContain('This step is unfinished.')
+
+    store.stateModel.tombstone.authorizedActions = []
+  })
 })
 
 describe('List People And Roles component - BEN restoration', () => {
@@ -653,6 +699,8 @@ describe('List People And Roles component - Short form amalgamation', () => {
 
   it('shows the error box when adopted director data is incomplete', () => {
     store.stateModel.amalgamation.type = AmalgamationTypes.VERTICAL
+    // an earlier test can replace the tombstone, so reset it
+    store.stateModel.tombstone.authorizedActions = []
 
     wrapper = shallowWrapperFactory(
       ListPeopleAndRoles,
