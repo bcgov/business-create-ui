@@ -56,8 +56,10 @@ function isValidOptionalName (name: string, maxLength: number): boolean {
  * Returns the list of data issues for the org-person (empty if it is complete).
  * NB - the name rules mirror legal-api's validate_party_name.
  * @param orgPerson the org-person to validate
+ * @param skipPersonNameChecks whether to skip the person name checks (for names the
+ *                             user is not allowed to edit, eg a locked Completing Party)
  */
-export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
+export function GetOrgPersonIssues (orgPerson: OrgPersonIF, skipPersonNameChecks = false): string[] {
   const issues: string[] = []
   const officer: any = orgPerson?.officer
   if (!officer) return ['Officer information is missing']
@@ -71,20 +73,22 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
       officer.middleInitial?.trim() || officer.lastName?.trim()
     ) issues.push('Unexpected person name')
   } else {
-    // NB - the API does not require a first name; when present it must fit the COLIN sync limit
-    if (!isValidOptionalName(officer.firstName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`First name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
-    }
-    if (!officer.lastName?.trim()) {
-      issues.push('Last name is missing')
-    } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
-      issues.push(`Last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
-    }
-    if (!isValidOptionalName(officer.middleName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`Middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
-    }
-    if (!isValidOptionalName(officer.middleInitial, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-      issues.push(`Middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+    if (!skipPersonNameChecks) {
+      // NB - the API does not require a first name; when present it must fit the COLIN sync limit
+      if (!isValidOptionalName(officer.firstName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
+        issues.push(`First name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      }
+      if (!officer.lastName?.trim()) {
+        issues.push('Last name is missing')
+      } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
+        issues.push(`Last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
+      }
+      if (!isValidOptionalName(officer.middleName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
+        issues.push(`Middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      }
+      if (!isValidOptionalName(officer.middleInitial, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
+        issues.push(`Middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      }
     }
     // organization name must not be set on a person
     if (officer.organizationName?.trim()) issues.push('Unexpected organization name')
@@ -109,17 +113,25 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF): string[] {
 /**
  * Whether the org-person has the names and addresses the filing requires.
  * @param orgPerson the org-person to validate
+ * @param skipPersonNameChecks whether to skip the person name checks
  */
-export function IsOrgPersonComplete (orgPerson: OrgPersonIF): boolean {
-  return (GetOrgPersonIssues(orgPerson).length === 0)
+export function IsOrgPersonComplete (orgPerson: OrgPersonIF, skipPersonNameChecks = false): boolean {
+  return (GetOrgPersonIssues(orgPerson, skipPersonNameChecks).length === 0)
 }
 
 /**
  * Whether every org-person in the list is complete.
  * @param orgPeople the org-person list to validate (an empty list is valid)
+ * @param completingPartyNameLocked whether the Completing Party's name is pre-populated
+ *                                  from the user's login and not editable — its name
+ *                                  checks are skipped since the user cannot fix them
  */
-export function AreOrgPersonsComplete (orgPeople: OrgPersonIF[]): boolean {
-  return (orgPeople || []).every(orgPerson => IsOrgPersonComplete(orgPerson))
+export function AreOrgPersonsComplete (orgPeople: OrgPersonIF[], completingPartyNameLocked = false): boolean {
+  return (orgPeople || []).every(orgPerson => IsOrgPersonComplete(
+    orgPerson,
+    completingPartyNameLocked &&
+      !!orgPerson.roles?.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+  ))
 }
 
 /**
