@@ -1,5 +1,5 @@
-import { AreOfficesComplete, AreOrgPersonsComplete, GetOfficeIssues, GetOrgPersonIssues,
-  IsAddressValid, IsOrgPersonComplete, IsShareStructureComplete } from '@/utils'
+import { AreOfficesComplete, AreOrgPersonsComplete, FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH, GetOfficeIssues,
+  GetOrgPersonIssues, IsAddressValid, IsOrgPersonComplete, IsShareStructureComplete } from '@/utils'
 import { OfficeAddressSchema, PersonAddressSchema } from '@/schemas'
 import { CurrencyCodes } from '@/constants'
 
@@ -157,6 +157,27 @@ describe('IsOrgPersonComplete / AreOrgPersonsComplete', () => {
     expect(IsOrgPersonComplete({
       ...VALID_DIRECTOR, officer: { partyType: 'person', firstName: 'JANE', lastName: 'DOE', middleName: name20 + 'A' }
     })).toBe(false)
+  })
+
+  it('applies the firm first/middle limit when provided (registration/restoration)', () => {
+    const name25 = 'A'.repeat(25)
+    const partner: any = {
+      ...VALID_DIRECTOR,
+      officer: { partyType: 'person', firstName: name25, middleName: name25, lastName: 'DOE' },
+      roles: [{ roleType: 'Partner', appointmentDate: '2010-05-05' }]
+    }
+    // over the default 20-char COLIN sync limit
+    expect(AreOrgPersonsComplete([partner])).toBe(false)
+    // within the 30-char firm limit
+    expect(AreOrgPersonsComplete([partner], false, FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)).toBe(true)
+    // the firm limit is still a hard cap
+    expect(AreOrgPersonsComplete([
+      { ...partner, officer: { ...partner.officer, firstName: 'A'.repeat(31) } }
+    ], false, FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)).toBe(false)
+    // the last name limit is unchanged
+    expect(AreOrgPersonsComplete([
+      { ...partner, officer: { ...partner.officer, lastName: 'B'.repeat(31) } }
+    ], false, FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)).toBe(false)
   })
 
   it('skips name checks for a locked Completing Party (pre-populated, not editable)', () => {

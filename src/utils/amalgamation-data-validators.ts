@@ -16,9 +16,13 @@ import { SignificantDigits } from './SignificantDigits'
  * validate_share_currency) so this catches anything that would fail at submission.
  */
 
-// legal-api common_validations.py party name limits (COLIN sync constraints)
-const PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH = 20
-const PARTY_LAST_NAME_MAX_LENGTH = 30
+// legal-api common_validations.py party name limits (COLIN sync constraints), enforced
+// on the filings legal-api syncs back to COLIN (IA, amalgamation, continuation-in)
+export const PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH = 20
+// limit for filings without the COLIN sync check (registration, restoration), matching
+// the RegAddEditOrgPerson form rules and legal-api's 30-char parties table columns
+export const FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH = 30
+export const PARTY_LAST_NAME_MAX_LENGTH = 30
 
 // legal-api common_validations.py share structure constants
 const SHARE_NAME_SUFFIX = ' Shares'
@@ -58,8 +62,13 @@ function isValidOptionalName (name: string, maxLength: number): boolean {
  * @param orgPerson the org-person to validate
  * @param skipPersonNameChecks whether to skip the person name checks (for names the
  *                             user is not allowed to edit, eg a locked Completing Party)
+ * @param firstMiddleMaxLength the first/middle name limit for the subject filing
  */
-export function GetOrgPersonIssues (orgPerson: OrgPersonIF, skipPersonNameChecks = false): string[] {
+export function GetOrgPersonIssues (
+  orgPerson: OrgPersonIF,
+  skipPersonNameChecks = false,
+  firstMiddleMaxLength = PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH
+): string[] {
   const issues: string[] = []
   const officer: any = orgPerson?.officer
   if (!officer) return ['Officer information is missing']
@@ -74,20 +83,20 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF, skipPersonNameChecks
     ) issues.push('Unexpected person name')
   } else {
     if (!skipPersonNameChecks) {
-      // NB - the API does not require a first name; when present it must fit the COLIN sync limit
-      if (!isValidOptionalName(officer.firstName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-        issues.push(`First name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      // NB - the API does not require a first name; when present it must fit the filing's limit
+      if (!isValidOptionalName(officer.firstName, firstMiddleMaxLength)) {
+        issues.push(`First name exceeds ${firstMiddleMaxLength} characters`)
       }
       if (!officer.lastName?.trim()) {
         issues.push('Last name is missing')
       } else if (officer.lastName.trim().length > PARTY_LAST_NAME_MAX_LENGTH) {
         issues.push(`Last name exceeds ${PARTY_LAST_NAME_MAX_LENGTH} characters`)
       }
-      if (!isValidOptionalName(officer.middleName, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-        issues.push(`Middle name exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      if (!isValidOptionalName(officer.middleName, firstMiddleMaxLength)) {
+        issues.push(`Middle name exceeds ${firstMiddleMaxLength} characters`)
       }
-      if (!isValidOptionalName(officer.middleInitial, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH)) {
-        issues.push(`Middle initial exceeds ${PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH} characters`)
+      if (!isValidOptionalName(officer.middleInitial, firstMiddleMaxLength)) {
+        issues.push(`Middle initial exceeds ${firstMiddleMaxLength} characters`)
       }
     }
     // organization name must not be set on a person
@@ -114,9 +123,14 @@ export function GetOrgPersonIssues (orgPerson: OrgPersonIF, skipPersonNameChecks
  * Whether the org-person has the names and addresses the filing requires.
  * @param orgPerson the org-person to validate
  * @param skipPersonNameChecks whether to skip the person name checks
+ * @param firstMiddleMaxLength the first/middle name limit for the subject filing
  */
-export function IsOrgPersonComplete (orgPerson: OrgPersonIF, skipPersonNameChecks = false): boolean {
-  return (GetOrgPersonIssues(orgPerson, skipPersonNameChecks).length === 0)
+export function IsOrgPersonComplete (
+  orgPerson: OrgPersonIF,
+  skipPersonNameChecks = false,
+  firstMiddleMaxLength = PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH
+): boolean {
+  return (GetOrgPersonIssues(orgPerson, skipPersonNameChecks, firstMiddleMaxLength).length === 0)
 }
 
 /**
@@ -125,12 +139,18 @@ export function IsOrgPersonComplete (orgPerson: OrgPersonIF, skipPersonNameCheck
  * @param completingPartyNameLocked whether the Completing Party's name is pre-populated
  *                                  from the user's login and not editable — its name
  *                                  checks are skipped since the user cannot fix them
+ * @param firstMiddleMaxLength the first/middle name limit for the subject filing
  */
-export function AreOrgPersonsComplete (orgPeople: OrgPersonIF[], completingPartyNameLocked = false): boolean {
+export function AreOrgPersonsComplete (
+  orgPeople: OrgPersonIF[],
+  completingPartyNameLocked = false,
+  firstMiddleMaxLength = PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH
+): boolean {
   return (orgPeople || []).every(orgPerson => IsOrgPersonComplete(
     orgPerson,
     completingPartyNameLocked &&
-      !!orgPerson.roles?.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+      !!orgPerson.roles?.some(role => role.roleType === RoleTypes.COMPLETING_PARTY),
+    firstMiddleMaxLength
   ))
 }
 
