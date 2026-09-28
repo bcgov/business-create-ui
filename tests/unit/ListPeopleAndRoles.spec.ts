@@ -431,6 +431,55 @@ describe('List People And Roles component - SP registration', () => {
 
     store.stateModel.tombstone.authorizedActions = []
   })
+
+  it('does not show the error box for a proprietor name within the 30-char firm limit', () => {
+    // the RegAddEditOrgPerson form allows 30-char first/middle names for firms,
+    // so the review page must not flag a name the form accepted
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            deliveryAddress: { ...mockPersonList[1].deliveryAddress },
+            mailingAddress: { ...mockPersonList[1].mailingAddress },
+            officer: { firstName: 'A'.repeat(25), lastName: 'Doe', organizationName: '', partyType: 'person' },
+            roles: [{ appointmentDate: '2022-04-02', roleType: 'Proprietor' }]
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
+  })
+
+  it('shows the error box for a proprietor name over the 30-char firm limit', () => {
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            deliveryAddress: { ...mockPersonList[1].deliveryAddress },
+            mailingAddress: { ...mockPersonList[1].mailingAddress },
+            officer: { firstName: 'A'.repeat(31), lastName: 'Doe', organizationName: '', partyType: 'person' },
+            roles: [{ appointmentDate: '2022-04-02', roleType: 'Proprietor' }]
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    const message = wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent
+    expect(message).toContain('This step is unfinished.')
+  })
 })
 
 describe('List People And Roles component - BEN restoration', () => {
@@ -511,6 +560,29 @@ describe('List People And Roles component - BEN restoration', () => {
 
     expect(wrapper.findAll('.people-roles-content').length).toEqual(1)
     expect(wrapper.find('.people-roles-content').exists()).toBe(true)
+  })
+
+  it('does not show the error box for an applicant name within the 30-char firm limit', () => {
+    // restoration applicants use the RegAddEditOrgPerson form, which allows
+    // 30-char first/middle names, so the review page must not flag them
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[0],
+            officer: { ...mockPersonList[0].officer, firstName: 'A'.repeat(25) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
   })
 })
 
