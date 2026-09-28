@@ -159,6 +159,26 @@ describe('IsOrgPersonComplete / AreOrgPersonsComplete', () => {
     })).toBe(false)
   })
 
+  it('skips name checks for a locked Completing Party (pre-populated, not editable)', () => {
+    const longNameCompletingParty: any = {
+      officer: { partyType: 'person', firstName: 'A'.repeat(21), lastName: 'B'.repeat(31) },
+      mailingAddress: { ...VALID_BC_ADDRESS },
+      roles: [{ roleType: 'Completing Party', appointmentDate: '2010-05-05' }]
+    }
+    // blocked when the name is editable
+    expect(AreOrgPersonsComplete([longNameCompletingParty])).toBe(false)
+    expect(AreOrgPersonsComplete([longNameCompletingParty], false)).toBe(false)
+    // skipped when the name is locked
+    expect(AreOrgPersonsComplete([longNameCompletingParty], true)).toBe(true)
+    // the lock only covers the Completing Party, not other people
+    expect(AreOrgPersonsComplete([
+      longNameCompletingParty,
+      { ...VALID_DIRECTOR, officer: { partyType: 'person', firstName: 'A'.repeat(21), lastName: 'DOE' } }
+    ], true)).toBe(false)
+    // the lock only covers names — an incomplete address still blocks
+    expect(AreOrgPersonsComplete([{ ...longNameCompletingParty, mailingAddress: null }], true)).toBe(false)
+  })
+
   it('lists the reasons an org-person is invalid', () => {
     expect(GetOrgPersonIssues(VALID_DIRECTOR)).toEqual([])
     expect(GetOrgPersonIssues({
