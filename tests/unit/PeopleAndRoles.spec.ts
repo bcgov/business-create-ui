@@ -13,7 +13,6 @@ import { AmalgamationShortResourceBc } from '@/resources/AmalgamationShort'
 import { AmalgamationTypes } from '@bcrs-shared-components/enums'
 import { AuthorizationRoles, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
-import * as FeatureFlags from '@/utils/feature-flag-utils'
 import { setAuthRole } from '../set-auth-role'
 import { verifyAddressValidation } from 'tests/unit/utils'
 
@@ -82,13 +81,9 @@ describe('People And Roles component', () => {
     store.resourceModel = IncorporationResourceBen as ResourceIF
     setAuthRole(store, AuthorizationRoles.STAFF)
 
-    // base company incorporation with the Completing Party feature flag on
-    // (so the Completing Party is removed)
+    // base company incorporation (so the Completing Party is removed)
     store.stateModel.tombstone.filingType = FilingTypes.INCORPORATION_APPLICATION
     store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag =>
-      flag === 'enable-new-feature' ? 'incorporationApplication-completingParty' : null
-    )
 
     wrapperFactory = () => {
       return mount(PeopleAndRoles, {
@@ -145,18 +140,6 @@ describe('People And Roles component', () => {
     ])
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
-    wrapper.destroy()
-    resetStore()
-  })
-
-  it('shows Add Completing Party Button when the feature flag is off', () => {
-    // feature flag off => Completing Party is retained
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(() => '')
-    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
-      { roleType: 'Director', appointmentDate: '2020-03-30' }
-    ])
-    const wrapper = wrapperFactory()
-    expect(wrapper.find(btnAddCompletingParty).exists()).toBeTruthy()
     wrapper.destroy()
     resetStore()
   })

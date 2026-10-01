@@ -20,7 +20,7 @@ import {
 } from '@/enums'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
-import { GetFeatureFlag, IsAuthorized } from '@/utils'
+import { IsAuthorized } from '@/utils'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -750,14 +750,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     })
 
     // restore Persons and Organizations
-    // NB: when the Completing Party is turned on for base company incorporations (via the
-    // 'incorporationApplication-completingParty' feature flag), strip it from any older draft
+    // NB: for base company incorporations, strip the Completing Party from any older draft
     // data (this also keeps it out of the People table and filing submission)
-    const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
-      ?.includes('incorporationApplication-completingParty')
     if (draftFiling.incorporationApplication.parties) {
       this.setOrgPersonList(
-        (this.isBaseCompany && isCompletingPartyReleased)
+        this.isBaseCompany
           ? this.removeCompletingParty(draftFiling.incorporationApplication.parties)
           : draftFiling.incorporationApplication.parties
       )
