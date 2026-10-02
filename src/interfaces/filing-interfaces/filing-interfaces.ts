@@ -58,7 +58,7 @@ export interface AmalgamationFilingIF {
     // BEN / CC / BC / ULC only:
     shareStructure?: {
       shareClasses: ShareClassIF[]
-      resolutionDates?: string[]
+      resolutionDates?: Array<{ id?: number, date: string }> // new API format
     }
     incorporationAgreement?: {
       agreementType: string

@@ -87,9 +87,8 @@
                   filled
                   class="item"
                   label="First Name"
-                  :rules="enableRules ? Rules.FirstNameRules : []"
-                  :readonly="isEntityCoop && isCompletingParty &&
-                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
+                  :rules="enableRules && !isCompletingPartyLocked ? Rules.FirstNameRules : []"
+                  :readonly="isCompletingPartyLocked"
                 />
                 <v-text-field
                   id="person__middle-name"
@@ -97,9 +96,8 @@
                   filled
                   class="item"
                   label="Middle Name (Optional)"
-                  :rules="enableRules ? Rules.MiddleNameRules: []"
-                  :readonly="isEntityCoop && isCompletingParty &&
-                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
+                  :rules="enableRules && !isCompletingPartyLocked ? Rules.MiddleNameRules: []"
+                  :readonly="isCompletingPartyLocked"
                 />
                 <v-text-field
                   id="person__last-name"
@@ -107,9 +105,8 @@
                   filled
                   class="item"
                   label="Last Name"
-                  :rules="enableRules ? Rules.LastNameRules : []"
-                  :readonly="isEntityCoop && isCompletingParty &&
-                    !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
+                  :rules="enableRules && !isCompletingPartyLocked ? Rules.LastNameRules : []"
+                  :readonly="isCompletingPartyLocked"
                 />
               </div>
             </article>
@@ -305,6 +302,12 @@ export default class AddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //
+
+  /** Whether the Completing Party name is pre-populated from the user's login and not editable. */
+  get isCompletingPartyLocked (): boolean {
+    return this.isEntityCoop && this.isCompletingParty &&
+      !this.IsAuthorized(this.AuthorizedActions.EDITABLE_COMPLETING_PARTY)
+  }
 }
 </script>
 

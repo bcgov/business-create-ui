@@ -79,7 +79,8 @@ import {
   ConfirmCompletionIF
 } from '@/interfaces'
 import { GetFeatureFlag } from '@/utils/feature-flag-utils'
-import { AreOfficesComplete, AreOrgPersonsComplete, IsAuthorized, IsShareStructureComplete } from '@/utils'
+import { AreOfficesComplete, AreOrgPersonsComplete, FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH, IsAuthorized,
+  IsShareStructureComplete, PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH } from '@/utils'
 
 // It's possible to move getters / actions into seperate files:
 // https://github.com/vuejs/pinia/issues/802#issuecomment-1018780409
@@ -624,9 +625,20 @@ export const useStore = defineStore('store', {
     isAddPeopleAndRolesValid (): boolean {
       // also verify each org-person's completeness, since prepopulated and draft-restored
       // people never pass through the add/edit form that normally enforces it
+      // NB: a locked Completing Party name is skipped — it is pre-populated from the
+      // user's login and they cannot fix it (mirrors the add/edit form's rules gating)
+      // NB: registration and restoration parties are not COLIN-synced, so legal-api allows
+      // their first/middle names up to 30 characters (mirrors the RegAddEditOrgPerson rules)
+      const firstMiddleMaxLength = (this.isRegistrationFiling || this.isRestorationFiling)
+        ? FIRM_PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH
+        : PARTY_FIRST_MIDDLE_NAME_MAX_LENGTH
       return (
         this.getAddPeopleAndRoleStep.valid &&
-        AreOrgPersonsComplete(this.getAddPeopleAndRoleStep.orgPeople)
+        AreOrgPersonsComplete(
+          this.getAddPeopleAndRoleStep.orgPeople,
+          !IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY),
+          firstMiddleMaxLength
+        )
       )
     },
 

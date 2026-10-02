@@ -2,7 +2,7 @@ import { wrapperFactory, shallowWrapperFactory } from '../vitest-wrapper-factory
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
-import { AmalgamationTypes, FilingTypes } from '@/enums'
+import { AmalgamationTypes, AuthorizedActions, FilingTypes } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 
 setActivePinia(createPinia())
@@ -385,6 +385,101 @@ describe('List People And Roles component - SP registration', () => {
     expect(peoplesListItem2.querySelectorAll('.roles-column p')[0].textContent)
       .toContain('Completing Party')
   })
+
+  it('does not show the error box for a locked completing party with an over-length name', () => {
+    // the name is pre-populated from the user's login; a public user cannot edit it
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[1],
+            officer: { ...mockPersonList[1].officer, firstName: 'A'.repeat(31) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
+  })
+
+  it('shows the error box for an over-length completing party name when the user can edit it', () => {
+    store.stateModel.tombstone.authorizedActions = [AuthorizedActions.EDITABLE_COMPLETING_PARTY]
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[1],
+            officer: { ...mockPersonList[1].officer, firstName: 'A'.repeat(31) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    const message = wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent
+    expect(message).toContain('This step is unfinished.')
+
+    store.stateModel.tombstone.authorizedActions = []
+  })
+
+  it('does not show the error box for a proprietor name within the 30-char firm limit', () => {
+    // the RegAddEditOrgPerson form allows 30-char first/middle names for firms,
+    // so the review page must not flag a name the form accepted
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            deliveryAddress: { ...mockPersonList[1].deliveryAddress },
+            mailingAddress: { ...mockPersonList[1].mailingAddress },
+            officer: { firstName: 'A'.repeat(25), lastName: 'Doe', organizationName: '', partyType: 'person' },
+            roles: [{ appointmentDate: '2022-04-02', roleType: 'Proprietor' }]
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
+  })
+
+  it('shows the error box for a proprietor name over the 30-char firm limit', () => {
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            deliveryAddress: { ...mockPersonList[1].deliveryAddress },
+            mailingAddress: { ...mockPersonList[1].mailingAddress },
+            officer: { firstName: 'A'.repeat(31), lastName: 'Doe', organizationName: '', partyType: 'person' },
+            roles: [{ appointmentDate: '2022-04-02', roleType: 'Proprietor' }]
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    const message = wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent
+    expect(message).toContain('This step is unfinished.')
+  })
 })
 
 describe('List People And Roles component - BEN restoration', () => {
@@ -465,6 +560,29 @@ describe('List People And Roles component - BEN restoration', () => {
 
     expect(wrapper.findAll('.people-roles-content').length).toEqual(1)
     expect(wrapper.find('.people-roles-content').exists()).toBe(true)
+  })
+
+  it('does not show the error box for an applicant name within the 30-char firm limit', () => {
+    // restoration applicants use the RegAddEditOrgPerson form, which allows
+    // 30-char first/middle names, so the review page must not flag them
+    store.stateModel.tombstone.authorizedActions = []
+
+    wrapper = shallowWrapperFactory(
+      ListPeopleAndRoles,
+      { isSummary: true },
+      {
+        addPeopleAndRoleStep: {
+          valid: true,
+          orgPeople: [{
+            ...mockPersonList[0],
+            officer: { ...mockPersonList[0].officer, firstName: 'A'.repeat(25) }
+          }]
+        },
+        showErrors: true
+      }
+    )
+
+    expect(wrapper.vm.$el.querySelector('.people-roles-invalid-message')).toBeNull()
   })
 })
 
@@ -622,7 +740,7 @@ describe('List People And Roles component - Short form amalgamation', () => {
     expect(rows.at(0).find('.edit-action').exists()).toBe(true)
     // the tooltip lists the specific issues
     expect(wrapper.vm.directorIssues({ ...mockPersonList[1], deliveryAddress: null }))
-      .toEqual(['incomplete delivery address'])
+      .toEqual(['Delivery Address is incorrect or incomplete'])
   })
 
   it('does not show the warning icon when the adopted director is complete', () => {
@@ -653,6 +771,8 @@ describe('List People And Roles component - Short form amalgamation', () => {
 
   it('shows the error box when adopted director data is incomplete', () => {
     store.stateModel.amalgamation.type = AmalgamationTypes.VERTICAL
+    // an earlier test can replace the tombstone, so reset it
+    store.stateModel.tombstone.authorizedActions = []
 
     wrapper = shallowWrapperFactory(
       ListPeopleAndRoles,

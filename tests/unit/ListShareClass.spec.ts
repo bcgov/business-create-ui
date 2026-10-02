@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { shallowWrapperFactory } from '../vitest-wrapper-factory'
 import ListShareClass from '@/components/common/ListShareClass.vue'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 import { AmalgamationTypes, FilingTypes } from '@/enums'
 import flushPromises from 'flush-promises'
 
@@ -368,6 +369,9 @@ describe('error summary messaging', () => {
     expect(message).toContain('This step is unfinished.')
     expect(message).toContain('Return to this step to finish it')
 
+    // the red border spans the whole section (message + table)
+    expect(wrapper.find('section.invalid-section').exists()).toBe(true)
+
     wrapper.destroy()
   })
 
@@ -380,17 +384,18 @@ describe('error summary messaging', () => {
       }
     )
 
-    const message = wrapper.find('.share-summary-invalid-message').text()
-    expect(message).toContain('The adopted share structure is missing required information.')
-    expect(message).toContain('correct the share structure on the')
-    expect(message).toContain('primary')
+    // the warning is a red message box with the fix-path instructions
+    const messageBox = wrapper.find('.share-summary-invalid-message').findComponent(MessageBoxWarning)
+    expect(messageBox.exists()).toBe(true)
+    const messages = messageBox.props('messages')
+    expect(messages[0].prefix).toBe('Incomplete or incorrect shares or share structure:')
+    expect(messages[1].message).toContain('open the primary company')
     expect(wrapper.find('#router-link').exists()).toBe(false)
 
-    // the two sentences are separate lines, aligned in a text column beside the icon
-    const lines = wrapper.findAll('.share-summary-invalid-message .error-text.d-block')
-    expect(lines.length).toBe(2)
-    expect(lines.at(0).text()).toContain('The adopted share structure is missing required information.')
-    expect(lines.at(1).text()).toContain('Save this draft application')
+    // the red border is on the share table only, not the section around the message box
+    // (the table is stubbed in this shallow render, so match the class alone)
+    expect(wrapper.find('section.invalid-section').exists()).toBe(false)
+    expect(wrapper.find('.invalid-section').exists()).toBe(true)
 
     wrapper.destroy()
   })

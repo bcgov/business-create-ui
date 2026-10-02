@@ -703,7 +703,7 @@ describe('Office Addresses component - adopted data warning icons', () => {
     expect(wrapper.find('#summary-registered-address .invalid-data-icon').exists()).toBe(true)
     expect(wrapper.find('#summary-records-address .invalid-data-icon').exists()).toBe(false)
     // the tooltip lists the specific issues
-    expect(wrapper.vm.registeredOfficeIssues).toEqual(['incomplete mailing address'])
+    expect(wrapper.vm.registeredOfficeIssues).toEqual(['Mailing Address is incorrect or incomplete'])
   })
 
   it('shows no icons when the adopted addresses are valid', () => {

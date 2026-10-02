@@ -175,6 +175,15 @@
           </li>
         </template>
       </ul>
+
+      <!-- invalid adopted directors warning -->
+      <MessageBoxWarning
+        v-if="isShortFormAmalgamation && !validDirectorInfo"
+        class="mt-6"
+        iconName="mdi-alert"
+        iconColour="error"
+        :messages="directorWarningMessages"
+      />
     </section>
 
     <!-- Start by Adding the Completing Party -->
@@ -275,7 +284,9 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
+import { Getter } from 'pinia-class'
 import { cloneDeep } from 'lodash'
+import { useStore } from '@/store/store'
 import { EmptyOrgPerson } from '@/interfaces'
 import { EmptyAddress } from '@bcrs-shared-components/interfaces'
 import { PartyTypes, RoleTypes } from '@/enums'
@@ -284,19 +295,45 @@ import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 
 @Component({
   components: {
     AddEditOrgPerson,
     ConfirmDialog,
     HelpSection,
-    ListPeopleAndRoles
+    ListPeopleAndRoles,
+    MessageBoxWarning
   }
 })
 export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
   //
   // NB: see mixin for common properties, methods, etc.
   //
+
+  @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
+  @Getter(useStore) isAmalgamationFilingVertical!: boolean
+
+  /** Whether this is a short-form (horizontal or vertical) amalgamation filing. */
+  get isShortFormAmalgamation (): boolean {
+    return (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical)
+  }
+
+  /** The invalid adopted directors warning messages. */
+  get directorWarningMessages (): Array<{ prefix?: string, message: string }> {
+    const business = this.isAmalgamationFilingHorizontal ? 'primary' : 'holding'
+    return [
+      {
+        prefix: 'Incomplete or incorrect director information:',
+        message: 'The information for at least one director of the amalgamated company is incomplete ' +
+          'or incorrect.'
+      },
+      {
+        message: `To update director information for this company, save this application, open the ${business} ` +
+          'company, change the director information, then return to this application.'
+      }
+    ]
+  }
 
   addOrgPerson (roleType: RoleTypes, partyType: PartyTypes): void {
     // first assign empty org/person object
