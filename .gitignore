@@ -155,3 +155,6 @@ firebase-debug.log
 # Copilot custom instructions
 /**/.github/copilot-instructions.md
 /**/.github/agents/
+
+# Claude Code
+.claude/
