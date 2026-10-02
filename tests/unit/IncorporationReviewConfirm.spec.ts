@@ -9,17 +9,11 @@ import { AuthorizationRoles } from '@/enums'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
 import { setAuthRole } from '../set-auth-role'
-import * as FeatureFlags from '@/utils/feature-flag-utils'
 
 setActivePinia(createPinia())
 const store = useStore()
 store.stateModel.tombstone.userFirstname = 'Test'
 store.stateModel.tombstone.userLastname = 'User'
-
-vi.mock('@/utils/feature-flags', () => {
-  // we just care about this one function
-  return { GetFeatureFlag: vi.fn() }
-})
 
 // Test Case Data
 const reviewConfirmTestCases = [
@@ -68,10 +62,6 @@ const reviewConfirmTestCases = [
 for (const test of reviewConfirmTestCases) {
   describe(`Review Confirm view for a ${test.entityType}`, () => {
     let wrapper: any
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
-      if (flag === 'enable-new-feature') return 'incorporationApplication-completingParty'
-      return null
-    })
 
     beforeEach(() => {
       // reset completedBy

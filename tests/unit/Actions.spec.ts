@@ -18,15 +18,10 @@ import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAg
 import { ShareClassIF } from '@bcrs-shared-components/interfaces'
 import { setAuthRole } from '../set-auth-role'
 import { AxiosInstance as axios } from '@/utils'
-import * as FeatureFlags from '@/utils/feature-flag-utils'
 
 const vuetify = new Vuetify({})
 setActivePinia(createPinia())
 const store = useStore()
-vi.mock('@/utils/feature-flags', () => {
-  // we just care about this one function
-  return { GetFeatureFlag: vi.fn() }
-})
 
 // mock services function
 const mockUpdateFiling = vi.spyOn((LegalServices as any), 'updateFiling').mockResolvedValue({})
@@ -486,10 +481,6 @@ describe('Actions component - Filing Functionality', () => {
   }
 
   beforeEach(() => {
-    vi.spyOn(FeatureFlags, 'GetFeatureFlag').mockImplementation(flag => {
-      if (flag === 'enable-new-feature') return 'incorporationApplication-completingParty'
-      return null
-    })
     // mock the window.location.assign function
     delete window.location
     window.location = { assign: vi.fn() } as any

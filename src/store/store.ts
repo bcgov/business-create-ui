@@ -817,9 +817,7 @@ export const useStore = defineStore('store', {
       // Validate different steps for Base Companies vs Coops
       const isDocumentValid = this.isBaseCompany ? isBaseStepsValid : isCoopStepsValid
 
-      const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
-        ?.includes('incorporationApplication-completingParty')
-      const isCompletingPartyStmtValid = (this.isBaseCompany && isCompletingPartyReleased)
+      const isCompletingPartyStmtValid = this.isBaseCompany
         ? this.getConfirmCompletionState.confirmed && !!this.getConfirmCompletionState.completedBy
         : true
 
@@ -1095,13 +1093,9 @@ export const useStore = defineStore('store', {
     getPeopleAndRolesResource (): PeopleAndRolesResourceIF {
       const resource = this.resourceModel.peopleAndRoles
 
-      // For base company incorporations, the Completing Party is gated behind the
-      // 'incorporationApplication-completingParty' feature flag. When the flag is on,
-      // strip the Completing Party rule so its checklist item, both "Add Completing Party"
-      // buttons, the role checkbox and the step validation are all removed.
-      const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
-        ?.includes('incorporationApplication-completingParty')
-      if (this.isBaseCompany && this.isIncorporationFiling && isCompletingPartyReleased) {
+      // For base company incorporations, strip the Completing Party rule so its checklist item,
+      // both "Add Completing Party" buttons, the role checkbox and the step validation are all removed.
+      if (this.isBaseCompany && this.isIncorporationFiling) {
         return {
           ...resource,
           rules: resource.rules.filter(rule => rule.id !== RuleIds.NUM_COMPLETING_PARTY)
@@ -1203,9 +1197,7 @@ export const useStore = defineStore('store', {
 
     /** The certified by value, or undefined if this is a base company. */
     getCertifiedBy (): string | undefined {
-      const isCompletingPartyReleased = GetFeatureFlag('enable-new-feature')
-        ?.includes('incorporationApplication-completingParty')
-      return this.isBaseCompany && this.getFilingType === 'incorporationApplication' && isCompletingPartyReleased
+      return this.isBaseCompany && this.getFilingType === 'incorporationApplication'
         ? this.getConfirmCompletionState.completedBy
         : (this.getCertifyState.certifiedBy || undefined)
     }
