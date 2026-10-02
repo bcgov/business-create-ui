@@ -342,7 +342,7 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
     vi.resetAllMocks()
   })
 
-  it('saves an amalgamating business - BC - unaffiliated - non-staff', async () => {
+  it('shows not affiliated dialog for unaffiliated business - BC - non-staff', async () => {
     // set state
     setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     await Vue.nextTick()
@@ -363,16 +363,12 @@ describe('Amalgamating Businesses - add amalgamating business', () => {
       identifier: 'BC1234567'
     })
 
-    // verify data
-    expect(store.getAmalgamatingBusinesses.length).toBe(1)
-    const business = store.getAmalgamatingBusinesses[0] as any
-    expect(business.type).toBe(AmlTypes.LEAR)
-    expect(business.role).toBe(AmlRoles.AMALGAMATING)
-    expect(business.identifier).toBe('BC1234567')
-    expect(business.name).toBe('My BC Business')
+    // verify business was NOT added to the table
+    expect(store.getAmalgamatingBusinesses.length).toBe(0)
 
-    // verify panel is now closed
-    expect(wrapper.vm.isAddingAmalgamatingBusiness).toBe(false)
+    // verify the not affiliated error dialog is displayed
+    expect(wrapper.vm.errorDialog).toBe(true)
+    expect(wrapper.vm.errorDialogTitle).toBe('Business Not Affiliated')
 
     vi.resetAllMocks()
   })
