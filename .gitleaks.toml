@@ -1,0 +1,28 @@
+title = "business-create-ui gitleaks config"
+
+# Start from gitleaks' maintained default ruleset and layer allowlists
+# on top for this repo's known false positives, per the Git Hooks RFC:
+# https://github.com/bcgov/connect/discussions/23
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Lockfiles and this config"
+paths = [
+  '''pnpm-lock\.yaml''',
+  '''package-lock\.json''',
+  '''\.gitleaks\.toml''',
+]
+
+[[allowlists]]
+description = "Document storage keys (<uuid>.pdf) in fixtures/test data, not secrets"
+regexes = [
+  '''[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.pdf''',
+]
+
+[[allowlists]]
+description = "NAICS classification keys in fixtures/test data, not secrets"
+regexTarget = "line"
+regexes = [
+  '''naicsKey"?\s*:\s*"[0-9a-f-]{36}"''',
+]
