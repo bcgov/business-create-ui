@@ -235,7 +235,7 @@
       class="mt-10"
     >
       <header>
-        <h2>Dissolution Documents Delivery</h2>
+        <h2>Dissolution Document Delivery</h2>
         <p class="mt-4">
           Copies of the dissolution documents will be sent to the email addresses listed below.
         </p>
