@@ -52,7 +52,42 @@
 
       <!-- Display Mode -->
       <template v-else>
-        <NameRequestInfo :spaceForButton="isAmalgamationFilingRegular" />
+        <NameRequestInfo
+          :spaceForButton="isAmalgamationFilingRegular"
+          :displayResultingBusinessType="!isResultingBusinessTypeEditable"
+        />
+
+        <!-- Resulting Business Type (editable for named BC / BEN companies) -->
+        <div
+          v-if="isResultingBusinessTypeEditable"
+          id="resulting-business-type"
+          class="section-container pt-0"
+        >
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label>Resulting Business Type</label>
+            </v-col>
+
+            <v-col
+              cols="12"
+              sm="9"
+              class="pt-4 pt-sm-0"
+            >
+              <v-select
+                id="resulting-business-type-select"
+                filled
+                hide-details
+                :value="getEntityType"
+                :items="resultingBusinessTypeItems"
+                @change="onResultingBusinessTypeChange($event)"
+              />
+            </v-col>
+          </v-row>
+        </div>
 
         <template v-if="isAmalgamationFilingRegular">
           <v-divider class="mx-6" />
@@ -60,13 +95,13 @@
           <v-btn
             text
             color="primary"
-            class="btn-undo"
+            class="btn-edit"
             @click="resetName()"
           >
             <v-icon small>
-              mdi-undo
+              mdi-pencil
             </v-icon>
-            <span>Undo</span>
+            <span>Edit</span>
           </v-btn>
         </template>
       </template>
@@ -87,7 +122,7 @@ import { CorrectNameOptions, NrRequestActionCodes } from '@bcrs-shared-component
 import { CorrectName } from '@bcrs-shared-components/correct-name/'
 import NameRequestInfo from '@/components/common/NameRequestInfo.vue'
 import NameTranslations from '@/components/common/NameTranslations.vue'
-import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestErrorDialog } from '@/dialogs/'
 
 @Component({
@@ -122,6 +157,32 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     CorrectNameOptions.CORRECT_NEW_NR,
     CorrectNameOptions.CORRECT_AML_NUMBERED
   ]
+
+  /** The legal types that may be switched between via the Resulting Business Type selector. */
+  readonly switchableLegalTypes = [
+    CorpTypeCd.BC_COMPANY,
+    CorpTypeCd.BENEFIT_COMPANY
+  ]
+
+  /** The items for the Resulting Business Type selector. */
+  readonly resultingBusinessTypeItems = this.switchableLegalTypes.map(legalType => ({
+    text: GetCorpFullDescription(legalType),
+    value: legalType
+  }))
+
+  /**
+   * Whether the Resulting Business Type can be edited, ie, this is a regular amalgamation
+   * for a named company (adopted name or name request) that is a BC Limited Company or a
+   * BC Benefit Company. In this case, the user may switch between those two types.
+   */
+  get isResultingBusinessTypeEditable (): boolean {
+    return (
+      this.isAmalgamationFilingRegular &&
+      [CorrectNameOptions.CORRECT_AML_ADOPT, CorrectNameOptions.CORRECT_NEW_NR]
+        .includes(this.getCorrectNameOption) &&
+      this.switchableLegalTypes.includes(this.getEntityType)
+    )
+  }
 
   /**
    * The list of amalgamating businesses, excluding foreigns and including only businesses of a
@@ -185,9 +246,17 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
         throw error
       })
 
+    // a BC Limited Company or BC Benefit Company may use a NR of either type
+    // (the resulting business type can then be changed via the selector)
+    const isSwitchable = this.switchableLegalTypes.includes(this.getEntityType)
+    if (isSwitchable && !this.switchableLegalTypes.includes(nameRequest.legalType)) {
+      throw new Error('The Name Request is not intended for this business type.')
+    }
+
     // try to validate the name request
     // (may throw an error that can be displayed to the user)
-    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null, this.getEntityType)
+    return this.validateNameRequest(nameRequest, NrRequestActionCodes.AMALGAMATE, null,
+      isSwitchable ? nameRequest.legalType : this.getEntityType)
   }
 
   /** Displays fetch/validation error from CorrectName shared component. */
@@ -224,8 +293,18 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
     this.updateResources()
   }
 
+  /** On resulting business type change, sets store accordingly. */
+  onResultingBusinessTypeChange (legalType: CorpTypeCd): void {
+    if (!legalType || legalType === this.getEntityType) return
+
+    // use the selected legal type
+    // and update resources (since legal type has changed)
+    this.setEntityType(legalType)
+    this.updateResources()
+  }
+
   /**
-   * Resets company name values to original when Cancel is clicked.
+   * Resets company name values to original when Cancel or Edit is clicked.
    * NB - does not reset the original legal type.
    */
   resetName (): void {
@@ -239,21 +318,21 @@ export default class ResultingBusinessName extends Mixins(AmalgamationMixin, Nam
 </script>
 
 <style lang="scss" scoped>
-// position the Undo button "on top of" NameRequestInfo
-.btn-undo {
+// position the Edit button "on top of" NameRequestInfo
+.btn-edit {
   position: absolute;
   top: 22px;
   right: 20px;
 }
 // "sm" breakpoint
 @media (min-width: 600px) {
-  .btn-undo {
+  .btn-edit {
     top: 24px;
   }
 }
 // "md" breakpoint
 @media (min-width: 960px) {
-  .btn-undo {
+  .btn-edit {
     top: 28px;
   }
 }
