@@ -346,3 +346,59 @@ describe('Name Request Info component without a NR', () => {
     expect(listItems[1].textContent).toContain('Entity Type: BC Unlimited Liability Company')
   })
 })
+
+describe('Name Request Info with a NR of a different legal type', () => {
+  let wrapper: any
+
+  beforeEach(async () => {
+    // resulting business type (BC) differs from NR legal type (BEN)
+    store.stateModel.entityType = CorpTypeCd.BC_COMPANY
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+    await store.setNameRequest(mockNrData)
+    wrapper = mount(NameRequestInfo, { vuetify })
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders the entity type from the NR, not from the store', () => {
+    const listItems = wrapper.vm.$el.querySelectorAll('.name-request-list-items li')
+    expect(listItems[1].textContent).toContain('Entity Type: BC Benefit Company')
+  })
+})
+
+describe('Adopted Amalgamation Info component', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.entityType = CorpTypeCd.BENEFIT_COMPANY
+    store.stateModel.nameRequest.nrNum = null
+    store.stateModel.nameRequestApprovedName = 'ADOPTED COMPANY NAME'
+    store.stateModel.correctNameOption = CorrectNameOptions.CORRECT_AML_ADOPT
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('renders the adopted name and the resulting business type by default', () => {
+    wrapper = mount(NameRequestInfo, { vuetify })
+    const section = wrapper.vm.$el.querySelector('#amalgamation-adopted-info')
+    expect(section.textContent).toContain('Resulting Business Name')
+    expect(section.textContent).toContain('ADOPTED COMPANY NAME')
+    expect(section.textContent).toContain('Resulting Business Type')
+    expect(wrapper.vm.$el.querySelector('.entity-type-description li').textContent).toContain('BC Benefit Company')
+  })
+
+  it('hides the resulting business type when told to', () => {
+    wrapper = mount(NameRequestInfo, { vuetify, propsData: { displayResultingBusinessType: false } })
+    const section = wrapper.vm.$el.querySelector('#amalgamation-adopted-info')
+    expect(section.textContent).toContain('ADOPTED COMPANY NAME')
+    expect(section.textContent).not.toContain('Resulting Business Type')
+    expect(wrapper.vm.$el.querySelector('.entity-type-description')).toBeNull()
+  })
+})

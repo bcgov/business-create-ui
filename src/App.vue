@@ -1097,7 +1097,15 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       }
 
       // match legal type
-      if ((nrResponse.legalType as unknown as CorpTypeCd) !== this.getEntityType) {
+      // NB - a BC / BEN amalgamation may use a NR of either type (resulting business type can be changed)
+      const nrLegalType = (nrResponse.legalType as unknown as CorpTypeCd)
+      const bcBenTypes = [CorpTypeCd.BC_COMPANY, CorpTypeCd.BENEFIT_COMPANY]
+      const isBcBenAmalgamation = (
+        this.isAmalgamationFiling &&
+        bcBenTypes.includes(this.getEntityType) &&
+        bcBenTypes.includes(nrLegalType)
+      )
+      if (nrLegalType !== this.getEntityType && !isBcBenAmalgamation) {
         console.log('NR legal type doesn\'t match entity type') // eslint-disable-line no-console
         this.invalidFilingError = NameRequestStates.INVALID
         this.invalidFilingDialog = true

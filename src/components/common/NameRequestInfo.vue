@@ -30,7 +30,7 @@
                 <span>{{ getNameRequestApprovedName }}</span>
               </li>
               <li class="mt-4">
-                <strong>Entity Type:</strong> {{ getEntityTypeDescription }}
+                <strong>Entity Type:</strong> {{ nrEntityTypeDescription }}
               </li>
               <li><strong>Request Type:</strong> {{ requestType }}</li>
               <li><strong>Expiry Date:</strong> {{ expirationDate }}</li>
@@ -105,25 +105,27 @@
             {{ getNameRequestApprovedName }}
           </v-col>
 
-          <v-col
-            cols="12"
-            sm="3"
-            class="pr-4 mt-8"
-          >
-            <label>Resulting Business Type</label>
-          </v-col>
+          <template v-if="displayResultingBusinessType">
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4 mt-8"
+            >
+              <label>Resulting Business Type</label>
+            </v-col>
 
-          <v-col
-            cols="12"
-            sm="9"
-            class="mt-4 mt-sm-8"
-          >
-            <ul class="entity-type-description pl-0">
-              <li>
-                {{ getEntityTypeDescription }}
-              </li>
-            </ul>
-          </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+              class="mt-4 mt-sm-8"
+            >
+              <ul class="entity-type-description pl-0">
+                <li>
+                  {{ getEntityTypeDescription }}
+                </li>
+              </ul>
+            </v-col>
+          </template>
         </v-row>
       </div>
     </template>
@@ -286,6 +288,8 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   @Prop({ default: true }) readonly displayNrNumber!: boolean
   @Prop({ default: true }) readonly displayApplicantInfo!: boolean
   @Prop({ default: false }) readonly spaceForButton!: boolean
+  /** Whether to display the (read-only) Resulting Business Type for an amalgamation adopted name. */
+  @Prop({ default: true }) readonly displayResultingBusinessType!: boolean
 
   @Getter(useStore) getCorrectNameOption!: CorrectNameOptions
   @Getter(useStore) getEntityType!: CorpTypeCd
@@ -312,6 +316,18 @@ export default class NameRequestInfo extends Mixins(CommonMixin, DateMixin) {
   /** The entity type description.  */
   get getEntityTypeDescription (): string {
     const corpTypeDescription = GetCorpFullDescription(this.getEntityType)
+    if (this.isEntitySoleProp) {
+      return `${corpTypeDescription} or Doing Business As (DBA)`
+    }
+    return corpTypeDescription
+  }
+
+  /**
+   * The Name Request's entity type description.
+   * NB - this may differ from the entity type (eg, amalgamation resulting business type).
+   */
+  get nrEntityTypeDescription (): string {
+    const corpTypeDescription = GetCorpFullDescription(this.getNameRequest.legalType)
     if (this.isEntitySoleProp) {
       return `${corpTypeDescription} or Doing Business As (DBA)`
     }
