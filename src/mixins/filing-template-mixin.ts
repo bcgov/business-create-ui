@@ -219,6 +219,9 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
     }
 
     if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
+      if (this.getDocumentDelivery.documentOptionalEmail) {
+        filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
+      }
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
@@ -351,6 +354,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // NB: Staff Payment is mutually exclusive with Folio Number
     if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
+      // restore document optional email
+      this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
