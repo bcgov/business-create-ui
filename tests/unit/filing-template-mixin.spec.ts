@@ -660,6 +660,57 @@ describe('Continuation In Filing - staff payment', () => {
   })
 })
 
+describe('Amalgamation Filing - staff document delivery', () => {
+  let wrapper: any
+
+  beforeEach(() => {
+    wrapper = wrapperFactory(MixinTester, null, {})
+    store.stateModel.tombstone.filingType = FilingTypes.AMALGAMATION_APPLICATION
+    store.setEntityType(CorpTypeCd.BENEFIT_COMPANY)
+    setAuthRole(store, AuthorizationRoles.STAFF)
+  })
+
+  afterEach(() => {
+    setAuthRole(store, null)
+    store.setDocumentOptionalEmail('')
+    wrapper.destroy()
+  })
+
+  it('persists the document optional email entered by staff', () => {
+    store.setDocumentOptionalEmail('client@example.com')
+
+    const filing = wrapper.vm.buildAmalgamationFiling()
+
+    expect(filing.header.documentOptionalEmail).toBe('client@example.com')
+  })
+
+  it('omits the document optional email when staff did not enter one', () => {
+    store.setDocumentOptionalEmail('')
+
+    const filing = wrapper.vm.buildAmalgamationFiling()
+
+    expect(filing.header.documentOptionalEmail).toBeUndefined()
+  })
+
+  it('omits the document optional email for non-staff users', () => {
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    store.setDocumentOptionalEmail('client@example.com')
+
+    const filing = wrapper.vm.buildAmalgamationFiling()
+
+    expect(filing.header.documentOptionalEmail).toBeUndefined()
+  })
+
+  it('restores the document optional email from a draft', async () => {
+    await wrapper.vm.parseAmalgamationDraft({
+      header: { filingId: 123, documentOptionalEmail: 'client@example.com' },
+      amalgamationApplication: { nameRequest: { legalType: CorpTypeCd.BENEFIT_COMPANY } }
+    })
+
+    expect(store.getDocumentDelivery.documentOptionalEmail).toBe('client@example.com')
+  })
+})
+
 describe('Amalgamation Filing', () => {
   let wrapper: any
 
