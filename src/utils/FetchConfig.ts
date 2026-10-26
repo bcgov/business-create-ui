@@ -39,7 +39,7 @@ export function FetchConfig (): void {
   axios.defaults.baseURL = businessApiUrl
 
   const registriesSearchApiUrl: string =
-    (import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_URL + import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_VERSION + '/')
+    (import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_URL + import.meta.env.VUE_APP_REGISTRIES_SEARCH_API_VERSION_2 + '/')
   sessionStorage.setItem('REGISTRIES_SEARCH_API_URL', registriesSearchApiUrl)
 
   const authApiUrl: string =
