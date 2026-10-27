@@ -11,18 +11,19 @@ export default class RegistriesSearchServices {
   }
 
   /**
-   * Searches for business by code or words.
+   * Searches for business by code or words (POST /search/businesses).
    * @param query - code or words to search
    * @param status - status to match (ACTIVE or HISTORICAL or '' to match all statuses)
-   * @param legalTypes - the legal types we're searching for
+   * @param legalTypes - the legal types we're searching for (comma-separated)
    * @returns a promise to return the search results
    */
   static async search (query: string, status: string, legalTypes: string): Promise<BusinessLookupResultIF[]> {
-    let url = this.searchApiUrl + 'businesses/search/facets?start=0&rows=20'
-    url += `&categories=legalType:${legalTypes}${status ? '::status:' + status : ''}`
-    url += `&query=value:${encodeURIComponent(query)}`
+    const url = this.searchApiUrl + 'search/businesses'
+    const categories: Record<string, string[]> = { legalType: legalTypes.split(',') }
+    if (status) categories.status = [status]
+    const data = { query: { value: query }, categories, start: 0, rows: 20 }
 
-    return axios.get(url)
+    return axios.post(url, data)
       .then(response => {
         const results: Array<BusinessLookupResultIF> = response?.data?.searchResults?.results
         if (!results) {
