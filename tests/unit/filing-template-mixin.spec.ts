@@ -2,8 +2,8 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import MixinTester from '@/mixin-tester.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { useStore } from '@/store/store'
-import { AuthorizationRoles, BusinessTypes, FilingStatus, FilingTypes, PartyTypes, RestorationTypes, RoleTypes,
-  StaffPaymentOptions } from '@/enums'
+import { AuthorizationRoles, AuthorizedActions, BusinessTypes, FilingStatus, FilingTypes, PartyTypes,
+  RestorationTypes, RoleTypes, StaffPaymentOptions } from '@/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { NameRequestIF } from '@/interfaces'
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
@@ -328,6 +328,195 @@ describe('Registration Filing', () => {
       confirmEmail: 'eleven@example.com',
       phone: '(111) 222-3333',
       extension: '444'
+    })
+  })
+})
+
+describe('Registration Filing - refresh from current user', () => {
+  let wrapper: any
+
+  const completingParty = () => ({
+    officer: {
+      id: '1234',
+      email: 'old-completing-party@example.com',
+      lastName: 'TWENTY',
+      firstName: 'BCREGTEST Lucille',
+      partyType: PartyTypes.PERSON,
+      middleName: 'J',
+      organizationName: '',
+      businessNumber: ''
+    },
+    mailingAddress: {
+      postalCode: 'V8V 8V8',
+      addressCity: 'Victoria',
+      addressRegion: 'BC',
+      streetAddress: '1234 Main Street',
+      addressCountry: 'CA',
+      streetAddressAdditional: ''
+    },
+    roles: [{ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: '2022-05-17' }]
+  })
+
+  const organization = () => ({
+    officer: {
+      id: '4321',
+      email: 'kitty@example.com',
+      lastName: '',
+      firstName: '',
+      partyType: PartyTypes.ORGANIZATION,
+      middleName: '',
+      organizationName: 'Crazy Cat Consulting Company',
+      businessNumber: '123456789'
+    },
+    mailingAddress: {
+      postalCode: 'V8V 8V8',
+      addressCity: 'Victoria',
+      addressRegion: 'BC',
+      streetAddress: '1234 Main Street',
+      addressCountry: 'CA',
+      streetAddressAdditional: ''
+    },
+    roles: [{ roleType: RoleTypes.PROPRIETOR, appointmentDate: '2022-05-17' }]
+  })
+
+  const orgPeople = () => store.stateModel.addPeopleAndRoleStep.orgPeople
+
+  beforeEach(() => {
+    wrapper = wrapperFactory(MixinTester, null, {})
+
+    store.setAuthorizedActions([])
+    store.setUserInfo({ firstname: 'Completing', lastname: 'Party', keycloakGuid: '', loginSource: 'BCSC' })
+    store.setUserEmail('completing-party@example.com')
+    store.setUserAddress({
+      addressCity: 'City',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'V8V 8V8',
+      streetAddress: '1234 Some Street',
+      streetAddressAdditional: 'Suite ABC'
+    })
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [completingParty(), organization()] as any
+    store.stateModel.certifyState = { valid: true, certifiedBy: 'BCREGTEST Lucille TWENTY' }
+  })
+
+  afterEach(() => {
+    store.setAuthorizedActions([])
+    wrapper.destroy()
+  })
+
+  describe('refreshCompletingParty', () => {
+    it('replaces the name, email and address with the current user info', () => {
+      wrapper.vm.refreshCompletingParty()
+
+      const cp = orgPeople()[0]
+      expect(cp.officer.firstName).toBe('Completing')
+      expect(cp.officer.lastName).toBe('Party')
+      expect(cp.officer.middleName).toBe('')
+      expect(cp.officer.email).toBe('completing-party@example.com')
+      expect(cp.mailingAddress).toEqual({
+        addressCity: 'City',
+        addressCountry: 'CA',
+        addressRegion: 'BC',
+        postalCode: 'V8V 8V8',
+        streetAddress: '1234 Some Street',
+        streetAddressAdditional: 'Suite ABC'
+      })
+    })
+
+    it('preserves the other fields on the completing party and the other parties', () => {
+      wrapper.vm.refreshCompletingParty()
+
+      expect(orgPeople()[0].officer.id).toBe('1234')
+      expect(orgPeople()[0].officer.partyType).toBe(PartyTypes.PERSON)
+      expect(orgPeople()[0].roles).toEqual(completingParty().roles)
+      expect(orgPeople()[1]).toEqual(organization())
+    })
+
+    it('uses empty strings when the user has no first name or email', () => {
+      store.setUserInfo({ firstname: '', lastname: 'Party', keycloakGuid: '', loginSource: 'BCSC' })
+      store.setUserEmail('')
+
+      wrapper.vm.refreshCompletingParty()
+
+      expect(orgPeople()[0].officer.firstName).toBe('')
+      expect(orgPeople()[0].officer.email).toBe('')
+    })
+
+    it('gives the party its own copy of the user address', () => {
+      wrapper.vm.refreshCompletingParty()
+
+      orgPeople()[0].mailingAddress.streetAddress = '999 Changed St'
+
+      expect(store.getUserAddress.streetAddress).toBe('1234 Some Street')
+    })
+
+    it('does nothing when the user may edit the completing party', () => {
+      store.setAuthorizedActions([AuthorizedActions.EDITABLE_COMPLETING_PARTY])
+
+      wrapper.vm.refreshCompletingParty()
+
+      expect(orgPeople()[0]).toEqual(completingParty())
+    })
+
+    it('does nothing when there is no completing party', () => {
+      store.stateModel.addPeopleAndRoleStep.orgPeople = [organization()] as any
+
+      wrapper.vm.refreshCompletingParty()
+
+      expect(orgPeople()).toEqual([organization()])
+    })
+
+    it('does nothing when the completing party is an organization', () => {
+      const orgCompletingParty = {
+        ...organization(),
+        roles: [{ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: '2022-05-17' }]
+      }
+      store.stateModel.addPeopleAndRoleStep.orgPeople = [orgCompletingParty] as any
+
+      wrapper.vm.refreshCompletingParty()
+
+      expect(orgPeople()[0]).toEqual(orgCompletingParty)
+    })
+  })
+
+  describe('refreshCertifiedBy', () => {
+    it('sets Certified By to the current user name and keeps the certified flag', () => {
+      wrapper.vm.refreshCertifiedBy()
+
+      expect(store.stateModel.certifyState).toEqual({ valid: true, certifiedBy: 'Completing Party' })
+    })
+
+    it('uses only the last name when the user has no first name', () => {
+      store.setUserInfo({ firstname: '', lastname: 'Party', keycloakGuid: '', loginSource: 'BCSC' })
+
+      wrapper.vm.refreshCertifiedBy()
+
+      expect(store.stateModel.certifyState.certifiedBy).toBe('Party')
+    })
+
+    it('does nothing when the user may edit Certified By', () => {
+      store.setAuthorizedActions([AuthorizedActions.EDITABLE_CERTIFY_NAME])
+
+      wrapper.vm.refreshCertifiedBy()
+
+      expect(store.stateModel.certifyState.certifiedBy).toBe('BCREGTEST Lucille TWENTY')
+    })
+
+    it('does nothing when Certified By is blank by design', () => {
+      store.setAuthorizedActions([AuthorizedActions.BLANK_CERTIFY_STATE])
+      store.stateModel.certifyState = { valid: false, certifiedBy: '' }
+
+      wrapper.vm.refreshCertifiedBy()
+
+      expect(store.stateModel.certifyState.certifiedBy).toBe('')
+    })
+
+    it('leaves Certified By unchanged when it already matches the user', () => {
+      store.stateModel.certifyState = { valid: false, certifiedBy: 'Completing Party' }
+
+      wrapper.vm.refreshCertifiedBy()
+
+      expect(store.stateModel.certifyState).toEqual({ valid: false, certifiedBy: 'Completing Party' })
     })
   })
 })

@@ -19,7 +19,7 @@ import mockRouter from './MockRouter'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { FilingTypes } from '@bcrs-shared-components/enums'
 import * as FeatureFlags from '@/utils/feature-flag-utils'
-import { AuthorizationRoles } from '@/enums'
+import { AuthorizedActions, AuthorizationRoles, RoleTypes, RouteNames } from '@/enums'
 import * as utils from '@/utils'
 import { PublicUserActions, BusinessRegistryStaffActions } from './test-data/AuthorizedActionsLists'
 import { setAuthRole } from '../set-auth-role'
@@ -586,6 +586,206 @@ describe('Incorporation - Define Company page for a BEN (named)', () => {
     // verify redirection
     const baseUrl = 'https://business-dash.url/T1234567?accountid=668'
     expect(window.location.assign).toHaveBeenCalledWith(baseUrl)
+  })
+})
+
+describe('Registration - completing party refresh when resuming a draft', () => {
+  let wrapper: any
+  const { assign } = window.location
+
+  const sampleCompletingParty = filingData.incorporationApplication.parties[0]
+
+  const staleCompletingParty = () => ({
+    officer: {
+      ...sampleCompletingParty.officer,
+      email: 'old-completing-party@example.com'
+    },
+    mailingAddress: { ...sampleCompletingParty.mailingAddress },
+    roles: [
+      { roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: '2018-01-01' },
+      { roleType: RoleTypes.DIRECTOR, appointmentDate: '2018-01-01' }
+    ]
+  })
+
+  const proprietor = () => ({
+    officer: {
+      id: 2,
+      firstName: nrData.applicants.firstName,
+      lastName: nrData.applicants.lastName,
+      middleName: '',
+      organizationName: '',
+      partyType: 'person',
+      email: nrData.applicants.emailAddress
+    },
+    mailingAddress: { ...sampleCompletingParty.deliveryAddress },
+    roles: [{ roleType: RoleTypes.PROPRIETOR, appointmentDate: '2018-01-01' }]
+  })
+
+  /** Mounts App on a registration draft with the given parties and authorized actions. */
+  async function mountRegistrationDraft (parties: Array<any>, actions: Array<any>, certifiedBy = '') {
+    delete window.location
+    window.location = { assign: vi.fn() } as any
+
+    store.stateModel.tempId = ''
+    store.stateModel.business.businessId = ''
+
+    vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
+      contacts: [
+        {
+          email: 'completing-party@example.com',
+          phone: '123-456-7890'
+        }
+      ],
+      firstname: 'Completing',
+      lastname: 'Party'
+    })
+
+    vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
+      mailingAddress:
+      {
+        city: 'City',
+        country: 'CA',
+        region: 'BC',
+        postalCode: 'V8V 8V8',
+        street: '1234 Some Street',
+        streetAdditional: 'Suite ABC'
+      }
+    })
+
+    vi.spyOn((LegalServices as any), 'fetchFirstOrOnlyFiling').mockResolvedValue({
+      header: {
+        name: 'registration',
+        filingId: 54321,
+        status: 'DRAFT',
+        certifiedBy
+      },
+      business: {
+        identifier: 'T7654321',
+        legalType: 'SP'
+      },
+      registration: {
+        nameRequest: {
+          legalType: 'SP'
+        },
+        parties
+      }
+    })
+
+    vi.spyOn((PayServices as any), 'fetchFilingFees').mockResolvedValue({ futureEffectiveFees: 100 })
+    vi.spyOn((LegalServices as any), 'fetchAuthorizedActions').mockResolvedValue(actions)
+    await Vue.nextTick()
+
+    vi.spyOn(utils, 'GetKeycloakRoles').mockReturnValue([AuthorizationRoles.PUBLIC_USER])
+
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.filter('currency', (x) => x)
+    const router = mockRouter.mock()
+    router.push({ name: RouteNames.REGISTRATION_DEFINE_BUSINESS, query: { id: 'T7654321' } })
+
+    wrapper = shallowMount(App, {
+      localVue,
+      router,
+      vuetify,
+      stubs: { Affix: true }
+    })
+
+    await flushPromises()
+  }
+
+  const findParty = (roleType: RoleTypes) =>
+    store.stateModel.addPeopleAndRoleStep.orgPeople.find(
+      (p: any) => p.roles.some((r: any) => r.roleType === roleType)
+    )
+
+  afterEach(() => {
+    window.location.assign = assign
+    sinon.restore()
+    vi.resetAllMocks()
+    wrapper.destroy()
+  })
+
+  it('overwrites a stale locked completing party with the current user info', async () => {
+    await mountRegistrationDraft([staleCompletingParty(), proprietor()], [...PublicUserActions])
+
+    const cp = findParty(RoleTypes.COMPLETING_PARTY)
+    expect(cp.officer.firstName).toBe('Completing')
+    expect(cp.officer.lastName).toBe('Party')
+    expect(cp.officer.middleName).toBe('')
+    expect(cp.officer.email).toBe('completing-party@example.com')
+    expect(cp.mailingAddress).toEqual({
+      addressCity: 'City',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'V8V 8V8',
+      streetAddress: '1234 Some Street',
+      streetAddressAdditional: 'Suite ABC'
+    })
+    expect(cp.officer.id).toBe(sampleCompletingParty.officer.id)
+    expect(cp.officer.partyType).toBe('person')
+    expect(cp.roles).toEqual(staleCompletingParty().roles)
+  })
+
+  it('does not touch the other parties', async () => {
+    await mountRegistrationDraft([staleCompletingParty(), proprietor()], [...PublicUserActions])
+
+    const other = findParty(RoleTypes.PROPRIETOR)
+    expect(other.officer.firstName).toBe(nrData.applicants.firstName)
+    expect(other.officer.lastName).toBe(nrData.applicants.lastName)
+    expect(other.officer.email).toBe(nrData.applicants.emailAddress)
+    expect(other.mailingAddress).toEqual(sampleCompletingParty.deliveryAddress)
+  })
+
+  it('leaves the draft alone when the user may edit the completing party', async () => {
+    await mountRegistrationDraft(
+      [staleCompletingParty(), proprietor()],
+      [...PublicUserActions, AuthorizedActions.EDITABLE_COMPLETING_PARTY]
+    )
+
+    const cp = findParty(RoleTypes.COMPLETING_PARTY)
+    expect(cp.officer.firstName).toBe(sampleCompletingParty.officer.firstName)
+    expect(cp.officer.middleName).toBe(sampleCompletingParty.officer.middleName)
+    expect(cp.officer.lastName).toBe(sampleCompletingParty.officer.lastName)
+    expect(cp.officer.email).toBe('old-completing-party@example.com')
+    expect(cp.mailingAddress).toEqual(sampleCompletingParty.mailingAddress)
+  })
+
+  it('leaves an organization-type completing party alone', async () => {
+    const orgParty = filingData.incorporationApplication.parties[1]
+    const orgCompletingParty = {
+      officer: { ...orgParty.officer },
+      mailingAddress: { ...orgParty.mailingAddress },
+      roles: [{ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: '2018-01-01' }]
+    }
+    await mountRegistrationDraft([orgCompletingParty, proprietor()], [...PublicUserActions])
+
+    const cp = findParty(RoleTypes.COMPLETING_PARTY)
+    expect(cp.officer.organizationName).toBe('XyzInc.')
+    expect(cp.officer.firstName).toBe('')
+    expect(cp.mailingAddress).toEqual(orgParty.mailingAddress)
+  })
+
+  it('does not add a completing party when the draft has none', async () => {
+    await mountRegistrationDraft([proprietor()], [...PublicUserActions])
+
+    expect(findParty(RoleTypes.COMPLETING_PARTY)).toBeUndefined()
+    expect(store.stateModel.addPeopleAndRoleStep.orgPeople).toHaveLength(1)
+  })
+
+  it('overwrites a stale Certified By when the user cannot edit it', async () => {
+    await mountRegistrationDraft([staleCompletingParty(), proprietor()], [...PublicUserActions], 'Old Name')
+
+    expect(store.stateModel.certifyState.certifiedBy).toBe('Completing Party')
+  })
+
+  it('keeps the draft Certified By when the user may edit it', async () => {
+    await mountRegistrationDraft(
+      [staleCompletingParty(), proprietor()],
+      [...PublicUserActions, AuthorizedActions.EDITABLE_CERTIFY_NAME],
+      'Typed Name'
+    )
+
+    expect(store.stateModel.certifyState.certifiedBy).toBe('Typed Name')
   })
 })
 

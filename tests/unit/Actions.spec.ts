@@ -10,7 +10,8 @@ import sinon from 'sinon'
 import Actions from '@/components/common/Actions.vue'
 import mockRouter from './MockRouter'
 import LegalServices from '@/services/legal-services'
-import { AuthorizationRoles, FilingStatus, FilingTypes } from '@/enums'
+import { AuthServices } from '@/services'
+import { AuthorizationRoles, AuthorizedActions, FilingStatus, FilingTypes, PartyTypes, RoleTypes } from '@/enums'
 import { CorrectNameOptions, NameRequestStates } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { CourtOrderStepIF, DefineCompanyIF, EffectiveDateTimeIF, IncorporationAgreementIF, NameRequestIF,
@@ -688,6 +689,161 @@ describe('Actions component - Filing Functionality', () => {
     // verify event emission
     const events = wrapper.emitted('goToDashboard')
     expect(events.length).toBe(1)
+  })
+})
+
+describe('Actions component - Registration completing party refresh', () => {
+  let wrapper: any
+  let fetchUserInfoSpy: any
+
+  const staleOrgPeople = () => [
+    {
+      officer: {
+        id: '1',
+        firstName: 'Joe',
+        lastName: 'Swanson',
+        middleName: 'P',
+        organizationName: '',
+        partyType: PartyTypes.PERSON,
+        email: 'old-completing-party@example.com'
+      },
+      mailingAddress: {
+        streetAddress: 'mailing_address-addresslineone',
+        streetAddressAdditional: '',
+        addressCity: 'mailing_addresscity',
+        addressCountry: 'CA',
+        postalCode: 'H0H0H0',
+        addressRegion: 'BC'
+      },
+      roles: [{ roleType: RoleTypes.COMPLETING_PARTY, appointmentDate: '2018-01-01' }]
+    },
+    {
+      officer: {
+        id: '2',
+        firstName: nrData.applicants.firstName,
+        lastName: nrData.applicants.lastName,
+        middleName: '',
+        organizationName: '',
+        partyType: PartyTypes.PERSON,
+        email: nrData.applicants.emailAddress
+      },
+      mailingAddress: {
+        streetAddress: 'delivery_address-addresslineone',
+        streetAddressAdditional: '',
+        addressCity: 'delivery_addresscity',
+        addressCountry: 'CA',
+        postalCode: 'H0H0H0',
+        addressRegion: 'BC'
+      },
+      roles: [{ roleType: RoleTypes.PROPRIETOR, appointmentDate: '2018-01-01' }]
+    }
+  ] as OrgPersonIF[]
+
+  /** The filing body passed to the most recent updateFiling call. */
+  const savedFiling = () => mockUpdateFiling.mock.calls[mockUpdateFiling.mock.calls.length - 1][1]
+
+  const findParty = (roleType: RoleTypes) =>
+    savedFiling().registration.parties.find(
+      (p: any) => p.roles.some((r: any) => r.roleType === roleType)
+    )
+
+  beforeEach(() => {
+    mockUpdateFiling.mockClear()
+    mockUpdateFiling.mockResolvedValue({})
+
+    fetchUserInfoSpy = vi.spyOn(AuthServices as any, 'fetchUserInfo').mockResolvedValue({
+      contacts: [{ email: 'completing-party@example.com' }],
+      firstname: 'Renamed',
+      lastname: 'Party'
+    })
+
+    store.stateModel.tombstone = {
+      filingType: FilingTypes.REGISTRATION,
+      userEmail: 'old-completing-party@example.com',
+      authorizedActions: []
+    } as TombstoneIF
+    store.stateModel.tombstone.userFirstname = 'Joe'
+    store.stateModel.tombstone.userLastname = 'Swanson'
+    store.setUserAddress({
+      addressCity: 'City',
+      addressCountry: 'CA',
+      addressRegion: 'BC',
+      postalCode: 'V8V 8V8',
+      streetAddress: '1234 Some Street',
+      streetAddressAdditional: 'Suite ABC'
+    })
+    store.stateModel.certifyState = { valid: true, certifiedBy: 'Joe Swanson' }
+    store.stateModel.addPeopleAndRoleStep.orgPeople = staleOrgPeople()
+    store.stateModel.tempId = 'T1234567'
+    store.stateModel.filingId = 1234
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+
+    store.stateModel.isSaving = false
+    store.stateModel.isSavingResuming = false
+    store.stateModel.isFilingPaying = false
+
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    const router = mockRouter.mock()
+    router.push({ name: 'registration-review-confirm', query: { id: 'T1234567' } })
+    wrapper = shallowMount(Actions, { localVue, router, vuetify })
+  })
+
+  afterEach(() => {
+    fetchUserInfoSpy.mockRestore()
+    wrapper.destroy()
+  })
+
+  it('saves the current user info when it changed after the draft was opened', async () => {
+    await wrapper.vm.onClickSave()
+
+    const cp = findParty(RoleTypes.COMPLETING_PARTY)
+    expect(cp.officer.firstName).toBe('Renamed')
+    expect(cp.officer.lastName).toBe('Party')
+    expect(cp.officer.middleName).toBe('')
+    expect(cp.officer.email).toBe('completing-party@example.com')
+    expect(cp.mailingAddress.streetAddress).toBe('1234 Some Street')
+    expect(savedFiling().header.certifiedBy).toBe('Renamed Party')
+  })
+
+  it('applies the same refresh on Save and Resume Later', async () => {
+    await wrapper.vm.onClickSaveResume()
+
+    expect(findParty(RoleTypes.COMPLETING_PARTY).officer.firstName).toBe('Renamed')
+    expect(savedFiling().header.certifiedBy).toBe('Renamed Party')
+  })
+
+  it('does not change the other parties', async () => {
+    await wrapper.vm.onClickSave()
+
+    const other = findParty(RoleTypes.PROPRIETOR)
+    expect(other.officer.firstName).toBe(nrData.applicants.firstName)
+    expect(other.officer.email).toBe(nrData.applicants.emailAddress)
+  })
+
+  it('keeps the draft values when the user may edit the completing party and certified by', async () => {
+    store.stateModel.tombstone.authorizedActions = [
+      AuthorizedActions.EDITABLE_COMPLETING_PARTY,
+      AuthorizedActions.EDITABLE_CERTIFY_NAME
+    ]
+
+    await wrapper.vm.onClickSave()
+
+    expect(findParty(RoleTypes.COMPLETING_PARTY).officer.firstName).toBe('Joe')
+    expect(savedFiling().header.certifiedBy).toBe('Joe Swanson')
+  })
+
+  it('still saves the existing values when the user info fetch fails', async () => {
+    const { log } = console
+    console.log = vi.fn()
+    fetchUserInfoSpy.mockRejectedValue(new Error('Auth unavailable'))
+
+    await wrapper.vm.onClickSave()
+
+    expect(mockUpdateFiling).toHaveBeenCalledTimes(1)
+    expect(findParty(RoleTypes.COMPLETING_PARTY).officer.firstName).toBe('Joe')
+
+    console.log = log
   })
 })
 
