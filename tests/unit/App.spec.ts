@@ -632,12 +632,12 @@ describe('Registration - completing party refresh when resuming a draft', () => 
     vi.spyOn((AuthServices as any), 'fetchUserInfo').mockResolvedValue({
       contacts: [
         {
-          email: 'completing-party@example.com',
+          email: 'current-profile@example.com',
           phone: '123-456-7890'
         }
       ],
-      firstname: 'Completing',
-      lastname: 'Party'
+      firstname: 'Current',
+      lastname: 'User'
     })
 
     vi.spyOn((AuthServices as any), 'fetchOrgInfo').mockResolvedValue({
@@ -709,18 +709,11 @@ describe('Registration - completing party refresh when resuming a draft', () => 
     await mountRegistrationDraft([staleCompletingParty(), proprietor()], [...PublicUserActions])
 
     const cp = findParty(RoleTypes.COMPLETING_PARTY)
-    expect(cp.officer.firstName).toBe('Completing')
-    expect(cp.officer.lastName).toBe('Party')
+    expect(cp.officer.firstName).toBe('Current')
+    expect(cp.officer.lastName).toBe('User')
     expect(cp.officer.middleName).toBe('')
-    expect(cp.officer.email).toBe('completing-party@example.com')
-    expect(cp.mailingAddress).toEqual({
-      addressCity: 'City',
-      addressCountry: 'CA',
-      addressRegion: 'BC',
-      postalCode: 'V8V 8V8',
-      streetAddress: '1234 Some Street',
-      streetAddressAdditional: 'Suite ABC'
-    })
+    expect(cp.officer.email).toBe('old-completing-party@example.com')
+    expect(cp.mailingAddress).toEqual(sampleCompletingParty.mailingAddress)
     expect(cp.officer.id).toBe(sampleCompletingParty.officer.id)
     expect(cp.officer.partyType).toBe('person')
     expect(cp.roles).toEqual(staleCompletingParty().roles)
@@ -775,7 +768,7 @@ describe('Registration - completing party refresh when resuming a draft', () => 
   it('overwrites a stale Certified By when the user cannot edit it', async () => {
     await mountRegistrationDraft([staleCompletingParty(), proprietor()], [...PublicUserActions], 'Old Name')
 
-    expect(store.stateModel.certifyState.certifiedBy).toBe('Completing Party')
+    expect(store.stateModel.certifyState.certifiedBy).toBe('Current User')
   })
 
   it('keeps the draft Certified By when the user may edit it', async () => {

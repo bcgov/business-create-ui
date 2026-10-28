@@ -405,25 +405,20 @@ describe('Registration Filing - refresh from current user', () => {
   })
 
   describe('refreshCompletingParty', () => {
-    it('replaces the name, email and address with the current user info', () => {
+    it('refreshes the name and preserves the draft email and mailing address', () => {
+      const draftAddress = { ...completingParty().mailingAddress }
+
       wrapper.vm.refreshCompletingParty()
 
       const cp = orgPeople()[0]
       expect(cp.officer.firstName).toBe('Completing')
-      expect(cp.officer.lastName).toBe('Party')
       expect(cp.officer.middleName).toBe('')
-      expect(cp.officer.email).toBe('completing-party@example.com')
-      expect(cp.mailingAddress).toEqual({
-        addressCity: 'City',
-        addressCountry: 'CA',
-        addressRegion: 'BC',
-        postalCode: 'V8V 8V8',
-        streetAddress: '1234 Some Street',
-        streetAddressAdditional: 'Suite ABC'
-      })
+      expect(cp.officer.lastName).toBe('Party')
+      expect(cp.officer.email).toBe('old-completing-party@example.com')
+      expect(cp.mailingAddress).toEqual(draftAddress)
     })
 
-    it('preserves the other fields on the completing party and the other parties', () => {
+    it('preserves the completing party identity and other parties', () => {
       wrapper.vm.refreshCompletingParty()
 
       expect(orgPeople()[0].officer.id).toBe('1234')
@@ -432,22 +427,15 @@ describe('Registration Filing - refresh from current user', () => {
       expect(orgPeople()[1]).toEqual(organization())
     })
 
-    it('uses empty strings when the user has no first name or email', () => {
+    it('uses an empty first name when the user has no first name', () => {
       store.setUserInfo({ firstname: '', lastname: 'Party', keycloakGuid: '', loginSource: 'BCSC' })
-      store.setUserEmail('')
 
       wrapper.vm.refreshCompletingParty()
 
       expect(orgPeople()[0].officer.firstName).toBe('')
-      expect(orgPeople()[0].officer.email).toBe('')
-    })
-
-    it('gives the party its own copy of the user address', () => {
-      wrapper.vm.refreshCompletingParty()
-
-      orgPeople()[0].mailingAddress.streetAddress = '999 Changed St'
-
-      expect(store.getUserAddress.streetAddress).toBe('1234 Some Street')
+      expect(orgPeople()[0].officer.middleName).toBe('')
+      expect(orgPeople()[0].officer.lastName).toBe('Party')
+      expect(orgPeople()[0].officer.email).toBe('old-completing-party@example.com')
     })
 
     it('does nothing when the user may edit the completing party', () => {

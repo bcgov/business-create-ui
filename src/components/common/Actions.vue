@@ -113,7 +113,7 @@ import { useStore } from '@/store/store'
 import { IsAuthorized, Navigate } from '@/utils'
 import { AmalgamationMixin, CommonMixin, DateMixin, FilingTemplateMixin, NameRequestMixin }
   from '@/mixins'
-import { AuthServices, LegalServices } from '@/services/'
+import { LegalServices } from '@/services/'
 import { AuthorizedActions, FilingStatus, FilingTypes, RouteNames } from '@/enums'
 import { NameRequestStates } from '@bcrs-shared-components/enums'
 import flushPromises from 'flush-promises'
@@ -401,7 +401,7 @@ export default class Actions extends Mixins(
   }
 
   /** Prepare filing for saving/filing. */
-  private async prepareFiling (): Promise<any> {
+  private prepareFiling (): any {
     switch (this.getFilingType) {
       case FilingTypes.AMALGAMATION_APPLICATION:
         return this.buildAmalgamationFiling()
@@ -410,8 +410,6 @@ export default class Actions extends Mixins(
       case FilingTypes.INCORPORATION_APPLICATION:
         return this.buildIncorporationFiling()
       case FilingTypes.REGISTRATION:
-        await this.refreshUserAndCompletingParty()
-        this.refreshCertifiedBy()
         return this.buildRegistrationFiling()
       case FilingTypes.RESTORATION:
         return this.buildRestorationFiling()
@@ -444,20 +442,6 @@ export default class Actions extends Mixins(
     if (state !== NameRequestStates.APPROVED && state !== NameRequestStates.CONDITIONAL) {
       this.$root.$emit('name-request-invalid-error', state || NameRequestStates.INVALID)
       throw new Error(`Invalid NR state = {$state}`)
-    }
-  }
-
-  /** Re-fetches the user's Auth profile and refreshes the completing party. */
-  private async refreshUserAndCompletingParty (): Promise<void> {
-    try {
-      const userInfo = await AuthServices.fetchUserInfo()
-      if (!userInfo?.lastname) return
-
-      this.setUserInfo(userInfo)
-      this.setUserEmail(userInfo.contacts?.[0]?.email || userInfo.email || this.getUserEmail)
-      this.refreshCompletingParty()
-    } catch (error) {
-      console.log('Error refreshing completing party: ', error) // eslint-disable-line no-console
     }
   }
 

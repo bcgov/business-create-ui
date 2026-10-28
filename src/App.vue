@@ -774,13 +774,13 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
         throw new Error('You are not authorized to access Voluntary Dissolution filings.')
       }
 
+      // set completing party
+      this.setCompletingParty(this.getCompletingParties())
+
       if (this.isRegistrationFiling) {
         this.refreshCompletingParty()
         this.refreshCertifiedBy()
       }
-
-      // set completing party
-      this.setCompletingParty(this.getCompletingParties())
 
       // load parties only for SP/GP businesses
       if (this.isEntityFirm && this.getBusinessId) {

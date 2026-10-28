@@ -6,7 +6,7 @@ import {
   AddressIF, AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, ConfirmCompletionIF, CompletingPartyIF,
   AuthorizationProofIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DissolutionFilingIF,
-  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyAddress, EmptyNaics,
+  DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
   ExistingBusinessInfoIF, IncorporationAgreementIF, IncorporationFilingIF, NaicsIF, NrApplicantIF,
   NameRequestFilingIF, NameTranslationIF, OfficeAddressIF, OrgPersonIF, PartyIF,
   RegistrationFilingIF, RegistrationStateIF, RestorationFilingIF, RestorationStateIF,
@@ -21,7 +21,6 @@ import {
 import { CorrectNameOptions } from '@bcrs-shared-components/enums'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module/'
 import { IsAuthorized } from '@/utils'
-import { cloneDeep } from 'lodash'
 
 /**
  * Mixin that provides the integration with the Legal API.
@@ -1693,10 +1692,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         ...completingParty.officer,
         firstName: this.getUserFirstname || '',
         middleName: '',
-        lastName: this.getUserLastname || '',
-        email: this.getUserEmail || ''
-      },
-      mailingAddress: cloneDeep(this.getUserAddress || { ...EmptyAddress })
+        lastName: this.getUserLastname || ''
+      }
     }
 
     this.setOrgPersonList(orgPeople)
