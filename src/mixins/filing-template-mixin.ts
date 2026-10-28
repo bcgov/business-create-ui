@@ -3,7 +3,7 @@ import { Getter, Action } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { AmalgamationMixin, DateMixin } from '@/mixins'
 import {
-  AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, ConfirmCompletionIF, CompletingPartyIF,
+  AddressIF, AmalgamationFilingIF, BusinessAddressIF, ContactPointIF, CertifyIF, ConfirmCompletionIF, CompletingPartyIF,
   AuthorizationProofIF, ContinuationInFilingIF, CourtOrderIF, CourtOrderStepIF,
   CreateMemorandumIF, CreateResolutionIF, CreateRulesIF, DissolutionFilingIF,
   DissolutionStatementIF, DocumentDeliveryIF, EffectiveDateTimeIF, EmptyNaics,
@@ -74,6 +74,10 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   @Getter(useStore) getStaffPaymentStep!: StaffPaymentStepIF
   @Getter(useStore) getTempId!: string
   @Getter(useStore) getTransactionalFolioNumber!: string
+  @Getter(useStore) getUserAddress!: AddressIF
+  @Getter(useStore) getUserEmail!: string
+  @Getter(useStore) getUserFirstname!: string
+  @Getter(useStore) getUserLastname!: string
   @Getter(useStore) isContinuationInAuthorization!: boolean
   @Getter(useStore) isBaseCompany!: boolean
   @Getter(useStore) isEntityCoop!: boolean
@@ -133,6 +137,8 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   // @Action(useStore) setShareClasses!: (x: ShareClassIF[]) => void
   @Action(useStore) setStaffPayment!: (x: StaffPaymentIF) => void
   @Action(useStore) setTransactionalFolioNumber!: (x: string) => void
+  @Action(useStore) setUserEmail!: (x: string) => void
+  @Action(useStore) setUserInfo!: (x: any) => void
 
   /**
    * Builds an amalgamation application filing from store data. Used when saving a filing.
@@ -1665,5 +1671,48 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         roles: party.roles.filter(role => role.roleType !== RoleTypes.COMPLETING_PARTY)
       }))
       .filter(party => party.roles.length > 0)
+  }
+
+  /** Pulls latest Completing Party info with the current user. */
+  refreshCompletingParty (): void {
+    if (IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)) return
+
+    const orgPeople = [...this.getAddPeopleAndRoleStep.orgPeople]
+    const index = orgPeople.findIndex(person =>
+      person.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
+    )
+    if (index === -1) return
+
+    const completingParty = orgPeople[index]
+    if (completingParty.officer.partyType !== PartyTypes.PERSON) return
+
+    orgPeople[index] = {
+      ...completingParty,
+      officer: {
+        ...completingParty.officer,
+        firstName: this.getUserFirstname || '',
+        middleName: '',
+        lastName: this.getUserLastname || ''
+      }
+    }
+
+    this.setOrgPersonList(orgPeople)
+  }
+
+  /** Pulls latest Certified By info with the current user. */
+  refreshCertifiedBy (): void {
+    if (IsAuthorized(AuthorizedActions.BLANK_CERTIFY_STATE)) return
+    if (IsAuthorized(AuthorizedActions.EDITABLE_CERTIFY_NAME)) return
+
+    const certifiedBy = this.getUserFirstname
+      ? `${this.getUserFirstname} ${this.getUserLastname}`
+      : `${this.getUserLastname}`
+
+    if (certifiedBy === this.getCertifyState.certifiedBy) return
+
+    this.setCertifyState({
+      valid: this.getCertifyState.valid,
+      certifiedBy
+    })
   }
 }

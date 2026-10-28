@@ -307,9 +307,6 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   @Getter(useStore) getOrgInformation!: OrgInformationIF
   @Getter(useStore) getPageBlurb!: string
   @Getter(useStore) getSteps!: Array<StepIF>
-  @Getter(useStore) getUserFirstname!: string
-  @Getter(useStore) getUserLastname!: string
-  @Getter(useStore) getUserEmail!: string
   @Getter(useStore) getUserPhone!: string
   @Getter(useStore) isAmalgamationFiling: boolean
   // @Getter(useStore) isAmalgamationFilingHorizontal!: boolean
@@ -349,9 +346,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   // @Action(useStore) setNameRequest!: (x: NameRequestIF) => void
   @Action(useStore) setParties!: (x: Array<PartyIF>) => void
   // @Action(useStore) setResources!: (x: ResourceIF) => void
-  @Action(useStore) setUserInfo!: (x: any) => void
   @Action(useStore) setUserAddress!: (x: AddressIF) => void
-  @Action(useStore) setUserEmail!: (x: string) => void
   @Action(useStore) setUserPhone!: (x: string) => void
   @Action(useStore) setHaveChanges!: (x: boolean) => void
   // @Action(useStore) setOfficeAddresses!: (x: RegisteredRecordsAddressesIF) => void
@@ -781,6 +776,11 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
       // set completing party
       this.setCompletingParty(this.getCompletingParties())
+
+      if (this.isRegistrationFiling) {
+        this.refreshCompletingParty()
+        this.refreshCertifiedBy()
+      }
 
       // load parties only for SP/GP businesses
       if (this.isEntityFirm && this.getBusinessId) {
