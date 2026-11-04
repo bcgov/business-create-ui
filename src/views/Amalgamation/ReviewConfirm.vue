@@ -149,10 +149,11 @@
         <DocumentDelivery
           class="py-8 px-6"
           :class="{ 'invalid-section': isDocumentDeliveryInvalid }"
-          :editableCompletingParty="IsAuthorized(AuthorizedActions.EDITABLE_COMPLETING_PARTY)"
+          :editableCompletingParty="true"
+          completingPartyLabel="Additional Email"
+          optionalEmailLabel="Additional Email Address (Optional)"
           :invalidSection="isDocumentDeliveryInvalid"
           :contactValue="getBusinessContact.email"
-          :completingPartyEmail="getUserEmail"
           :documentOptionalEmail="documentOptionalEmail"
           contactLabel="Registered Office"
           @update:optionalEmail="setDocumentOptionalEmail($event)"
@@ -248,6 +249,53 @@
       </v-card>
     </section>
 
+    <!-- Completing Party -->
+    <section
+      v-if="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
+      id="completing-party-section"
+      class="mt-10"
+    >
+      <header>
+        <h2>Completing Party</h2>
+      </header>
+
+      <v-card
+        flat
+        class="mt-6 py-8 px-6 prevent-red-title"
+        :class="{ 'invalid-section': isCompletingPartyInvalid }"
+      >
+        <v-form
+          ref="completingPartyForm"
+          lazy-validation
+          @submit.prevent
+        >
+          <v-row no-gutters>
+            <v-col
+              cols="12"
+              sm="3"
+              class="pr-4"
+            >
+              <label class="title-label">Completing Party</label>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="9"
+            >
+              <v-text-field
+                id="completing-party-textfield"
+                filled
+                persistent-hint
+                label="Legal name of completing party"
+                :value="getCertifyState.certifiedBy"
+                :rules="[(v) => !!v || 'Please enter the full legal name of the completing party']"
+                @input="onCertifiedBy($event)"
+              />
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-card>
+    </section>
+
     <!-- Certify -->
     <section
       id="certify-section"
@@ -259,8 +307,7 @@
           v-if="isBaseCompany"
           class="mt-4"
         >
-          Certify your authorization to complete and submit this application. The name of the person submitting this
-          filing will be displayed in the history of filings for this {{ getEntityDescription }}.
+          {{ certifyText }}
         </p>
         <p
           v-else
@@ -282,7 +329,19 @@
           :isStaff="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
           :showLegalName="!isBaseCompany"
           :authorizationMode="certify"
-        />
+        >
+          <template
+            v-if="IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)"
+            #checkbox-label
+          >
+            <p class="ma-0 certify-stmt">
+              {{ getCertifyState.certifiedBy || '[Completing Party]' }}
+              certifies that the information provided is correct and that
+              they are authorized to submit this filing on behalf of the
+              {{ getEntityDescription }}.
+            </p>
+          </template>
+        </Certify>
       </v-card>
     </section>
 
@@ -308,13 +367,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { OTHER_CURRENCY } from '@/constants'
 import { AuthorizedActions, RouteNames } from '@/enums'
 import { ContactPointIF, CertifyIF, EffectiveDateTimeIF, ShareStructureIF,
   CourtOrderStepIF, DocumentDeliveryIF } from '@/interfaces'
+import { FormIF } from '@bcrs-shared-components/interfaces'
 import CardHeader from '@/components/common/CardHeader.vue'
 import Certify from '@/components/common/Certify.vue'
 import { CourtOrderPoa } from '@bcrs-shared-components/court-order-poa'
@@ -384,6 +444,16 @@ export default class AmalgamationReviewConfirm extends Vue {
   @Action(useStore) setHasPlanOfArrangement!: (x: boolean) => void
   @Action(useStore) setIsFutureEffective!: (x: boolean) => void
 
+  // Refs
+  $refs: {
+    completingPartyForm: FormIF
+  }
+
+  @Watch('isCompletingPartyInvalid')
+  private validateCompletingParty (): void {
+    this.$refs.completingPartyForm?.validate()
+  }
+
   /**
    * In case submitting the amalgamation failed, we want to reset the validity of Certify.
    * This is since the checkbox has to be ticked again after the save dialog has been closed.
@@ -426,6 +496,29 @@ export default class AmalgamationReviewConfirm extends Vue {
     return this.getValidateSteps && !this.getEffectiveDateTime.valid
   }
 
+  /** The Certify section instructions. */
+  get certifyText (): string {
+    const whoseAuthorization = IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT)
+      ? 'Certify the completing party\'s authorization to complete and submit this filing.'
+      : 'Certify your authorization to complete and submit this application.'
+    return `${whoseAuthorization} The name of the person submitting this filing will be displayed in the ` +
+      `history of filings for this ${this.getEntityDescription}.`
+  }
+
+  /** Is true when staff have not entered the completing party's name. */
+  get isCompletingPartyInvalid (): boolean {
+    return (
+      this.getValidateSteps &&
+      IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT) &&
+      !this.getCertifyState.certifiedBy
+    )
+  }
+
+  /** Saves the completing party's name as the Certified By value. */
+  onCertifiedBy (val: string): void {
+    this.setCertifyState({ valid: this.getCertifyState.valid, certifiedBy: val })
+  }
+
   /** Is true when the certify conditions are not met. */
   get isCertifyInvalid (): boolean {
     if (this.isBaseCompany) {
@@ -455,11 +548,12 @@ export default class AmalgamationReviewConfirm extends Vue {
   }
 
   /**
-   * Get the Document Delivery email when a staff files.
-   * Default: staff email; editable.
+   * The initial Document Delivery additional email.
+   * Default: the user's own email (not pre-populated for staff); editable.
    */
   get documentOptionalEmail (): string {
-    return this.getDocumentDelivery.documentOptionalEmail || this.getUserEmail
+    return this.getDocumentDelivery.documentOptionalEmail ||
+      (IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT) ? '' : this.getUserEmail)
   }
 }
 </script>

@@ -131,14 +131,20 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays Authorization section', () => {
-      const section = wrapper.findAll('section').at(5)
+      const section = wrapper.findAll('section').at(6)
       expect(section.find('header h2').text()).toBe('Certify')
-      expect(section.find('header p').text()).toContain('Certify your authorization to complete and submit')
+      expect(section.find('header p').text()).toContain("Certify the completing party's authorization")
       expect(section.findComponent(Certify).exists()).toBe(true)
     })
 
+    it('displays Completing Party section for staff', () => {
+      const section = wrapper.find('#completing-party-section')
+      expect(section.exists()).toBe(true)
+      expect(section.find('header h2').text()).toBe('Completing Party')
+    })
+
     it('displays Staff Payment section for staff', () => {
-      const section = wrapper.findAll('section').at(6)
+      const section = wrapper.findAll('section').at(7)
       expect(section.find('header h2').text()).toBe('Staff Payment')
       expect(section.findComponent(StaffPayment).exists()).toBe(true)
     })
@@ -239,6 +245,10 @@ for (const test of amalgamationBusinessInfo) {
       expect(section.find('header h2').text()).toBe('Certify')
       expect(section.find('header p').text()).toContain('Certify your authorization to complete and submit')
       expect(section.findComponent(Certify).exists()).toBe(true)
+    })
+
+    it('does not display Completing Party section for non-staff', () => {
+      expect(wrapper.find('#completing-party-section').exists()).toBe(false)
     })
 
     it('does not display Staff Payment section for non-staff', () => {
