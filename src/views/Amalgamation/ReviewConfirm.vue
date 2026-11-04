@@ -275,7 +275,7 @@
               sm="3"
               class="pr-4"
             >
-              <label class="title-label">Completing Party</label>
+              <label class="title-label font-weight-bold">Completing Party</label>
             </v-col>
             <v-col
               cols="12"
