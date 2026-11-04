@@ -184,6 +184,20 @@
         iconColour="error"
         :messages="directorWarningMessages"
       />
+
+      <!-- adopted directors info -->
+      <MessageBox
+        v-if="isShortFormAmalgamation"
+        id="adopted-directors-info"
+        color="gold"
+        class="mt-6"
+      >
+        <p class="mb-0">
+          <strong>Important:</strong> To update director information for this company, save this application,
+          open the {{ shortFormBusiness }} company, change the director information, then return to this
+          application.
+        </p>
+      </MessageBox>
     </section>
 
     <!-- Start by Adding the Completing Party -->
@@ -295,6 +309,7 @@ import AddEditOrgPerson from '@/components/common/AddEditOrgPerson.vue'
 import { ConfirmDialog } from '@bcrs-shared-components/confirm-dialog'
 import HelpSection from '@/components/common/HelpSection.vue'
 import ListPeopleAndRoles from '@/components/common/ListPeopleAndRoles.vue'
+import MessageBox from '@/components/common/MessageBox.vue'
 import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
 
 @Component({
@@ -303,6 +318,7 @@ import MessageBoxWarning from '@/components/common/MessageBoxWarning.vue'
     ConfirmDialog,
     HelpSection,
     ListPeopleAndRoles,
+    MessageBox,
     MessageBoxWarning
   }
 })
@@ -319,18 +335,27 @@ export default class PeopleAndRoles extends Mixins(PeopleRolesMixin) {
     return (this.isAmalgamationFilingHorizontal || this.isAmalgamationFilingVertical)
   }
 
+  /** The business whose directors a short-form amalgamation adopts. */
+  get shortFormBusiness (): string {
+    return this.isAmalgamationFilingHorizontal ? 'primary' : 'holding'
+  }
+
+  /** The blurb (a short-form amalgamation names the business whose directors are adopted). */
+  get blurb (): string {
+    if (this.isShortFormAmalgamation) {
+      return `The resulting business will adopt the following Directors of the ${this.shortFormBusiness} ` +
+        'business in this amalgamation.'
+    }
+    return (!Array.isArray(this.getPeopleAndRolesResource.blurb) && this.getPeopleAndRolesResource.blurb)
+  }
+
   /** The invalid adopted directors warning messages. */
   get directorWarningMessages (): Array<{ prefix?: string, message: string }> {
-    const business = this.isAmalgamationFilingHorizontal ? 'primary' : 'holding'
     return [
       {
         prefix: 'Incomplete or incorrect director information:',
         message: 'The information for at least one director of the amalgamated company is incomplete ' +
           'or incorrect.'
-      },
-      {
-        message: `To update director information for this company, save this application, open the ${business} ` +
-          'company, change the director information, then return to this application.'
       }
     ]
   }

@@ -216,34 +216,40 @@ describe('People And Roles component - Amalgamation Short form', () => {
   })
 
   it('shows correct blurb text', () => {
+    setShortFormFiling()
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
-    expect(wrapper.find('.blurb-para').text()).toContain('Add the Completing Party to this application')
-    expect(wrapper.find('.rule-item-txt').text()).toContain('The Completing Party')
-  })
-
-  it('shows Start by Adding Completing Party Button when people list is empty', () => {
-    store.stateModel.addPeopleAndRoleStep.orgPeople = []
-    const wrapper = wrapperFactory()
-    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeTruthy()
-    expect(wrapper.find(btnStartAddCompletingParty).text()).toContain('Start by Adding the Completing Party')
+    expect(wrapper.find('.blurb-para').text())
+      .toContain('The resulting business will adopt the following Directors of the primary business')
+    expect(wrapper.find('.rule-item-txt').text()).toContain('Complete Director information')
     wrapper.destroy()
+    resetShortFormFiling()
   })
 
-  it('does not show Add Completing Party Button when people list has Completing Party', () => {
-    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+  it('names the holding business in the blurb for a vertical amalgamation', () => {
+    setShortFormFiling()
+    store.stateModel.amalgamation.type = AmalgamationTypes.VERTICAL
     const wrapper = wrapperFactory()
+    expect(wrapper.find('.blurb-para').text()).toContain('Directors of the holding business')
+    wrapper.destroy()
+    resetShortFormFiling()
+  })
+
+  it('does not show any add buttons', () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = []
+    const wrapper = wrapperFactory()
+    expect(wrapper.find(btnStartAddCompletingParty).exists()).toBeFalsy()
     expect(wrapper.find(btnAddCompletingParty).exists()).toBeFalsy()
+    expect(wrapper.find(btnAddPerson).exists()).toBeFalsy()
     wrapper.destroy()
-    resetStore()
   })
 
-  it('Shows check mark next to roles added', () => {
+  it('does not show the Completing Party checklist item', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList([
       { roleType: 'Completing Party', appointmentDate: '2020-03-30' }
     ])
     const wrapper = wrapperFactory()
-    expect(wrapper.find(checkCompletingParty).exists()).toBeTruthy()
+    expect(wrapper.find(checkCompletingParty).exists()).toBeFalsy()
     expect(wrapper.find(checkDirector).exists()).toBeFalsy()
     wrapper.destroy()
     resetStore()
@@ -314,7 +320,25 @@ describe('People And Roles component - Amalgamation Short form', () => {
     const messageBox = wrapper.findComponent(MessageBoxWarning)
     expect(messageBox.exists()).toBe(true)
     expect(messageBox.text()).toContain('Incomplete or incorrect director information:')
-    expect(messageBox.text()).toContain('open the primary company')
+    wrapper.destroy()
+    resetShortFormFiling()
+  })
+
+  it('shows the adopted-directors info box naming the primary business', () => {
+    setShortFormFiling()
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [completeDirector]
+    const wrapper = wrapperFactory()
+    expect(wrapper.find('#adopted-directors-info').text()).toContain('open the primary company')
+    wrapper.destroy()
+    resetShortFormFiling()
+  })
+
+  it('shows the adopted-directors info box naming the holding business', () => {
+    setShortFormFiling()
+    store.stateModel.amalgamation.type = AmalgamationTypes.VERTICAL
+    store.stateModel.addPeopleAndRoleStep.orgPeople = [completeDirector]
+    const wrapper = wrapperFactory()
+    expect(wrapper.find('#adopted-directors-info').text()).toContain('open the holding company')
     wrapper.destroy()
     resetShortFormFiling()
   })
@@ -328,12 +352,13 @@ describe('People And Roles component - Amalgamation Short form', () => {
     resetShortFormFiling()
   })
 
-  it('does not show the invalid-directors warning box outside a short-form amalgamation', () => {
+  it('does not show the invalid-directors warning or info boxes outside a short-form amalgamation', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = [
       { ...completeDirector, officer: { ...completeDirector.officer, lastName: '' } }
     ]
     const wrapper = wrapperFactory()
     expect(wrapper.findComponent(MessageBoxWarning).exists()).toBe(false)
+    expect(wrapper.find('#adopted-directors-info').exists()).toBe(false)
     wrapper.destroy()
     resetStore()
   })

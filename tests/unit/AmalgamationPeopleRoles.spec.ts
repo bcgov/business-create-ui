@@ -109,7 +109,7 @@ for (const test of amalgamationBusinessInfo) {
     })
 
     it('displays the header and renders the People and Roles component correctly', () => {
-      expect(wrapper.find('header h2').text()).toBe('1. Add People to your Application')
+      expect(wrapper.find('header h2').text()).toBe('1. Confirm Directors')
       expect(wrapper.findComponent(PeopleAndRoles).exists()).toBe(true)
     })
   })
