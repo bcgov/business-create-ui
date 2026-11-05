@@ -154,7 +154,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
         folioNumber: this.getFolioNumber || undefined,
         isFutureEffective: this.getEffectiveDateTime.isFutureEffective,
         ...(this.isBaseCompany
-          ? { authorizationReceived: this.getCertifyState.valid }
+          ? {
+            authorizationReceived: this.getCertifyState.valid,
+            // staff supply the completing party's name (not set for a public user)
+            certifiedBy: this.getCertifyState.certifiedBy || undefined
+          }
           : { certifiedBy: this.getCertifyState.certifiedBy })
       },
       business: {
@@ -224,10 +228,12 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       filing.header.effectiveDate = this.dateToApi(this.getEffectiveDateTime.effectiveDate)
     }
 
+    // Add the Document Delivery additional email.
+    if (this.getDocumentDelivery.documentOptionalEmail) {
+      filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
+    }
+
     if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
-      if (this.getDocumentDelivery.documentOptionalEmail) {
-        filing.header.documentOptionalEmail = this.getDocumentDelivery.documentOptionalEmail
-      }
       // Add staff payment data.
       this.buildStaffPayment(filing)
     }
@@ -259,8 +265,14 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
 
     // restore Persons and Organizations
     // NB - short-form amalg will overwrite this from the holding/primary business
+    // NB - for base companies, strip the Completing Party from any older draft data
+    //      (this also keeps it out of the People table and filing submission)
     if (draftFiling.amalgamationApplication.parties) {
-      this.setOrgPersonList(draftFiling.amalgamationApplication.parties)
+      this.setOrgPersonList(
+        this.isBaseCompany
+          ? this.removeCompletingParty(draftFiling.amalgamationApplication.parties)
+          : draftFiling.amalgamationApplication.parties
+      )
     }
 
     // restore Share Classes
@@ -358,10 +370,11 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
       certifiedBy: draftFiling.header.certifiedBy
     })
 
+    // restore document optional email
+    this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
+
     // NB: Staff Payment is mutually exclusive with Folio Number
     if (IsAuthorized(AuthorizedActions.STAFF_PAYMENT)) {
-      // restore document optional email
-      this.setDocumentOptionalEmail(draftFiling.header.documentOptionalEmail)
       // restore Staff Payment data
       this.parseStaffPayment(draftFiling)
     }
@@ -1660,7 +1673,7 @@ export default class FilingTemplateMixin extends Mixins(AmalgamationMixin, DateM
   /**
    * Removes the Completing Party role from the given parties, and drops any party
    * left with no roles. Used to strip the Completing Party from base company
-   * incorporations, which no longer use one.
+   * incorporations and amalgamations, which no longer use one.
    * @param parties the parties to strip
    * @returns the parties without any Completing Party
    */

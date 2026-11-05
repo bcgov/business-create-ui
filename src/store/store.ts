@@ -742,8 +742,10 @@ export const useStore = defineStore('store', {
       const isCourtOrderValid = IsAuthorized(AuthorizedActions.COURT_ORDER_POA)
         ? this.getCourtOrderStep.valid
         : true
+      // staff enter the completing party's name, which is required to certify
       const isCertifyValid = this.isBaseCompany
-        ? this.getCertifyState.valid
+        ? (this.getCertifyState.valid &&
+          (!IsAuthorized(AuthorizedActions.THIRD_PARTY_CERTIFY_STMT) || !!this.getCertifyState.certifiedBy))
         : (this.getCertifyState.valid && !!this.getCertifyState.certifiedBy)
       const isStaffPaymentValid = IsAuthorized(AuthorizedActions.STAFF_PAYMENT)
         ? this.getStaffPaymentStep.valid

@@ -869,13 +869,13 @@ describe('Amalgamation Filing - staff document delivery', () => {
     expect(filing.header.documentOptionalEmail).toBeUndefined()
   })
 
-  it('omits the document optional email for non-staff users', () => {
+  it('persists the document optional email for non-staff users', () => {
     setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     store.setDocumentOptionalEmail('client@example.com')
 
     const filing = wrapper.vm.buildAmalgamationFiling()
 
-    expect(filing.header.documentOptionalEmail).toBeUndefined()
+    expect(filing.header.documentOptionalEmail).toBe('client@example.com')
   })
 
   it('restores the document optional email from a draft', async () => {
@@ -900,6 +900,50 @@ describe('Amalgamation Filing', () => {
 
   afterEach(() => {
     wrapper.destroy()
+  })
+
+  it('includes the completing party name as certifiedBy when entered', () => {
+    store.setCertifyState({ valid: true, certifiedBy: 'Jane Doe' })
+
+    const filing = wrapper.vm.buildAmalgamationFiling()
+
+    expect(filing.header.authorizationReceived).toBe(true)
+    expect(filing.header.certifiedBy).toBe('Jane Doe')
+    store.setCertifyState({ valid: false, certifiedBy: '' })
+  })
+
+  it('omits certifiedBy when no completing party name was entered', () => {
+    store.setCertifyState({ valid: true, certifiedBy: '' })
+
+    const filing = wrapper.vm.buildAmalgamationFiling()
+
+    expect(filing.header.certifiedBy).toBeUndefined()
+    store.setCertifyState({ valid: false, certifiedBy: '' })
+  })
+
+  it('strips the Completing Party from parties on load', async () => {
+    await wrapper.vm.parseAmalgamationDraft({
+      header: { filingId: 123 },
+      amalgamationApplication: {
+        nameRequest: { legalType: CorpTypeCd.BENEFIT_COMPANY },
+        parties: [
+          {
+            officer: { firstName: 'JANE', lastName: 'DOE', partyType: 'person' },
+            roles: [{ roleType: 'Completing Party' }, { roleType: 'Director' }]
+          },
+          {
+            officer: { firstName: 'JOHN', lastName: 'DOE', partyType: 'person' },
+            roles: [{ roleType: 'Completing Party' }]
+          }
+        ]
+      }
+    })
+
+    const orgPeople = store.stateModel.addPeopleAndRoleStep.orgPeople
+    expect(orgPeople.length).toBe(1)
+    expect(orgPeople[0].officer.firstName).toBe('JANE')
+    expect(orgPeople[0].roles).toEqual([{ roleType: 'Director' }])
+    store.setOrgPersonList([])
   })
 
   it('emits shareStructure.resolutionDates when there are resolutions', () => {

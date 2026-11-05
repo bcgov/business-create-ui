@@ -25,7 +25,7 @@ export const AmalgamationShortSteps = [
     id: 'step-3-btn',
     step: 3,
     icon: 'mdi-account-multiple-plus',
-    text: 'Add People\nand Roles',
+    text: 'Directors',
     to: RouteNames.AMALG_SHORT_PEOPLE_ROLES,
     component: Views.AMALGAMATION_PEOPLE_ROLES
 

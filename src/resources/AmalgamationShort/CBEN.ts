@@ -21,18 +21,13 @@ export const AmalgamationShortResourceCben: AmalgamationResourceIF = {
     }
   ],
   peopleAndRoles: {
-    header: '1. Add People to your Application',
-    blurb: 'Add the Completing Party to this application',
+    header: '1. Confirm Directors',
+    blurb: null,
     helpSection: null,
     addPerson: false,
     showDirectors: true,
     readonlyDirectors: true,
     rules: [
-      {
-        id: RuleIds.NUM_COMPLETING_PARTY,
-        text: 'The Completing Party',
-        test: (num) => { return (num === 1) }
-      },
       {
         id: RuleIds.COMPLETE_DIRECTOR_INFO,
         text: 'Complete Director information',

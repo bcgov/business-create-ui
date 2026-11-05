@@ -14,15 +14,9 @@ export const AmalgamationRegResourceCben: AmalgamationResourceIF = {
   }],
   peopleAndRoles: {
     header: '1. Add People to your Application',
-    blurb: `Add the people who will have a role in the amalgamated business. A person can be
-      both the Completing Party and a Director.`,
+    blurb: 'Add the people who will have a role in the amalgamated business.',
     helpSection: null,
     rules: [
-      {
-        id: RuleIds.NUM_COMPLETING_PARTY,
-        text: 'The Completing Party',
-        test: (num) => { return (num === 1) }
-      },
       {
         id: RuleIds.NUM_DIRECTORS,
         text: 'At least one Director',
