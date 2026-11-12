@@ -144,6 +144,13 @@ export default class AddEditOrgPersonMixin extends Vue {
     return this.orgPerson?.isLookupBusiness && !!this.inProgressBusinessLookup.identifier
   }
 
+  /** Whether a looked-up business has any mailing or delivery address populated. */
+  get hasPrepopulatedBusinessAddresses (): boolean {
+    return this.hasBusinessSelectedFromLookup &&
+      (!this.isEmptyAddress(this.inProgressMailingAddress) ||
+       !this.isEmptyAddress(this.inProgressDeliveryAddress))
+  }
+
   get showRoles (): boolean {
     return (
       this.showCompletingPartyRole ||

@@ -12,10 +12,12 @@ export const RegistrationResourceGp: RegistrationResourceIF = {
     filingTypeCode: FilingCodes.REGISTRATION_GP
   }],
   peopleAndRoles: {
-    header: '1. Add People, Business(es), and/or Corporation(s) to your Registration',
-    blurb: 'Add the people, business(es), and/or corporation(s) who will have a role in your ' +
-      'business. A person can be both the Completing Party and a Partner; a business and a ' +
-      'corporation can only be a Partner.',
+    header: 'Add People to your Registration',
+    blurb: [
+      'Add the people and/or the businesses who will have a role in your partnership.',
+
+      'The Completing Party must be a person, but the partners can be people or businesses.'
+    ],
     helpSection: null,
     rules: [
       {
