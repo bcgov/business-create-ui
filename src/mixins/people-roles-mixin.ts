@@ -353,28 +353,6 @@ export default class PeopleRolesMixin extends Vue {
     )
   }
 
-  async confirmAddProprietorPerson (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Add a Person',
-      'By adding an individual as the proprietor, you will be registering a ' +
-        'business with that proprietor as the owner who performs all business ' +
-        'operations and assumes all liabilities. Do you wish to continue?',
-      'Continue',
-      'Cancel'
-    )
-  }
-
-  async confirmAddProprietorOrganization (): Promise<boolean> {
-    return this.showConfirmDialog(
-      'Add a Business or a Corporation',
-      'By adding an existing business, society or a corporation as the proprietor, you will ' +
-        'be registering an existing company under another name (e.g., a numbered ' +
-        'company that does business under a DBA name). Do you wish to continue?',
-      'Continue',
-      'Cancel'
-    )
-  }
-
   private async confirmRemoveProprietorPerson (): Promise<boolean> {
     return this.showConfirmDialog(
       'Remove Person',

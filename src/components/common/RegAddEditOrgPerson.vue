@@ -53,7 +53,10 @@
             class="add-org-header"
             :class="{'error-text': !addPersonOrgFormValid}"
           >
-            <span v-if="isNaN(activeIndex)">Add Person</span>
+            <span v-if="isCompletingParty">Completing Party</span>
+            <span v-else-if="isNaN(activeIndex)">
+              Add a Person as {{ isEntitySoleProp ? 'the Proprietor' : 'a Partner' }}
+            </span>
             <span v-else>Edit Person</span>
           </label>
         </v-col>
@@ -64,16 +67,19 @@
         >
           <MessageBox
             v-if="isCompletingParty && !IsAuthorized(AuthorizedActions.NO_COMPLETING_PARTY_MESSAGE_BOX)"
-            color="gold"
+            color="blue"
+            :rounded="true"
           >
             <p>
-              <strong>Important:</strong> The Completing Party information below is based on your
-              BC Registries account information. Your name and email cannot be changed here. Name
-              and email changes must be made through your account settings.
-            </p>
-            <p>
-              If you make changes to your address below, please update your address in the account
-              settings after you have completed this filing to ensure your information is up to date.
+              <v-icon
+                color="primary"
+                class="mr-2 mb-1"
+              >
+                mdi-information-outline
+              </v-icon>
+
+              <strong>Note:</strong> The Completing Party Name is taken from the logged in user and cannot be changed
+              here.
             </p>
           </MessageBox>
 
@@ -222,13 +228,12 @@
                   Business or Corporation Not Registered in B.C.
                 </a>
                 <div
-                  v-if="hasBusinessSelectedFromLookup"
+                  v-if="hasPrepopulatedBusinessAddresses"
                   class="mt-6"
                 >
                   <MessageBox color="gold">
                     <p>
-                      <strong>Important:</strong> If the addresses shown below are out of date, you
-                      may update them here. The updates are applicable only to this application.
+                      <strong>Important:</strong> Ensure your addresses are accurate for this application.
                     </p>
                   </MessageBox>
                 </div>
@@ -242,6 +247,10 @@
                     a bank or a railway, use the manual entry form. All other types of business cannot
                     be the Proprietor.
                   </p>
+                  <HelpContactUs
+                    class="help"
+                    type="proprietor"
+                  />
                 </div>
                 <div v-else-if="isPartner">
                   <p class="mt-6 mb-0">
@@ -253,7 +262,10 @@
                     a bank or a railway, use the manual entry form. All other types of business cannot
                     be a partner.
                   </p>
-                  <HelpContactUs class="help" />
+                  <HelpContactUs
+                    class="help"
+                    type="partner"
+                  />
                 </div>
                 <div v-else>
                   <p class="mt-6 mb-0">
@@ -271,6 +283,10 @@
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="RegistriesSearchServices"
+                  :excludeLegalTypes="businessLookupExcludedLegalTypes"
+                  :resultsHeading="businessLookupResultsHeading"
+                  :noDataMessage="businessLookupNoDataMessage"
+                  :noDataDetails="businessLookupNoDataDetails"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
@@ -281,36 +297,40 @@
                 v-else
                 class="business-lookup-article"
               >
+                <label>Business Name</label>
+
                 <div
-                  v-if="hasBusinessSelectedFromLookup"
+                  v-if="hasPrepopulatedBusinessAddresses"
                   class="mt-6"
                 >
                   <MessageBox color="gold">
                     <p>
-                      <strong>Important:</strong> If the addresses shown below are out of date, you
-                      may update them here. The updates are applicable only to this application.
+                      <strong>Important:</strong> Ensure your addresses are accurate for this application.
                     </p>
                   </MessageBox>
                 </div>
-                <div v-if="isProprietor">
-                  <p class="mb-0">
-                    Enter an existing B.C. business as the proprietor.
-                  </p>
-                </div>
-                <div v-else>
-                  <p class="mb-0">
-                    Enter an existing B.C. business as a partner.
+                <div>
+                  <p class="mt-6 mb-0">
+                    Look up the business by Business Name or Incorporation/Registration Number. The business must be
+                    registered in B.C.{{ isProprietor ? ' and cannot be another sole proprietorship.' : '' }}
                   </p>
                 </div>
 
-                <HelpContactUs class="help" />
+                <HelpContactUs
+                  class="help"
+                  :type="isProprietor ? 'proprietor' : 'partner'"
+                />
 
                 <BusinessLookup
                   class="mt-5"
                   :showErrors="enableRules"
                   :businessLookup="inProgressBusinessLookup"
                   :BusinessLookupServices="RegistriesSearchServices"
+                  :excludeLegalTypes="businessLookupExcludedLegalTypes"
                   label="Business Name or Incorporation/Registration Number"
+                  :resultsHeading="businessLookupResultsHeading"
+                  :noDataMessage="businessLookupNoDataMessage"
+                  :noDataDetails="businessLookupNoDataDetails"
                   @setBusiness="updateBusinessDetails($event)"
                   @undoBusiness="resetBusinessDetails()"
                 />
@@ -407,7 +427,6 @@
                 class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 :rules="enableRules ? Rules.EmailRules : []"
-                :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS)"
               />
             </article>
 
@@ -542,11 +561,27 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
     return this.isCompletingParty && !this.IsAuthorized(this.AuthorizedActions.EDITABLE_COMPLETING_PARTY)
   }
 
+  /** The legal types to exclude from the business lookup. */
+  get businessLookupExcludedLegalTypes (): Array<string> {
+    // a sole proprietorship cannot be owned by another sole proprietorship
+    return this.isEntitySoleProp ? ['SP'] : []
+  }
+
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<VuetifyRuleFunction> = [
     v => !!v?.trim() || 'Business or corporation name is required',
     v => (v?.length <= 150) || 'Cannot exceed 150 characters' // maximum character count
   ]
+
+  /** The heading shown above the business lookup results. */
+  readonly businessLookupResultsHeading = 'Active B.C. Businesses:'
+
+  /** The message shown when the business lookup finds no results. */
+  readonly businessLookupNoDataMessage = 'No active B.C. businesses found.'
+
+  /** The details shown under the no-results message. */
+  readonly businessLookupNoDataDetails =
+    'Ensure you have entered the name or incorporation/registration number of an active B.C. business.'
 
   readonly RegistriesSearchServices = RegistriesSearchServices
 }
@@ -613,8 +648,9 @@ div.three-column {
 }
 
 .help {
-  margin-top: 30px;
-  margin-bottom: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 12px;
 }
 
 // align checkbox with top of its label

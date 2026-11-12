@@ -139,6 +139,16 @@
                   :address="orgPerson.deliveryAddress"
                 />
               </template>
+
+              <template v-else-if="isCompletingParty(orgPerson)">
+                <p v-if="!orgPerson.deliveryAddress">
+                  N/A
+                </p>
+                <DeliveryAddress
+                  v-else
+                  :address="orgPerson.deliveryAddress"
+                />
+              </template>
             </v-col>
 
             <v-col
@@ -343,6 +353,11 @@ export default class ListPeopleAndRoles extends Mixins(CommonMixin) {
   /** Returns true if specified org/person is a partner. */
   isPartner (orgPerson: OrgPersonIF): boolean {
     return orgPerson?.roles.some(role => role.roleType === RoleTypes.PARTNER)
+  }
+
+  /** Returns true if specified org/person is a completing party. */
+  isCompletingParty (orgPerson: OrgPersonIF): boolean {
+    return orgPerson?.roles.some(role => role.roleType === RoleTypes.COMPLETING_PARTY)
   }
 
   /** Formats the org-person's name. */

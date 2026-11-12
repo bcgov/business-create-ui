@@ -1212,7 +1212,12 @@ describe('Breadcrumbs for firms - Without Easy Legal Name Fix', () => {
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
     expect(breadcrumbs.at(1).text).toBe('My Business Registry')
     expect(breadcrumbs.at(2).text).toBe('My NR Approved Name')
-    expect(breadcrumbs.at(3).text).toBe('Registration')
+    expect(breadcrumbs.at(3).text).toBe('BC Sole Proprietorship Registration')
+    expect((wrapper.vm as any).registrationLabel).toBe('BC Sole Proprietorship Registration')
+
+    store.stateModel.entityType = CorpTypeCd.PARTNERSHIP
+    expect((wrapper.vm as any).registrationLabel).toBe('BC General Partnership Registration')
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
 
     wrapper.destroy()
   })
@@ -1289,7 +1294,7 @@ describe('Breadcrumbs for firms - With Easy Legal Name Fix', () => {
     expect(breadcrumbs.at(0).text).toBe('BC Registries Dashboard')
     expect(breadcrumbs.at(1).text).toBe('My Business Registry')
     expect(breadcrumbs.at(2).text).toBe('My NR Approved Name')
-    expect(breadcrumbs.at(3).text).toBe('Registration')
+    expect(breadcrumbs.at(3).text).toBe('BC Sole Proprietorship Registration')
 
     wrapper.destroy()
   })

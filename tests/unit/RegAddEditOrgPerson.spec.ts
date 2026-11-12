@@ -8,6 +8,7 @@ import { useStore } from '@/store/store'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
 import { AuthorizationRoles } from '@/enums'
 import { setAuthRole } from '../set-auth-role'
 
@@ -227,6 +228,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(false)
     expect(vm.isPartner).toBe(false)
+    expect(wrapper.find('.add-org-header').text()).toContain('Completing Party')
 
     wrapper.destroy()
   })
@@ -241,6 +243,7 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(true)
     expect(vm.isPartner).toBe(false)
+    expect(wrapper.find('.add-org-header').text()).toContain('Add a Person as the Proprietor')
 
     wrapper.destroy()
   })
@@ -289,6 +292,10 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('displays form data for completing party', () => {
     const wrapper = createComponent(validCompletingParty, 0, null)
+
+    const completingPartyMessage = wrapper.find('.message-box-blue')
+    expect(completingPartyMessage.classes()).toContain('rounded')
+    expect(completingPartyMessage.classes()).not.toContain('rounded-0')
 
     // verify input values
     const firstNameInput = wrapper.find(`${firstNameSelector} input`)
@@ -391,13 +398,70 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
+  it('passes business lookup presentation and legal-type options to both lookup views', () => {
+    const scenarios = [
+      { role: AuthorizationRoles.STAFF, entityType: CorpTypeCd.SOLE_PROP, excludedTypes: ['SP'] },
+      { role: AuthorizationRoles.PUBLIC_USER, entityType: CorpTypeCd.SOLE_PROP, excludedTypes: ['SP'] },
+      { role: AuthorizationRoles.STAFF, entityType: CorpTypeCd.PARTNERSHIP, excludedTypes: [] },
+      { role: AuthorizationRoles.PUBLIC_USER, entityType: CorpTypeCd.PARTNERSHIP, excludedTypes: [] }
+    ]
+
+    for (const { role, entityType, excludedTypes } of scenarios) {
+      setAuthRole(store, role)
+      store.stateModel.entityType = entityType
+      const wrapper = createComponent(validProprietorOrg, -1, null)
+      const lookup = wrapper.findComponent(BusinessLookup)
+
+      expect(lookup.exists()).toBe(true)
+      const lookupOptions = { ...lookup.vm.$attrs, ...lookup.props() }
+      expect(lookupOptions).toMatchObject({
+        excludeLegalTypes: excludedTypes,
+        resultsHeading: 'Active B.C. Businesses:',
+        noDataMessage: 'No active B.C. businesses found.',
+        noDataDetails:
+          'Ensure you have entered the name or incorporation/registration number of an active B.C. business.'
+      })
+
+      wrapper.destroy()
+    }
+
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+  })
+
+  it('only displays the address alert when a looked-up business has populated addresses', async () => {
+    const alertText = 'Ensure your addresses are accurate for this application.'
+    const orgWithLookedUpBusiness = {
+      ...validProprietorOrg,
+      officer: { ...validProprietorOrg.officer, identifier: 'BC1234567' }
+    }
+
+    for (const role of [AuthorizationRoles.STAFF, AuthorizationRoles.PUBLIC_USER]) {
+      setAuthRole(store, role)
+      const wrapper = createComponent(orgWithLookedUpBusiness, -1, null)
+
+      expect(wrapper.text()).toContain(alertText)
+
+      wrapper.setData({
+        inProgressMailingAddress: {},
+        inProgressDeliveryAddress: {}
+      })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.text()).not.toContain(alertText)
+      wrapper.destroy()
+    }
+  })
+
   it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
     setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
     const wrapper = createComponent(validProprietorOrg, -1, null)
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text())
-      .toContain('Enter an existing B.C. business as the proprietor')
+      .toContain('Look up the business by Business Name or Incorporation/Registration Number.')
+    expect(wrapper.findAll('.business-lookup-article p').at(0).text())
+      .toContain('and cannot be another sole proprietorship.')
 
     wrapper.destroy()
   })
@@ -470,7 +534,7 @@ describe('Registration Add/Edit Org/Person component', () => {
 
     expect(wrapper.find('.business-lookup-article label').text()).toContain('Business')
     expect(wrapper.findAll('.business-lookup-article p').at(0).text())
-      .toContain('Enter an existing B.C. business as a partner')
+      .toContain('Look up the business by Business Name or Incorporation/Registration Number.')
 
     wrapper.destroy()
   })

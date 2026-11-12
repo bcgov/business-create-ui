@@ -95,7 +95,7 @@
         id="btn-start-add-cp"
         outlined
         color="primary"
-        class="btn-outlined-primary mt-6"
+        class="btn-outlined-primary mt-2"
         :disabled="showOrgPersonForm"
         @click="addOrgPerson(RoleTypes.COMPLETING_PARTY, PartyTypes.PERSON)"
       >
@@ -130,7 +130,7 @@
           @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.PERSON)"
         >
           <v-icon>mdi-account-plus</v-icon>
-          <span>Add a Person</span>
+          <span>Add a Person as the Proprietor</span>
         </v-btn>
 
         <v-btn
@@ -143,7 +143,7 @@
           @click="addOrgPerson(RoleTypes.PROPRIETOR, PartyTypes.ORGANIZATION)"
         >
           <v-icon>mdi-domain-plus</v-icon>
-          <span>Add a Business or a Corporation</span>
+          <span>Add a Business as the Proprietor</span>
         </v-btn>
       </template>
 
@@ -157,7 +157,7 @@
           @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.PERSON)"
         >
           <v-icon>mdi-account-plus</v-icon>
-          <span>Add a Person</span>
+          <span>Add a Person as a Partner</span>
         </v-btn>
 
         <v-btn
@@ -169,7 +169,7 @@
           @click="addOrgPerson(RoleTypes.PARTNER, PartyTypes.ORGANIZATION)"
         >
           <v-icon>mdi-domain-plus</v-icon>
-          <span>Add a Business or a Corporation</span>
+          <span>Add a Business as a Partner</span>
         </v-btn>
       </template>
 
@@ -293,13 +293,11 @@ export default class RegPeopleAndRoles extends Mixins(PeopleRolesMixin) {
 
     // if the proprietor is a person then this is a SP
     if (isProprietor && isPerson) {
-      if (!await this.confirmAddProprietorPerson()) return
       this.setRegistrationBusinessType(BusinessTypes.SP)
     }
 
     // if the proprietor is an org then this is a DBA
     if (isProprietor && isOrganization) {
-      if (!await this.confirmAddProprietorOrganization()) return
       this.setRegistrationBusinessType(BusinessTypes.DBA)
     }
 

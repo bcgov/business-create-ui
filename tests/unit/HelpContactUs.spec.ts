@@ -39,4 +39,30 @@ describe('HelpBusinessNumber', () => {
 
     wrapper.destroy()
   })
+
+  it.each([
+    {
+      type: 'proprietor',
+      title: 'Help with Adding a Business as the Proprietor',
+      body: 'A sole proprietorship can be owned by any active business registered or incorporated in B.C.'
+    },
+    {
+      type: 'partner',
+      title: 'Help with Adding a Business as a Partner',
+      body: 'A general partnership can have any active business registered or incorporated in B.C. as a partner.'
+    }
+  ])('displays $type-specific help content', async ({ type, title, body }) => {
+    const wrapper = mount(HelpContactUs, {
+      vuetify,
+      propsData: { type }
+    })
+
+    await wrapper.find('.help-btn').trigger('click')
+
+    expect(wrapper.find('.help-header h2').text()).toBe(title)
+    expect(wrapper.text()).toContain(body)
+    expect(wrapper.text()).toContain('If you are having trouble finding your active business')
+
+    wrapper.destroy()
+  })
 })

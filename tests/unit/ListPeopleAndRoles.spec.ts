@@ -155,6 +155,21 @@ describe('List People And Roles component - BEN IA', () => {
       .toContain('Same as Mailing Address')
   })
 
+  it('displays N/A for a completing party without a delivery address', () => {
+    const completingPartyWithoutDeliveryAddress = {
+      ...mockPersonList[0],
+      roles: [{ roleType: 'Completing Party', appointmentDate: '2020-03-30' }],
+      deliveryAddress: null
+    }
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [completingPartyWithoutDeliveryAddress] } }
+    )
+
+    const row = wrapper.vm.$el.querySelector('.people-roles-content')
+    expect(row.querySelector('.delivery-address-column').textContent.trim()).toBe('N/A')
+  })
+
   it('displays the correct addresses text when mailing and delivery do not match', () => {
     mockPersonList[0].deliveryAddress.streetAddress = '123 Different rd'
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
