@@ -1,10 +1,13 @@
 <template>
   <v-card
     outlined
-    class="rounded-0 ma-0"
+    class="ma-0"
     :class="{
+      'rounded-0': !rounded,
+      rounded,
       'message-box-gold': color === 'gold',
-      'message-box-red': color === 'red'
+      'message-box-red': color === 'red',
+      'message-box-blue': color === 'blue'
     }"
   >
     <div class="mx-7 my-5 pa-0">
@@ -17,7 +20,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 @Component({})
 export default class MessageBox extends Vue {
-  @Prop({ required: true }) readonly color!: 'gold' | 'red'
+  @Prop({ required: true }) readonly color!: 'gold' | 'red' | 'blue'
+  @Prop({ default: false }) readonly rounded!: boolean
 }
 </script>
 
@@ -25,7 +29,8 @@ export default class MessageBox extends Vue {
 @import '@/assets/styles/theme.scss';
 
 .v-card {
-  div {
+  :deep(p),
+  :deep(div) {
     font-size: $px-14;
     letter-spacing: 0.01rem;
     color: $gray7;
@@ -38,5 +43,8 @@ export default class MessageBox extends Vue {
 .message-box-red {
   background-color: $app-lt-red !important;
   border-color: $app-red !important;
+}
+.message-box-blue {
+  border-color: $app-blue !important;
 }
 </style>

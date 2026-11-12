@@ -390,7 +390,7 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     const crumbs: Array<BreadcrumbIF> = [
       getBusinessDashboardBreadcrumb(),
       {
-        text: this.getFilingName,
+        text: this.isRegistrationFiling ? this.registrationLabel : this.getFilingName,
         to: { name: this.$route.name }
       }
     ]
@@ -420,6 +420,8 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
       return `${this.getFilingName} (Vertical Short-form)`
     } else if (this.isContinuationInAuthorization) {
       return 'Continuation Authorization'
+    } else if (this.isRegistrationFiling) {
+      return this.registrationLabel
     }
     return this.getFilingName
   }
@@ -480,8 +482,17 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
   get filingLabel (): string {
     // special case for firm dissolutions
     if (this.isFirmDissolutionFiling) return 'Dissolution'
+
+    if (this.isRegistrationFiling) return this.registrationLabel
     // otherwise, no special label
     return null
+  }
+
+  /** The registration filing label. */
+  get registrationLabel (): string {
+    return this.isEntitySoleProp
+      ? 'BC Sole Proprietorship Registration'
+      : 'BC General Partnership Registration'
   }
 
   /** The About text. */
