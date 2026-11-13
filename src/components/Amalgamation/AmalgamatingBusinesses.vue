@@ -183,6 +183,7 @@
               sm="9"
             >
               <Jurisdiction
+                :showUsaJurisdictions="true"
                 :errorMessages="jurisdictionErrorMessage"
                 @change="onJurisdictionChange($event)"
               />
@@ -640,8 +641,10 @@ export default class AmalgamatingBusinesses extends Mixins(AmalgamationMixin, Co
       foreignJurisdiction: {
         region: this.isCan
           ? ((this.jurisdiction.value === JurisdictionLocation.FD) ? 'FEDERAL' : this.jurisdiction.value)
-          : '', // no region outside Canada
-        country: this.isCan ? JurisdictionLocation.CA : this.jurisdiction.value
+          : this.jurisdiction.group === 1 ? this.jurisdiction.value : '',
+        country: this.isCan
+          ? JurisdictionLocation.CA
+          : this.jurisdiction.group === 1 ? JurisdictionLocation.US : this.jurisdiction.value
       },
       legalName: this.legalName,
       identifier: this.identifier
