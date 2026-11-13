@@ -13,6 +13,7 @@ import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { AuthServices, LegalServices } from '@/services'
 import { AmalgamationRegResources, AmalgamationShortResources } from '@/resources'
 import { IsAuthorized } from '@/utils'
+import { movePrimaryOrHoldingBusinessToTop } from '@/utils/amalgamation-utils'
 
 /**
  * Mixin that provides amalgamation rules, etc.
@@ -591,6 +592,11 @@ export default class AmalgamationMixin extends Vue {
     // set this business as the new holding/primary business
     if (this.isAmalgamationFilingVertical) business.role = AmlRoles.HOLDING
     if (this.isAmalgamationFilingHorizontal) business.role = AmlRoles.PRIMARY
+
+    // Keep the selected business first while preserving the order of the remaining businesses.
+    if (this.getAmalgamatingBusinesses[0] !== business) {
+      this.setAmalgamatingBusinesses(movePrimaryOrHoldingBusinessToTop(this.getAmalgamatingBusinesses))
+    }
 
     // overwrite office addresses
     this.setOfficeAddresses(business.addresses)

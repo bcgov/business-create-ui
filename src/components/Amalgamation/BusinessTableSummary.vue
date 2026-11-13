@@ -19,7 +19,7 @@
         </tr>
 
         <tr
-          v-for="item in getAmalgamatingBusinesses"
+          v-for="item in businesses"
           :key="item.identifier"
         >
           <td class="business-name">
@@ -44,7 +44,10 @@
           </td>
 
           <td class="business-role">
-            {{ role(item) }}
+            <strong v-if="isPrimaryOrHoldingBusiness(item)">{{ role(item) }}</strong>
+            <template v-else>
+              {{ role(item) }}
+            </template>
           </td>
         </tr>
       </tbody>
@@ -55,12 +58,16 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Getter } from 'pinia-class'
-import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlRoles, AmlTypes } from '@/enums'
 import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
+import {
+  getAmalgamationJurisdiction,
+  hasPrimaryOrHoldingRole,
+  movePrimaryOrHoldingBusinessToTop
+} from '@/utils/amalgamation-utils'
 
 @Component({
   components: {
@@ -72,6 +79,14 @@ export default class BusinessTableSummary extends Vue {
   readonly AmlTypes = AmlTypes
 
   @Getter(useStore) getAmalgamatingBusinesses!: AmalgamatingBusinessIF[]
+
+  get businesses (): AmalgamatingBusinessIF[] {
+    return movePrimaryOrHoldingBusinessToTop(this.getAmalgamatingBusinesses)
+  }
+
+  isPrimaryOrHoldingBusiness (item: AmalgamatingBusinessIF): boolean {
+    return hasPrimaryOrHoldingRole(item)
+  }
 
   /** True for foreign businesses and for COLIN businesses that are extraprovincial (legal type A). */
   isForeignOrXproColin (item: AmalgamatingBusinessIF): boolean {
@@ -110,24 +125,7 @@ export default class BusinessTableSummary extends Vue {
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {
-    // extrapro COLIN rows carry the resolved home jurisdiction string from the COLIN snapshot
-    // ('BC' | province code | 'FD' | free text)
-    if (item?.type === AmlTypes.COLIN) {
-      const j = item.jurisdiction
-      if (!j) return '(Unknown)' // should never happen
-      if (j === 'FD') return 'Federal, Canada'
-      if (/^[A-Z]{2}$/.test(j)) return `${j}, Canada`
-      return j
-    }
-
-    const fj = (item?.type === AmlTypes.FOREIGN) && item.foreignJurisdiction
-    if (fj?.country) {
-      const country = getName(fj.country)
-      const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
-      if (region) return `${region}, ${country}`
-      return country
-    }
-    return '(Unknown)' // should never happen
+    return getAmalgamationJurisdiction(item)
   }
 
   role (item: AmalgamatingBusinessIF): string {

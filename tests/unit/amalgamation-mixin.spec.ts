@@ -741,6 +741,41 @@ describe('Amalgamation Mixin - updatePrepopulatedData for COLIN', () => {
     expect(store.getEntityType).toBe(CorpTypeCd.BC_COMPANY)
   })
 
+  it('moves a newly selected holding business first and keeps other businesses in order', async () => {
+    vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue(null)
+    vi.spyOn((LegalServices as any), 'fetchColinSnapshot').mockResolvedValue(COLIN_SNAPSHOT)
+
+    const previousHolding = {
+      type: AmlTypes.LEAR,
+      role: AmlRoles.HOLDING,
+      identifier: 'BC1111111'
+    } as any
+    const otherBusiness = {
+      type: AmlTypes.LEAR,
+      role: AmlRoles.AMALGAMATING,
+      identifier: 'BC2222222'
+    } as any
+    const newHolding = {
+      type: AmlTypes.COLIN,
+      role: AmlRoles.AMALGAMATING,
+      identifier: 'BC7654321',
+      name: 'Colin Business Ltd',
+      legalType: CorpTypeCd.BC_COMPANY,
+      addresses: { registeredOffice: {} }
+    } as any
+    store.setAmalgamatingBusinesses([previousHolding, otherBusiness, newHolding])
+
+    await wrapper.vm.updatePrepopulatedData(newHolding, true)
+
+    expect(store.getAmalgamatingBusinesses.map(business => business.identifier)).toEqual([
+      'BC7654321',
+      'BC1111111',
+      'BC2222222'
+    ])
+    expect(previousHolding.role).toBe(AmlRoles.AMALGAMATING)
+    expect(newHolding.role).toBe(AmlRoles.HOLDING)
+  })
+
   it('throws when the snapshot cannot be fetched', async () => {
     vi.spyOn((AuthServices as any), 'fetchAuthInfo').mockResolvedValue(null)
     vi.spyOn((LegalServices as any), 'fetchColinSnapshot').mockRejectedValue({ response: { status: 500 } })
