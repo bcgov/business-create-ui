@@ -3,6 +3,7 @@ import { wrapperFactory } from '../vitest-wrapper-factory'
 import BusinessTable from '@/components/Amalgamation/BusinessTable.vue'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import AmalgamationMixin from '@/mixins/amalgamation-mixin'
+import { movePrimaryOrHoldingBusinessToTop } from '@/utils/amalgamation-utils'
 
 describe('Business Table - display', () => {
   it('displays correctly when there are no amalgamating businesses', () => {
@@ -104,7 +105,7 @@ describe('Business Table - display', () => {
         country: 'CA',
         region: 'FEDERAL'
       },
-      expectedJurisdiction: 'Federal, Canada',
+      expectedJurisdiction: 'Canada (Federal)',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -115,9 +116,10 @@ describe('Business Table - display', () => {
       legalName: 'My USA Business',
       expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
-        country: 'US'
+        country: 'US',
+        region: 'ME'
       },
-      expectedJurisdiction: 'United States of America',
+      expectedJurisdiction: 'Maine',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -131,7 +133,7 @@ describe('Business Table - display', () => {
         country: 'CA',
         region: 'BC'
       },
-      expectedJurisdiction: 'BC, Canada',
+      expectedJurisdiction: 'British Columbia',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -174,7 +176,7 @@ describe('Business Table - display', () => {
       legalType: CorpTypeCd.EXTRA_PRO_A,
       jurisdiction: 'ON',
       expectedBusinessType: 'Extraprovincial Company',
-      expectedJurisdiction: 'ON, Canada',
+      expectedJurisdiction: 'Ontario',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -186,7 +188,7 @@ describe('Business Table - display', () => {
       legalType: CorpTypeCd.EXTRA_PRO_A,
       jurisdiction: 'FD',
       expectedBusinessType: 'Extraprovincial Company',
-      expectedJurisdiction: 'Federal, Canada',
+      expectedJurisdiction: 'Canada (Federal)',
       role: AmlRoles.AMALGAMATING
     }
   ]
@@ -328,6 +330,82 @@ describe('Business Table - more actions menu', () => {
     })).toBe(false)
     expect(vm.showMoreActionsMenu({ type: AmlTypes.FOREIGN, role: AmlRoles.AMALGAMATING })).toBe(false)
 
+    wrapper.destroy()
+  })
+})
+
+describe('Business Table - primary/holding business presentation', () => {
+  it('slots newly selected primary business at the top, bolds the role and bumps other businesses down', async () => {
+    const firstBusiness = {
+      type: AmlTypes.LEAR,
+      identifier: 'BC1111111',
+      name: 'First Business',
+      legalType: CorpTypeCd.BC_COMPANY,
+      addresses: {},
+      role: AmlRoles.AMALGAMATING
+    }
+    const secondBusiness = {
+      type: AmlTypes.LEAR,
+      identifier: 'BC2222222',
+      name: 'Second Business',
+      legalType: CorpTypeCd.BC_COMPANY,
+      addresses: {},
+      role: AmlRoles.AMALGAMATING
+    }
+    const thirdBusiness = {
+      type: AmlTypes.LEAR,
+      identifier: 'BC3333333',
+      name: 'Third Business',
+      legalType: CorpTypeCd.BC_COMPANY,
+      addresses: {},
+      role: AmlRoles.AMALGAMATING
+    }
+    const businesses = [ firstBusiness, secondBusiness, thirdBusiness ]
+    const wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      {
+        amalgamation: {
+          type: AmalgamationTypes.HORIZONTAL,
+          amalgamatingBusinesses: businesses
+        },
+        tombstone: {
+          filingType: FilingTypes.AMALGAMATION_APPLICATION,
+          authorizedActions: []
+        }
+      }
+    )
+
+    const businessRows = () => wrapper.findAll('#business-table tbody tr')
+    // set the third business to be the primary business
+    thirdBusiness.role = AmlRoles.PRIMARY
+    await wrapper.vm.$nextTick()
+    expect(businessRows().wrappers.map(row => row.find('.business-name').text())).toEqual([
+      expect.stringContaining('Third Business'),
+      expect.stringContaining('First Business'),
+      expect.stringContaining('Second Business')
+    ])
+
+    // The parent persists the promoted business order after changing its role.
+    businesses.splice(0, businesses.length, ...movePrimaryOrHoldingBusinessToTop(businesses))
+
+    // Promote Second Business, demoting the previous Primary Business.
+    thirdBusiness.role = AmlRoles.AMALGAMATING
+    secondBusiness.role = AmlRoles.PRIMARY
+    await wrapper.vm.$nextTick()
+    expect(businessRows().wrappers.map(row => row.find('.business-name').text())).toEqual([
+      expect.stringContaining('Second Business'),
+      expect.stringContaining('Third Business'),
+      expect.stringContaining('First Business')
+    ])
+    expect(businessRows().at(0).find('.business-role strong').text()).toBe('Primary Business')
+
+    await businessRows().at(2).find('.remove-btn').trigger('click')
+    await wrapper.vm.$nextTick()
+
+    expect(businessRows().length).toBe(2)
+    expect(businessRows().at(0).find('.business-name').text()).toContain('Second Business')
+    expect(businessRows().at(1).find('.business-name').text()).toContain('Third Business')
     wrapper.destroy()
   })
 })

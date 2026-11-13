@@ -1021,6 +1021,24 @@ describe('Amalgamating Businesses - add amalgamating foreign business', () => {
     expect(wrapper.vm.isAddingAmalgamatingForeignBusiness).toBe(false)
   })
 
+  it('saves a foreign business in a US state jurisdiction', async () => {
+    await wrapper.setData({ isAddingAmalgamatingForeignBusiness: true })
+    await wrapper.setData({
+      isCan: false,
+      jurisdiction: { group: 1, text: 'California', value: 'CA' },
+      legalName: 'US Business',
+      identifier: 'US-123'
+    })
+
+    wrapper.vm.saveAmalgamatingForeignBusiness()
+
+    expect(wrapper.vm.isForeignBusinessValid).toBe(true)
+    expect(store.getAmalgamatingBusinesses[0].foreignJurisdiction).toEqual({
+      country: JurisdictionLocation.US,
+      region: 'CA'
+    })
+  })
+
   it('doesn\'t save a duplicate foreign business', async () => {
     // pre-populate a foreign business
     store.stateModel.amalgamation.amalgamatingBusinesses = [

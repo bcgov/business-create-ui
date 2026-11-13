@@ -92,7 +92,7 @@ describe('Business Table Summary', () => {
         country: 'CA',
         region: 'FEDERAL'
       },
-      expectedJurisdiction: 'Federal, Canada',
+      expectedJurisdiction: 'Canada (Federal)',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -102,9 +102,10 @@ describe('Business Table Summary', () => {
       identifier: 'US-4444444',
       legalName: 'Test Business 4',
       foreignJurisdiction: {
-        country: 'US'
+        country: 'US',
+        region: 'ME'
       },
-      expectedJurisdiction: 'United States of America',
+      expectedJurisdiction: 'Maine',
       role: AmlRoles.AMALGAMATING
     },
     {
@@ -134,7 +135,7 @@ describe('Business Table Summary', () => {
       name: 'Test Extrapro Colin Business',
       legalType: 'A',
       jurisdiction: 'ON',
-      expectedJurisdiction: 'ON, Canada',
+      expectedJurisdiction: 'Ontario',
       role: AmlRoles.AMALGAMATING
     }
   ]
@@ -219,4 +220,39 @@ describe('Business Table Summary', () => {
       wrapper.destroy()
     })
   }
+
+  it('shows the primary or holding business first and emphasizes its role', () => {
+    const wrapper = wrapperFactory(
+      BusinessTableSummary,
+      null,
+      {
+        amalgamation: {
+          amalgamatingBusinesses: [
+            {
+              type: AmlTypes.LEAR,
+              identifier: 'BC2222222',
+              name: 'Amalgamating Business',
+              authInfo: { contacts: [ { email: 'bc2222222@example.com' } ] },
+              addresses: {},
+              role: AmlRoles.AMALGAMATING
+            },
+            {
+              type: AmlTypes.LEAR,
+              identifier: 'BC1111111',
+              name: 'Holding Business',
+              authInfo: { contacts: [ { email: 'bc1111111@example.com' } ] },
+              addresses: {},
+              role: AmlRoles.HOLDING
+            }
+          ]
+        }
+      }
+    )
+
+    const rows = wrapper.findAll('#business-table-summary tbody tr')
+    expect(rows.at(0).find('.business-name').text()).toContain('Holding Business')
+    expect(rows.at(0).find('.business-role strong').text()).toBe('Holding Business')
+    expect(rows.at(1).find('.business-role strong').exists()).toBe(false)
+    wrapper.destroy()
+  })
 })
