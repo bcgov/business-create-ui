@@ -155,6 +155,21 @@ describe('List People And Roles component - BEN IA', () => {
       .toContain('Same as Mailing Address')
   })
 
+  it('does not display N/A for a completing party without a delivery address on a non-registration filing', () => {
+    const completingPartyWithoutDeliveryAddress = {
+      ...mockPersonList[0],
+      roles: [{ roleType: 'Completing Party', appointmentDate: '2020-03-30' }],
+      deliveryAddress: null
+    }
+    wrapper = wrapperFactory(ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [completingPartyWithoutDeliveryAddress] } }
+    )
+
+    const row = wrapper.vm.$el.querySelector('.people-roles-content')
+    expect(row.querySelector('.delivery-address-column').textContent.trim()).toBe('')
+  })
+
   it('displays the correct addresses text when mailing and delivery do not match', () => {
     mockPersonList[0].deliveryAddress.streetAddress = '123 Different rd'
     // Mounting the Wrapper to allow for the test to reach into the baseAddress component to validate data
@@ -480,6 +495,22 @@ describe('List People And Roles component - SP registration', () => {
     const message = wrapper.vm.$el.querySelector('.people-roles-invalid-message').textContent
     expect(message).toContain('This step is unfinished.')
   })
+
+  it('displays N/A for a completing party without a delivery address on a registration filing', () => {
+    const completingPartyWithoutDeliveryAddress = {
+      ...mockPersonList[1],
+      deliveryAddress: null
+    }
+
+    wrapper = wrapperFactory(
+      ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [completingPartyWithoutDeliveryAddress] } }
+    )
+
+    const row = wrapper.vm.$el.querySelector('.people-roles-content')
+    expect(row.querySelector('.delivery-address-column').textContent.trim()).toBe('N/A')
+  })
 })
 
 describe('List People And Roles component - BEN restoration', () => {
@@ -793,5 +824,21 @@ describe('List People And Roles component - Short form amalgamation', () => {
     expect(message).toContain('Return to this step to finish it')
 
     store.stateModel.amalgamation.type = null
+  })
+
+  it('does not display N/A for a completing party without a delivery address on an amalgamation filing', () => {
+    const completingPartyWithoutDeliveryAddress = {
+      ...mockPersonList[1],
+      deliveryAddress: null
+    }
+
+    wrapper = wrapperFactory(
+      ListPeopleAndRoles,
+      null,
+      { addPeopleAndRoleStep: { orgPeople: [completingPartyWithoutDeliveryAddress] } }
+    )
+
+    const row = wrapper.vm.$el.querySelector('.people-roles-content')
+    expect(row.querySelector('.delivery-address-column').textContent.trim()).toBe('')
   })
 })

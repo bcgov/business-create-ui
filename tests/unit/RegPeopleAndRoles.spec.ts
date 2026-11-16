@@ -96,6 +96,19 @@ describe('Registration People And Roles component - SP', () => {
     wrapper.destroy()
   })
 
+  it('displays the updated sole proprietorship guidance', () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    const wrapper = wrapperFactory()
+    const blurbs = wrapper.findAll('.blurb-para')
+
+    expect(blurbs.at(0).text()).toContain('Add the people and/or the business')
+    expect(blurbs.at(1).text()).toContain('The Completing Party must be a person')
+    expect(blurbs.at(2).text()).toContain('Add a person as the proprietor')
+    expect(blurbs.at(2).text()).toContain('Doing Business As')
+
+    wrapper.destroy()
+  })
+
   it('does not show the other buttons when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
@@ -119,6 +132,8 @@ describe('Registration People And Roles component - SP', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
     expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddPerson).text()).toContain('Add a Person as the Proprietor')
+    expect(wrapper.find(btnAddOrganization).text()).toContain('Add a Business as the Proprietor')
     wrapper.destroy()
   })
 
@@ -147,9 +162,6 @@ describe('Registration People And Roles component - SP', () => {
 
     // click the Add Person button
     await wrapper.vm.$el.querySelector(btnAddPerson).click()
-
-    // click the Continue button in the dialog
-    await wrapper.vm.$el.querySelector('.dialog-yes-btn').click()
 
     // wait for everything to update
     await flushPromises()
@@ -238,6 +250,17 @@ describe('Registration People And Roles component - GP', () => {
     wrapper.destroy()
   })
 
+  it('displays the updated general partnership guidance', () => {
+    store.stateModel.addPeopleAndRoleStep.orgPeople = getPersonList()
+    const wrapper = wrapperFactory()
+    const blurbs = wrapper.findAll('.blurb-para')
+
+    expect(blurbs.at(0).text()).toContain('Add the people and/or the businesses')
+    expect(blurbs.at(1).text()).toContain('The Completing Party must be a person')
+
+    wrapper.destroy()
+  })
+
   it('does not show the other buttons when people list is empty', () => {
     store.stateModel.addPeopleAndRoleStep.orgPeople = []
     const wrapper = wrapperFactory()
@@ -261,6 +284,8 @@ describe('Registration People And Roles component - GP', () => {
     const wrapper = wrapperFactory()
     expect(wrapper.find(btnAddPerson).exists()).toBeTruthy()
     expect(wrapper.find(btnAddOrganization).exists()).toBeTruthy()
+    expect(wrapper.find(btnAddPerson).text()).toContain('Add a Person as a Partner')
+    expect(wrapper.find(btnAddOrganization).text()).toContain('Add a Business as a Partner')
     wrapper.destroy()
   })
 

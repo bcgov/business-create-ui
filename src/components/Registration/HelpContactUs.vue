@@ -13,7 +13,7 @@
       <span
         v-if="!helpToggle"
         class="pl-2"
-      >Need Help? Contact Us</span>
+      >{{ content.helpText }}</span>
       <span
         v-else
         class="pl-2"
@@ -27,13 +27,16 @@
       >
         <header class="help-header">
           <h2 class="py-4 px-0">
-            Contact BC Registries
+            {{ content.title }}
           </h2>
         </header>
 
-        <p class="my-4">
-          If you require further assistance adding a business, please contact us.
-        </p>
+        <p
+          v-for="(paragraph, index) in content.body"
+          :key="index"
+          class="my-4"
+          v-html="paragraph"
+        />
 
         <FirmContactInfo />
 
@@ -49,8 +52,48 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
+
+interface HelpContent {
+  helpText: string
+  title: string
+  body: string[]
+}
+
+export type HelpType = 'proprietor' | 'partner' | 'default'
+
+const CONTACT_US =
+  'If you are having trouble finding your active business, you can contact us for help.'
+
+const HELP_CONTENT: Record<HelpType, HelpContent> = {
+  proprietor: {
+    helpText: 'Help with Adding a Business as the Proprietor',
+    title: 'Help with Adding a Business as the Proprietor',
+    body: [
+      'To add a business as the proprietor of the sole proprietorship, enter the business name or the ' +
+        'incorporation/registration number of the active B.C. business you are trying to add.',
+      'A sole proprietorship can be owned by any active business registered or incorporated in B.C., ' +
+        '<strong>except</strong> for an existing sole proprietorship.',
+      CONTACT_US
+    ]
+  },
+  partner: {
+    helpText: 'Help with adding a business as a Partner',
+    title: 'Help with Adding a Business as a Partner',
+    body: [
+      'To add a business as a partner for this general partnership, enter the business name or the ' +
+        'incorporation/registration number of the active B.C. business you are trying to add.',
+      'A general partnership can have any active business registered or incorporated in B.C. as a partner.',
+      CONTACT_US
+    ]
+  },
+  default: {
+    helpText: 'Need Help? Contact Us',
+    title: 'Contact BC Registries',
+    body: ['If you require further assistance adding a business, please contact us.']
+  }
+}
 
 @Component({
   components: {
@@ -58,7 +101,15 @@ import FirmContactInfo from '@/components/common/FirmContactInfo.vue'
   }
 })
 export default class HelpContactUs extends Vue {
+  /** Which set of help copy to show. */
+  @Prop({ default: 'default' }) readonly type!: HelpType
+
   helpToggle = false
+
+  /** The help text, title and body for the current type. */
+  get content (): HelpContent {
+    return HELP_CONTENT[this.type] || HELP_CONTENT.default
+  }
 }
 </script>
 
