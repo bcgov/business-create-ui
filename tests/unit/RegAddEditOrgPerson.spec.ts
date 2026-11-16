@@ -4,6 +4,7 @@ import { mount, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { getLastEvent } from '../get-last-event'
 import { createPinia, setActivePinia } from 'pinia'
+import { LegalServices } from '@/services'
 import { useStore } from '@/store/store'
 import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
@@ -431,26 +432,73 @@ describe('Registration Add/Edit Org/Person component', () => {
 
   it('only displays the address alert when a looked-up business has populated addresses', async () => {
     const alertText = 'Ensure your addresses are accurate for this application.'
-    const orgWithLookedUpBusiness = {
+    const orgWithoutAddresses = {
       ...validProprietorOrg,
-      officer: { ...validProprietorOrg.officer, identifier: 'BC1234567' }
+      mailingAddress: {},
+      deliveryAddress: {}
     }
+
+    const fetchAddressesSpy = vi.spyOn(LegalServices, 'fetchAddresses')
 
     for (const role of [AuthorizationRoles.STAFF, AuthorizationRoles.PUBLIC_USER]) {
       setAuthRole(store, role)
-      const wrapper = createComponent(orgWithLookedUpBusiness, -1, null)
+
+      const wrapper = createComponent(orgWithoutAddresses, -1, null)
+      const vm = wrapper.vm as any
+
+      // A lookup response with populated addresses displays the alert.
+      fetchAddressesSpy.mockResolvedValueOnce({
+        registeredOffice: {
+          mailingAddress: validProprietorOrg.mailingAddress,
+          deliveryAddress: validProprietorOrg.deliveryAddress
+        }
+      } as any)
+
+      await vm.updateBusinessDetails({
+        name: validProprietorOrg.officer.organizationName,
+        identifier: 'BC1234567',
+        bn: validProprietorOrg.officer.businessNumber
+      })
+      await Vue.nextTick()
 
       expect(wrapper.text()).toContain(alertText)
 
-      wrapper.setData({
-        inProgressMailingAddress: {},
-        inProgressDeliveryAddress: {}
+      // A lookup response without populated addresses does not display the alert.
+      fetchAddressesSpy.mockResolvedValueOnce({
+        registeredOffice: {
+          mailingAddress: {},
+          deliveryAddress: {}
+        }
+      } as any)
+
+      await vm.updateBusinessDetails({
+        name: validProprietorOrg.officer.organizationName,
+        identifier: 'BC1234567',
+        bn: validProprietorOrg.officer.businessNumber
       })
-      await wrapper.vm.$nextTick()
+      await Vue.nextTick()
 
       expect(wrapper.text()).not.toContain(alertText)
+
+      // Manually entered addresses do not display the alert.
+      vm.swapIsLookupBusiness()
+      vm.inProgressMailingAddress = { streetAddress: '123 Manual Street' }
+      vm.inProgressDeliveryAddress = { streetAddress: '123 Manual Street' }
+      await Vue.nextTick()
+
+      expect(wrapper.text()).not.toContain(alertText)
+
+      // Undoing the business selection keeps the alert hidden.
+      vm.resetBusinessDetails()
+      await Vue.nextTick()
+
+      expect(wrapper.text()).not.toContain(alertText)
+
       wrapper.destroy()
     }
+
+    fetchAddressesSpy.mockRestore()
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
   })
 
   it('displays form data for proprietor-org (SP) - business lookup - SBC staff or client', () => {
