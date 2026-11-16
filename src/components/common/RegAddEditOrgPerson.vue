@@ -55,7 +55,15 @@
           >
             <span v-if="isCompletingParty">Completing Party</span>
             <span v-else-if="isNaN(activeIndex)">
-              Add a Person as {{ isEntitySoleProp ? 'the Proprietor' : 'a Partner' }}
+              <template v-if="isRegistrationFiling && isEntitySoleProp">
+                Add a Person as the Proprietor
+              </template>
+              <template v-else-if="isRegistrationFiling && isEntityPartnership">
+                Add a Person as the Partner
+              </template>
+              <template v-else>
+                Add Person
+              </template>
             </span>
             <span v-else>Edit Person</span>
           </label>

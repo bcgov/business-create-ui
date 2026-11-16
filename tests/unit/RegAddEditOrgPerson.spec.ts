@@ -10,7 +10,7 @@ import RegAddEditOrgPerson from '@/components/common/RegAddEditOrgPerson.vue'
 import { EmptyOrgPerson } from '@/interfaces'
 import { CorpTypeCd } from '@bcrs-shared-components/corp-type-module'
 import { BusinessLookup } from '@bcrs-shared-components/business-lookup'
-import { AuthorizationRoles } from '@/enums'
+import { AuthorizationRoles, FilingTypes } from '@/enums'
 import { setAuthRole } from '../set-auth-role'
 
 // mock the console.warn function to hide "[Vuetify] Unable to locate target XXX"
@@ -217,6 +217,7 @@ function createComponent (
 
 store.stateModel.entityType = CorpTypeCd.SOLE_PROP
 store.stateModel.currentDate = '2021-04-01'
+store.stateModel.tombstone.filingType = FilingTypes.REGISTRATION
 
 describe('Registration Add/Edit Org/Person component', () => {
   it('loads the component and sets the data for completing party', () => {
@@ -250,6 +251,7 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('loads the component and sets the data for partner-person (GP)', () => {
+    store.stateModel.entityType = CorpTypeCd.PARTNERSHIP
     const wrapper = createComponent(validPartnerPerson, NaN, null)
     const vm = wrapper.vm as any
 
@@ -259,8 +261,20 @@ describe('Registration Add/Edit Org/Person component', () => {
     expect(vm.isDirector).toBe(false)
     expect(vm.isProprietor).toBe(false)
     expect(vm.isPartner).toBe(true)
+    expect(wrapper.find('.add-org-header').text()).toContain('Add a Person as the Partner')
 
     wrapper.destroy()
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
+  })
+
+  it('displays generic Add Person label for other entity types', () => {
+    store.stateModel.entityType = 'BC' as CorpTypeCd
+    const wrapper = createComponent(validPartnerPerson, NaN, null)
+
+    expect(wrapper.find('.add-org-header').text()).toContain('Add Person')
+
+    wrapper.destroy()
+    store.stateModel.entityType = CorpTypeCd.SOLE_PROP
   })
 
   it('loads the component and sets the data for proprietor-org (SP)', () => {

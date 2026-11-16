@@ -55,6 +55,7 @@ export default class AddEditOrgPersonMixin extends Vue {
   @Getter(useStore) isEntitySoleProp!: boolean
   @Getter(useStore) isFullRestorationFiling!: boolean
   @Getter(useStore) isLimitedRestorationFiling: boolean
+  @Getter(useStore) isRegistrationFiling: boolean
 
   @Action(useStore) setAddPeopleAndRoleStepValidity!: (x: boolean) => void
   @Action(useStore) setIsAutoPopulatedBusinessNumber!: (x: boolean) => void
