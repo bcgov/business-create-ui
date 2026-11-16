@@ -140,7 +140,7 @@
                 />
               </template>
 
-              <template v-else-if="isCompletingParty(orgPerson)">
+              <template v-else-if="isCompletingParty(orgPerson) && isRegistrationFiling">
                 <p v-if="!orgPerson.deliveryAddress">
                   N/A
                 </p>

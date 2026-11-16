@@ -75,6 +75,8 @@ export default class AddEditOrgPersonMixin extends Vue {
   mailingAddressValid = false
   deliveryAddressValid = false
   reassignCompletingParty = false
+  /** Whether the business lookup returned any mailing or delivery address information. */
+  hasPrepopulatedBusinessAddresses = false
 
   /** Model value for roles checboxes. */
   selectedRoles = [] as Array<RoleTypes>
@@ -142,13 +144,6 @@ export default class AddEditOrgPersonMixin extends Vue {
   /** Whether current business object is selected using lookup. */
   get hasBusinessSelectedFromLookup (): boolean {
     return this.orgPerson?.isLookupBusiness && !!this.inProgressBusinessLookup.identifier
-  }
-
-  /** Whether a looked-up business has any mailing or delivery address populated. */
-  get hasPrepopulatedBusinessAddresses (): boolean {
-    return this.hasBusinessSelectedFromLookup &&
-      (!this.isEmptyAddress(this.inProgressMailingAddress) ||
-       !this.isEmptyAddress(this.inProgressDeliveryAddress))
   }
 
   get showRoles (): boolean {
@@ -346,6 +341,8 @@ export default class AddEditOrgPersonMixin extends Vue {
       : (businessLookup.bn?.length > 9) ? businessLookup.bn.slice(0, 9) : null
 
     this.inProgressBusinessLookup = { ...businessLookup }
+    this.hasPrepopulatedBusinessAddresses = false
+
     if (businessLookup.identifier) {
       const addresses = await LegalServices.fetchAddresses(businessLookup.identifier)
         .then((data) => {
@@ -357,6 +354,10 @@ export default class AddEditOrgPersonMixin extends Vue {
       if (addresses) {
         this.inProgressMailingAddress = { ...addresses.mailingAddress }
         this.inProgressDeliveryAddress = { ...addresses.deliveryAddress }
+
+        this.hasPrepopulatedBusinessAddresses =
+          !this.isEmptyAddress(addresses.mailingAddress) ||
+          !this.isEmptyAddress(addresses.deliveryAddress)
       }
     }
   }

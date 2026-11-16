@@ -427,6 +427,7 @@
                 class="item email-address mt-4 mb-n6"
                 label="Email Address"
                 :rules="enableRules ? Rules.EmailRules : []"
+                :readonly="isCompletingParty && !IsAuthorized(AuthorizedActions.FIRM_EDITABLE_EMAIL_ADDRESS)"
               />
             </article>
 
