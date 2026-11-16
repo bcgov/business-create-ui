@@ -22,7 +22,7 @@
         </tr>
 
         <tr
-          v-for="(item, index) in businesses"
+          v-for="item in businesses"
           :key="key(item)"
         >
           <td class="business-status">
@@ -52,7 +52,10 @@
           </td>
 
           <td class="business-role">
-            {{ role(item) }}
+            <strong v-if="isPrimaryOrHoldingBusiness(item)">{{ role(item) }}</strong>
+            <template v-else>
+              {{ role(item) }}
+            </template>
           </td>
 
           <td class="business-actions">
@@ -61,7 +64,7 @@
                 text
                 color="primary"
                 class="remove-btn mt-n2 ml-n4"
-                @click="removeBusiness(index)"
+                @click="removeBusiness(item)"
               >
                 <v-icon
                   small
@@ -128,7 +131,6 @@
 <script lang="ts">
 import { Component, Emit, Mixins, Watch } from 'vue-property-decorator'
 import { Action, Getter } from 'pinia-class'
-import { getName } from 'country-list'
 import { useStore } from '@/store/store'
 import { AmlStatuses, AmlRoles, AmlTypes } from '@/enums'
 import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
@@ -136,6 +138,11 @@ import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
 import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationMixin } from '@/mixins'
+import {
+  getAmalgamationJurisdiction,
+  hasPrimaryOrHoldingRole,
+  movePrimaryOrHoldingBusinessToTop
+} from '@/utils/amalgamation-utils'
 
 @Component({
   components: {
@@ -176,7 +183,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
    */
   get businesses (): AmalgamatingBusinessIF[] {
     // iterate overall all amalgamating businesses
-    return this.getAmalgamatingBusinesses.map(business => {
+    const businesses = this.getAmalgamatingBusinesses.map(business => {
       // evaluate the rules for the current business
       // assign the value of the first failed rule (if any) else OK
       business.status = this.rules.reduce(
@@ -192,6 +199,12 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
       // return updated business object
       return business
     })
+
+    return movePrimaryOrHoldingBusinessToTop(businesses)
+  }
+
+  isPrimaryOrHoldingBusiness (item: AmalgamatingBusinessIF): boolean {
+    return hasPrimaryOrHoldingRole(item)
   }
 
   key (item: AmalgamatingBusinessIF): string {
@@ -228,24 +241,7 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   jurisdiction (item: AmalgamatingBusinessIF): string {
-    // extrapro COLIN rows carry the resolved home jurisdiction string from the COLIN snapshot
-    // ('BC' | province code | 'FD' | free text)
-    if (item?.type === AmlTypes.COLIN) {
-      const j = item.jurisdiction
-      if (!j) return '(Unknown)' // should never happen
-      if (j === 'FD') return 'Federal, Canada'
-      if (/^[A-Z]{2}$/.test(j)) return `${j}, Canada`
-      return j
-    }
-
-    const fj = (item?.type === AmlTypes.FOREIGN) && item.foreignJurisdiction
-    if (fj?.country) {
-      const country = getName(fj.country)
-      const region = (fj.region === 'FEDERAL' ? 'Federal' : fj.region)
-      if (region) return `${region}, ${country}`
-      return country
-    }
-    return '(Unknown)' // should never happen
+    return getAmalgamationJurisdiction(item)
   }
 
   role (item: AmalgamatingBusinessIF): string {
@@ -257,9 +253,11 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
     }
   }
 
-  removeBusiness (index: number): void {
+  removeBusiness (business: AmalgamatingBusinessIF): void {
+    const index = this.getAmalgamatingBusinesses.indexOf(business)
+    if (index < 0) return
+
     // If the company to be deleted is selected as the resulting business name, reset values.
-    const business = this.getAmalgamatingBusinesses[index] as any
     if (this.getNameRequestApprovedName && this.getNameRequestApprovedName === business.name) {
       this.resetValues()
     }
