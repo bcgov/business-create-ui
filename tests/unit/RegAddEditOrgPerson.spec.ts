@@ -335,6 +335,68 @@ describe('Registration Add/Edit Org/Person component', () => {
     wrapper.destroy()
   })
 
+  it('displays the completing party alert noting only the name is taken from the logged in user', () => {
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    const wrapper = createComponent(validCompletingParty, 0, null)
+
+    const text = wrapper.find('.message-box-blue').text()
+    expect(text).toContain('The Completing Party Name is taken from the logged in user and cannot be changed here.')
+    expect(text).not.toContain('email')
+
+    wrapper.destroy()
+  })
+
+  it('allows all users to edit the completing party email', async () => {
+    for (const role of [AuthorizationRoles.PUBLIC_USER, AuthorizationRoles.STAFF]) {
+      setAuthRole(store, role)
+      const wrapper = createComponent(validCompletingParty, 0, null)
+      const emailInput = wrapper.find(`${emailAddressSelector} input`)
+
+      expect(emailInput.attributes('readonly')).toBeUndefined()
+
+      emailInput.setValue('new-email@example.com')
+      emailInput.trigger('change')
+      await flushPromises()
+
+      expect(wrapper.vm.$data.orgPerson.officer.email).toBe('new-email@example.com')
+
+      wrapper.destroy()
+    }
+
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+  })
+
+  it('emits the edited completing party email when Done is clicked', async () => {
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    const wrapper = createComponent(validCompletingParty, NaN, null)
+
+    const emailInput = wrapper.find(`${emailAddressSelector} input`)
+    emailInput.setValue('new-email@example.com')
+    emailInput.trigger('change')
+    await flushPromises()
+
+    wrapper.find(buttonDoneSelector).trigger('click')
+    await flushPromises()
+
+    const event = getLastEvent(wrapper, addEditPersonEvent)
+    expect(event.officer.email).toEqual('new-email@example.com')
+
+    wrapper.destroy()
+  })
+
+  it('keeps the completing party name read-only for users who cannot edit it', () => {
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    const wrapper = createComponent(validCompletingParty, 0, null)
+
+    expect(wrapper.find(`${firstNameSelector} input`).attributes('readonly')).toBeDefined()
+    expect(wrapper.find(`${middleNameSelector} input`).attributes('readonly')).toBeDefined()
+    expect(wrapper.find(`${lastNameSelector} input`).attributes('readonly')).toBeDefined()
+    // email is editable
+    expect(wrapper.find(`${emailAddressSelector} input`).attributes('readonly')).toBeUndefined()
+
+    wrapper.destroy()
+  })
+
   it('displays form data for proprietor-person (SP)', () => {
     const wrapper = createComponent(validProprietorPerson, 0, null)
 
