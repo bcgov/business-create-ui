@@ -575,6 +575,16 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
     return this.isEntitySoleProp ? ['SP'] : []
   }
 
+  /** The details shown under the no-results message. */
+  get businessLookupNoDataDetails (): string {
+    const base = 'Ensure you have entered the name or incorporation/registration number of an active B.C. business'
+
+    // a sole proprietorship cannot be owned by another sole proprietorship
+    return this.isEntitySoleProp
+      ? `${base} that is not a sole proprietorship.`
+      : `${base}.`
+  }
+
   /** The validation rules for the Organization Name. */
   readonly OrgNameRules: Array<VuetifyRuleFunction> = [
     v => !!v?.trim() || 'Business or corporation name is required',
@@ -586,10 +596,6 @@ export default class RegAddEditOrgPerson extends Mixins(AddEditOrgPersonMixin) {
 
   /** The message shown when the business lookup finds no results. */
   readonly businessLookupNoDataMessage = 'No active B.C. businesses found.'
-
-  /** The details shown under the no-results message. */
-  readonly businessLookupNoDataDetails =
-    'Ensure you have entered the name or incorporation/registration number of an active B.C. business.'
 
   readonly RegistriesSearchServices = RegistriesSearchServices
 }
