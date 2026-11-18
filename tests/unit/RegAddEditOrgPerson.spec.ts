@@ -476,14 +476,40 @@ describe('Registration Add/Edit Org/Person component', () => {
   })
 
   it('passes business lookup presentation and legal-type options to both lookup views', () => {
+    const noDataDetailsDefault =
+      'Ensure you have entered the name or incorporation/registration number of an active B.C. business.'
+    const noDataDetailsSoleProp =
+      'Ensure you have entered the name or incorporation/registration number of an active B.C. business ' +
+      'that is not a sole proprietorship.'
+
     const scenarios = [
-      { role: AuthorizationRoles.STAFF, entityType: CorpTypeCd.SOLE_PROP, excludedTypes: ['SP'] },
-      { role: AuthorizationRoles.PUBLIC_USER, entityType: CorpTypeCd.SOLE_PROP, excludedTypes: ['SP'] },
-      { role: AuthorizationRoles.STAFF, entityType: CorpTypeCd.PARTNERSHIP, excludedTypes: [] },
-      { role: AuthorizationRoles.PUBLIC_USER, entityType: CorpTypeCd.PARTNERSHIP, excludedTypes: [] }
+      {
+        role: AuthorizationRoles.STAFF,
+        entityType: CorpTypeCd.SOLE_PROP,
+        excludedTypes: ['SP'],
+        noDataDetails: noDataDetailsSoleProp
+      },
+      {
+        role: AuthorizationRoles.PUBLIC_USER,
+        entityType: CorpTypeCd.SOLE_PROP,
+        excludedTypes: ['SP'],
+        noDataDetails: noDataDetailsSoleProp
+      },
+      {
+        role: AuthorizationRoles.STAFF,
+        entityType: CorpTypeCd.PARTNERSHIP,
+        excludedTypes: [],
+        noDataDetails: noDataDetailsDefault
+      },
+      {
+        role: AuthorizationRoles.PUBLIC_USER,
+        entityType: CorpTypeCd.PARTNERSHIP,
+        excludedTypes: [],
+        noDataDetails: noDataDetailsDefault
+      }
     ]
 
-    for (const { role, entityType, excludedTypes } of scenarios) {
+    for (const { role, entityType, excludedTypes, noDataDetails } of scenarios) {
       setAuthRole(store, role)
       store.stateModel.entityType = entityType
       const wrapper = createComponent(validProprietorOrg, -1, null)
@@ -495,8 +521,7 @@ describe('Registration Add/Edit Org/Person component', () => {
         excludeLegalTypes: excludedTypes,
         resultsHeading: 'Active B.C. Businesses:',
         noDataMessage: 'No active B.C. businesses found.',
-        noDataDetails:
-          'Ensure you have entered the name or incorporation/registration number of an active B.C. business.'
+        noDataDetails
       })
 
       wrapper.destroy()
