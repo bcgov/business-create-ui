@@ -123,12 +123,12 @@ describe('Business Table - display', () => {
       role: AmlRoles.AMALGAMATING
     },
     {
-      label: 'extraprovincial business',
+      label: 'foreign business with an A-prefixed number',
       amalgamationType: AmalgamationTypes.REGULAR,
       type: AmlTypes.FOREIGN,
       identifier: 'A1234567',
-      legalName: 'My Extrapro Business',
-      expectedBusinessType: 'Extra Provincial',
+      legalName: 'My Foreign Business',
+      expectedBusinessType: 'Foreign',
       foreignJurisdiction: {
         country: 'CA',
         region: 'BC'
@@ -175,7 +175,7 @@ describe('Business Table - display', () => {
       name: 'My Extrapro Colin Business',
       legalType: CorpTypeCd.EXTRA_PRO_A,
       jurisdiction: 'ON',
-      expectedBusinessType: 'Extraprovincial Company',
+      expectedBusinessType: 'Extra Provincial',
       expectedJurisdiction: 'Ontario',
       role: AmlRoles.AMALGAMATING
     },
@@ -187,7 +187,7 @@ describe('Business Table - display', () => {
       name: 'My Federal Extrapro Colin Business',
       legalType: CorpTypeCd.EXTRA_PRO_A,
       jurisdiction: 'FD',
-      expectedBusinessType: 'Extraprovincial Company',
+      expectedBusinessType: 'Extra Provincial',
       expectedJurisdiction: 'Canada (Federal)',
       role: AmlRoles.AMALGAMATING
     }
@@ -301,6 +301,31 @@ describe('Business Table - display', () => {
       wrapper.destroy()
     })
   }
+})
+
+describe('Business Table - business type label', () => {
+  it('returns the expected label for each business type', () => {
+    const wrapper = wrapperFactory(
+      BusinessTable,
+      null,
+      { amalgamation: { amalgamatingBusinesses: [] } }
+    )
+    const vm = wrapper.vm as any
+
+    expect(vm.type({ type: AmlTypes.COLIN, legalType: CorpTypeCd.EXTRA_PRO_A })).toBe('Extra Provincial')
+    expect(vm.type({ type: AmlTypes.COLIN, legalType: CorpTypeCd.BC_COMPANY })).toBe('BC Limited Company')
+    expect(vm.type({ type: AmlTypes.LEAR, legalType: CorpTypeCd.BC_COMPANY })).toBe('BC Limited Company')
+
+    // manually entered foreign businesses are always "Foreign", whatever the number or jurisdiction
+    for (const identifier of ['A1234567', 'a1234567', 'AF908004', 'XF908004']) {
+      expect(vm.type({ type: AmlTypes.FOREIGN, identifier, foreignJurisdiction: { country: 'CA', region: 'AB' } }))
+        .toBe('Foreign')
+      expect(vm.type({ type: AmlTypes.FOREIGN, identifier, foreignJurisdiction: { country: 'AF', region: '' } }))
+        .toBe('Foreign')
+    }
+
+    wrapper.destroy()
+  })
 })
 
 describe('Business Table - more actions menu', () => {
