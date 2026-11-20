@@ -136,7 +136,7 @@ import { AmlStatuses, AmlRoles, AmlTypes } from '@/enums'
 import { AddressIF, AmalgamatingBusinessIF } from '@/interfaces'
 import { BaseAddress } from '@bcrs-shared-components/base-address'
 import BusinessStatus from './BusinessStatus.vue'
-import { GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
+import { CorpTypeCd, GetCorpFullDescription } from '@bcrs-shared-components/corp-type-module'
 import { AmalgamationMixin } from '@/mixins'
 import {
   getAmalgamationJurisdiction,
@@ -224,11 +224,14 @@ export default class BusinessTable extends Mixins(AmalgamationMixin) {
   }
 
   type (item: AmalgamatingBusinessIF): string {
+    if (item?.type === AmlTypes.COLIN && item.legalType === CorpTypeCd.EXTRA_PRO_A) {
+      return 'Extra Provincial'
+    }
     if (item?.type === AmlTypes.LEAR || item?.type === AmlTypes.COLIN) {
       return GetCorpFullDescription(item.legalType)
     }
     if (item?.type === AmlTypes.FOREIGN) {
-      return item.identifier?.startsWith('A') ? 'Extra Provincial' : 'Foreign'
+      return 'Foreign'
     }
     return '(Unknown)' // should never happen
   }
