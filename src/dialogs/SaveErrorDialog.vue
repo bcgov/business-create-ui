@@ -38,7 +38,10 @@
           v-if="numErrors > 0"
           class="mb-4"
         >
-          <p>We were unable to save your {{ filingTitle }} due to the following errors:</p>
+          <p>
+            We were unable to save your {{ filingTitle }} due to the following errors. Please correct the data and
+            resubmit this filing.
+          </p>
           <ul>
             <li
               v-for="(error, index) in errors"
