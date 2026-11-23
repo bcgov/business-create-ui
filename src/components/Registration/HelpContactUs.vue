@@ -68,7 +68,7 @@ const CONTACT_US =
 
 const HELP_CONTENT: Record<HelpType, HelpContent> = {
   proprietor: {
-    helpText: 'Help with Adding a Business as the Proprietor',
+    helpText: 'Help with adding a business as the Proprietor',
     title: 'Help with Adding a Business as the Proprietor',
     body: [
       'To add a business as the proprietor of the sole proprietorship, enter the business name or the ' +
