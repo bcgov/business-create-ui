@@ -75,6 +75,7 @@ describe('Save Error Dialog', () => {
     expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
     expect(wrapper.findAll('p').length).toBe(2)
     expect(wrapper.findAll('p').at(0).text()).toContain('We were unable to save your Application due')
+    expect(wrapper.findAll('p').at(0).text()).toContain('Please correct the data and resubmit this Application.')
     expect(wrapper.findAll('p').at(1).text()).toContain('If this error persists')
     expect(wrapper.findAll('li').length).toBe(2)
     expect(wrapper.findAll('li').at(0).text()).toBe('Test Error 1')

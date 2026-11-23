@@ -239,7 +239,8 @@ import { Action, Getter } from 'pinia-class'
 import { useStore } from '@/store/store'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
-import { GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate, Sleep } from '@/utils'
+import { DecodeApiErrors, GetApiErrorPayload, GetFeatureFlag, GetKeycloakRoles, IsAuthorized, UpdateLdUser, Navigate,
+  Sleep } from '@/utils'
 
 // Components, dialogs and views
 import Actions from '@/components/common/Actions.vue'
@@ -540,15 +541,22 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
 
     // listen for save error event
     this.$root.$on('save-error-event', async error => {
-      // save errors/warnings
-      this.saveErrors = error?.response?.data?.errors || []
-      this.saveWarnings = error?.response?.data?.warnings || []
+      // save errors/warnings (the API Gateway wraps the API response body in "rootCause")
+      const payload = GetApiErrorPayload(error)
+      this.saveErrors = Array.isArray(payload?.errors) ? payload.errors : []
+      this.saveWarnings = Array.isArray(payload?.warnings) ? payload.warnings : []
 
       if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {
         // changes were saved if a 402 is received, so clear flag
         this.setHaveChanges(false)
         this.paymentErrorDialog = true
       } else {
+        // decode each error into a user-friendly message (which record, then the API message)
+        this.saveErrors = DecodeApiErrors(this.saveErrors, payload?.filing)
+        // some rejections (eg, Not Allowed) carry a single message instead of an errors list
+        if (this.saveErrors.length === 0 && typeof payload?.message === 'string') {
+          this.saveErrors = [{ error: payload.message }]
+        }
         console.log('Save error =', error) // eslint-disable-line no-console
         this.saveErrorDialog = true
       }
