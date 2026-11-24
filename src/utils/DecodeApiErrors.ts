@@ -71,6 +71,33 @@ const INCORPORATION_LABELS: Record<string, string> = {
   shareStructure: 'Share structure'
 }
 
+/** Labels for the amalgamation application properties the API can report on (without a nested record). */
+const AMALGAMATION_LABELS: Record<string, string> = {
+  amalgamatingBusinesses: 'Amalgamating businesses',
+  contactPoint: 'Contact information',
+  cooperative: 'Cooperative documents',
+  courtApproval: 'Court approval',
+  courtOrder: 'Court order',
+  nameRequest: 'Resulting business name',
+  nameTranslations: 'Name translation',
+  offices: 'Offices',
+  parties: 'Parties',
+  resolution: 'Special resolution',
+  resolutionDate: 'Special resolution',
+  shareClasses: 'Share structure',
+  shareStructure: 'Share structure',
+  signatory: 'Special resolution',
+  signingDate: 'Special resolution',
+  type: 'Amalgamation type'
+}
+
+/** Labels for the roles of an amalgamating business. */
+const AMALGAMATING_BUSINESS_LABELS: Record<string, string> = {
+  amalgamating: 'Amalgamating business',
+  holding: 'Holding business',
+  primary: 'Primary business'
+}
+
 /** Labels for the filing header properties the API can report on. */
 const HEADER_LABELS: Record<string, string> = {
   certifiedBy: 'Certified by',
@@ -157,8 +184,8 @@ function dissolutionLabel (segments: string[], filing: any): string {
  * @example "Share class (Class A Shares)"
  * @example "Share class 2" (when the filing is not available)
  */
-function shareClassLabel (filing: any, index: number): string {
-  const classes = filingSection(filing, 'incorporationApplication')?.shareStructure?.shareClasses
+function shareClassLabel (filing: any, section: string, index: number): string {
+  const classes = filingSection(filing, section)?.shareStructure?.shareClasses
   const name = Array.isArray(classes) ? classes[index]?.name : undefined
   return name ? `Share class (${name})` : `Share class ${index + 1}`
 }
@@ -168,8 +195,8 @@ function shareClassLabel (filing: any, index: number): string {
  * @example "Share series (Series 1 Shares)"
  * @example "Share series 1 of share class 2" (when the filing is not available)
  */
-function shareSeriesLabel (filing: any, classIndex: number, seriesIndex: number): string {
-  const classes = filingSection(filing, 'incorporationApplication')?.shareStructure?.shareClasses
+function shareSeriesLabel (filing: any, section: string, classIndex: number, seriesIndex: number): string {
+  const classes = filingSection(filing, section)?.shareStructure?.shareClasses
   const series = Array.isArray(classes) ? classes[classIndex]?.series : undefined
   const name = Array.isArray(series) ? series[seriesIndex]?.name : undefined
   return name ? `Share series (${name})` : `Share series ${seriesIndex + 1} of share class ${classIndex + 1}`
@@ -180,11 +207,70 @@ function shareSeriesLabel (filing: any, classIndex: number, seriesIndex: number)
  * The API reports share class errors both under "shareStructure/shareClasses/{i}" and under "shareClasses/{i}".
  * @param segments the path segments after "shareClasses" (eg, ["0", "series", "1", "name"])
  */
-function shareClassesLabel (segments: string[], filing: any): string {
+function shareClassesLabel (segments: string[], filing: any, section: string): string {
   const [index, sub1, seriesIndex] = segments
-  if (!/^\d+$/.test(index)) return INCORPORATION_LABELS.shareStructure
-  if (sub1 === 'series' && /^\d+$/.test(seriesIndex)) return shareSeriesLabel(filing, +index, +seriesIndex)
-  return shareClassLabel(filing, +index)
+  if (!/^\d+$/.test(index)) return 'Share structure'
+  if (sub1 === 'series' && /^\d+$/.test(seriesIndex)) return shareSeriesLabel(filing, section, +index, +seriesIndex)
+  return shareClassLabel(filing, section, +index)
+}
+
+/**
+ * Returns the user-facing label of the record a share structure error path points to.
+ * @param segments the path segments after "shareStructure" or "shareClasses"
+ * @param key the segment the path started with ("shareStructure" or "shareClasses")
+ */
+function shareStructureLabel (key: string, segments: string[], filing: any, section: string): string {
+  if (key === 'shareClasses') return shareClassesLabel(segments, filing, section)
+  return (segments[0] === 'shareClasses') ? shareClassesLabel(segments.slice(1), filing, section) : 'Share structure'
+}
+
+/**
+ * Returns the user-facing label of the record an "offices" error path points to.
+ * @param segments the path segments after "offices" (eg, ["registeredOffice", "mailingAddress", "postalCode"])
+ */
+function officesLabel (segments: string[]): string {
+  const [officeType, addressType] = segments
+  const office = OFFICE_LABELS[officeType]
+  if (!office) return 'Offices'
+  return ADDRESS_LABELS[addressType] ? `${office} ${ADDRESS_LABELS[addressType]}` : office
+}
+
+/**
+ * Describes the amalgamating business at the given index of the amalgamation application, by role and name.
+ * @example "Holding business (BC1234567)"
+ * @example "Amalgamating business (Foreign Co Ltd)"
+ * @example "Amalgamating business 2" (when the filing is not available)
+ */
+function amalgamatingBusinessLabel (filing: any, index: number): string {
+  const businesses = filingSection(filing, 'amalgamationApplication')?.amalgamatingBusinesses
+  const business = Array.isArray(businesses) ? businesses[index] : undefined
+  const role = AMALGAMATING_BUSINESS_LABELS[business?.role] || 'Amalgamating business'
+  const name = business?.legalName || business?.identifier
+  return name ? `${role} (${name})` : `${role} ${index + 1}`
+}
+
+/**
+ * Returns the user-facing label of the record an amalgamation application error path points to.
+ * Returns undefined when the path is not recognized.
+ */
+function amalgamationLabel (segments: string[], filing: any): string {
+  const [key, sub1, sub2] = segments
+  if (!key) return 'Amalgamation application'
+
+  if (key === 'parties') return partiesLabel(segments.slice(1), filing, 'amalgamationApplication')
+  if (key === 'offices') return officesLabel(segments.slice(1))
+  if (key === 'shareStructure' || key === 'shareClasses') {
+    return shareStructureLabel(key, segments.slice(1), filing, 'amalgamationApplication')
+  }
+  if (key === 'cooperative') return COOPERATIVE_DOCUMENT_LABELS[sub1] || AMALGAMATION_LABELS.cooperative
+
+  if (key === 'amalgamatingBusinesses') {
+    if (!/^\d+$/.test(sub1)) return AMALGAMATION_LABELS.amalgamatingBusinesses
+    const business = amalgamatingBusinessLabel(filing, +sub1)
+    return (sub2 === 'foreignJurisdiction') ? `${business} foreign jurisdiction` : business
+  }
+
+  return AMALGAMATION_LABELS[key]
 }
 
 /**
@@ -192,24 +278,15 @@ function shareClassesLabel (segments: string[], filing: any): string {
  * Returns undefined when the path is not recognized.
  */
 function incorporationLabel (segments: string[], filing: any): string {
-  const [key, sub1, sub2] = segments
+  const [key, sub1] = segments
   if (!key) return 'Incorporation application'
 
   if (key === 'parties') return partiesLabel(segments.slice(1), filing, 'incorporationApplication')
 
-  if (key === 'offices') {
-    const office = OFFICE_LABELS[sub1]
-    if (!office) return INCORPORATION_LABELS.offices
-    return ADDRESS_LABELS[sub2] ? `${office} ${ADDRESS_LABELS[sub2]}` : office
+  if (key === 'offices') return officesLabel(segments.slice(1))
+  if (key === 'shareStructure' || key === 'shareClasses') {
+    return shareStructureLabel(key, segments.slice(1), filing, 'incorporationApplication')
   }
-
-  if (key === 'shareStructure') {
-    return (sub1 === 'shareClasses')
-      ? shareClassesLabel(segments.slice(2), filing)
-      : INCORPORATION_LABELS.shareStructure
-  }
-  if (key === 'shareClasses') return shareClassesLabel(segments.slice(1), filing)
-
   if (key === 'cooperative') return COOPERATIVE_DOCUMENT_LABELS[sub1] || INCORPORATION_LABELS.cooperative
 
   return INCORPORATION_LABELS[key]
@@ -217,7 +294,7 @@ function incorporationLabel (segments: string[], filing: any): string {
 
 /**
  * Returns the user-facing label of the record an error path points to, or undefined if unknown.
- * Dissolution and incorporation application are mapped; other filings fall back to the API message alone.
+ * Dissolution, incorporation and amalgamation applications are mapped; other filings fall back to the API message.
  */
 function labelForPath (path: string, filing: any): string {
   const [section, ...rest] = pathSegments(path)
@@ -226,6 +303,7 @@ function labelForPath (path: string, filing: any): string {
     case 'header': return HEADER_LABELS[rest[0]] || 'Filing header'
     case 'dissolution': return dissolutionLabel(rest, filing)
     case 'incorporationApplication': return incorporationLabel(rest, filing)
+    case 'amalgamationApplication': return amalgamationLabel(rest, filing)
     case 'specialResolution': return 'Special resolution'
     default: return undefined
   }

@@ -129,7 +129,7 @@ describe('DecodeApiError - dissolution', () => {
   })
 
   it('returns the API message alone for an unknown path', () => {
-    expect(DecodeApiError({ error: 'Something is wrong.', path: '/filing/amalgamationApplication/offices' }, filing))
+    expect(DecodeApiError({ error: 'Something is wrong.', path: '/filing/continuationIn/offices' }, filing))
       .toBe('Something is wrong.')
     expect(DecodeApiError({ error: 'Something is wrong.', path: '/filing/dissolution/unknownProperty' }, filing))
       .toBe('Something is wrong.')
@@ -293,6 +293,143 @@ describe('DecodeApiError - incorporation application', () => {
     }
     expect(DecodeApiError(err, iaFiling))
       .toBe("Registered office delivery address: 'postalCode' is a required property")
+  })
+})
+
+// filing echoed by the API in its error response (regular amalgamation of two BC companies and a foreign one)
+const amlFiling = {
+  header: { name: 'amalgamationApplication' },
+  business: { identifier: 'TRtKAWg7Ah', legalType: 'BC' },
+  amalgamationApplication: {
+    type: 'regular',
+    amalgamatingBusinesses: [
+      { role: 'amalgamating', identifier: 'BC1234567' },
+      { role: 'holding', identifier: 'BC7654321' },
+      {
+        role: 'amalgamating',
+        identifier: 'A0000001',
+        legalName: 'Foreign Co Ltd',
+        foreignJurisdiction: { country: 'US', region: 'WA' }
+      }
+    ],
+    nameRequest: { legalType: 'BC' },
+    parties: [
+      {
+        officer: { partyType: 'person', firstName: 'Jane', lastName: 'Doe' },
+        roles: [{ roleType: 'Completing Party' }]
+      },
+      {
+        officer: { partyType: 'person', firstName: 'John', lastName: 'Smith' },
+        roles: [{ roleType: 'Director' }]
+      }
+    ],
+    shareStructure: { shareClasses: [{ name: 'Class A Shares', series: [{ name: 'Series 1 Shares' }] }] }
+  }
+}
+
+describe('DecodeApiError - amalgamation application', () => {
+  it.each([
+    ['/filing/amalgamationApplication/type', 'Invalid amalgamation type.',
+      'Amalgamation type: Invalid amalgamation type.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses',
+      'Regular amalgamation must have 2 or more amalgamating businesses.',
+      'Amalgamating businesses: Regular amalgamation must have 2 or more amalgamating businesses.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses',
+      'Duplicate amalgamating business entry found in list: BC1234567.',
+      'Amalgamating businesses: Duplicate amalgamating business entry found in list: BC1234567.'],
+    ['/filing/amalgamationApplication/nameRequest/legalName', 'Legal name does not match the holding business.',
+      'Resulting business name: Legal name does not match the holding business.'],
+    ['/filing/amalgamationApplication/nameRequest/nrNumber', 'Short-form amalgamations cannot have a Name Request.',
+      'Resulting business name: Short-form amalgamations cannot have a Name Request.'],
+    ['/filing/amalgamationApplication/nameRequest/legalType',
+      'Legal type should be same as the legal type in primary or holding business.',
+      'Resulting business name: Legal type should be same as the legal type in primary or holding business.'],
+    ['/filing/amalgamationApplication/offices', "Offices do not match the holding business's current offices.",
+      "Offices: Offices do not match the holding business's current offices."],
+    ['/filing/amalgamationApplication/offices/registeredOffice/mailingAddress/postalCode', 'Postal code is required.',
+      'Registered office mailing address: Postal code is required.'],
+    ['/filing/amalgamationApplication/offices/recordsOffice/deliveryAddress', "Address Country must be 'CA'.",
+      "Records office delivery address: Address Country must be 'CA'."],
+    ['/filing/amalgamationApplication/parties', 'At least one Director and a Completing Party is required.',
+      'Parties: At least one Director and a Completing Party is required.'],
+    ['/filing/amalgamationApplication/parties/roles', 'Invalid party role(s) provided: incorporator.',
+      'Parties: Invalid party role(s) provided: incorporator.'],
+    ['/filing/amalgamationApplication/shareStructure',
+      "Share structure does not match the holding business's current share structure.",
+      "Share structure: Share structure does not match the holding business's current share structure."],
+    ['/filing/amalgamationApplication/shareStructure/resolutionDates', 'Resolution dates do not match.',
+      'Share structure: Resolution dates do not match.'],
+    ['/filing/amalgamationApplication/shareStructure/shareClasses',
+      'A company must have at least one Class of Shares.',
+      'Share structure: A company must have at least one Class of Shares.'],
+    ['/filing/amalgamationApplication/courtOrder/orderDate', 'Court order date cannot be in the future.',
+      'Court order: Court order date cannot be in the future.'],
+    ['/filing/amalgamationApplication/courtApproval', 'Court approval is required.',
+      'Court approval: Court approval is required.'],
+    ['/filing/amalgamationApplication/cooperative/rulesFileKey', 'Invalid file.', 'Rules: Invalid file.'],
+    ['/filing/amalgamationApplication/cooperative', 'cooperative data is missing in amalgamationApplication.',
+      'Cooperative documents: cooperative data is missing in amalgamationApplication.'],
+    ['/filing/amalgamationApplication/resolution', 'Resolution must be provided.',
+      'Special resolution: Resolution must be provided.'],
+    ['/filing/amalgamationApplication/resolutionDate', 'Resolution date is required.',
+      'Special resolution: Resolution date is required.'],
+    ['/filing/amalgamationApplication/signingDate', 'Signing date cannot be in the future.',
+      'Special resolution: Signing date cannot be in the future.'],
+    ['/filing/amalgamationApplication/signatory/givenName', 'Signatory given name is required.',
+      'Special resolution: Signatory given name is required.'],
+    ['/filing/amalgamationApplication/contactPoint/phone', 'Invalid phone number, expected format: (XXX) XXX-XXXX',
+      'Contact information: Invalid phone number, expected format: (XXX) XXX-XXXX'],
+    ['/filing/amalgamationApplication/nameTranslations/0/name', 'Invalid name translation.',
+      'Name translation: Invalid name translation.'],
+    ['/filing/amalgamationApplication', 'A valid filing is required.',
+      'Amalgamation application: A valid filing is required.']
+  ])('decodes %s', (path, message, expected) => {
+    expect(DecodeApiError({ error: message, path }, amlFiling)).toBe(expected)
+  })
+
+  it.each([
+    ['/filing/amalgamationApplication/amalgamatingBusinesses/0', 'BC1234567 is not in good standing.',
+      'Amalgamating business (BC1234567): BC1234567 is not in good standing.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses/1',
+      'BC7654321 has a draft, pending or future effective filing.',
+      'Holding business (BC7654321): BC7654321 has a draft, pending or future effective filing.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses/2',
+      'A Foreign Co Ltd foreign corporation cannot be marked as Primary or Holding.',
+      'Amalgamating business (Foreign Co Ltd): ' +
+      'A Foreign Co Ltd foreign corporation cannot be marked as Primary or Holding.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses/2/foreignJurisdiction/region',
+      'Region should not be BC.',
+      'Amalgamating business (Foreign Co Ltd) foreign jurisdiction: Region should not be BC.'],
+    ['/filing/amalgamationApplication/amalgamatingBusinesses/2/foreignJurisdiction/country', 'Invalid country.',
+      'Amalgamating business (Foreign Co Ltd) foreign jurisdiction: Invalid country.']
+  ])('names the amalgamating business for %s', (path, message, expected) => {
+    expect(DecodeApiError({ error: message, path }, amlFiling)).toBe(expected)
+  })
+
+  it.each([
+    ['/filing/amalgamationApplication/parties/1/mailingAddress/postalCode', 'Postal code is required.',
+      'Director (John Smith) mailing address: Postal code is required.'],
+    ['/filing/amalgamationApplication/parties/1', 'deliveryAddress is required.',
+      'Director (John Smith): deliveryAddress is required.'],
+    ['/filing/amalgamationApplication/parties/0/officer/email', 'Email is required.',
+      'Completing Party (Jane Doe) email: Email is required.'],
+    ['/filing/amalgamationApplication/shareClasses/0/name/',
+      "Share class name 'Class A Shares' must end with 'Shares'.",
+      "Share class (Class A Shares): Share class name 'Class A Shares' must end with 'Shares'."],
+    ['/filing/amalgamationApplication/shareStructure/shareClasses/0/series/0/maxNumberOfShares',
+      'Number must be greater than 0', 'Share series (Series 1 Shares): Number must be greater than 0']
+  ])('names the party, share class or series for %s', (path, message, expected) => {
+    expect(DecodeApiError({ error: message, path }, amlFiling)).toBe(expected)
+  })
+
+  it('falls back to the business number when the filing is not available', () => {
+    expect(DecodeApiError({ error: 'BC1234567 is frozen.',
+      path: '/filing/amalgamationApplication/amalgamatingBusinesses/1' }))
+      .toBe('Amalgamating business 2: BC1234567 is frozen.')
+    const noName = { amalgamationApplication: { amalgamatingBusinesses: [{ role: 'primary' }] } }
+    expect(DecodeApiError({ error: 'Not found.',
+      path: '/filing/amalgamationApplication/amalgamatingBusinesses/0' }, noName))
+      .toBe('Primary business 1: Not found.')
   })
 })
 
