@@ -38,9 +38,13 @@
           v-if="numErrors > 0"
           class="mb-4"
         >
-          <p>
+          <!-- data errors can be corrected; other rejections (eg, Not Allowed) cannot -->
+          <p v-if="hasDataErrors">
             We were unable to save your {{ filingTitle }} due to the following errors. Please correct the data
             and resubmit this {{ filingTitle }}.
+          </p>
+          <p v-else>
+            We were unable to save your {{ filingTitle }} due to the following errors:
           </p>
           <ul>
             <li
@@ -177,6 +181,11 @@ export default class SaveErrorDialog extends Vue {
   /** The number of warnings in the passed-in array. */
   get numWarnings (): number {
     return (this.warnings?.length || 0)
+  }
+
+  /** Whether any error points to a data element in the filing (ie, something the user can correct). */
+  get hasDataErrors (): boolean {
+    return (this.errors || []).some(error => !!(error?.path || error?.context))
   }
 }
 </script>

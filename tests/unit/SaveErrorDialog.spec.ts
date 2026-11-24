@@ -66,8 +66,8 @@ describe('Save Error Dialog', () => {
         propsData: {
           dialog: true,
           errors: [
-            { error: 'Test Error 1' },
-            { error: 'Test Error 2' }
+            { error: 'Test Error 1', path: '/filing/header/certifiedBy' },
+            { error: 'Test Error 2', path: '/filing/business/identifier' }
           ]
         }
       })
@@ -82,6 +82,29 @@ describe('Save Error Dialog', () => {
     expect(wrapper.findAll('li').at(1).text()).toBe('Test Error 2')
     expect(wrapper.find('#dialog-exit-button').exists()).toBe(true)
     expect(wrapper.find('#dialog-okay-button').exists()).toBe(true)
+
+    wrapper.destroy()
+  })
+
+  it('does not ask the user to correct data when the error is not a data error', () => {
+    setAuthRole(store, AuthorizationRoles.PUBLIC_USER)
+    const wrapper = shallowMount(SaveErrorDialog,
+      {
+        vuetify,
+        propsData: {
+          dialog: true,
+          errors: [
+            { error: 'Not Allowed - You are not allowed to submit this type of filing for BC1234567.' }
+          ]
+        }
+      })
+
+    expect(wrapper.find('#dialog-title').text()).toBe('Unable to save Application')
+    expect(wrapper.findAll('p').at(0).text())
+      .toBe('We were unable to save your Application due to the following errors:')
+    expect(wrapper.findAll('p').at(0).text()).not.toContain('correct the data')
+    expect(wrapper.findAll('li').length).toBe(1)
+    expect(wrapper.findAll('li').at(0).text()).toContain('Not Allowed')
 
     wrapper.destroy()
   })
