@@ -543,7 +543,9 @@ export default class App extends Mixins(CommonMixin, DateMixin, FilingTemplateMi
     this.$root.$on('save-error-event', async error => {
       // save errors/warnings (the API Gateway wraps the API response body in "rootCause")
       const payload = GetApiErrorPayload(error)
-      this.saveErrors = Array.isArray(payload?.errors) ? payload.errors : []
+      // some rejections (eg, Permission Denied for a disabled filing) return the errors list as the whole body
+      const errors = Array.isArray(payload) ? payload : payload?.errors
+      this.saveErrors = Array.isArray(errors) ? errors : []
       this.saveWarnings = Array.isArray(payload?.warnings) ? payload.warnings : []
 
       if (error?.response?.status === StatusCodes.PAYMENT_REQUIRED) {

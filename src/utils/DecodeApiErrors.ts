@@ -7,6 +7,7 @@ import { RoleTypes } from '@/enums'
  */
 export interface ApiErrorIF {
   error?: string
+  message?: string
   path?: string
   context?: Array<{ message?: string, jsonPath?: string }>
   [key: string]: any
@@ -312,6 +313,8 @@ function labelForPath (path: string, filing: any): string {
 /**
  * Decodes one API error into a user-friendly message: the record it belongs to, then the API message.
  * The raw path stays out of the message (it is logged to the console by the caller).
+ * Validation errors carry the text in "error"; other rejections (eg, Permission Denied, duplicate filing,
+ * draft conflicts) carry it in "message" with no path.
  * @param err an element of the "errors" array in the API response
  * @param filing the filing echoed in the API response, used to name parties (optional)
  * @example "Custodian (Jane Doe) delivery address: Address must be in BC."
@@ -320,7 +323,7 @@ export function DecodeApiError (err: ApiErrorIF, filing: any = null): string {
   // a schema error carries the detail in its first context item
   const context = err?.context?.[0]
   const path = context?.jsonPath || err?.path
-  const message = context?.message || err?.error || 'Unknown error'
+  const message = context?.message || err?.error || err?.message || 'Unknown error'
 
   const label = path ? labelForPath(path, filing) : undefined
   return label ? `${label}: ${message}` : message

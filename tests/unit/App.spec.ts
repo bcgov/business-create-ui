@@ -1047,6 +1047,51 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     ])
   })
 
+  it('shows an API error that carries a "message" instead of an "error"', async () => {
+    // legal-api put_basic_checks wraps its message in the errors list (eg, 403 duplicate filing)
+    const error = {
+      response: {
+        status: 403,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: {
+            errors: [{ message: 'Illegal to attempt to create a duplicate filing for BC0870803.' }]
+          }
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors.map(e => e.error))
+      .toEqual(['Illegal to attempt to create a duplicate filing for BC0870803.'])
+  })
+
+  it('shows a Permission Denied error returned as a bare errors list', async () => {
+    // legal-api check_filing_enabled returns the errors list as the whole body
+    const error = {
+      response: {
+        status: 403,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: [{
+            message: 'Permission Denied - transition filing is currently not available for this user and/or account.'
+          }]
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors.map(e => e.error))
+      .toEqual(['Permission Denied - transition filing is currently not available for this user and/or account.'])
+    expect(wrapper.vm.saveWarnings).toEqual([])
+  })
+
   it('still reads an unwrapped save error response', async () => {
     const error = {
       response: {

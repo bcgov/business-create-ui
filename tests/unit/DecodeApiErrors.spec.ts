@@ -141,6 +141,17 @@ describe('DecodeApiError - dissolution', () => {
     expect(DecodeApiError({} as any)).toBe('Unknown error')
     expect(DecodeApiError(null as any)).toBe('Unknown error')
   })
+
+  it('uses the "message" property when the API error has no "error" (eg, Permission Denied)', () => {
+    // shapes from legal-api check_filing_enabled, put_basic_checks and the draft rebase guard
+    expect(DecodeApiError({
+      message: 'Permission Denied - transition filing is currently not available for this user and/or account.'
+    })).toBe('Permission Denied - transition filing is currently not available for this user and/or account.')
+    expect(DecodeApiError({ message: 'Illegal to attempt to create a duplicate filing for BC1234567.' }))
+      .toBe('Illegal to attempt to create a duplicate filing for BC1234567.')
+    // "error" wins when both are present
+    expect(DecodeApiError({ error: 'From error', message: 'From message' })).toBe('From error')
+  })
 })
 
 // filing echoed by the API in its error response (incorporation application with directors and share classes)
@@ -447,6 +458,14 @@ describe('DecodeApiErrors', () => {
     ])
     // input is not mutated
     expect(errors[0].error).toBe('Custodian email is required.')
+  })
+
+  it('decodes errors that carry a "message" instead of an "error"', () => {
+    const errors = [{ message: "A filing was completed after this draft's base transaction. Reload the draft." }]
+    expect(DecodeApiErrors(errors)).toEqual([{
+      message: "A filing was completed after this draft's base transaction. Reload the draft.",
+      error: "A filing was completed after this draft's base transaction. Reload the draft."
+    }])
   })
 
   it('wraps plain string errors and tolerates a non-array', () => {
