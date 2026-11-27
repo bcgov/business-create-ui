@@ -985,6 +985,148 @@ describe('Voluntary Dissolution - Define Dissolution page for a BEN', () => {
     expect(wrapper.findComponent(Stepper).exists()).toBe(true)
     expect(wrapper.findComponent(Actions).exists()).toBe(true)
   })
+
+  it('decodes the API validation errors from a gateway-wrapped save error', async () => {
+    // response shape observed on dev through the API Gateway (2026-11-21)
+    const error = {
+      response: {
+        status: 400,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: {
+            errors: [
+              { error: 'Custodian email is required.', path: '/filing/dissolution/parties/0/officer/email' },
+              { error: 'Address must be in BC.', path: '/filing/dissolution/parties/0/deliveryAddress/addressRegion' }
+            ],
+            filing: {
+              dissolution: {
+                parties: [{
+                  officer: { partyType: 'person', firstName: 'Jane', lastName: 'Doe' },
+                  roles: [{ roleType: 'Custodian' }]
+                }]
+              }
+            }
+          }
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.paymentErrorDialog).toBe(false)
+    expect(wrapper.vm.saveErrors.map(e => e.error)).toEqual([
+      'Custodian (Jane Doe) email: Custodian email is required.',
+      'Custodian (Jane Doe) delivery address: Address must be in BC.'
+    ])
+    // the original path is kept for troubleshooting
+    expect(wrapper.vm.saveErrors[0].path).toBe('/filing/dissolution/parties/0/officer/email')
+  })
+
+  it('shows the single API message when a save error has no errors list', async () => {
+    const error = {
+      response: {
+        status: 403,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: {
+            blockers: ['DRAFT_PENDING'],
+            message: 'Not Allowed - You are not allowed to submit this type of filing for BC0870803.'
+          }
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors).toEqual([
+      { error: 'Not Allowed - You are not allowed to submit this type of filing for BC0870803.' }
+    ])
+  })
+
+  it('shows an API error that carries a "message" instead of an "error"', async () => {
+    // legal-api put_basic_checks wraps its message in the errors list (eg, 403 duplicate filing)
+    const error = {
+      response: {
+        status: 403,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: {
+            errors: [{ message: 'Illegal to attempt to create a duplicate filing for BC0870803.' }]
+          }
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors.map(e => e.error))
+      .toEqual(['Illegal to attempt to create a duplicate filing for BC0870803.'])
+  })
+
+  it('shows a Permission Denied error returned as a bare errors list', async () => {
+    // legal-api check_filing_enabled returns the errors list as the whole body
+    const error = {
+      response: {
+        status: 403,
+        data: {
+          errorMessage: 'API backend third party service error.',
+          rootCause: [{
+            message: 'Permission Denied - transition filing is currently not available for this user and/or account.'
+          }]
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors.map(e => e.error))
+      .toEqual(['Permission Denied - transition filing is currently not available for this user and/or account.'])
+    expect(wrapper.vm.saveWarnings).toEqual([])
+  })
+
+  it('still reads an unwrapped save error response', async () => {
+    const error = {
+      response: {
+        status: 400,
+        data: {
+          errors: [{ error: 'Dissolution type must be provided.', path: '/filing/dissolution/dissolutionType' }],
+          warnings: [{ warning: 'Test warning' }]
+        }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.saveErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrors.map(e => e.error)).toEqual(['Dissolution type: Dissolution type must be provided.'])
+    expect(wrapper.vm.saveWarnings).toEqual([{ warning: 'Test warning' }])
+  })
+
+  it('opens the payment error dialog on a 402 save error', async () => {
+    const error = {
+      response: {
+        status: 402,
+        data: { rootCause: { errors: [{ error: 'Payment failed', path: '/filing/header/paymentToken' }] } }
+      }
+    }
+
+    wrapper.vm.$root.$emit('save-error-event', error)
+    await Vue.nextTick()
+
+    expect(wrapper.vm.paymentErrorDialog).toBe(true)
+    expect(wrapper.vm.saveErrorDialog).toBe(false)
+    // payment errors are shown as the API sends them
+    expect(wrapper.vm.saveErrors).toEqual([{ error: 'Payment failed', path: '/filing/header/paymentToken' }])
+  })
 })
 
 describe('Restoration - App page', () => {
